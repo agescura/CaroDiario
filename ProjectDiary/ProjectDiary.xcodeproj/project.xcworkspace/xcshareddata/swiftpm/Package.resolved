@@ -1,0 +1,70 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "combine-schedulers",
+        "repositoryURL": "https://github.com/pointfreeco/combine-schedulers",
+        "state": {
+          "branch": null,
+          "revision": "c37e5ae8012fb654af776cc556ff8ae64398c841",
+          "version": "0.5.0"
+        }
+      },
+      {
+        "package": "Kingfisher",
+        "repositoryURL": "https://github.com/onevcat/Kingfisher",
+        "state": {
+          "branch": null,
+          "revision": "8c73044cd5f6754ce605da05e2a4dab891d1aa0a",
+          "version": "7.0.0-beta.1"
+        }
+      },
+      {
+        "package": "swift-case-paths",
+        "repositoryURL": "https://github.com/pointfreeco/swift-case-paths",
+        "state": {
+          "branch": null,
+          "revision": "ac1cf1c35b63d70bf05707ad368c9459f31513ff",
+          "version": "0.4.0"
+        }
+      },
+      {
+        "package": "swift-collections",
+        "repositoryURL": "https://github.com/apple/swift-collections",
+        "state": {
+          "branch": null,
+          "revision": "3426dba9ee5c9f8e4981b0fc9d39a818d36eec28",
+          "version": "0.0.4"
+        }
+      },
+      {
+        "package": "swift-composable-architecture",
+        "repositoryURL": "https://github.com/pointfreeco/swift-composable-architecture.git",
+        "state": {
+          "branch": null,
+          "revision": "4223ffbf97cfe030617b95b713bb5d6b6503567d",
+          "version": "0.23.0"
+        }
+      },
+      {
+        "package": "swift-identified-collections",
+        "repositoryURL": "https://github.com/pointfreeco/swift-identified-collections",
+        "state": {
+          "branch": null,
+          "revision": "930bd6e400a30b71018385cd2853dba7b120e88e",
+          "version": "0.1.0"
+        }
+      },
+      {
+        "package": "xctest-dynamic-overlay",
+        "repositoryURL": "https://github.com/pointfreeco/xctest-dynamic-overlay",
+        "state": {
+          "branch": null,
+          "revision": "603974e3909ad4b48ba04aad7e0ceee4f077a518",
+          "version": "0.1.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

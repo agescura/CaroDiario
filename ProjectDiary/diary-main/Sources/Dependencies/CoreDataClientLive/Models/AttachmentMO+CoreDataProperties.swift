@@ -1,0 +1,23 @@
+//
+//  AttachmentMO+CoreDataProperties.swift
+//  
+//
+//  Created by Albert Gil Escura on 1/8/21.
+//
+//
+
+import Foundation
+import CoreData
+
+
+extension AttachmentMO {
+
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<AttachmentMO> {
+        return NSFetchRequest<AttachmentMO>(entityName: "AttachmentMO")
+    }
+
+    @NSManaged public var id: UUID?
+    @NSManaged public var lastUpdated: Date?
+    @NSManaged public var entry: EntryMO?
+
+}

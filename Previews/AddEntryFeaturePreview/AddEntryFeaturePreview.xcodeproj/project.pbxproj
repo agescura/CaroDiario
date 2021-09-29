@@ -1,0 +1,402 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		955764DE26D7ABEA00C8BD84 /* AVCaptureDeviceClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955764DD26D7ABEA00C8BD84 /* AVCaptureDeviceClientLive */; };
+		95A3D44126BC65B000FD54F1 /* CoreDataClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95A3D44026BC65B000FD54F1 /* CoreDataClientLive */; };
+		95A3D44326BC65B000FD54F1 /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95A3D44226BC65B000FD54F1 /* FileClientLive */; };
+		95A3D44926BDD2EB00FD54F1 /* UIApplicationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95A3D44826BDD2EB00FD54F1 /* UIApplicationClientLive */; };
+		95AAAB0B26D82A4000D90D1A /* AVAudioRecorderClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95AAAB0A26D82A4000D90D1A /* AVAudioRecorderClientLive */; };
+		95AAAB0D26D82B9C00D90D1A /* AVAudioSessionClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95AAAB0C26D82B9C00D90D1A /* AVAudioSessionClientLive */; };
+		95AAAB0F26D839F300D90D1A /* AVAudioPlayerClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95AAAB0E26D839F300D90D1A /* AVAudioPlayerClientLive */; };
+		95B9036A26BAE71400FF8B60 /* AddEntryFeaturePreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B9036926BAE71400FF8B60 /* AddEntryFeaturePreviewApp.swift */; };
+		95B9036E26BAE71500FF8B60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95B9036D26BAE71500FF8B60 /* Assets.xcassets */; };
+		95B9037126BAE71500FF8B60 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95B9037026BAE71500FF8B60 /* Preview Assets.xcassets */; };
+		95B9037A26BAE7A100FF8B60 /* AddEntryFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 95B9037926BAE7A100FF8B60 /* AddEntryFeature */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		95B9036626BAE71400FF8B60 /* AddEntryFeaturePreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AddEntryFeaturePreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		95B9036926BAE71400FF8B60 /* AddEntryFeaturePreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryFeaturePreviewApp.swift; sourceTree = "<group>"; };
+		95B9036D26BAE71500FF8B60 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		95B9037026BAE71500FF8B60 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		95B9037226BAE71500FF8B60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		95B9036326BAE71400FF8B60 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				955764DE26D7ABEA00C8BD84 /* AVCaptureDeviceClientLive in Frameworks */,
+				95A3D44326BC65B000FD54F1 /* FileClientLive in Frameworks */,
+				95A3D44126BC65B000FD54F1 /* CoreDataClientLive in Frameworks */,
+				95AAAB0B26D82A4000D90D1A /* AVAudioRecorderClientLive in Frameworks */,
+				95AAAB0F26D839F300D90D1A /* AVAudioPlayerClientLive in Frameworks */,
+				95B9037A26BAE7A100FF8B60 /* AddEntryFeature in Frameworks */,
+				95AAAB0D26D82B9C00D90D1A /* AVAudioSessionClientLive in Frameworks */,
+				95A3D44926BDD2EB00FD54F1 /* UIApplicationClientLive in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		95B9035D26BAE71400FF8B60 = {
+			isa = PBXGroup;
+			children = (
+				95B9036826BAE71400FF8B60 /* AddEntryFeaturePreview */,
+				95B9036726BAE71400FF8B60 /* Products */,
+				95B9037826BAE7A100FF8B60 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		95B9036726BAE71400FF8B60 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				95B9036626BAE71400FF8B60 /* AddEntryFeaturePreview.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		95B9036826BAE71400FF8B60 /* AddEntryFeaturePreview */ = {
+			isa = PBXGroup;
+			children = (
+				95B9036926BAE71400FF8B60 /* AddEntryFeaturePreviewApp.swift */,
+				95B9036D26BAE71500FF8B60 /* Assets.xcassets */,
+				95B9037226BAE71500FF8B60 /* Info.plist */,
+				95B9036F26BAE71500FF8B60 /* Preview Content */,
+			);
+			path = AddEntryFeaturePreview;
+			sourceTree = "<group>";
+		};
+		95B9036F26BAE71500FF8B60 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				95B9037026BAE71500FF8B60 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		95B9037826BAE7A100FF8B60 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		95B9036526BAE71400FF8B60 /* AddEntryFeaturePreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95B9037526BAE71500FF8B60 /* Build configuration list for PBXNativeTarget "AddEntryFeaturePreview" */;
+			buildPhases = (
+				95B9036226BAE71400FF8B60 /* Sources */,
+				95B9036326BAE71400FF8B60 /* Frameworks */,
+				95B9036426BAE71400FF8B60 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AddEntryFeaturePreview;
+			packageProductDependencies = (
+				95B9037926BAE7A100FF8B60 /* AddEntryFeature */,
+				95A3D44026BC65B000FD54F1 /* CoreDataClientLive */,
+				95A3D44226BC65B000FD54F1 /* FileClientLive */,
+				95A3D44826BDD2EB00FD54F1 /* UIApplicationClientLive */,
+				955764DD26D7ABEA00C8BD84 /* AVCaptureDeviceClientLive */,
+				95AAAB0A26D82A4000D90D1A /* AVAudioRecorderClientLive */,
+				95AAAB0C26D82B9C00D90D1A /* AVAudioSessionClientLive */,
+				95AAAB0E26D839F300D90D1A /* AVAudioPlayerClientLive */,
+			);
+			productName = AddEntryFeaturePreview;
+			productReference = 95B9036626BAE71400FF8B60 /* AddEntryFeaturePreview.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		95B9035E26BAE71400FF8B60 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					95B9036526BAE71400FF8B60 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+				};
+			};
+			buildConfigurationList = 95B9036126BAE71400FF8B60 /* Build configuration list for PBXProject "AddEntryFeaturePreview" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				ca,
+				es,
+			);
+			mainGroup = 95B9035D26BAE71400FF8B60;
+			productRefGroup = 95B9036726BAE71400FF8B60 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				95B9036526BAE71400FF8B60 /* AddEntryFeaturePreview */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		95B9036426BAE71400FF8B60 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95B9037126BAE71500FF8B60 /* Preview Assets.xcassets in Resources */,
+				95B9036E26BAE71500FF8B60 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		95B9036226BAE71400FF8B60 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95B9036A26BAE71400FF8B60 /* AddEntryFeaturePreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		95B9037326BAE71500FF8B60 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		95B9037426BAE71500FF8B60 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		95B9037626BAE71500FF8B60 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"AddEntryFeaturePreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CCGZFCU763;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = AddEntryFeaturePreview/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.AddEntryFeaturePreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		95B9037726BAE71500FF8B60 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"AddEntryFeaturePreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CCGZFCU763;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = AddEntryFeaturePreview/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.AddEntryFeaturePreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		95B9036126BAE71400FF8B60 /* Build configuration list for PBXProject "AddEntryFeaturePreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95B9037326BAE71500FF8B60 /* Debug */,
+				95B9037426BAE71500FF8B60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95B9037526BAE71500FF8B60 /* Build configuration list for PBXNativeTarget "AddEntryFeaturePreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95B9037626BAE71500FF8B60 /* Debug */,
+				95B9037726BAE71500FF8B60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		955764DD26D7ABEA00C8BD84 /* AVCaptureDeviceClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVCaptureDeviceClientLive;
+		};
+		95A3D44026BC65B000FD54F1 /* CoreDataClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoreDataClientLive;
+		};
+		95A3D44226BC65B000FD54F1 /* FileClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FileClientLive;
+		};
+		95A3D44826BDD2EB00FD54F1 /* UIApplicationClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIApplicationClientLive;
+		};
+		95AAAB0A26D82A4000D90D1A /* AVAudioRecorderClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVAudioRecorderClientLive;
+		};
+		95AAAB0C26D82B9C00D90D1A /* AVAudioSessionClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVAudioSessionClientLive;
+		};
+		95AAAB0E26D839F300D90D1A /* AVAudioPlayerClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVAudioPlayerClientLive;
+		};
+		95B9037926BAE7A100FF8B60 /* AddEntryFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AddEntryFeature;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 95B9035E26BAE71400FF8B60 /* Project object */;
+}
