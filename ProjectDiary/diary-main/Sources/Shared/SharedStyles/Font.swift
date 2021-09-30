@@ -42,7 +42,6 @@ private struct AdaptiveFont: ViewModifier {
     }
 }
 
-
 import UIKit
 
 public func registerFonts() {

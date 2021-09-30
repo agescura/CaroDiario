@@ -41,7 +41,6 @@ public enum EntriesAction: Equatable {
     case onAppear
     case coreDataClientAction(CoreDataClient.Action)
     case fetchEntriesResponse([[Entry]])
-    case onDissapear
     
     case addEntryAction(AddEntryAction)
     case presentAddEntry(Bool)
@@ -195,12 +194,6 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
                 state.entries = dayResult
                 state.isLoading = false
                 return .none
-                
-            case .onDissapear:
-                return environment.coreDataClient.destroy(CoreDataId())
-                    .receive(on: environment.mainQueue)
-                    .eraseToEffect()
-                    .fireAndForget()
                 
             case .addEntryAction(.addButtonTapped):
                 state.presentAddEntry = false
@@ -358,9 +351,6 @@ public struct EntriesView: View {
             .navigationViewStyle(StackNavigationViewStyle())
             .onAppear {
                 viewStore.send(.onAppear)
-            }
-            .onDisappear {
-                viewStore.send(.onDissapear)
             }
         }
     }

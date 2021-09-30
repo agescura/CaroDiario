@@ -41,7 +41,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 coreDataClient: .live,
                 fileClient: .live,
                 userDefaultsClient: .live(userDefaults:)(),
-                localAuthenticationClient: .noop,
+                localAuthenticationClient: .live,
                 applicationClient: .live,
                 avCaptureDeviceClient: .live,
                 feedbackGeneratorClient: .live,

@@ -13,7 +13,7 @@ import LocalAuthentication
 extension LocalAuthenticationClient {
     
     public static var live: Self {
-        let context = LAContext()
+        var context = LAContext()
         var error: NSError?
         
         return Self(
@@ -34,6 +34,7 @@ extension LocalAuthenticationClient {
             },
             evaluate: { reason in
                 return .future { promise in
+                    context = LAContext()
                     context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
                         promise(.success(success))
                     }

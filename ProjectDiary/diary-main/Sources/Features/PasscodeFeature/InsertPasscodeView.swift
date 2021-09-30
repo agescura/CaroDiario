@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import UserDefaultsClient
 import SharedViews
+import LocalAuthenticationClient
 
 public struct InsertPasscodeState: Equatable {
     public var step: Step = .firstCode
@@ -49,11 +50,17 @@ public enum InsertPasscodeAction: Equatable {
 
 public struct InsertPasscodeEnvironment {
     public let userDefaultsClient: UserDefaultsClient
+    public let localAuthenticationClient: LocalAuthenticationClient
+    public let mainQueue: AnySchedulerOf<DispatchQueue>
     
     public init(
-        userDefaultsClient: UserDefaultsClient
+        userDefaultsClient: UserDefaultsClient,
+        localAuthenticationClient: LocalAuthenticationClient,
+        mainQueue: AnySchedulerOf<DispatchQueue>
     ) {
         self.userDefaultsClient = userDefaultsClient
+        self.localAuthenticationClient = localAuthenticationClient
+        self.mainQueue = mainQueue
     }
 }
 
@@ -64,7 +71,11 @@ public let insertPasscodeReducer: Reducer<InsertPasscodeState, InsertPasscodeAct
         .pullback(
             state: \InsertPasscodeState.menuPasscodeState,
             action: /InsertPasscodeAction.menuPasscodeAction,
-            environment: { MenuPasscodeEnvironment(userDefaultsClient: $0.userDefaultsClient) }
+            environment: { MenuPasscodeEnvironment(
+                userDefaultsClient: $0.userDefaultsClient,
+                localAuthenticationClient: $0.localAuthenticationClient,
+                mainQueue: $0.mainQueue)
+            }
         ),
     
     .init { state, action, environment in
@@ -106,7 +117,7 @@ public let insertPasscodeReducer: Reducer<InsertPasscodeState, InsertPasscodeAct
             
         case let .navigateMenuPasscode(value):
             state.navigateMenuPasscode = value
-            state.menuPasscodeState = value ? .init(optionTimeForAskPasscode: -2) : nil
+            state.menuPasscodeState = value ? .init(authenticationType: .none, optionTimeForAskPasscode: -2) : nil
             return environment.userDefaultsClient.setOptionTimeForAskPasscode(-2).fireAndForget()
         }
     }

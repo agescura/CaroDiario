@@ -30,7 +30,7 @@ struct SettingsFeaturePreviewApp: App {
                         iconType: .dark,
                         hasPasscode: true,
                         cameraStatus: .notDetermined,
-                        optionTimeForAskPasscode: nil
+                        optionTimeForAskPasscode: 0
                     ),
                     reducer: settingsReducer,
                     environment: .init(

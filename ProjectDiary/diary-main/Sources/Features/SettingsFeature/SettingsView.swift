@@ -191,6 +191,7 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction, SettingsEnvir
             action: /SettingsAction.activatePasscodeAction,
             environment: { ActivatePasscodeEnvironment(
                 userDefaultsClient: $0.userDefaultsClient,
+                localAuthenticationClient: $0.localAuthenticationClient,
                 mainQueue: $0.mainQueue)
             }
         ),
@@ -201,7 +202,9 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction, SettingsEnvir
             state: \SettingsState.menuPasscodeState,
             action: /SettingsAction.menuPasscodeAction,
             environment: { MenuPasscodeEnvironment(
-                userDefaultsClient: $0.userDefaultsClient)
+                userDefaultsClient: $0.userDefaultsClient,
+                localAuthenticationClient: $0.localAuthenticationClient,
+                mainQueue: $0.mainQueue)
             }
         ),
     
@@ -359,7 +362,7 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction, SettingsEnvir
             
         case let .navigateMenuPasscode(value):
             state.navigateMenuPasscode = value
-            state.menuPasscodeState = value ? .init(optionTimeForAskPasscode: state.optionTimeForAskPasscode) : nil
+            state.menuPasscodeState = value ? .init(authenticationType: state.authenticationType, optionTimeForAskPasscode: state.optionTimeForAskPasscode) : nil
             return .none
             
         case let .cameraSettingsAction(.requestAccessResponse(value)):

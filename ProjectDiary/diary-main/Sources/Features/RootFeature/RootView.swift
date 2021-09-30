@@ -28,6 +28,7 @@ public struct RootState: Equatable {
     public var featureState: AppState
     
     public var isFirstStarted = true
+    public var isBiometricAlertPresent = false
     
     public enum State {
         case active
@@ -58,6 +59,8 @@ public enum RootAction: Equatable {
     case process(URL)
     case state(RootState.State)
     case shortcuts
+    
+    case biometricAlertPresent(Bool)
 }
 
 public struct RootEnvironment {
@@ -192,6 +195,18 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
         case .featureAction(.lockScreen(.matchedCode)):
             return Effect(value: RootAction.requestCameraStatus)
 
+        case .featureAction(.home(.settings(.menuPasscodeAction(.toggleFaceId(true))))),
+                .featureAction(.home(.settings(.activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.toggleFaceId(isOn: true))))))),
+                .featureAction(.lockScreen(.checkFaceId)):
+            return Effect(value: .biometricAlertPresent(true))
+            
+        case .featureAction(.home(.settings(.menuPasscodeAction(.faceId(response:))))),
+                .featureAction(.home(.settings(.activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.faceId(response:))))))),
+                .featureAction(.lockScreen(.faceIdResponse)):
+            return Effect(value: .biometricAlertPresent(false))
+                .delay(for: 10, scheduler: environment.mainQueue)
+                .eraseToEffect()
+            
         case .featureAction:
             return .none
             
@@ -240,6 +255,9 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             if state.isFirstStarted {
                 return .none
             }
+            if state.isBiometricAlertPresent {
+                return .none
+            }
             if let timeForAskPasscode = environment.userDefaultsClient.timeForAskPasscode,
                timeForAskPasscode > environment.mainRunLoop.now.date {
                 return .none
@@ -263,6 +281,11 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             return .none
             
         case .shortcuts:
+            return .none
+            
+        case let .biometricAlertPresent(value):
+            print(value)
+            state.isBiometricAlertPresent = value
             return .none
         }
     }
