@@ -43,7 +43,8 @@ public enum AgreementType {
     }
 }
 
-public struct AgreementsState: Equatable {}
+public struct AgreementsState: Equatable {
+}
 
 public enum AgreementsAction: Equatable {
     case open(AgreementType)

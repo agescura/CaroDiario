@@ -13,6 +13,7 @@ public struct UIApplicationClient {
     public let supportsAlternateIcons: () -> Bool
     public let openSettings: () -> Effect<Never, Never>
     public var open: (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>
+    public var canOpen: (URL) -> Bool
     public let share: (Any) -> Effect<Never, Never>
     
     public init(
@@ -21,6 +22,7 @@ public struct UIApplicationClient {
         supportsAlternateIcons: @escaping () -> Bool,
         openSettings: @escaping () -> Effect<Never, Never>,
         open: @escaping (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>,
+        canOpen: @escaping (URL) -> Bool,
         share: @escaping (Any) -> Effect<Never, Never>
     ) {
         self.alternateIconName = alternateIconName
@@ -28,6 +30,7 @@ public struct UIApplicationClient {
         self.supportsAlternateIcons = supportsAlternateIcons
         self.openSettings = openSettings
         self.open = open
+        self.canOpen = canOpen
         self.share = share
     }
 }
