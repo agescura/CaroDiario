@@ -187,7 +187,7 @@ public let audioRecordReducer = Reducer<AudioRecordState, AudioRecordAction, Aud
         
     case .record:
         let id = environment.uuid()
-        state.audioPath = environment.fileClient.path(id)
+        state.audioPath = environment.fileClient.path(id).appendingPathExtension("caf")
         guard let audioPath = state.audioPath else { return .none }
         
         state.hasAudioRecorded = false

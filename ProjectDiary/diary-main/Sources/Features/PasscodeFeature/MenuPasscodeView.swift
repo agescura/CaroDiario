@@ -169,8 +169,8 @@ public struct MenuPasscodeView: View {
                             .foregroundColor(.chambray)
                     }
                     .confirmationDialog(
-                      store.scope(state: \.actionSheet),
-                      dismiss: .actionSheetCancelTapped
+                        store.scope(state: \.actionSheet),
+                        dismiss: .actionSheetCancelTapped
                     )
                 }
                 

@@ -287,6 +287,8 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             
         case .requestAuthorizationCamera:
             return environment.avCaptureDeviceClient.authorizationStatus()
+                .receive(on: environment.mainQueue)
+                .eraseToEffect()
                 .map(AddEntryAction.requestAuthorizationCameraResponse)
             
         case let .requestAuthorizationCameraResponse(response):
@@ -337,8 +339,8 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
         case let .loadImage(image):
             let id = environment.uuid()
             let thumbnailId = environment.uuid()
-            let path = environment.fileClient.path(id)
-            let thumbnail = environment.fileClient.path(thumbnailId)
+            let path = environment.fileClient.path(id).appendingPathExtension("png")
+            let thumbnail = environment.fileClient.path(thumbnailId).appendingPathExtension("png")
             
             let entryImage = EntryImage(
                 id: id,

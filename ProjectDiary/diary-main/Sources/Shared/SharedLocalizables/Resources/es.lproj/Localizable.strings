@@ -62,6 +62,7 @@
 "Entries.Edit" = "Editar";
 "Entries.FakeEntry.FirstMessage" = "Hoy he ido al cine";
 "Entries.FakeEntry.SecondMessage" = "He empezado a leer un libro";
+"Entries.Share" = "Compartir";
 
 // AddEntryFeature
 

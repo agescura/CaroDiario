@@ -23,7 +23,6 @@
 /* Begin PBXFileReference section */
 		95D9A10326C2C5270035FCC1 /* EntryDetailFeaturePreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EntryDetailFeaturePreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95D9A10626C2C5270035FCC1 /* EntryDetailFeaturePreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryDetailFeaturePreviewApp.swift; sourceTree = "<group>"; };
-		95D9A10826C2C5270035FCC1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		95D9A10A26C2C5280035FCC1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		95D9A10D26C2C5280035FCC1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		95D9A10F26C2C5280035FCC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -69,7 +68,6 @@
 			isa = PBXGroup;
 			children = (
 				95D9A10626C2C5270035FCC1 /* EntryDetailFeaturePreviewApp.swift */,
-				95D9A10826C2C5270035FCC1 /* ContentView.swift */,
 				95D9A10A26C2C5280035FCC1 /* Assets.xcassets */,
 				95D9A10F26C2C5280035FCC1 /* Info.plist */,
 				95D9A10C26C2C5280035FCC1 /* Preview Content */,

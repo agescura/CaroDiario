@@ -212,7 +212,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
                 buttons: [
                     .cancel(.init("Cancel".localized)),
                     .default(.init("Entries.Edit".localized), action: .send(.presentAddEntry(true))),
-                    .destructive(.init("Entries.Remove.Action".localized), action: .send(.alertRemoveButtonTapped))
+                    .default(.init("Entries.Share".localized), action: .send(.processShare))
                 ])
             return .none
             
@@ -334,16 +334,7 @@ public struct EntryDetailView: View {
             }
             .navigationBarTitle(viewStore.entry.stringLongDate, displayMode: .inline)
             .navigationBarItems(
-                trailing: HStack {
-                    Button(action: {
-                        viewStore.send(.processShare)
-                    }) {
-                        Image(systemName: "square.and.arrow.up")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(.chambray)
-                    }
+                trailing: HStack(spacing: 16) {
                     
                     Button(
                         action: {
@@ -351,7 +342,7 @@ public struct EntryDetailView: View {
                         }, label: {
                             Image(systemName: "trash")
                                 .resizable()
-                                .aspectRatio(contentMode: .fill)
+                                .aspectRatio(contentMode: .fit)
                                 .frame(width: 16, height: 16)
                                 .foregroundColor(.chambray)
                         }
@@ -359,16 +350,20 @@ public struct EntryDetailView: View {
                     
                     Button(
                         action: {
-                            viewStore.send(.presentAddEntry(true))
+                            viewStore.send(.meatballActionSheetButtonTapped)
                         }, label: {
-                            Image(systemName: "pencil.circle")
+                            Image(systemName: "ellipsis")
                                 .resizable()
-                                .aspectRatio(contentMode: .fill)
+                                .aspectRatio(contentMode: .fit)
                                 .frame(width: 16, height: 16)
                                 .foregroundColor(.chambray)
                         }
                     )
                 }
+            )
+            .confirmationDialog(
+                store.scope(state: \.meatballActionSheet),
+                dismiss: .dismissMeatballActionSheet
             )
         }
     }
