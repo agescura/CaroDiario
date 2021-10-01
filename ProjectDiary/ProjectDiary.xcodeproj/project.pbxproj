@@ -16,8 +16,6 @@
 		954422F926F669D9002C1E1C /* CoreDataClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 954422F826F669D9002C1E1C /* CoreDataClientLive */; };
 		954422FB26F669DF002C1E1C /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 954422FA26F669DF002C1E1C /* FileClientLive */; };
 		9544230326F691EF002C1E1C /* PDFKitClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9544230226F691EF002C1E1C /* PDFKitClientLive */; };
-		9553330927034F3A00D2FC02 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9553330827034F3A00D2FC02 /* CloudKit.framework */; };
-		9553330A27034FDF00D2FC02 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9553330827034F3A00D2FC02 /* CloudKit.framework */; };
 		955764DC26D7A86700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955764DB26D7A86700C8BD84 /* AVCaptureDeviceClientLive */; };
 		9565C2DB26D989DD004DB3D9 /* AVAudioPlayerClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2DA26D989DD004DB3D9 /* AVAudioPlayerClientLive */; };
 		9565C2DD26D989E3004DB3D9 /* AVAudioRecorderClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2DC26D989E3004DB3D9 /* AVAudioRecorderClientLive */; };
@@ -127,7 +125,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9553330A27034FDF00D2FC02 /* CloudKit.framework in Frameworks */,
 				954422F926F669D9002C1E1C /* CoreDataClientLive in Frameworks */,
 				954422FB26F669DF002C1E1C /* FileClientLive in Frameworks */,
 			);
@@ -144,7 +141,6 @@
 				955764DC26D7A86700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */,
 				9565C2DB26D989DD004DB3D9 /* AVAudioPlayerClientLive in Frameworks */,
 				95ABFF4826B48BD9001DAAE7 /* UIApplicationClientLive in Frameworks */,
-				9553330927034F3A00D2FC02 /* CloudKit.framework in Frameworks */,
 				9544230326F691EF002C1E1C /* PDFKitClientLive in Frameworks */,
 				95ABFF4A26B48BD9001DAAE7 /* UserDefaultsClientLive in Frameworks */,
 				956952BE26C0788300D73FAD /* FeedbackGeneratorClientLive in Frameworks */,
@@ -496,7 +492,7 @@
 				CODE_SIGN_ENTITLEMENTS = ProjectDiary/ProjectDiaryDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				INFOPLIST_FILE = ProjectDiary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -631,7 +627,7 @@
 				CODE_SIGN_ENTITLEMENTS = Share/ShareDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -664,7 +660,7 @@
 				CODE_SIGN_ENTITLEMENTS = Share/ShareRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Share/Info.plist;
@@ -753,7 +749,7 @@
 				CODE_SIGN_ENTITLEMENTS = ProjectDiary/ProjectDiary.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				INFOPLIST_FILE = ProjectDiary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
