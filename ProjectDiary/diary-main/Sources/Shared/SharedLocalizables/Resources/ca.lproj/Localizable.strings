@@ -128,6 +128,7 @@
 "Settings.About" = "Quant a Caro Diario";
 "Settings.Version" = "Versió";
 "Settings.ReportBug" = "Reportar un error";
+"Settings.Biometric.Test" = "Per a poder activar el %@, primer hem de comprovar que funciona correctament";
 
 // PasscodeFeature
 
@@ -139,8 +140,8 @@
 "Passcode.Dismiss" = "Cancel.lar";
 "Passcode.Turnoff" = "Desactivar el codi";
 "Passcode.Different" = "Els codis no coincideixen";
-"Passcode.Turnoff.Message" = "Vols desactivar el Face ID/Touch ID?";
-"Passcode.UnlockFaceId" = "Desbloquejar amb Face ID/Touch ID";
+"Passcode.Turnoff.Message" = "Vols desactivar el %@?";
+"Passcode.UnlockFaceId" = "Desbloquejar amb %@";
 "Passcode.Autolock" = "Bloqueig automàtic";
 "Passcode.Always" = "Sempre";
 "Passcode.Disabled" = "Sols a l'inici";

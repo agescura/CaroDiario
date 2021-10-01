@@ -34,6 +34,9 @@ extension UIApplicationClient {
                     UIApplication.shared.open(url, options: options)
                 }
         },
+        canOpen: {
+            UIApplication.shared.canOpenURL($0)
+        },
         share: { data in
                 .fireAndForget {
                     guard let windowScene = UIApplication.shared.windows.first?.windowScene else { return }

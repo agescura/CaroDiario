@@ -18,6 +18,9 @@ public struct LockScreenState: Equatable {
     var codeToMatch: String = ""
     var wrongAttempts: Int = 0
     
+    public var authenticationType: LocalAuthenticationClient.AuthenticationType = .none
+    public var buttons: [LockScreenNumber] = []
+    
     public init(
         code: String,
         codeToMatch: String = ""
@@ -28,12 +31,14 @@ public struct LockScreenState: Equatable {
 }
 
 public enum LockScreenAction: Equatable {
-    case numberButtonTapped(Int?)
+    case numberButtonTapped(LockScreenNumber)
     case matchedCode
     case failedCode
     case reset
     
     case onAppear
+    case checkFaceId
+    case determine(LocalAuthenticationClient.AuthenticationType)
     case faceIdResponse(Bool)
 }
 
@@ -55,8 +60,11 @@ public struct LockScreenEnvironment {
 
 public let lockScreenReducer = Reducer<LockScreenState, LockScreenAction, LockScreenEnvironment> { state, action, environment in
     switch action {
-    case let .numberButtonTapped(value):
-        if let value = value {
+    case let .numberButtonTapped(item):
+        if item == .biometric(.touchId) || item == .biometric(.faceId) {
+            return Effect(value: .checkFaceId)
+        }
+        if let value = item.value {
             state.codeToMatch.append("\(value)")
         }
         if state.code == state.codeToMatch {
@@ -67,6 +75,34 @@ public let lockScreenReducer = Reducer<LockScreenState, LockScreenAction, LockSc
         return .none
         
     case .onAppear:
+        return .merge(
+            Effect(value: .checkFaceId),
+            environment.localAuthenticationClient.determineType()
+                .map(LockScreenAction.determine)
+        )
+        
+    case let .determine(type):
+        state.authenticationType = type
+        
+        let leftButton: LockScreenNumber = type == .none || !environment.userDefaultsClient.isFaceIDActivate ? .emptyLeft : .biometric(type)
+        state.buttons = [
+            .number(1),
+            .number(2),
+            .number(3),
+            .number(4),
+            .number(5),
+            .number(6),
+            .number(7),
+            .number(8),
+            .number(9),
+            leftButton,
+            .number(0),
+            .emptyRight
+        ]
+        return .none
+        
+    case .checkFaceId:
+        
         if environment.userDefaultsClient.isFaceIDActivate {
             return environment.localAuthenticationClient.evaluate("JIJIJAJAJ")
                 .receive(on: environment.mainQueue)
@@ -108,20 +144,6 @@ public struct LockScreenView: View {
             GridItem(.flexible()),
             GridItem(.flexible())
         ]
-    let data: [LockScreenNumber] = [
-        .number(1),
-        .number(2),
-        .number(3),
-        .number(4),
-        .number(5),
-        .number(6),
-        .number(7),
-        .number(8),
-        .number(9),
-        .number(0),
-        .emptyLeft,
-        .emptyRight
-    ]
     
     public init(store: Store<LockScreenState, LockScreenAction>) {
         self.store = store
@@ -141,10 +163,10 @@ public struct LockScreenView: View {
                 .modifier(ShakeGeometryEffect(animatableData: CGFloat(viewStore.wrongAttempts)))
                 Spacer()
                 LazyVGrid(columns: columns) {
-                    ForEach(data) { item in
+                    ForEach(viewStore.buttons) { item in
                         Button(action: {
                             withAnimation(.default) {
-                                viewStore.send(.numberButtonTapped(item.value))
+                                viewStore.send(.numberButtonTapped(item))
                             }
                         }) {
                             LockScreenButton(number: item)
@@ -154,19 +176,20 @@ public struct LockScreenView: View {
                 .padding(.horizontal)
                 Spacer()
             }
-//            .onAppear {
-//                viewStore.send(.onAppear)
-//            }
+            .onAppear {
+                viewStore.send(.onAppear)
+            }
         }
     }
 }
 
-enum LockScreenNumber: Equatable, Identifiable {
+public enum LockScreenNumber: Equatable, Identifiable {
     case number(Int)
     case emptyLeft
     case emptyRight
+    case biometric(LocalAuthenticationClient.AuthenticationType)
     
-    var id: String {
+    public var id: String {
         switch self {
         case let .number(value):
             return "\(value)"
@@ -174,14 +197,20 @@ enum LockScreenNumber: Equatable, Identifiable {
             return "emptyLeft"
         case .emptyRight:
             return "emptyRight"
+        case .biometric(.touchId):
+            return "touchid"
+        case .biometric(.faceId):
+            return "faceid"
+        case .biometric:
+            return "none"
         }
     }
     
-    var value: Int? {
+    public var value: Int? {
         switch self {
         case let .number(value):
             return value
-        case .emptyLeft, .emptyRight:
+        case .emptyLeft, .emptyRight, .biometric:
             return nil
         }
     }
@@ -205,6 +234,13 @@ struct LockScreenButton: View {
                 .foregroundColor(.adaptiveWhite)
                 .padding(32)
                 .background(Color.clear)
+        case .biometric:
+            Image(systemName: number.id)
+                .adaptiveFont(.latoRegular, size: 32)
+                .foregroundColor(.adaptiveWhite)
+                .padding(20)
+                .background(Color.chambray)
+                .clipShape(Circle())
         }
     }
 }

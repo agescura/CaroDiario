@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import UserDefaultsClient
 import SharedViews
+import LocalAuthenticationClient
 
 public struct ActivatePasscodeState: Equatable {
     public var insertPasscodeState: InsertPasscodeState?
@@ -24,13 +25,16 @@ public enum ActivatePasscodeAction: Equatable {
 
 public struct ActivatePasscodeEnvironment {
     public let userDefaultsClient: UserDefaultsClient
+    public let localAuthenticationClient: LocalAuthenticationClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     
     public init(
         userDefaultsClient: UserDefaultsClient,
+        localAuthenticationClient: LocalAuthenticationClient,
         mainQueue: AnySchedulerOf<DispatchQueue>
     ) {
         self.userDefaultsClient = userDefaultsClient
+        self.localAuthenticationClient = localAuthenticationClient
         self.mainQueue = mainQueue
     }
 }
@@ -43,7 +47,9 @@ public let activatePasscodeReducer: Reducer<ActivatePasscodeState, ActivatePassc
             state: \ActivatePasscodeState.insertPasscodeState,
             action: /ActivatePasscodeAction.insertPasscodeAction,
             environment: { InsertPasscodeEnvironment(
-                userDefaultsClient: $0.userDefaultsClient)
+                userDefaultsClient: $0.userDefaultsClient,
+                localAuthenticationClient: $0.localAuthenticationClient,
+                mainQueue: $0.mainQueue)
             }
         ),
     

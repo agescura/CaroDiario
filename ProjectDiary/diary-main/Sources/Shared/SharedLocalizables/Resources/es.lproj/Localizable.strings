@@ -128,6 +128,7 @@
 "Settings.About" = "Acerca de Caro Diario";
 "Settings.Version" = "Versión";
 "Settings.ReportBug" = "Reportar un error";
+"Settings.Biometric.Test" = "Para poder activar el %@, primero tenemos que comprobar que funciona correctamente";
 
 // PasscodeFeature
 
@@ -139,8 +140,8 @@
 "Passcode.Dismiss" = "Cancelar";
 "Passcode.Turnoff" = "Desactivar el código";
 "Passcode.Different" = "Los códigos no coinciden";
-"Passcode.Turnoff.Message" = "¿Quieres desactivar el Face ID/Touch ID?";
-"Passcode.UnlockFaceId" = "Desbloquear con Face ID/Touch ID";
+"Passcode.Turnoff.Message" = "¿Quieres desactivar el %@?";
+"Passcode.UnlockFaceId" = "Desbloquear con %@";
 "Passcode.Autolock" = "Bloqueo automático";
 "Passcode.Always" = "Siempre";
 "Passcode.Disabled" = "Solo al inicio";

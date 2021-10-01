@@ -10,8 +10,11 @@ import ComposableArchitecture
 import SharedViews
 import UserDefaultsClient
 import SharedLocalizables
+import LocalAuthenticationClient
 
 public struct MenuPasscodeState: Equatable {
+    public var authenticationType: LocalAuthenticationClient.AuthenticationType
+    
     var actionSheet: ConfirmationDialogState<MenuPasscodeAction>?
     public var faceIdEnabled: Bool = false
     
@@ -19,8 +22,11 @@ public struct MenuPasscodeState: Equatable {
     public let listTimesForAskPasscode: [TimeForAskPasscode] = [.never, .always, .after(minutes: 1), .after(minutes: 5), .after(minutes: 30), .after(minutes: 60)]
     
     public init(
+        authenticationType: LocalAuthenticationClient.AuthenticationType,
         optionTimeForAskPasscode: Int
     ) {
+        self.authenticationType = authenticationType
+        
         if optionTimeForAskPasscode == -2 {
             self.optionTimeForAskPasscode = .never
         } else if optionTimeForAskPasscode == -1 {
@@ -62,16 +68,23 @@ public enum MenuPasscodeAction: Equatable {
     case actionSheetTurnoffTapped
     
     case toggleFaceId(isOn: Bool)
+    case faceId(response: Bool)
     case optionTimeForAskPasscode(changed: MenuPasscodeState.TimeForAskPasscode)
 }
 
 public struct MenuPasscodeEnvironment {
     public let userDefaultsClient: UserDefaultsClient
+    public let localAuthenticationClient: LocalAuthenticationClient
+    public let mainQueue: AnySchedulerOf<DispatchQueue>
     
     public init(
-        userDefaultsClient: UserDefaultsClient
+        userDefaultsClient: UserDefaultsClient,
+        localAuthenticationClient: LocalAuthenticationClient,
+        mainQueue: AnySchedulerOf<DispatchQueue>
     ) {
         self.userDefaultsClient = userDefaultsClient
+        self.localAuthenticationClient = localAuthenticationClient
+        self.mainQueue = mainQueue
     }
 }
 
@@ -87,7 +100,7 @@ public let menuPasscodeReducer = Reducer<MenuPasscodeState, MenuPasscodeAction, 
         
     case .actionSheetButtonTapped:
         state.actionSheet = .init(
-            title: .init("Passcode.Turnoff.Message".localized),
+            title: .init("Passcode.Turnoff.Message".localized(with: [state.authenticationType.rawValue])),
             buttons: [
                 .cancel(.init("Cancel".localized), action: .send(.actionSheetCancelTapped)),
                 .default(.init("Passcode.Turnoff".localized), action: .send(.actionSheetTurnoffTapped))
@@ -102,9 +115,20 @@ public let menuPasscodeReducer = Reducer<MenuPasscodeState, MenuPasscodeAction, 
     case .actionSheetTurnoffTapped:
         return .none
         
-    case let  .toggleFaceId(isOn: value):
-        state.faceIdEnabled = value
-        return environment.userDefaultsClient.setFaceIDActivate(value)
+    case let .toggleFaceId(isOn: value):
+        if !value {
+            state.faceIdEnabled = value
+            return environment.userDefaultsClient.setFaceIDActivate(value)
+                .fireAndForget()
+        }
+        return environment.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.authenticationType.rawValue]))
+            .receive(on: environment.mainQueue)
+            .eraseToEffect()
+            .map(MenuPasscodeAction.faceId(response:))
+        
+    case let .faceId(response: response):
+        state.faceIdEnabled = response
+        return environment.userDefaultsClient.setFaceIDActivate(response)
             .fireAndForget()
         
     case let .optionTimeForAskPasscode(changed: newValue):
@@ -151,16 +175,16 @@ public struct MenuPasscodeView: View {
                 }
                 
                 Section(header: Text(""), footer: Text("")) {
-//                    Toggle(
-//                        isOn: viewStore.binding(
-//                            get: \.faceIdEnabled,
-//                            send: MenuPasscodeAction.toggleFaceId
-//                        )
-//                    ) {
-//                        Text("Passcode.UnlockFaceId".localized)
-//                            .foregroundColor(.chambray)
-//                    }
-//                    .toggleStyle(SwitchToggleStyle(tint: .chambray))
+                    Toggle(
+                        isOn: viewStore.binding(
+                            get: \.faceIdEnabled,
+                            send: MenuPasscodeAction.toggleFaceId
+                        )
+                    ) {
+                        Text("Passcode.UnlockFaceId".localized(with: [viewStore.authenticationType.rawValue]))
+                            .foregroundColor(.chambray)
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: .chambray))
                     
                     Picker("",  selection: viewStore.binding(
                         get: \.optionTimeForAskPasscode,

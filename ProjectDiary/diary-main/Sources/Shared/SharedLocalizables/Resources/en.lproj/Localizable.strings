@@ -128,6 +128,7 @@
 "Settings.About" = "About Caro Diario";
 "Settings.Version" = "Version";
 "Settings.ReportBug" = "Report a bug";
+"Settings.Biometric.Test" = "To activate %@, we need to check it works perfectly.";
 
 // PasscodeFeature
 
@@ -139,8 +140,8 @@
 "Passcode.Dismiss" = "Dismiss";
 "Passcode.Turnoff" = "Turn Passcode Off";
 "Passcode.Different" = "The codes don't match";
-"Passcode.Turnoff.Message" = "Do you want to turn off the Face ID/Touch ID?";
-"Passcode.UnlockFaceId" = "Unlock with Face ID/Touch ID";
+"Passcode.Turnoff.Message" = "Do you want to turn off the %@?";
+"Passcode.UnlockFaceId" = "Unlock with %@";
 "Passcode.Autolock" = "Auto-Lock";
 "Passcode.Always" = "Always";
 "Passcode.Disabled" = "Only when starts";

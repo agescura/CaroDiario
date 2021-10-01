@@ -14,6 +14,7 @@ extension UIApplicationClient {
         supportsAlternateIcons: { true },
         openSettings: { .fireAndForget {} },
         open: { _, _ in .fireAndForget {} },
+        canOpen: { _ in true },
         share: { _ in .fireAndForget {} }
     )
 }

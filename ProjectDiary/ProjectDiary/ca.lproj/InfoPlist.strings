@@ -8,4 +8,4 @@
 
 NSMicrophoneUsageDescription = "Caro Diario necessita accés al micròfon per a poder afegir una nota de veu al teu diari";
 NSCameraUsageDescription = "Caro Diario necessita accés a la càmera per a poder afegir una foto o un video al teu diari";
-NSFaceIDUsageDescription = "Caro Diario necessita Face ID/Touch ID per a poder desbloquejar l'aplicació sense introduïr el teu codi secret";
+NSFaceIDUsageDescription = "Caro Diario necessita Face ID per a poder desbloquejar l'aplicació sense introduïr el teu codi secret";
