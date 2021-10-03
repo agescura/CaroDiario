@@ -365,11 +365,11 @@ public struct EntryDetailView: View {
                                 .foregroundColor(.chambray)
                         }
                     )
+                        .confirmationDialog(
+                            store.scope(state: \.meatballActionSheet),
+                            dismiss: .dismissMeatballActionSheet
+                        )
                 }
-            )
-            .confirmationDialog(
-                store.scope(state: \.meatballActionSheet),
-                dismiss: .dismissMeatballActionSheet
             )
         }
     }
