@@ -22,6 +22,7 @@ import AVAudioPlayerClient
 import AVAudioRecorderClient
 import StoreKitClient
 import PDFKitClient
+import AVAssetClient
 
 public struct RootState: Equatable {
     public var appDelegate: AppDelegateState
@@ -76,6 +77,7 @@ public struct RootEnvironment {
     public let avAudioRecorderClient: AVAudioRecorderClient
     public let storeKitClient: StoreKitClient
     public let pdfKitClient: PDFKitClient
+    public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let mainRunLoop: AnySchedulerOf<RunLoop>
@@ -96,6 +98,7 @@ public struct RootEnvironment {
         avAudioRecorderClient: AVAudioRecorderClient,
         storeKitClient: StoreKitClient,
         pdfKitClient: PDFKitClient,
+        avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         mainRunLoop: AnySchedulerOf<RunLoop>,
@@ -114,6 +117,7 @@ public struct RootEnvironment {
         self.avAudioRecorderClient = avAudioRecorderClient
         self.storeKitClient = storeKitClient
         self.pdfKitClient = pdfKitClient
+        self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
         self.mainRunLoop = mainRunLoop
@@ -147,6 +151,7 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
                     avAudioRecorderClient: $0.avAudioRecorderClient,
                     storeKitClient: $0.storeKitClient,
                     pdfKitClient: $0.pdfKitClient,
+                    avAssetClient: $0.avAssetClient,
                     mainQueue: $0.mainQueue,
                     backgroundQueue: $0.backgroundQueue,
                     mainRunLoop: $0.mainRunLoop,

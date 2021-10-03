@@ -21,6 +21,7 @@ import AVAudioRecorderClient
 import AVAudioSessionClient
 import AVAudioPlayerClient
 import AudioRecordFeature
+import AVAssetClient
 
 public struct AddEntryState: Equatable {
     public var type: AccessType
@@ -102,6 +103,7 @@ public enum AddEntryAction: Equatable {
     case loadImage(UIImage)
     case loadImageResponse(EntryImage)
     case loadVideo(URL)
+    case generatedThumbnail(URL, UIImage)
     case loadVideoResponse(EntryVideo)
     case loadAudio(URL)
     case loadAudioResponse(EntryAudio)
@@ -127,6 +129,7 @@ public struct AddEntryEnvironment {
     public let avAudioSessionClient: AVAudioSessionClient
     public let avAudioPlayerClient: AVAudioPlayerClient
     public let avAudioRecorderClient: AVAudioRecorderClient
+    public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let mainRunLoop: AnySchedulerOf<RunLoop>
@@ -140,6 +143,7 @@ public struct AddEntryEnvironment {
         avAudioSessionClient: AVAudioSessionClient,
         avAudioPlayerClient: AVAudioPlayerClient,
         avAudioRecorderClient: AVAudioRecorderClient,
+        avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         mainRunLoop: AnySchedulerOf<RunLoop>,
@@ -152,6 +156,7 @@ public struct AddEntryEnvironment {
         self.avAudioSessionClient = avAudioSessionClient
         self.avAudioPlayerClient = avAudioPlayerClient
         self.avAudioRecorderClient = avAudioRecorderClient
+        self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
         self.mainRunLoop = mainRunLoop
@@ -184,6 +189,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 avAudioSessionClient: $0.avAudioSessionClient,
                 avAudioPlayerClient: $0.avAudioPlayerClient,
                 avAudioRecorderClient: $0.avAudioRecorderClient,
+                avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 mainRunLoop: $0.mainRunLoop,
@@ -364,6 +370,12 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 .fireAndForget()
             
         case let .loadVideo(url):
+            return environment.avAssetClient.generateThumbnail(url)
+                .replaceError(with: UIImage())
+                .eraseToEffect()
+                .map({ AddEntryAction.generatedThumbnail(url, $0) })
+            
+        case let .generatedThumbnail(url, image):
             let pathExtension = url.pathExtension
             let id = environment.uuid()
             let thumbnailId = environment.uuid()
@@ -377,7 +389,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 url: path
             )
             
-            return environment.fileClient.addVideo(url, entryVideo, environment.backgroundQueue)
+            return environment.fileClient.addVideo(url, image, entryVideo, environment.backgroundQueue)
                 .receive(on: environment.mainQueue)
                 .eraseToEffect()
                 .map(AddEntryAction.loadVideoResponse)

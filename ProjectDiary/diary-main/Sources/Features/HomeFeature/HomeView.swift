@@ -24,6 +24,7 @@ import AVAudioPlayerClient
 import AVAudioRecorderClient
 import StoreKitClient
 import PDFKitClient
+import AVAssetClient
 
 public struct HomeState: Equatable {
     public var tabBars: [TabViewType]
@@ -67,6 +68,7 @@ public struct HomeEnvironment {
     public let avAudioPlayerClient: AVAudioPlayerClient
     public let avAudioRecorderClient: AVAudioRecorderClient
     public let pdfKitClient: PDFKitClient
+    public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let storeKitClient: StoreKitClient
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
@@ -87,6 +89,7 @@ public struct HomeEnvironment {
         avAudioRecorderClient: AVAudioRecorderClient,
         storeKitClient: StoreKitClient,
         pdfKitClient: PDFKitClient,
+        avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         mainRunLoop: AnySchedulerOf<RunLoop>,
@@ -105,6 +108,7 @@ public struct HomeEnvironment {
         self.avAudioRecorderClient = avAudioRecorderClient
         self.storeKitClient = storeKitClient
         self.pdfKitClient = pdfKitClient
+        self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
         self.mainRunLoop = mainRunLoop
@@ -127,6 +131,7 @@ public let homeReducer: Reducer<HomeState, HomeAction, HomeEnvironment> = .combi
             avAudioSessionClient: $0.avAudioSessionClient,
             avAudioPlayerClient: $0.avAudioPlayerClient,
             avAudioRecorderClient: $0.avAudioRecorderClient,
+            avAssetClient: $0.avAssetClient,
             mainQueue: $0.mainQueue,
             backgroundQueue: $0.backgroundQueue,
             mainRunLoop: $0.mainRunLoop,
@@ -146,6 +151,7 @@ public let homeReducer: Reducer<HomeState, HomeAction, HomeEnvironment> = .combi
             avAudioSessionClient: $0.avAudioSessionClient,
             avAudioPlayerClient: $0.avAudioPlayerClient,
             avAudioRecorderClient: $0.avAudioRecorderClient,
+            avAssetClient: $0.avAssetClient,
             mainQueue: $0.mainQueue,
             backgroundQueue: $0.backgroundQueue,
             mainRunLoop: $0.mainRunLoop,

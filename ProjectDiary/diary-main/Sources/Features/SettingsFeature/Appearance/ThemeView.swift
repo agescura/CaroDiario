@@ -49,6 +49,7 @@ public let themeReducer: Reducer<ThemeState, ThemeAction, ThemeEnvironment> = .c
                 avAudioSessionClient: .noop,
                 avAudioPlayerClient: .noop,
                 avAudioRecorderClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 mainRunLoop: $0.mainRunLoop,

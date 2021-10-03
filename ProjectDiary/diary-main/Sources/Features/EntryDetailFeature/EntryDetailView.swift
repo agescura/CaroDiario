@@ -19,6 +19,7 @@ import AddEntryFeature
 import AVAudioSessionClient
 import AVAudioPlayerClient
 import AVAudioRecorderClient
+import AVAssetClient
 
 public struct EntryDetailState: Equatable {
     public var entry: Entry
@@ -70,6 +71,7 @@ public struct EntryDetailEnvironment {
     public let avAudioSessionClient: AVAudioSessionClient
     public let avAudioPlayerClient: AVAudioPlayerClient
     public let avAudioRecorderClient: AVAudioRecorderClient
+    public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let mainRunLoop: AnySchedulerOf<RunLoop>
@@ -83,6 +85,7 @@ public struct EntryDetailEnvironment {
         avAudioSessionClient: AVAudioSessionClient,
         avAudioPlayerClient: AVAudioPlayerClient,
         avAudioRecorderClient: AVAudioRecorderClient,
+        avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         mainRunLoop: AnySchedulerOf<RunLoop>,
@@ -95,6 +98,7 @@ public struct EntryDetailEnvironment {
         self.avAudioSessionClient = avAudioSessionClient
         self.avAudioPlayerClient = avAudioPlayerClient
         self.avAudioRecorderClient = avAudioRecorderClient
+        self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
         self.mainRunLoop = mainRunLoop
@@ -127,6 +131,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
                 avAudioSessionClient: $0.avAudioSessionClient,
                 avAudioPlayerClient: $0.avAudioPlayerClient,
                 avAudioRecorderClient: $0.avAudioRecorderClient,
+                avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 mainRunLoop: $0.mainRunLoop,
@@ -147,6 +152,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
             avAudioSessionClient: $0.avAudioSessionClient,
             avAudioPlayerClient: $0.avAudioPlayerClient,
             avAudioRecorderClient: $0.avAudioRecorderClient,
+            avAssetClient: $0.avAssetClient,
             mainQueue: $0.mainQueue,
             backgroundQueue: $0.backgroundQueue,
             mainRunLoop: $0.mainRunLoop,

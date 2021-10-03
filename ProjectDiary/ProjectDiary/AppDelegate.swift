@@ -21,6 +21,7 @@ import AVAudioPlayerClientLive
 import AVAudioRecorderClientLive
 import StoreKitClientLive
 import PDFKitClientLive
+import AVAssetClientLive
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let store: Store<RootState, RootAction>
@@ -50,6 +51,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 avAudioRecorderClient: .live,
                 storeKitClient: .live,
                 pdfKitClient: .live,
+                avAssetClient: .live,
                 mainQueue: .main,
                 backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
                 mainRunLoop: .main,

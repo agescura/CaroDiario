@@ -8,7 +8,8 @@
 import ComposableArchitecture
 
 extension AVAssetClient {
-    static let noop = Self(
-        commonMetadata: { _ in .fireAndForget {} }
+    public static let noop = Self(
+        commonMetadata: { _ in .fireAndForget {} },
+        generateThumbnail: { _ in .fireAndForget {} }
     )
 }

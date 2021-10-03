@@ -27,6 +27,8 @@
 		956717E726B1E1DA00E2C1E9 /* Icon-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 956717E426B1E1DA00E2C1E9 /* Icon-1.png */; };
 		956952BE26C0788300D73FAD /* FeedbackGeneratorClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 956952BD26C0788300D73FAD /* FeedbackGeneratorClientLive */; };
 		9582631D26F6222500913B2F /* StoreKitClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9582631C26F6222500913B2F /* StoreKitClientLive */; };
+		958A6C3A270A1706005CF5B5 /* AVAssetClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 958A6C39270A1706005CF5B5 /* AVAssetClientLive */; };
+		958A6C3C270A1A98005CF5B5 /* AVAssetClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 958A6C3B270A1A98005CF5B5 /* AVAssetClientLive */; };
 		95ABFF3E26B48BD0001DAAE7 /* RootFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF3D26B48BD0001DAAE7 /* RootFeature */; };
 		95ABFF4026B48BD9001DAAE7 /* CoreDataClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF3F26B48BD9001DAAE7 /* CoreDataClientLive */; };
 		95ABFF4226B48BD9001DAAE7 /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF4126B48BD9001DAAE7 /* FileClientLive */; };
@@ -125,6 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				958A6C3A270A1706005CF5B5 /* AVAssetClientLive in Frameworks */,
 				954422F926F669D9002C1E1C /* CoreDataClientLive in Frameworks */,
 				954422FB26F669DF002C1E1C /* FileClientLive in Frameworks */,
 			);
@@ -137,6 +140,7 @@
 				95ABFF4226B48BD9001DAAE7 /* FileClientLive in Frameworks */,
 				95ABFF4026B48BD9001DAAE7 /* CoreDataClientLive in Frameworks */,
 				9565C2DD26D989E3004DB3D9 /* AVAudioRecorderClientLive in Frameworks */,
+				958A6C3C270A1A98005CF5B5 /* AVAssetClientLive in Frameworks */,
 				95ABFF3E26B48BD0001DAAE7 /* RootFeature in Frameworks */,
 				955764DC26D7A86700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */,
 				9565C2DB26D989DD004DB3D9 /* AVAudioPlayerClientLive in Frameworks */,
@@ -298,6 +302,7 @@
 				9565C2DC26D989E3004DB3D9 /* AVAudioRecorderClientLive */,
 				9582631C26F6222500913B2F /* StoreKitClientLive */,
 				9544230226F691EF002C1E1C /* PDFKitClientLive */,
+				958A6C3B270A1A98005CF5B5 /* AVAssetClientLive */,
 			);
 			productName = ProjectDiary;
 			productReference = BD2A3298447210A07EE095A2 /* ProjectDiary.app */;
@@ -340,6 +345,7 @@
 			packageProductDependencies = (
 				954422F826F669D9002C1E1C /* CoreDataClientLive */,
 				954422FA26F669DF002C1E1C /* FileClientLive */,
+				958A6C39270A1706005CF5B5 /* AVAssetClientLive */,
 			);
 			productName = Share;
 			productReference = 954422E926F66535002C1E1C /* Share.appex */;
@@ -838,6 +844,14 @@
 		9582631C26F6222500913B2F /* StoreKitClientLive */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StoreKitClientLive;
+		};
+		958A6C39270A1706005CF5B5 /* AVAssetClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVAssetClientLive;
+		};
+		958A6C3B270A1A98005CF5B5 /* AVAssetClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVAssetClientLive;
 		};
 		95ABFF3D26B48BD0001DAAE7 /* RootFeature */ = {
 			isa = XCSwiftPackageProductDependency;

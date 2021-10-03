@@ -16,7 +16,7 @@ extension FileClient {
             return .fireAndForget {}
         },
         loadImage: { _, _ in .fireAndForget {} },
-        addVideo: { _, _, _ in .fireAndForget {} },
+        addVideo: { _, _, _, _ in .fireAndForget {} },
         addAudio: { _, _ , _ in .fireAndForget {} }
     )
 }

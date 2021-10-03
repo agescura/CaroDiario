@@ -18,6 +18,7 @@ import AVAudioRecorderClient
 import AVAudioSessionClient
 import AVAudioPlayerClient
 import EntryDetailFeature
+import AVAssetClient
 
 public struct EntriesState: Equatable {
     public var isLoading = true
@@ -62,6 +63,7 @@ public struct EntriesEnvironment {
     public let avAudioSessionClient: AVAudioSessionClient
     public let avAudioPlayerClient: AVAudioPlayerClient
     public let avAudioRecorderClient: AVAudioRecorderClient
+    public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let mainRunLoop: AnySchedulerOf<RunLoop>
@@ -76,6 +78,7 @@ public struct EntriesEnvironment {
         avAudioSessionClient: AVAudioSessionClient,
         avAudioPlayerClient: AVAudioPlayerClient,
         avAudioRecorderClient: AVAudioRecorderClient,
+        avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         mainRunLoop: AnySchedulerOf<RunLoop>,
@@ -89,6 +92,7 @@ public struct EntriesEnvironment {
         self.avAudioSessionClient = avAudioSessionClient
         self.avAudioPlayerClient = avAudioPlayerClient
         self.avAudioRecorderClient = avAudioRecorderClient
+        self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
         self.mainRunLoop = mainRunLoop
@@ -111,6 +115,7 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
                 avAudioSessionClient: $0.avAudioSessionClient,
                 avAudioPlayerClient: $0.avAudioPlayerClient,
                 avAudioRecorderClient: $0.avAudioRecorderClient,
+                avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 mainRunLoop: $0.mainRunLoop,
@@ -136,6 +141,7 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
                 avAudioSessionClient: $0.avAudioSessionClient,
                 avAudioPlayerClient: $0.avAudioPlayerClient,
                 avAudioRecorderClient: $0.avAudioRecorderClient,
+                avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 mainRunLoop: $0.mainRunLoop,
@@ -156,6 +162,7 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
                 avAudioSessionClient: $0.avAudioSessionClient,
                 avAudioPlayerClient: $0.avAudioPlayerClient,
                 avAudioRecorderClient: $0.avAudioRecorderClient,
+                avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 mainRunLoop: $0.mainRunLoop,

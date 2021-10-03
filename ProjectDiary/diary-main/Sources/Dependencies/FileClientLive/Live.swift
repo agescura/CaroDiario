@@ -64,19 +64,17 @@ extension FileClient {
                         }
                     }
             },
-            addVideo: { source, entryVideo, queue in
-                .future { promise in
-                    queue.schedule {
-                        try? fileManager.copyItem(at: source, to: entryVideo.url)
-                        if let image = source.generateThumbnail() {
-                            try? image
+            addVideo: { source, thumbnail, entryVideo, queue in
+                    .future { promise in
+                        queue.schedule {
+                            try? fileManager.copyItem(at: source, to: entryVideo.url)
+                            try? thumbnail
                                 .resized(for: CGSize(width: 200, height: 200))
                                 .pngData()!
                                 .write(to: entryVideo.thumbnail, options: .atomic)
+                            promise(.success(entryVideo))
                         }
-                        promise(.success(entryVideo))
                     }
-                }
             },
             
             addAudio: { source, entryAudio, queue in
@@ -117,22 +115,22 @@ extension UIImage {
     }
 }
 
-import AVKit
-
-extension URL {
-    func generateThumbnail() -> UIImage? {
-        do {
-            let asset = AVURLAsset(url: self)
-            let imageGenerator = AVAssetImageGenerator(asset: asset)
-            imageGenerator.appliesPreferredTrackTransform = true
-            
-            let cgImage = try imageGenerator.copyCGImage(at: .zero,
-                                                         actualTime: nil)
-
-            return UIImage(cgImage: cgImage)
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-}
+//import AVKit
+//
+//extension URL {
+//    func generateThumbnail() -> UIImage? {
+//        do {
+//            let asset = AVURLAsset(url: self)
+//            let imageGenerator = AVAssetImageGenerator(asset: asset)
+//            imageGenerator.appliesPreferredTrackTransform = true
+//
+//            let cgImage = try imageGenerator.copyCGImage(at: .zero,
+//                                                         actualTime: nil)
+//
+//            return UIImage(cgImage: cgImage)
+//        } catch {
+//            print(error.localizedDescription)
+//            return nil
+//        }
+//    }
+//}

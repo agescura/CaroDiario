@@ -15,7 +15,7 @@ public struct FileClient {
     public var removeAttachments: ([URL], AnySchedulerOf<DispatchQueue>) -> Effect<Void, Never>
     public var addImage: (UIImage, EntryImage, AnySchedulerOf<DispatchQueue>) -> Effect<EntryImage, Never>
     public var loadImage: (EntryImage, AnySchedulerOf<DispatchQueue>) -> Effect<Data, Never>
-    public var addVideo: (URL, EntryVideo, AnySchedulerOf<DispatchQueue>) -> Effect<EntryVideo, Never>
+    public var addVideo: (URL, UIImage, EntryVideo, AnySchedulerOf<DispatchQueue>) -> Effect<EntryVideo, Never>
     public var addAudio: (URL, EntryAudio, AnySchedulerOf<DispatchQueue>) -> Effect<EntryAudio, Never>
     
     public init(
@@ -23,7 +23,7 @@ public struct FileClient {
         removeAttachments: @escaping ([URL], AnySchedulerOf<DispatchQueue>) -> Effect<Void, Never>,
         addImage: @escaping (UIImage, EntryImage, AnySchedulerOf<DispatchQueue>) -> Effect<EntryImage, Never>,
         loadImage: @escaping (EntryImage, AnySchedulerOf<DispatchQueue>) -> Effect<Data, Never>,
-        addVideo: @escaping (URL, EntryVideo, AnySchedulerOf<DispatchQueue>) -> Effect<EntryVideo, Never>,
+        addVideo: @escaping (URL, UIImage, EntryVideo, AnySchedulerOf<DispatchQueue>) -> Effect<EntryVideo, Never>,
         addAudio: @escaping (URL, EntryAudio, AnySchedulerOf<DispatchQueue>) -> Effect<EntryAudio, Never>
     ) {
         self.path = path

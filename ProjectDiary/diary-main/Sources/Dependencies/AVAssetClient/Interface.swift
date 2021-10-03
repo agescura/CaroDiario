@@ -6,14 +6,18 @@
 //
 
 import ComposableArchitecture
+import UIKit
 
 public struct AVAssetClient {
     public var commonMetadata: (URL) -> Effect<CommonMetadata, Never>
+    public var generateThumbnail: (URL) -> Effect<UIImage, Error>
     
     public init(
-        commonMetadata: @escaping (URL) -> Effect<AVAssetClient.CommonMetadata, Never>
+        commonMetadata: @escaping (URL) -> Effect<AVAssetClient.CommonMetadata, Never>,
+        generateThumbnail: @escaping (URL) -> Effect<UIImage, Error>
     ) {
         self.commonMetadata = commonMetadata
+        self.generateThumbnail = generateThumbnail
     }
     
     public struct CommonMetadata: Equatable {
