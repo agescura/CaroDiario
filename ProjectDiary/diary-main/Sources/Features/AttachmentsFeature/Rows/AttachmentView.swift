@@ -49,6 +49,30 @@ public enum AttachmentState: Equatable {
             return value.entryAudio
         }
     }
+    
+    public var date: Date {
+        switch self {
+        case let .image(value):
+            return value.entryImage.lastUpdated
+        case let .video(value):
+            return value.entryVideo.lastUpdated
+        case let .audio(value):
+            return value.entryAudio.lastUpdated
+        }
+    }
+}
+
+extension AttachmentState: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        switch self {
+        case let .image(state):
+            hasher.combine(state.entryImage.id)
+        case let .video(state):
+            hasher.combine(state.entryVideo.id)
+        case let .audio(state):
+            hasher.combine(state.entryAudio.id)
+        }
+    }
 }
 
 public enum AttachmentAction: Equatable {
@@ -57,39 +81,13 @@ public enum AttachmentAction: Equatable {
     case audio(AttachmentAudioAction)
 }
 
-public struct AttachmentEnvironment {
-    public let fileClient: FileClient
-    public let applicationClient: UIApplicationClient
-    public var avAudioPlayerClient: AVAudioPlayerClient
-    public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    
-    public init(
-        fileClient: FileClient,
-        applicationClient: UIApplicationClient,
-        avAudioPlayerClient: AVAudioPlayerClient,
-        mainQueue: AnySchedulerOf<DispatchQueue>,
-        backgroundQueue: AnySchedulerOf<DispatchQueue>
-    ) {
-        self.fileClient = fileClient
-        self.applicationClient = applicationClient
-        self.avAudioPlayerClient = avAudioPlayerClient
-        self.mainQueue = mainQueue
-        self.backgroundQueue = backgroundQueue
-    }
-}
-
-public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, AttachmentEnvironment> = .combine(
+public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, Void> = .combine(
     
     attachmentImageReducer
         .pullback(
             state: /AttachmentState.image,
             action: /AttachmentAction.image,
-            environment: { AttachmentImageEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
+            environment: { _ in ()
             }
         ),
     
@@ -97,11 +95,7 @@ public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, Attachm
         .pullback(
             state: /AttachmentState.video,
             action: /AttachmentAction.video,
-            environment: { AttachmentVideoEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
+            environment: { _ in ()
             }
         ),
     
@@ -109,12 +103,7 @@ public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, Attachm
         .pullback(
             state: /AttachmentState.audio,
             action: /AttachmentAction.audio,
-            environment: { AttachmentAudioEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                avAudioPlayerClient: $0.avAudioPlayerClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
+            environment: { _ in ()
             }
         ),
     

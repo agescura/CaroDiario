@@ -501,7 +501,8 @@ let package = Package(
                 "AVAudioRecorderClient",
                 "AVAudioSessionClient",
                 "AVAudioPlayerClient",
-                "AudioRecordFeature"
+                "AudioRecordFeature",
+                "AVAssetClient"
             ],
             path: "Sources/Features/AddEntryFeature"
         ),

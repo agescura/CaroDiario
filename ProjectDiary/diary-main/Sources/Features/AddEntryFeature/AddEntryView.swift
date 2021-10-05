@@ -170,12 +170,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
         .pullback(
             state: \AttachmentRowState.attachment,
             action: /AttachmentRowAction.attachment,
-            environment: { AttachmentEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                avAudioPlayerClient: $0.avAudioPlayerClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
+            environment: { _ in ()
             }
         )
         .forEach(
@@ -427,20 +422,20 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             return environment.coreDataClient.addAttachmentEntry(entryAudio, state.entry.id)
                 .map({ AddEntryAction.presentAudioRecord(false) })
             
-        case let .attachments(id: id, action: .attachment(.video(.remove))),
-            let .attachments(id: id, action: .attachment(.image(.remove))):
-            guard let attachmentState = state.attachments[id: id]?.attachment else {
-                return .none
-            }
-            
-            return environment.fileClient.removeAttachments(
-                [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-                environment.backgroundQueue
-            )
-                .receive(on: environment.mainQueue)
-                .eraseToEffect()
-                .map { _ in attachmentState.attachment.id }
-                .map(AddEntryAction.removeAttachmentResponse)
+//        case let .attachments(id: id, action: .attachment(.video(.remove))),
+//            let .attachments(id: id, action: .attachment(.image(.remove))):
+//            guard let attachmentState = state.attachments[id: id]?.attachment else {
+//                return .none
+//            }
+//            
+//            return environment.fileClient.removeAttachments(
+//                [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
+//                environment.backgroundQueue
+//            )
+//                .receive(on: environment.mainQueue)
+//                .eraseToEffect()
+//                .map { _ in attachmentState.attachment.id }
+//                .map(AddEntryAction.removeAttachmentResponse)
             
         case let .removeAttachmentResponse(id):
             state.attachments.remove(id: id)
@@ -557,9 +552,9 @@ public struct AddEntryView: View {
                             ForEachStore(
                                 store.scope(
                                     state: \.attachments,
-                                    action: AddEntryAction.attachments(id:action:)),
-                                content: AttachmentRowView.init(store:)
-                            )
+                                    action: AddEntryAction.attachments(id:action:))) { store in
+                                        AttachmentRowView(store: store)
+                                    }
                         }
                     }
                     .frame(height: 52)

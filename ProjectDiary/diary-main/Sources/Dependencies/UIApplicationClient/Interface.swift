@@ -15,6 +15,7 @@ public struct UIApplicationClient {
     public var open: (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>
     public var canOpen: (URL) -> Bool
     public let share: (Any) -> Effect<Never, Never>
+    public let showTabView: (Bool) -> Effect<Never, Never>
     
     public init(
         alternateIconName: String?,
@@ -23,7 +24,8 @@ public struct UIApplicationClient {
         openSettings: @escaping () -> Effect<Never, Never>,
         open: @escaping (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>,
         canOpen: @escaping (URL) -> Bool,
-        share: @escaping (Any) -> Effect<Never, Never>
+        share: @escaping (Any) -> Effect<Never, Never>,
+        showTabView: @escaping (Bool) -> Effect<Never, Never>
     ) {
         self.alternateIconName = alternateIconName
         self.setAlternateIconName = setAlternateIconName
@@ -32,5 +34,6 @@ public struct UIApplicationClient {
         self.open = open
         self.canOpen = canOpen
         self.share = share
+        self.showTabView = showTabView
     }
 }
