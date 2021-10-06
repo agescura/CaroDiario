@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.5
 
 import PackageDescription
 
@@ -7,7 +7,7 @@ let package = Package(
     defaultLocalization: "en",
     platforms: [
         .macOS(.v10_15),
-        .iOS(.v14),
+        .iOS(.v15),
     ],
     products: [
         .library(
@@ -123,8 +123,7 @@ let package = Package(
         .library(name: "SearchFeature", targets: ["SearchFeature"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.28.1"),
-        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.0.0")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.28.1")
     ],
     targets: [
         .target(
@@ -141,7 +140,6 @@ let package = Package(
         .target(
             name: "SharedViews",
             dependencies: [
-                "Kingfisher",
                 "SharedStyles"
             ],
             path: "Sources/Shared/SharedViews"

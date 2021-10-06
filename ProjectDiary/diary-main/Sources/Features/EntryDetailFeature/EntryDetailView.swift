@@ -22,12 +22,6 @@ import AVAudioRecorderClient
 import AVAssetClient
 import UIApplicationClient
 
-extension UIApplication {
-    func tabView(show: Bool) {
-        
-    }
-}
-
 public struct EntryDetailState: Equatable {
     public var entry: Entry
     public var attachments: IdentifiedArrayOf<AttachmentRowState> = []

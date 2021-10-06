@@ -35,7 +35,7 @@ public struct AddEntryState: Equatable {
     public var presentAudioPicker: Bool = false
     
     public var deniedCameraAlert: AlertState<AddEntryAction>?
-    public var attachments: IdentifiedArrayOf<AttachmentRowState> = []
+    public var attachments: IdentifiedArrayOf<AttachmentAddRowState> = []
     public var dismissAlert: AlertState<AddEntryAction>?
     
     public var addAttachmentInFlight: Bool = false
@@ -108,7 +108,7 @@ public enum AddEntryAction: Equatable {
     case loadAudio(URL)
     case loadAudioResponse(EntryAudio)
     
-    case attachments(id: UUID, action: AttachmentRowAction)
+    case attachments(id: UUID, action: AttachmentAddRowAction)
     case removeAttachmentResponse(UUID)
     
     case dismissAlertButtonTapped
@@ -166,11 +166,16 @@ public struct AddEntryEnvironment {
 
 public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvironment> = .combine(
     
-    attachmentReducer
+    attachmentAddReducer
         .pullback(
-            state: \AttachmentRowState.attachment,
-            action: /AttachmentRowAction.attachment,
-            environment: { _ in ()
+            state: \AttachmentAddRowState.attachment,
+            action: /AttachmentAddRowAction.attachment,
+            environment: { AttachmentAddEnvironment(
+                fileClient: $0.fileClient,
+                applicationClient: $0.applicationClient,
+                avAudioPlayerClient: $0.avAudioPlayerClient,
+                mainQueue: $0.mainQueue,
+                backgroundQueue: $0.backgroundQueue)
             }
         )
         .forEach(
@@ -215,11 +220,11 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
         case .onAppear:
             state.text = state.entry.text.message
             
-            var attachments: IdentifiedArrayOf<AttachmentRowState> = []
+            var attachments: IdentifiedArrayOf<AttachmentAddRowState> = []
             
-            let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentRowState? in
-                if let detailState = attachment.detail {
-                    return AttachmentRowState(id: attachment.id, attachment: detailState)
+            let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentAddRowState? in
+                if let detailState = attachment.addDetail {
+                    return AttachmentAddRowState(id: attachment.id, attachment: detailState)
                 }
                 return nil
             }
@@ -552,9 +557,8 @@ public struct AddEntryView: View {
                             ForEachStore(
                                 store.scope(
                                     state: \.attachments,
-                                    action: AddEntryAction.attachments(id:action:))) { store in
-                                        AttachmentRowView(store: store)
-                                    }
+                                    action: AddEntryAction.attachments(id:action:)),
+                                content: AttachmentAddRowView.init(store:))
                         }
                     }
                     .frame(height: 52)
