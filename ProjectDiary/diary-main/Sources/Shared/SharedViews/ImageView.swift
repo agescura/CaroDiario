@@ -5,7 +5,6 @@
 //
 
 import SwiftUI
-import Kingfisher
 
 public struct ImageView: View {
     private let url: URL
@@ -17,13 +16,12 @@ public struct ImageView: View {
     }
     
     public var body: some View {
-        KFImage(url)
-            .resizable()
-            .placeholder {
-                ProgressView()
-            }
-            .cancelOnDisappear(true)
-            .fade(duration: 0.3)
-            .aspectRatio(1, contentMode: .fit)
+        AsyncImage(url: url) { image in
+            image
+                .resizable()
+                .aspectRatio(1, contentMode: .fit)
+        } placeholder: {
+            ProgressView()
+        }
     }
 }

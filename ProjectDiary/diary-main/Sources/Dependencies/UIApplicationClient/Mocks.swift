@@ -15,6 +15,7 @@ extension UIApplicationClient {
         openSettings: { .fireAndForget {} },
         open: { _, _ in .fireAndForget {} },
         canOpen: { _ in true },
-        share: { _ in .fireAndForget {} }
+        share: { _ in .fireAndForget {} },
+        showTabView: { _ in .fireAndForget {} }
     )
 }

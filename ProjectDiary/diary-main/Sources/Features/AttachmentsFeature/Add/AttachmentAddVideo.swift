@@ -1,8 +1,7 @@
 //
-//  SwiftUIView.swift
-//  
+//  AttachmentAddVideo.swift
 //
-//  Created by Albert Gil Escura on 3/8/21.
+//  Created by Albert Gil Escura on 6/10/21.
 //
 
 import SwiftUI
@@ -15,11 +14,11 @@ import SharedLocalizables
 import UIApplicationClient
 import AVKit
 
-public struct AttachmentVideoState: Equatable {
+public struct AttachmentAddVideoState: Equatable {
     public var entryVideo: SharedModels.EntryVideo
     public var presentVideoPlayer: Bool = false
-    
-    public var videoAlert: AlertState<AttachmentVideoAction>?
+        
+    public var videoAlert: AlertState<AttachmentAddVideoAction>?
     
     public init(
         entryVideo: SharedModels.EntryVideo
@@ -28,39 +27,17 @@ public struct AttachmentVideoState: Equatable {
     }
 }
 
-public enum AttachmentVideoAction: Equatable {
+public enum AttachmentAddVideoAction: Equatable {
     case presentVideoPlayer(Bool)
-    
     case videoAlertButtonTapped
     case dismissRemoveFullScreen
     case remove
     case cancelRemoveFullScreenAlert
-    
-    case processShare
 }
 
-public struct AttachmentVideoEnvironment {
-    public let fileClient: FileClient
-    public let applicationClient: UIApplicationClient
-    public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    
-    public init(
-        fileClient: FileClient,
-        applicationClient: UIApplicationClient,
-        mainQueue: AnySchedulerOf<DispatchQueue>,
-        backgroundQueue: AnySchedulerOf<DispatchQueue>
-    ) {
-        self.fileClient = fileClient
-        self.applicationClient = applicationClient
-        self.mainQueue = mainQueue
-        self.backgroundQueue = backgroundQueue
-    }
-}
-
-public let attachmentVideoReducer = Reducer<AttachmentVideoState, AttachmentVideoAction, AttachmentVideoEnvironment> { state, action, environment in
+public let attachmentAddVideoReducer = Reducer<AttachmentAddVideoState, AttachmentAddVideoAction, Void> { state, action, _ in
     switch action {
-    
+        
     case let .presentVideoPlayer(value):
         state.presentVideoPlayer = value
         return .none
@@ -86,15 +63,11 @@ public let attachmentVideoReducer = Reducer<AttachmentVideoState, AttachmentVide
     case .cancelRemoveFullScreenAlert:
         state.videoAlert = nil
         return .none
-        
-    case .processShare:
-        return environment.applicationClient.share(state.entryVideo.url)
-            .fireAndForget()
     }
 }
 
-struct AttachmentVideoView: View {
-    let store: Store<AttachmentVideoState, AttachmentVideoAction>
+struct AttachmentAddVideoView: View {
+    let store: Store<AttachmentAddVideoState, AttachmentAddVideoAction>
 
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -105,9 +78,12 @@ struct AttachmentVideoView: View {
                     .foregroundColor(.adaptiveWhite)
                     .frame(width: 8, height: 8)
             }
+            .onTapGesture {
+                viewStore.send(.presentVideoPlayer(true))
+            }
             .fullScreenCover(isPresented: viewStore.binding(
                                 get: \.presentVideoPlayer,
-                                send: AttachmentVideoAction.presentVideoPlayer)
+                                send: AttachmentAddVideoAction.presentVideoPlayer)
             ) {
                 ZStack {
                     Color.black
@@ -121,16 +97,6 @@ struct AttachmentVideoView: View {
                             }) {
                                 Image(systemName: "trash")
                                     .frame(width: 48, height: 48)
-                                    .foregroundColor(.chambray)
-                            }
-                            
-                            Button(action: {
-                                viewStore.send(.processShare)
-                            }) {
-                                Image(systemName: "square.and.arrow.up")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 16, height: 16)
                                     .foregroundColor(.chambray)
                             }
                             
@@ -151,9 +117,6 @@ struct AttachmentVideoView: View {
                         dismiss: .cancelRemoveFullScreenAlert
                     )
                 }
-            }
-            .onTapGesture {
-                viewStore.send(.presentVideoPlayer(true))
             }
         }
     }

@@ -104,7 +104,7 @@ public struct LayoutView: View {
                         )
                     }
                     .accentColor(.chambray)
-                    .animation(.default)
+                    .animation(.default, value: 1)
                     .disabled(true)
                 }
                 

@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import SharedModels
 
-public struct AttachmentRowState: Identifiable, Equatable {
+public struct AttachmentRowState: Identifiable, Equatable, Hashable {
     public let id: UUID
     public var attachment: AttachmentState
     

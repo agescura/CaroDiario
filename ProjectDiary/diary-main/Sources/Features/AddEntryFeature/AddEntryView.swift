@@ -35,7 +35,7 @@ public struct AddEntryState: Equatable {
     public var presentAudioPicker: Bool = false
     
     public var deniedCameraAlert: AlertState<AddEntryAction>?
-    public var attachments: IdentifiedArrayOf<AttachmentRowState> = []
+    public var attachments: IdentifiedArrayOf<AttachmentAddRowState> = []
     public var dismissAlert: AlertState<AddEntryAction>?
     
     public var addAttachmentInFlight: Bool = false
@@ -108,7 +108,7 @@ public enum AddEntryAction: Equatable {
     case loadAudio(URL)
     case loadAudioResponse(EntryAudio)
     
-    case attachments(id: UUID, action: AttachmentRowAction)
+    case attachments(id: UUID, action: AttachmentAddRowAction)
     case removeAttachmentResponse(UUID)
     
     case dismissAlertButtonTapped
@@ -166,11 +166,11 @@ public struct AddEntryEnvironment {
 
 public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvironment> = .combine(
     
-    attachmentReducer
+    attachmentAddReducer
         .pullback(
-            state: \AttachmentRowState.attachment,
-            action: /AttachmentRowAction.attachment,
-            environment: { AttachmentEnvironment(
+            state: \AttachmentAddRowState.attachment,
+            action: /AttachmentAddRowAction.attachment,
+            environment: { AttachmentAddEnvironment(
                 fileClient: $0.fileClient,
                 applicationClient: $0.applicationClient,
                 avAudioPlayerClient: $0.avAudioPlayerClient,
@@ -220,11 +220,11 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
         case .onAppear:
             state.text = state.entry.text.message
             
-            var attachments: IdentifiedArrayOf<AttachmentRowState> = []
+            var attachments: IdentifiedArrayOf<AttachmentAddRowState> = []
             
-            let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentRowState? in
-                if let detailState = attachment.detail {
-                    return AttachmentRowState(id: attachment.id, attachment: detailState)
+            let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentAddRowState? in
+                if let detailState = attachment.addDetail {
+                    return AttachmentAddRowState(id: attachment.id, attachment: detailState)
                 }
                 return nil
             }
@@ -428,15 +428,16 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 .map({ AddEntryAction.presentAudioRecord(false) })
             
         case let .attachments(id: id, action: .attachment(.video(.remove))),
-            let .attachments(id: id, action: .attachment(.image(.remove))):
+            let .attachments(id: id, action: .attachment(.image(.remove))),
+            let .attachments(id: id, action: .attachment(.audio(.remove))):
             guard let attachmentState = state.attachments[id: id]?.attachment else {
                 return .none
             }
             
             return environment.fileClient.removeAttachments(
-                [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-                environment.backgroundQueue
-            )
+                    [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
+                    environment.backgroundQueue
+                )
                 .receive(on: environment.mainQueue)
                 .eraseToEffect()
                 .map { _ in attachmentState.attachment.id }
@@ -558,8 +559,7 @@ public struct AddEntryView: View {
                                 store.scope(
                                     state: \.attachments,
                                     action: AddEntryAction.attachments(id:action:)),
-                                content: AttachmentRowView.init(store:)
-                            )
+                                content: AttachmentAddRowView.init(store:))
                         }
                     }
                     .frame(height: 52)

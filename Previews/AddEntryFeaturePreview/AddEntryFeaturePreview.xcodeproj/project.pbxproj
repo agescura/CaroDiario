@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		951114A6270F4A290096EA31 /* AVAssetClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 951114A5270F4A290096EA31 /* AVAssetClientLive */; };
 		955764DE26D7ABEA00C8BD84 /* AVCaptureDeviceClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955764DD26D7ABEA00C8BD84 /* AVCaptureDeviceClientLive */; };
 		95A3D44126BC65B000FD54F1 /* CoreDataClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95A3D44026BC65B000FD54F1 /* CoreDataClientLive */; };
 		95A3D44326BC65B000FD54F1 /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95A3D44226BC65B000FD54F1 /* FileClientLive */; };
@@ -39,6 +40,7 @@
 				95AAAB0B26D82A4000D90D1A /* AVAudioRecorderClientLive in Frameworks */,
 				95AAAB0F26D839F300D90D1A /* AVAudioPlayerClientLive in Frameworks */,
 				95B9037A26BAE7A100FF8B60 /* AddEntryFeature in Frameworks */,
+				951114A6270F4A290096EA31 /* AVAssetClientLive in Frameworks */,
 				95AAAB0D26D82B9C00D90D1A /* AVAudioSessionClientLive in Frameworks */,
 				95A3D44926BDD2EB00FD54F1 /* UIApplicationClientLive in Frameworks */,
 			);
@@ -115,6 +117,7 @@
 				95AAAB0A26D82A4000D90D1A /* AVAudioRecorderClientLive */,
 				95AAAB0C26D82B9C00D90D1A /* AVAudioSessionClientLive */,
 				95AAAB0E26D839F300D90D1A /* AVAudioPlayerClientLive */,
+				951114A5270F4A290096EA31 /* AVAssetClientLive */,
 			);
 			productName = AddEntryFeaturePreview;
 			productReference = 95B9036626BAE71400FF8B60 /* AddEntryFeaturePreview.app */;
@@ -230,7 +233,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -286,7 +289,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -302,11 +305,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"AddEntryFeaturePreview/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AddEntryFeaturePreview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -324,11 +327,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"AddEntryFeaturePreview/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AddEntryFeaturePreview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -364,6 +367,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		951114A5270F4A290096EA31 /* AVAssetClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVAssetClientLive;
+		};
 		955764DD26D7ABEA00C8BD84 /* AVCaptureDeviceClientLive */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AVCaptureDeviceClientLive;

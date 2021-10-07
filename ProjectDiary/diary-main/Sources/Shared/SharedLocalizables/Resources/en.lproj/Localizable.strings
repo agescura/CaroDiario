@@ -96,6 +96,11 @@
 "Video.Remove.Description" = "Are you sure that you want to remove the video?";
 "Video.Remove.Title" = "Remove";
 
+// Audio
+
+"Audio.Remove.Description" = "Are you sure that you want to remove the audio?";
+"Audio.Remove.Title" = "Remove";
+
 // Camera
 
 "Camera.Denied" = "Camera Denied";

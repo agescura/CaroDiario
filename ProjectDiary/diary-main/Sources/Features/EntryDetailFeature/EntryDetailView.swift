@@ -20,6 +20,7 @@ import AVAudioSessionClient
 import AVAudioPlayerClient
 import AVAudioRecorderClient
 import AVAssetClient
+import UIApplicationClient
 
 public struct EntryDetailState: Equatable {
     public var entry: Entry
@@ -30,6 +31,15 @@ public struct EntryDetailState: Equatable {
     
     public var addEntryState: AddEntryState?
     public var presentAddEntry = false
+    
+    public var showAttachmentOverlayed = false
+    public var seletedAttachmentRowState: AttachmentRowState! = AttachmentRowState(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))) {
+        didSet {
+            self.selectedAttachmentDetailState = AttachmentDetailState(row: seletedAttachmentRowState)
+        }
+    }
+    
+    public var selectedAttachmentDetailState: AttachmentDetailState! = AttachmentDetailState(row: AttachmentRowState(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))))
     
     public init(
         entry: Entry
@@ -61,6 +71,12 @@ public enum EntryDetailAction: Equatable {
     case presentAddEntryCompleted
     
     case processShare
+    
+    case selectedAttachmentRowAction(AttachmentRowState)
+    case dismissAttachmentOverlayed
+    case attachmentDetail(AttachmentDetailAction)
+    case removeAttachment
+    case processShareAttachment
 }
 
 public struct EntryDetailEnvironment {
@@ -112,12 +128,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
         .pullback(
             state: \AttachmentRowState.attachment,
             action: /AttachmentRowAction.attachment,
-            environment: { AttachmentEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                avAudioPlayerClient: $0.avAudioPlayerClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
+            environment: { _ in ()
             }
         )
         .forEach(
@@ -136,6 +147,19 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
                 backgroundQueue: $0.backgroundQueue,
                 mainRunLoop: $0.mainRunLoop,
                 uuid: UUID.init)
+            }
+        ),
+    
+    attachmentDetailReducer
+        .pullback(
+            state: \EntryDetailState.selectedAttachmentDetailState,
+            action: /EntryDetailAction.attachmentDetail,
+            environment: { AttachmentDetailEnvironment(
+                fileClient: $0.fileClient,
+                applicationClient: $0.applicationClient,
+                avAudioPlayerClient: $0.avAudioPlayerClient,
+                mainQueue: $0.mainQueue,
+                backgroundQueue: $0.backgroundQueue)
             }
         ),
     
@@ -163,6 +187,32 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
     .init { state, action, environment in
         
         switch action {
+            
+        case let .attachments(id: id, action: .attachment(.image(.presentImageFullScreen(true)))),
+            let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),
+            let .attachments(id: id, action: .attachment(.audio(.presentAudioFullScreen(true)))):
+            state.seletedAttachmentRowState = state.attachments[id: id]
+            state.showAttachmentOverlayed = true
+            return environment.applicationClient.showTabView(true)
+                .fireAndForget()
+            
+        case let .selectedAttachmentRowAction(selected):
+            state.seletedAttachmentRowState = selected
+            return .none
+            
+        case .dismissAttachmentOverlayed:
+            state.showAttachmentOverlayed = false
+            return environment.applicationClient.showTabView(false)
+                .fireAndForget()
+            
+        case .attachmentDetail:
+            return .none
+            
+        case .processShareAttachment:
+            let attachmentState = state.seletedAttachmentRowState.attachment
+            
+            return environment.applicationClient.share(attachmentState.url)
+                .fireAndForget()
         
         case .onAppear:
             return environment.coreDataClient.fetchEntry(state.entry)
@@ -179,6 +229,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
                 }
                 return nil
             }
+            .sorted(by: { $0.attachment.date < $1.attachment.date })
             for attachment in entryAttachments {
                 attachments.append(attachment)
             }
@@ -186,12 +237,8 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
             
             return .none
             
-        case let .attachments(id: id, action: .attachment(.image(.remove))),
-            let .attachments(id: id, action: .attachment(.video(.remove))),
-            let .attachments(id: id, action: .attachment(.audio(.remove))):
-            guard let attachmentState = state.attachments[id: id]?.attachment else {
-                return .none
-            }
+        case .removeAttachment:
+            let attachmentState = state.seletedAttachmentRowState.attachment
             
             return environment.fileClient.removeAttachments(
                 [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
@@ -205,9 +252,12 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
         case let .removeAttachmentResponse(id):
             state.attachments.remove(id: id)
             
-            return environment.coreDataClient.removeAttachmentEntry(id).fireAndForget()
+            return .merge(
+                environment.coreDataClient.removeAttachmentEntry(id).fireAndForget()
                 .receive(on: environment.mainQueue)
-                .eraseToEffect()
+                .eraseToEffect(),
+                Effect(value: .dismissAttachmentOverlayed)
+            )
         
         case .attachments:
             return .none
@@ -287,9 +337,9 @@ public struct EntryDetailView: View {
         WithViewStore(store) { viewStore in
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 16) {
-                    
+
                     if !viewStore.attachments.isEmpty {
-                        
+
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack(spacing: 8) {
                                 ForEachStore(
@@ -302,12 +352,12 @@ public struct EntryDetailView: View {
                         }
                         .frame(height: 52)
                         .padding(.horizontal, 16)
-                        
+
                         Divider()
                             .frame(height: 1)
                             .background(Color.adaptiveGray)
                     }
-                    
+
                     HStack {
                         Text(viewStore.message)
                             .foregroundColor(.adaptiveBlack)
@@ -318,6 +368,66 @@ public struct EntryDetailView: View {
                 }
                 .padding(.vertical, 16)
             }
+            .overlay(
+
+                ZStack {
+                    if viewStore.showAttachmentOverlayed {
+                        Color.black
+                            .edgesIgnoringSafeArea(.all)
+
+                        ZStack {
+                            ScrollView(.init()) {
+                                TabView(selection: viewStore.binding(get: \.seletedAttachmentRowState, send: EntryDetailAction.selectedAttachmentRowAction)) {
+                                    ForEach(viewStore.attachments) { attachment in
+                                        AttachmentDetailView(
+                                            store: store.scope(
+                                                state: \.selectedAttachmentDetailState,
+                                                action: EntryDetailAction.attachmentDetail))
+                                            .tag(attachment)
+                                    }
+                                }
+                            }
+                        }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                        .overlay(
+                            HStack(spacing: 32) {
+                                Button(action: {
+                                    viewStore.send(.removeAttachment)
+                                }) {
+                                    Image(systemName: "trash")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 16, height: 16)
+                                        .foregroundColor(.chambray)
+                                }
+
+                                Button(action: {
+                                    viewStore.send(.processShareAttachment)
+                                }) {
+                                    Image(systemName: "square.and.arrow.up")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 16, height: 16)
+                                        .foregroundColor(.chambray)
+                                }
+
+                                Button(action: {
+                                    viewStore.send(.dismissAttachmentOverlayed)
+                                }) {
+                                    Image(systemName: "xmark")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 16, height: 16)
+                                        .foregroundColor(.chambray)
+                                }
+                            }
+                            .padding()
+                            , alignment: .topTrailing
+                        )
+                    }
+                }
+                .transition(.move(edge: .bottom))
+            )
             .fullScreenCover(
                 isPresented: viewStore.binding(
                     get: { $0.presentAddEntry },
@@ -341,7 +451,7 @@ public struct EntryDetailView: View {
             .navigationBarTitle(viewStore.entry.stringLongDate, displayMode: .inline)
             .navigationBarItems(
                 trailing: HStack(spacing: 16) {
-                    
+
                     Button(
                         action: {
                             viewStore.send(.alertRemoveButtonTapped)
@@ -353,7 +463,7 @@ public struct EntryDetailView: View {
                                 .foregroundColor(.chambray)
                         }
                     )
-                    
+
                     Button(
                         action: {
                             viewStore.send(.meatballActionSheetButtonTapped)
@@ -371,6 +481,7 @@ public struct EntryDetailView: View {
                         )
                 }
             )
+            .navigationBarHidden(viewStore.showAttachmentOverlayed)
         }
     }
 }

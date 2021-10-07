@@ -47,7 +47,7 @@ public struct AttachmentSearchState: Equatable {
     public var entryDetailSelected: Entry?
     
     public var entriesCount: Int {
-        entries.map { $0.dayEntries.entries.count }.reduce(0, +)
+        entries.map(\.dayEntries.entries.count).reduce(0, +)
     }
 }
 

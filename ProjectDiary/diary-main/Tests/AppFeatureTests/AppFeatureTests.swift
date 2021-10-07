@@ -30,6 +30,7 @@ class AppFeatureTests: XCTestCase {
                 avAudioRecorderClient: .noop,
                 storeKitClient: .noop,
                 pdfKitClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,
@@ -67,6 +68,7 @@ class AppFeatureTests: XCTestCase {
                 avAudioRecorderClient: .noop,
                 storeKitClient: .noop,
                 pdfKitClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,
@@ -99,7 +101,7 @@ class AppFeatureTests: XCTestCase {
                         iconType: .dark,
                         hasPasscode: false,
                         cameraStatus: .authorized,
-                        optionTimeForAskPasscode: nil
+                        optionTimeForAskPasscode: 0
                     )
                 )
             ),
@@ -117,6 +119,7 @@ class AppFeatureTests: XCTestCase {
                 avAudioRecorderClient: .noop,
                 storeKitClient: .noop,
                 pdfKitClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,

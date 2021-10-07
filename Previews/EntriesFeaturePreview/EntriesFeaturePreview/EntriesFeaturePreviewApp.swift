@@ -16,6 +16,7 @@ import UIApplicationClientLive
 import AVAudioSessionClientLive
 import AVAudioPlayerClientLive
 import AVAudioRecorderClientLive
+import AVAssetClientLive
 
 @main
 struct EntriesFeaturePreviewApp: App {
@@ -34,6 +35,7 @@ struct EntriesFeaturePreviewApp: App {
                         avAudioSessionClient: .live,
                         avAudioPlayerClient: .live,
                         avAudioRecorderClient: .live,
+                        avAssetClient: .live,
                         mainQueue: .main,
                         backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
                         mainRunLoop: .main,

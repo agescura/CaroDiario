@@ -126,7 +126,7 @@ public struct SplashView: View {
                             maxHeight: viewStore.animation.lineHeight
                         )
                         .background(Color.adaptiveWhite)
-                        .animation(viewStore.animation.duration)
+                        .animation(viewStore.animation.duration, value: 0.5)
                 }
             }
             .ignoresSafeArea()

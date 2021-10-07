@@ -15,6 +15,7 @@ import SharedStyles
 import AVAudioSessionClientLive
 import AVAudioPlayerClientLive
 import AVAudioRecorderClientLive
+import AVAssetClientLive
 
 @main
 struct EntryDetailFeaturePreviewApp: App {
@@ -69,6 +70,7 @@ struct EntryDetailFeaturePreviewApp: App {
                             avAudioSessionClient: .live,
                             avAudioPlayerClient: .live,
                             avAudioRecorderClient: .live,
+                            avAssetClient: .live,
                             mainQueue: .main,
                             backgroundQueue: .main,
                             mainRunLoop: .main,

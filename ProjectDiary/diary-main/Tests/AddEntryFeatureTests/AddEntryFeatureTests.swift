@@ -61,6 +61,7 @@ class AddEntryFeatureTests: XCTestCase {
                 avAudioSessionClient: .noop,
                 avAudioPlayerClient: .noop,
                 avAudioRecorderClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,
@@ -71,8 +72,8 @@ class AddEntryFeatureTests: XCTestCase {
         store.send(.onAppear) {
             $0.text = "message"
             $0.attachments = [
-                AttachmentRowState(id: self.imageId, attachment: .image(.init(entryImage: self.entryImage))),
-                AttachmentRowState(id: self.videoId, attachment: .video(.init(entryVideo: self.entryVideo)))
+                AttachmentAddRowState(id: self.imageId, attachment: .image(.init(entryImage: self.entryImage))),
+                AttachmentAddRowState(id: self.videoId, attachment: .video(.init(entryVideo: self.entryVideo)))
             ]
         }
         

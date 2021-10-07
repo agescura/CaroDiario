@@ -1,8 +1,8 @@
 //
-//  AddEntryAttachment.swift
+//  File.swift
 //  
 //
-//  Created by Albert Gil Escura on 10/8/21.
+//  Created by Albert Gil Escura on 6/10/21.
 //
 
 import SwiftUI
@@ -12,10 +12,10 @@ import AVAudioPlayerClient
 import UIApplicationClient
 import FileClient
 
-public enum AttachmentState: Equatable {
-    case image(AttachmentImageState)
-    case video(AttachmentVideoState)
-    case audio(AttachmentAudioState)
+public enum AttachmentAddState: Equatable {
+    case image(AttachmentAddImageState)
+    case video(AttachmentAddVideoState)
+    case audio(AttachmentAddAudioState)
     
     public var url: URL {
         switch self {
@@ -49,15 +49,39 @@ public enum AttachmentState: Equatable {
             return value.entryAudio
         }
     }
+    
+    public var date: Date {
+        switch self {
+        case let .image(value):
+            return value.entryImage.lastUpdated
+        case let .video(value):
+            return value.entryVideo.lastUpdated
+        case let .audio(value):
+            return value.entryAudio.lastUpdated
+        }
+    }
 }
 
-public enum AttachmentAction: Equatable {
-    case image(AttachmentImageAction)
-    case video(AttachmentVideoAction)
-    case audio(AttachmentAudioAction)
+extension AttachmentAddState: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        switch self {
+        case let .image(state):
+            hasher.combine(state.entryImage.id)
+        case let .video(state):
+            hasher.combine(state.entryVideo.id)
+        case let .audio(state):
+            hasher.combine(state.entryAudio.id)
+        }
+    }
 }
 
-public struct AttachmentEnvironment {
+public enum AttachmentAddAction: Equatable {
+    case image(AttachmentAddImageAction)
+    case video(AttachmentAddVideoAction)
+    case audio(AttachmentAddAudioAction)
+}
+
+public struct AttachmentAddEnvironment {
     public let fileClient: FileClient
     public let applicationClient: UIApplicationClient
     public var avAudioPlayerClient: AVAudioPlayerClient
@@ -79,39 +103,30 @@ public struct AttachmentEnvironment {
     }
 }
 
-public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, AttachmentEnvironment> = .combine(
+public let attachmentAddReducer: Reducer<AttachmentAddState, AttachmentAddAction, AttachmentAddEnvironment> = .combine(
     
-    attachmentImageReducer
+    attachmentAddImageReducer
         .pullback(
-            state: /AttachmentState.image,
-            action: /AttachmentAction.image,
-            environment: { AttachmentImageEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
+            state: /AttachmentAddState.image,
+            action: /AttachmentAddAction.image,
+            environment: { _ in ()
             }
         ),
     
-    attachmentVideoReducer
+    attachmentAddVideoReducer
         .pullback(
-            state: /AttachmentState.video,
-            action: /AttachmentAction.video,
-            environment: { AttachmentVideoEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
+            state: /AttachmentAddState.video,
+            action: /AttachmentAddAction.video,
+            environment: { _ in ()
             }
         ),
     
-    attachmentAudioReducer
+    attachmentAddAudioReducer
         .pullback(
-            state: /AttachmentState.audio,
-            action: /AttachmentAction.audio,
-            environment: { AttachmentAudioEnvironment(
+            state: /AttachmentAddState.audio,
+            action: /AttachmentAddAction.audio,
+            environment: { AttachmentAddAudioEnvironment(
                 fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
                 avAudioPlayerClient: $0.avAudioPlayerClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue)
@@ -123,27 +138,27 @@ public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, Attachm
     }
 )
 
-public struct AttachmentView: View {
-    let store: Store<AttachmentState, AttachmentAction>
+public struct AttachmentAddView: View {
+    let store: Store<AttachmentAddState, AttachmentAddAction>
     
     public var body: some View {
         SwitchStore(store) {
             CaseLet(
-                state: /AttachmentState.image,
-                action: AttachmentAction.image,
-                then: AttachmentImageView.init(store:)
+                state: /AttachmentAddState.image,
+                action: AttachmentAddAction.image,
+                then: AttachmentAddImageView.init(store:)
             )
             
             CaseLet(
-                state: /AttachmentState.video,
-                action: AttachmentAction.video,
-                then: AttachmentVideoView.init(store:)
+                state: /AttachmentAddState.video,
+                action: AttachmentAddAction.video,
+                then: AttachmentAddVideoView.init(store:)
             )
             
             CaseLet(
-                state: /AttachmentState.audio,
-                action: AttachmentAction.audio,
-                then: AttachmentAudioView.init(store:)
+                state: /AttachmentAddState.audio,
+                action: AttachmentAddAction.audio,
+                then: AttachmentAddAudioView.init(store:)
             )
         }
     }

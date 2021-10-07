@@ -57,8 +57,26 @@ extension UIApplicationClient {
                     )
                     
                 }
+        },
+        showTabView: { isShowing in
+                .fireAndForget {
+                    UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.allSubviews().forEach({ (v) in
+                        if let view = v as? UITabBar {
+                            view.isHidden = isShowing
+                        }
+                    })
+                }
         }
     )
 }
 
-
+extension UIView {
+    func allSubviews() -> [UIView] {
+        var res = subviews
+        for subview in subviews {
+            let riz = subview.allSubviews()
+            res.append(contentsOf: riz)
+        }
+        return res
+    }
+}

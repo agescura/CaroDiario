@@ -27,7 +27,7 @@ class HomeFeatureTests: XCTestCase {
                     iconType: .dark,
                     hasPasscode: false,
                     cameraStatus: .authorized,
-                    optionTimeForAskPasscode: nil
+                    optionTimeForAskPasscode: 0
                 )
             ),
             reducer: homeReducer,
@@ -44,6 +44,7 @@ class HomeFeatureTests: XCTestCase {
                 avAudioRecorderClient: .noop,
                 storeKitClient: .noop,
                 pdfKitClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,
