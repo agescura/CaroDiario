@@ -10,6 +10,7 @@ import XCTest
 import ComposableArchitecture
 import SwiftUI
 import SharedModels
+import AVAssetClient
 
 class EntriesFeatureTests: XCTestCase {
     let scheduler = DispatchQueue.test
@@ -67,6 +68,7 @@ class EntriesFeatureTests: XCTestCase {
                 avAudioSessionClient: .noop,
                 avAudioPlayerClient: .noop,
                 avAudioRecorderClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: runLoop.eraseToAnyScheduler(),
@@ -110,10 +112,6 @@ class EntriesFeatureTests: XCTestCase {
             $0.presentAddEntry = false
             XCTAssertTrue(coreDataClientUpdateMessageCalled)
             XCTAssertTrue(coreDataClientPublishEntryCalled)
-        }
-        
-        store.send(.onDissapear) { _ in
-            XCTAssertTrue(coreDataClientDestroyCalled)
         }
     }
     
@@ -169,6 +167,7 @@ class EntriesFeatureTests: XCTestCase {
                 avAudioSessionClient: .noop,
                 avAudioPlayerClient: .noop,
                 avAudioRecorderClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: runLoop.eraseToAnyScheduler(),
@@ -207,10 +206,6 @@ class EntriesFeatureTests: XCTestCase {
             $0.presentAddEntry = false
             XCTAssertTrue(coreDataClientUpdateMessageCalled)
             XCTAssertTrue(coreDataClientPublishEntryCalled)
-        }
-        
-        store.send(.onDissapear) { _ in
-            XCTAssertTrue(coreDataClientDestroyCalled)
         }
     }
 }

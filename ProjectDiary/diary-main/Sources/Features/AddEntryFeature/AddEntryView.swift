@@ -427,20 +427,21 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             return environment.coreDataClient.addAttachmentEntry(entryAudio, state.entry.id)
                 .map({ AddEntryAction.presentAudioRecord(false) })
             
-//        case let .attachments(id: id, action: .attachment(.video(.remove))),
-//            let .attachments(id: id, action: .attachment(.image(.remove))):
-//            guard let attachmentState = state.attachments[id: id]?.attachment else {
-//                return .none
-//            }
-//            
-//            return environment.fileClient.removeAttachments(
-//                [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-//                environment.backgroundQueue
-//            )
-//                .receive(on: environment.mainQueue)
-//                .eraseToEffect()
-//                .map { _ in attachmentState.attachment.id }
-//                .map(AddEntryAction.removeAttachmentResponse)
+        case let .attachments(id: id, action: .attachment(.video(.remove))),
+            let .attachments(id: id, action: .attachment(.image(.remove))),
+            let .attachments(id: id, action: .attachment(.audio(.remove))):
+            guard let attachmentState = state.attachments[id: id]?.attachment else {
+                return .none
+            }
+            
+            return environment.fileClient.removeAttachments(
+                    [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
+                    environment.backgroundQueue
+                )
+                .receive(on: environment.mainQueue)
+                .eraseToEffect()
+                .map { _ in attachmentState.attachment.id }
+                .map(AddEntryAction.removeAttachmentResponse)
             
         case let .removeAttachmentResponse(id):
             state.attachments.remove(id: id)

@@ -25,6 +25,7 @@ class SearchFeatureTests: XCTestCase {
                 avAudioSessionClient: .noop,
                 avAudioPlayerClient: .noop,
                 avAudioRecorderClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,

@@ -109,11 +109,7 @@ public let attachmentAddReducer: Reducer<AttachmentAddState, AttachmentAddAction
         .pullback(
             state: /AttachmentAddState.image,
             action: /AttachmentAddAction.image,
-            environment: { AttachmentAddImageEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
+            environment: { _ in ()
             }
         ),
     
@@ -131,7 +127,6 @@ public let attachmentAddReducer: Reducer<AttachmentAddState, AttachmentAddAction
             action: /AttachmentAddAction.audio,
             environment: { AttachmentAddAudioEnvironment(
                 fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
                 avAudioPlayerClient: $0.avAudioPlayerClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue)

@@ -65,8 +65,10 @@ class AudioRecordFeatureTests: XCTestCase {
                         openSettingsCalled = true
                         return .fireAndForget {}
                     },
-                    open: { _ in .fireAndForget {} },
-                    share: { _ in .fireAndForget {} }
+                    open: { _,_  in .fireAndForget {} },
+                    canOpen: { _ in false },
+                    share: { _ in .fireAndForget {} },
+                    showTabView: { _ in .fireAndForget {} }
                 ),
                 avAudioSessionClient: .init(
                     recordPermission: .notDetermined,
@@ -166,7 +168,7 @@ class AudioRecordFeatureTests: XCTestCase {
         store.send(.recordButtonTapped)
         store.receive(.record) {
             $0.isRecording = true
-            $0.audioPath = URL(string: "www.apple.com")
+            $0.audioPath = URL(string: "www.apple.com.caf")
         }
         store.receive(.startRecorderTimer)
         

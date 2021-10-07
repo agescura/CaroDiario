@@ -5,7 +5,6 @@
 //
 
 import SwiftUI
-import Kingfisher
 
 public struct ImageView: View {
     private let url: URL
@@ -13,7 +12,6 @@ public struct ImageView: View {
     public init(
         url: URL
     ) {
-        print(url)
         self.url = url
     }
     

@@ -8,6 +8,93 @@
       location = "group:Previews"
       name = "Previews">
       <Group
+         location = "group:AddEntryFeaturePreview"
+         name = "AddEntryFeaturePreview">
+         <Group
+            location = "group:AddEntryFeaturePreview"
+            name = "AddEntryFeaturePreview">
+            <FileRef
+               location = "group:AddEntryFeaturePreviewApp.swift">
+            </FileRef>
+            <Group
+               location = "group:Assets.xcassets"
+               name = "Assets.xcassets">
+               <Group
+                  location = "group:AppIcon.appiconset"
+                  name = "AppIcon.appiconset">
+                  <FileRef
+                     location = "group:Contents.json">
+                  </FileRef>
+               </Group>
+               <Group
+                  location = "group:AccentColor.colorset"
+                  name = "AccentColor.colorset">
+                  <FileRef
+                     location = "group:Contents.json">
+                  </FileRef>
+               </Group>
+               <FileRef
+                  location = "group:Contents.json">
+               </FileRef>
+            </Group>
+            <FileRef
+               location = "group:Info.plist">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:AddEntryFeaturePreview.xcodeproj">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:AudioRecordFeaturePreview"
+         name = "AudioRecordFeaturePreview">
+         <FileRef
+            location = "group:AudioRecordFeaturePreview.xcodeproj">
+         </FileRef>
+         <Group
+            location = "group:AudioRecordFeaturePreview"
+            name = "AudioRecordFeaturePreview">
+            <Group
+               location = "group:Assets.xcassets"
+               name = "Assets.xcassets">
+               <Group
+                  location = "group:AppIcon.appiconset"
+                  name = "AppIcon.appiconset">
+                  <FileRef
+                     location = "group:Contents.json">
+                  </FileRef>
+               </Group>
+               <Group
+                  location = "group:AccentColor.colorset"
+                  name = "AccentColor.colorset">
+                  <FileRef
+                     location = "group:Contents.json">
+                  </FileRef>
+               </Group>
+               <FileRef
+                  location = "group:Contents.json">
+               </FileRef>
+            </Group>
+            <Group
+               location = "group:Preview Content"
+               name = "Preview Content">
+               <Group
+                  location = "group:Preview Assets.xcassets"
+                  name = "Preview Assets.xcassets">
+                  <FileRef
+                     location = "group:Contents.json">
+                  </FileRef>
+               </Group>
+            </Group>
+            <FileRef
+               location = "group:AudioRecordFeaturePreviewApp.swift">
+            </FileRef>
+            <FileRef
+               location = "group:Info.plist">
+            </FileRef>
+         </Group>
+      </Group>
+      <Group
          location = "group:EntriesFeaturePreview"
          name = "EntriesFeaturePreview">
          <Group
@@ -54,44 +141,6 @@
          </Group>
          <FileRef
             location = "group:EntriesFeaturePreview.xcodeproj">
-         </FileRef>
-      </Group>
-      <Group
-         location = "group:AddEntryFeaturePreview"
-         name = "AddEntryFeaturePreview">
-         <Group
-            location = "group:AddEntryFeaturePreview"
-            name = "AddEntryFeaturePreview">
-            <FileRef
-               location = "group:AddEntryFeaturePreviewApp.swift">
-            </FileRef>
-            <Group
-               location = "group:Assets.xcassets"
-               name = "Assets.xcassets">
-               <Group
-                  location = "group:AppIcon.appiconset"
-                  name = "AppIcon.appiconset">
-                  <FileRef
-                     location = "group:Contents.json">
-                  </FileRef>
-               </Group>
-               <Group
-                  location = "group:AccentColor.colorset"
-                  name = "AccentColor.colorset">
-                  <FileRef
-                     location = "group:Contents.json">
-                  </FileRef>
-               </Group>
-               <FileRef
-                  location = "group:Contents.json">
-               </FileRef>
-            </Group>
-            <FileRef
-               location = "group:Info.plist">
-            </FileRef>
-         </Group>
-         <FileRef
-            location = "group:AddEntryFeaturePreview.xcodeproj">
          </FileRef>
       </Group>
       <Group
@@ -193,14 +242,17 @@
          </FileRef>
       </Group>
       <Group
-         location = "group:AudioRecordFeaturePreview"
-         name = "AudioRecordFeaturePreview">
+         location = "group:PDFFeaturePreview"
+         name = "PDFFeaturePreview">
          <FileRef
-            location = "group:AudioRecordFeaturePreview.xcodeproj">
+            location = "group:PDFFeaturePreview.xcodeproj">
          </FileRef>
          <Group
-            location = "group:AudioRecordFeaturePreview"
-            name = "AudioRecordFeaturePreview">
+            location = "group:PDFFeaturePreview"
+            name = "PDFFeaturePreview">
+            <FileRef
+               location = "group:PDFFeaturePreviewApp.swift">
+            </FileRef>
             <Group
                location = "group:Assets.xcassets"
                name = "Assets.xcassets">
@@ -233,12 +285,6 @@
                   </FileRef>
                </Group>
             </Group>
-            <FileRef
-               location = "group:AudioRecordFeaturePreviewApp.swift">
-            </FileRef>
-            <FileRef
-               location = "group:Info.plist">
-            </FileRef>
          </Group>
       </Group>
       <Group
@@ -289,52 +335,6 @@
          <FileRef
             location = "group:SettingsFeaturePreview.xcodeproj">
          </FileRef>
-      </Group>
-      <Group
-         location = "group:PDFFeaturePreview"
-         name = "PDFFeaturePreview">
-         <FileRef
-            location = "group:PDFFeaturePreview.xcodeproj">
-         </FileRef>
-         <Group
-            location = "group:PDFFeaturePreview"
-            name = "PDFFeaturePreview">
-            <FileRef
-               location = "group:PDFFeaturePreviewApp.swift">
-            </FileRef>
-            <Group
-               location = "group:Assets.xcassets"
-               name = "Assets.xcassets">
-               <Group
-                  location = "group:AppIcon.appiconset"
-                  name = "AppIcon.appiconset">
-                  <FileRef
-                     location = "group:Contents.json">
-                  </FileRef>
-               </Group>
-               <Group
-                  location = "group:AccentColor.colorset"
-                  name = "AccentColor.colorset">
-                  <FileRef
-                     location = "group:Contents.json">
-                  </FileRef>
-               </Group>
-               <FileRef
-                  location = "group:Contents.json">
-               </FileRef>
-            </Group>
-            <Group
-               location = "group:Preview Content"
-               name = "Preview Content">
-               <Group
-                  location = "group:Preview Assets.xcassets"
-                  name = "Preview Assets.xcassets">
-                  <FileRef
-                     location = "group:Contents.json">
-                  </FileRef>
-               </Group>
-            </Group>
-         </Group>
       </Group>
    </Group>
    <FileRef

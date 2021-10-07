@@ -16,6 +16,7 @@ import UIApplicationClientLive
 import AVAudioRecorderClientLive
 import AVAudioSessionClientLive
 import AVAudioPlayerClientLive
+import AVAssetClientLive
 
 @main
 struct AddEntryFeaturePreviewApp: App {
@@ -28,7 +29,7 @@ struct AddEntryFeaturePreviewApp: App {
         WindowGroup {
             AddEntryView(
                 store: .init(
-                    initialState: .init(entry: .init(id: .init(), date: .init(), startDay: .init(), text: .init(id: .init(), message: "", lastUpdated: .init()))),
+                    initialState: .init(type: .add, entry: .init(id: .init(), date: .init(), startDay: .init(), text: .init(id: .init(), message: "", lastUpdated: .init()))),
                     reducer: addEntryReducer,
                     environment: .init(
                         coreDataClient: .live,
@@ -38,6 +39,7 @@ struct AddEntryFeaturePreviewApp: App {
                         avAudioSessionClient: .live,
                         avAudioPlayerClient: .live,
                         avAudioRecorderClient: .live,
+                        avAssetClient: .live,
                         mainQueue: .main,
                         backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
                         mainRunLoop: .main,

@@ -13,10 +13,12 @@ import SwiftUI
 class MenuPasscodeViewTests: XCTestCase {
     func test() {
         let store = TestStore(
-            initialState: MenuPasscodeState(),
+            initialState: MenuPasscodeState(authenticationType: .none, optionTimeForAskPasscode: 0),
             reducer: menuPasscodeReducer,
             environment: MenuPasscodeEnvironment(
-                userDefaultsClient: .noop
+                userDefaultsClient: .noop,
+                localAuthenticationClient: .noop,
+                mainQueue: .immediate
             )
         )
         

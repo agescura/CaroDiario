@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		951114A8270F4A860096EA31 /* AVAssetClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 951114A7270F4A860096EA31 /* AVAssetClientLive */; };
 		955764E226D7AC2700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955764E126D7AC2700C8BD84 /* AVCaptureDeviceClientLive */; };
 		9565C2E526D98C86004DB3D9 /* AVAudioPlayerClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2E426D98C86004DB3D9 /* AVAudioPlayerClientLive */; };
 		9565C2E726D98C86004DB3D9 /* AVAudioRecorderClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2E626D98C86004DB3D9 /* AVAudioRecorderClientLive */; };
@@ -41,6 +42,7 @@
 				9565C2E526D98C86004DB3D9 /* AVAudioPlayerClientLive in Frameworks */,
 				959AF03D26C1A64E00CD2322 /* UserDefaultsClientLive in Frameworks */,
 				955764E226D7AC2700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */,
+				951114A8270F4A860096EA31 /* AVAssetClientLive in Frameworks */,
 				9565C2E726D98C86004DB3D9 /* AVAudioRecorderClientLive in Frameworks */,
 				9565C2E926D98C86004DB3D9 /* AVAudioSessionClientLive in Frameworks */,
 			);
@@ -118,6 +120,7 @@
 				9565C2E426D98C86004DB3D9 /* AVAudioPlayerClientLive */,
 				9565C2E626D98C86004DB3D9 /* AVAudioRecorderClientLive */,
 				9565C2E826D98C86004DB3D9 /* AVAudioSessionClientLive */,
+				951114A7270F4A860096EA31 /* AVAssetClientLive */,
 			);
 			productName = EntriesFeaturePreview;
 			productReference = 959AF01F26C1A5A900CD2322 /* EntriesFeaturePreview.app */;
@@ -230,7 +233,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -285,7 +288,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -305,7 +308,7 @@
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = EntriesFeaturePreview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -327,7 +330,7 @@
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = EntriesFeaturePreview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -363,6 +366,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		951114A7270F4A860096EA31 /* AVAssetClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVAssetClientLive;
+		};
 		955764E126D7AC2700C8BD84 /* AVCaptureDeviceClientLive */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AVCaptureDeviceClientLive;

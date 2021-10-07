@@ -94,6 +94,11 @@
 "Video.Remove.Description" = "Estàs segur que vols esborrar el video?";
 "Video.Remove.Title" = "Esborrar";
 
+// Audio
+
+"Audio.Remove.Description" = "Estàs segur que vols esborrar la nota de veu?";
+"Audio.Remove.Title" = "Esborrar";
+
 // Camera
 
 "Camera.Denied" = "Càmera Denegada";

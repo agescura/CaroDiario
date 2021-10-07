@@ -12,13 +12,11 @@ import FileClient
 import SharedViews
 import SharedModels
 import UIApplicationClient
-
 import AVAudioPlayerClient
 
 public struct AttachmentAudioState: Equatable {
     public var entryAudio: SharedModels.EntryAudio
-    public var presentAudioFullScreen: Bool = false
-
+    
     public init(
         entryAudio: SharedModels.EntryAudio
     ) {
@@ -30,7 +28,7 @@ public enum AttachmentAudioAction: Equatable {
     case presentAudioFullScreen(Bool)
 }
 
-public let attachmentAudioReducer = Reducer<AttachmentAudioState, AttachmentAudioAction, Void> { state, action, environment in
+public let attachmentAudioReducer = Reducer<AttachmentAudioState, AttachmentAudioAction, Void> { state, action, _ in
     switch action {
         
     case let .presentAudioFullScreen(value):

@@ -53,26 +53,21 @@ public enum AttachmentAddAudioAction: Equatable {
         case dragOnEnded(CGPoint)
         case playerGoBackward
         case playerGoForward
-        
-        case processShare
 }
 
 public struct AttachmentAddAudioEnvironment {
     public let fileClient: FileClient
-    public let applicationClient: UIApplicationClient
     public var avAudioPlayerClient: AVAudioPlayerClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     
     public init(
         fileClient: FileClient,
-        applicationClient: UIApplicationClient,
         avAudioPlayerClient: AVAudioPlayerClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>
     ) {
         self.fileClient = fileClient
-        self.applicationClient = applicationClient
         self.avAudioPlayerClient = avAudioPlayerClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
@@ -95,9 +90,9 @@ public let attachmentAddAudioReducer = Reducer<AttachmentAddAudioState, Attachme
             
         case .removeFullScreenAlertButtonTapped:
             state.removeFullScreenAlert = .init(
-                title: .init("Image.Remove.Description".localized),
+                title: .init("Audio.Remove.Description".localized),
                 primaryButton: .cancel(.init("Cancel".localized)),
-                secondaryButton: .destructive(.init("Image.Remove.Title".localized), action: .send(.remove))
+                secondaryButton: .destructive(.init("Audio.Remove.Title".localized), action: .send(.remove))
             )
             return .none
             
@@ -191,10 +186,6 @@ public let attachmentAddAudioReducer = Reducer<AttachmentAddAudioState, Attachme
                     .fireAndForget()
             }
             return .none
-            
-        case .processShare:
-            return environment.applicationClient.share(state.entryAudio.url)
-                .fireAndForget()
         }
 }
 
@@ -227,16 +218,6 @@ struct AttachmentAddAudioView: View {
                                     }) {
                                         Image(systemName: "trash")
                                             .frame(width: 48, height: 48)
-                                            .foregroundColor(.chambray)
-                                    }
-                                    
-                                    Button(action: {
-                                        viewStore.send(.processShare)
-                                    }) {
-                                        Image(systemName: "square.and.arrow.up")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: 16, height: 16)
                                             .foregroundColor(.chambray)
                                     }
                                     

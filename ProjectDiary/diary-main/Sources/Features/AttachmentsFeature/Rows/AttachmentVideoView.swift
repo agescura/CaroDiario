@@ -17,7 +17,6 @@ import AVKit
 
 public struct AttachmentVideoState: Equatable {
     public var entryVideo: SharedModels.EntryVideo
-    public var presentVideoPlayer: Bool = false
     
     public init(
         entryVideo: SharedModels.EntryVideo
@@ -30,7 +29,7 @@ public enum AttachmentVideoAction: Equatable {
     case presentVideoPlayer(Bool)
 }
 
-public let attachmentVideoReducer = Reducer<AttachmentVideoState, AttachmentVideoAction, Void> { state, action, environment in
+public let attachmentVideoReducer = Reducer<AttachmentVideoState, AttachmentVideoAction, Void> { state, action, _ in
     switch action {
     
     case let .presentVideoPlayer(value):

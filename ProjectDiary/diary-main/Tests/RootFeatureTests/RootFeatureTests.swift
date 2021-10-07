@@ -51,6 +51,7 @@ class RootFeatureTests: XCTestCase {
                 avAudioRecorderClient: .noop,
                 storeKitClient: .noop,
                 pdfKitClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,
@@ -110,6 +111,7 @@ class RootFeatureTests: XCTestCase {
                 avAudioRecorderClient: .noop,
                 storeKitClient: .noop,
                 pdfKitClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,
@@ -131,8 +133,6 @@ class RootFeatureTests: XCTestCase {
         store.receive(.featureAction(.splash(.finishAnimation))) {
             $0.featureState = .splash(.init(animation: .finish))
         }
-        store.receive(.startLockScreen)
-        store.receive(.requestCameraStatus)
     }
     
     func testReopeningAppWithSplashDisabled() {
@@ -174,6 +174,7 @@ class RootFeatureTests: XCTestCase {
                 avAudioRecorderClient: .noop,
                 storeKitClient: .noop,
                 pdfKitClient: .noop,
+                avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,
@@ -185,8 +186,5 @@ class RootFeatureTests: XCTestCase {
         store.send(.appDelegate(.didFinishLaunching))
         store.receive(.setUserInterfaceStyle)
         store.receive(.startFirstScreen)
-        store.receive(.startLockScreen)
-        store.receive(.requestCameraStatus)
-
     }
 }

@@ -42,34 +42,12 @@ public enum AttachmentAddImageAction: Equatable {
         case dismissRemoveFullScreen
         case cancelRemoveFullScreenAlert
         
-        case processShare
-        case shareImage(Data)
-        
         case scaleOnChanged(CGFloat)
         case scaleTapGestureCount
         case dragGesture(DragGesture.Value)
 }
 
-public struct AttachmentAddImageEnvironment {
-    public let fileClient: FileClient
-    public let applicationClient: UIApplicationClient
-    public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    
-    public init(
-        fileClient: FileClient,
-        applicationClient: UIApplicationClient,
-        mainQueue: AnySchedulerOf<DispatchQueue>,
-        backgroundQueue: AnySchedulerOf<DispatchQueue>
-    ) {
-        self.fileClient = fileClient
-        self.applicationClient = applicationClient
-        self.mainQueue = mainQueue
-        self.backgroundQueue = backgroundQueue
-    }
-}
-
-public let attachmentAddImageReducer = Reducer<AttachmentAddImageState, AttachmentAddImageAction, AttachmentAddImageEnvironment> { state, action, environment in
+public let attachmentAddImageReducer = Reducer<AttachmentAddImageState, AttachmentAddImageAction, Void> { state, action, _ in
     switch action {
         
         case let .presentImageFullScreen(value):
@@ -97,16 +75,6 @@ public let attachmentAddImageReducer = Reducer<AttachmentAddImageState, Attachme
         case .cancelRemoveFullScreenAlert:
             state.removeFullScreenAlert = nil
             return .none
-            
-        case .processShare:
-            return environment.fileClient.loadImage(state.entryImage, environment.backgroundQueue)
-                .receive(on: environment.mainQueue)
-                .eraseToEffect()
-                .map(AttachmentAddImageAction.shareImage)
-                    
-        case let .shareImage(image):
-            return environment.applicationClient.share(image)
-                .fireAndForget()
             
         case let .scaleOnChanged(value):
             let maxScale: CGFloat = 3.0
@@ -176,18 +144,7 @@ struct AttachmentAddImageView: View {
                                     .frame(width: 16, height: 16)
                                     .foregroundColor(.chambray)
                             }
-                            
-                            Button(action: {
-                                viewStore.send(.processShare)
-                            }) {
-                                Image(systemName: "square.and.arrow.up")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 16, height: 16)
-                                    .foregroundColor(.chambray)
-                            }
-                            
-                            
+                                                        
                             Button(action: {
                                 viewStore.send(.presentImageFullScreen(false))
                             }) {
