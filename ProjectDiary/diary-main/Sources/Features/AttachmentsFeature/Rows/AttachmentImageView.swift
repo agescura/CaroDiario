@@ -42,6 +42,9 @@ struct AttachmentImageView: View {
         WithViewStore(store) { viewStore in
             ImageView(url: viewStore.entryImage.thumbnail)
                 .frame(width: 52, height: 52)
+                .onTapGesture {
+                    viewStore.send(.presentImageFullScreen(true))
+                }
         }
     }
 }

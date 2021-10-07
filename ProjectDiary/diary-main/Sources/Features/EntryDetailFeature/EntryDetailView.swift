@@ -372,7 +372,7 @@ public struct EntryDetailView: View {
 
                 ZStack {
                     if viewStore.showAttachmentOverlayed {
-                        Color.orange
+                        Color.black
                             .edgesIgnoringSafeArea(.all)
 
                         ZStack {
