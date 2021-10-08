@@ -81,7 +81,8 @@ public let exportReducer: Reducer<ExportState, ExportAction, ExportEnvironment> 
                         .map(ExportAction.presentActivityView)
             
         case let .presentActivityView(file):
-            return environment.applicationClient.share(file)
+            #warning("activity review")
+            return environment.applicationClient.share(file, .pdf)
                 .fireAndForget()
             
         case .previewPDF:

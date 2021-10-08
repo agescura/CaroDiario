@@ -14,8 +14,14 @@ public struct UIApplicationClient {
     public let openSettings: () -> Effect<Never, Never>
     public var open: (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>
     public var canOpen: (URL) -> Bool
-    public let share: (Any) -> Effect<Never, Never>
+    public let share: (Any, UIApplicationClient.PopoverPosition) -> Effect<Never, Never>
     public let showTabView: (Bool) -> Effect<Never, Never>
+    
+    public enum PopoverPosition {
+        case text
+        case attachment
+        case pdf
+    }
     
     public init(
         alternateIconName: String?,
@@ -24,7 +30,7 @@ public struct UIApplicationClient {
         openSettings: @escaping () -> Effect<Never, Never>,
         open: @escaping (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>,
         canOpen: @escaping (URL) -> Bool,
-        share: @escaping (Any) -> Effect<Never, Never>,
+        share: @escaping (Any, UIApplicationClient.PopoverPosition) -> Effect<Never, Never>,
         showTabView: @escaping (Bool) -> Effect<Never, Never>
     ) {
         self.alternateIconName = alternateIconName

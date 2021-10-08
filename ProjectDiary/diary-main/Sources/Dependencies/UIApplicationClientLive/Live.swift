@@ -37,7 +37,7 @@ extension UIApplicationClient {
         canOpen: {
             UIApplication.shared.canOpenURL($0)
         },
-        share: { data in
+        share: { data, position in
                 .fireAndForget {
                     guard let windowScene = UIApplication.shared.windows.first?.windowScene else { return }
                     
@@ -48,6 +48,12 @@ extension UIApplicationClient {
                         presentedView = presented
                     } else {
                         presentedView = windowScene.windows.first?.rootViewController
+                    }
+                    
+                    if let popoverController = vc.popoverPresentationController {
+                        popoverController.sourceRect = CGRect(x: position.x, y: position.y, width: 0, height: 0)
+                        popoverController.sourceView = UIApplication.shared.windows.first?.rootViewController?.view
+                        popoverController.permittedArrowDirections = .up
                     }
                     
                     presentedView?.present(
@@ -78,5 +84,28 @@ extension UIView {
             res.append(contentsOf: riz)
         }
         return res
+    }
+}
+
+extension UIApplicationClient.PopoverPosition {
+    
+    var x: CGFloat {
+        switch self {
+        case .attachment:
+            return UIScreen.main.bounds.width - 74
+        case .text:
+            return UIScreen.main.bounds.width -  16
+        case .pdf:
+            return 0
+        }
+    }
+    
+    var y: CGFloat {
+        switch self {
+        case .attachment, .text:
+            return 70
+        case .pdf:
+            return 270
+        }
     }
 }

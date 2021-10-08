@@ -211,7 +211,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
         case .processShareAttachment:
             let attachmentState = state.seletedAttachmentRowState.attachment
             
-            return environment.applicationClient.share(attachmentState.url)
+            return environment.applicationClient.share(attachmentState.url, .attachment)
                 .fireAndForget()
         
         case .onAppear:
@@ -320,7 +320,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
             return Effect(value: .onAppear)
             
         case .processShare:
-            return environment.applicationClient.share(state.entry.text.message)
+            return environment.applicationClient.share(state.entry.text.message, .text)
                 .fireAndForget()
         }
     }
