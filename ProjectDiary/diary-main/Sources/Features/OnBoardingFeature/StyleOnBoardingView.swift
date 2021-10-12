@@ -23,6 +23,8 @@ public struct StyleOnBoardingState: Equatable {
     public var skipAlert: AlertState<StyleOnBoardingAction>?
     public var layoutOnBoardingState: LayoutOnBoardingState? = nil
     public var navigateLayoutOnBoarding: Bool = false
+    
+    public var isAppClip = false
 }
 
 public enum StyleOnBoardingAction: Equatable {
@@ -116,7 +118,8 @@ public let styleOnBoardingReducer: Reducer<StyleOnBoardingState, StyleOnBoarding
                 styleType: state.styleType, layoutType: state.layoutType,
                 entries: fakeEntries(
                     with: state.styleType,
-                    layout: state.layoutType)) : nil
+                    layout: state.layoutType),
+                isAppClip: state.isAppClip) : nil
             return .none
             
         case .skipAlertButtonTapped:
@@ -180,7 +183,7 @@ public struct StyleOnBoardingView: View {
                             )
                         }
                         .accentColor(.chambray)
-                        .animation(.default)
+                        .animation(.default, value: UUID())
                         .disabled(true)
                         .frame(minHeight: 200)
                         
@@ -209,6 +212,7 @@ public struct StyleOnBoardingView: View {
                     }) {
                     viewStore.send(.skipAlertButtonTapped)
                 }
+                .opacity(viewStore.isAppClip ? 0.0 : 1.0)
                 .padding(.horizontal, 16)
                 .alert(
                     store.scope(state: \.skipAlert),

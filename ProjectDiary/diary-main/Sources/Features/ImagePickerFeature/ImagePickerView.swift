@@ -6,6 +6,7 @@
 
 import SwiftUI
 import MobileCoreServices
+import UniformTypeIdentifiers
 
 public enum PickerSourceType: Int, Equatable {
     case photoAlbum
@@ -51,8 +52,8 @@ public struct ImagePicker: UIViewControllerRepresentable {
         controller.sourceType = type.sourceType
         controller.allowsEditing = false
         controller.mediaTypes = [
-            kUTTypeImage as String,
-            kUTTypeMovie as String
+            UTType.image.identifier as String,
+            UTType.movie.identifier as String
         ]
         controller.delegate = context.coordinator
         return controller

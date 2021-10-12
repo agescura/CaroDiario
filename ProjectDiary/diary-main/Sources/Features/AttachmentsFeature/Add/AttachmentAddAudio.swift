@@ -240,7 +240,7 @@ struct AttachmentAddAudioView: View {
                                         Capsule()
                                             .fill(Color.red)
                                             .frame(width: viewStore.playerProgress, height: 8)
-                                            .animation(nil)
+                                            .animation(nil, value: UUID())
                                             .gesture(
                                                 DragGesture()
                                                     .onChanged { value in
@@ -309,7 +309,7 @@ struct AttachmentAddAudioView: View {
                                     Spacer()
                                 }
                                 .padding()
-                                .animation(.default)
+                                .animation(.default, value: UUID())
                                 .onAppear {
                                     viewStore.send(.onAppear)
                                 }

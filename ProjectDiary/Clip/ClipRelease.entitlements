@@ -7,8 +7,10 @@
 		<string>applinks:caro-diario.web.app</string>
 		<string>appclip:caro-diario.clip</string>
 	</array>
-	<key>com.apple.developer.default-data-protection</key>
-	<string>NSFileProtectionComplete</string>
+	<key>com.apple.developer.parent-application-identifiers</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.albertgil.carodiario</string>
+	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.albertgil.carodiario</string>

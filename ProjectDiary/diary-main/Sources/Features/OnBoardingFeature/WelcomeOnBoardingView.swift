@@ -19,12 +19,16 @@ public struct WelcomeOnBoardingState: Equatable {
     public var selectedPage = 0
     public var tabViewAnimated = false
     
+    public var isAppClip = false
+    
     public init(
         privacyOnBoardingState: PrivacyOnBoardingState? = nil,
-        navigatePrivacyOnBoarding: Bool = false
+        navigatePrivacyOnBoarding: Bool = false,
+        isAppClip: Bool = false
     ) {
         self.privacyOnBoardingState = privacyOnBoardingState
         self.navigatePrivacyOnBoarding = navigatePrivacyOnBoarding
+        self.isAppClip = isAppClip
     }
 }
 
@@ -93,7 +97,7 @@ public let welcomeOnBoardingReducer: Reducer<WelcomeOnBoardingState, WelcomeOnBo
         switch action {
         
         case let .navigationPrivacyOnBoarding(value):
-            state.privacyOnBoardingState = value ? .init() : nil
+            state.privacyOnBoardingState = value ? .init(isAppClip: state.isAppClip) : nil
             state.navigatePrivacyOnBoarding = value
             return .cancel(id: TimerId())
             
@@ -197,6 +201,7 @@ public struct WelcomeOnBoardingView: View {
                         }) {
                         viewStore.send(.skipAlertButtonTapped)
                     }
+                    .opacity(viewStore.isAppClip ? 0.0 : 1.0)
                     .padding(.horizontal, 16)
                     .alert(
                         store.scope(state: \.skipAlert),

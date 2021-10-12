@@ -43,7 +43,7 @@ public struct OnBoardingTabView: View {
         .foregroundColor(.adaptiveWhite)
         .tabViewStyle(PageTabViewStyle())
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-        .animation(animated ? .spring() : nil)
+        .animation(animated ? .spring() : nil, value: UUID())
     }
 }
 

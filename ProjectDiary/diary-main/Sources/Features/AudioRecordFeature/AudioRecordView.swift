@@ -408,7 +408,7 @@ public struct AudioRecordView: View {
                             Capsule()
                                 .fill(Color.red)
                                 .frame(width: viewStore.playerProgress, height: 8)
-                                .animation(nil)
+                                .animation(nil, value: UUID())
                                 .gesture(
                                     DragGesture()
                                         .onChanged { value in
@@ -490,7 +490,7 @@ public struct AudioRecordView: View {
                         Spacer()
                     }
                     .opacity(viewStore.hasAudioRecorded ? 1.0 : 0.0)
-                    .animation(.default)
+                    .animation(.default, value: UUID())
                     
                     Text(viewStore.audioRecordDuration.formatter)
                         .adaptiveFont(.latoBold, size: 20)

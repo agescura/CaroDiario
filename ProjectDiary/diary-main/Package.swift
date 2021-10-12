@@ -120,7 +120,9 @@ let package = Package(
         .library(name: "PasscodeFeature", targets: ["PasscodeFeature"]),
         .library(name: "PDFPreviewFeature", targets: ["PDFPreviewFeature"]),
         
-        .library(name: "SearchFeature", targets: ["SearchFeature"])
+        .library(name: "SearchFeature", targets: ["SearchFeature"]),
+        
+        .library(name: "ClipFeature", targets: ["ClipFeature"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.28.1")
@@ -604,6 +606,16 @@ let package = Package(
                 "FileClient"
             ],
             path: "Sources/Features/SearchFeature"
+        ),
+        
+        .target(
+            name: "ClipFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "SplashFeature",
+                "OnBoardingFeature",
+            ],
+            path: "Sources/Features/ClipFeature"
         ),
         
         .testTarget(

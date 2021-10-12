@@ -68,7 +68,7 @@ public struct AttachmentImageDetailView: View {
         WithViewStore(store) { viewStore in
             ImageView(url: viewStore.entryImage.url)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .animation(.easeIn(duration: 1.0))
+                .animation(.easeIn(duration: 1.0), value: UUID())
                 .scaleEffect(viewStore.imageScale)
                 .offset(viewStore.currentPosition)
                 .gesture(
