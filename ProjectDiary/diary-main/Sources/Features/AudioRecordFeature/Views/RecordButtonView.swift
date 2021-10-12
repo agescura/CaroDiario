@@ -17,7 +17,7 @@ struct RecordButtonView: View {
             RoundedRectangle(cornerRadius: isRecording ? size * 0.1 : size / 2)
                 .fill(Color.berryRed)
                 .frame(width: isRecording ? size / 2 : size, height: isRecording ? size / 2 : size)
-                .animation(.default)
+                .animation(.default, value: UUID())
             
             Circle()
                 .stroke(Color.adaptiveGray, lineWidth: size * 0.04)

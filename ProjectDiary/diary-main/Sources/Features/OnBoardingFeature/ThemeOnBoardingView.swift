@@ -18,6 +18,8 @@ import FeedbackGeneratorClient
 public struct ThemeOnBoardingState: Equatable {
     public var themeType: ThemeType
     public var entries: IdentifiedArrayOf<DayEntriesRowState>
+    
+    public var isAppClip = false
 }
 
 public enum ThemeOnBoardingAction: Equatable {
@@ -127,7 +129,7 @@ public struct ThemeOnBoardingView: View {
                             )
                         }
                         .accentColor(.chambray)
-                        .animation(.default)
+                        .animation(.default, value: UUID())
                         .disabled(true)
                         .frame(minHeight: 200)
                     }
@@ -135,7 +137,7 @@ public struct ThemeOnBoardingView: View {
                 
                 PrimaryButtonView(
                     label: {
-                        Text("OnBoarding.Start".localized)
+                        Text(viewStore.isAppClip ? "Instalar en App Store" : "OnBoarding.Start".localized)
                             .adaptiveFont(.latoRegular, size: 16)
                     }) {
                     viewStore.send(.startButtonTapped)

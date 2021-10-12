@@ -19,12 +19,16 @@ public struct PrivacyOnBoardingState: Equatable {
     
     public var skipAlert: AlertState<PrivacyOnBoardingAction>?
     
+    public var isAppClip = false
+    
     public init(
         styleOnBoardingState: StyleOnBoardingState? = nil,
-        navigateStyleOnBoarding: Bool = false
+        navigateStyleOnBoarding: Bool = false,
+        isAppClip: Bool = false
     ) {
         self.styleOnBoardingState = styleOnBoardingState
         self.navigateStyleOnBoarding = navigateStyleOnBoarding
+        self.isAppClip = isAppClip
     }
 }
 
@@ -98,7 +102,8 @@ let privacyOnBoardingReducer: Reducer<PrivacyOnBoardingState, PrivacyOnBoardingA
                 styleType: styleType,
                 layoutType: layoutType,
                 entries: fakeEntries(with: styleType,
-                                     layout: layoutType)) : nil
+                                     layout: layoutType),
+                isAppClip: state.isAppClip) : nil
             return .none
             
         case .skipAlertButtonTapped:
@@ -176,6 +181,7 @@ public struct PrivacyOnBoardingView: View {
                     }) {
                     viewStore.send(.skipAlertButtonTapped)
                 }
+                .opacity(viewStore.isAppClip ? 0.0 : 1.0)
                 .padding(.horizontal, 16)
                 .alert(
                     store.scope(state: \.skipAlert),

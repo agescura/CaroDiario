@@ -103,7 +103,7 @@ public struct StyleView: View {
                         )
                     }
                     .accentColor(.chambray)
-                    .animation(.default)
+                    .animation(.default, value: UUID())
                     .disabled(true)
                 }
                 

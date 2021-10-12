@@ -1,6 +1,5 @@
 //
 //  OnboardingView.swift
-//  OnboardingFeature
 //
 //  Created by Albert Gil Escura on 26/6/21.
 //
@@ -126,7 +125,7 @@ public struct SplashView: View {
                             maxHeight: viewStore.animation.lineHeight
                         )
                         .background(Color.adaptiveWhite)
-                        .animation(viewStore.animation.duration, value: 0.5)
+                        .animation(viewStore.animation.duration, value: UUID())
                 }
             }
             .ignoresSafeArea()

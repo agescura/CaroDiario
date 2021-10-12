@@ -17,6 +17,14 @@
 		954422FB26F669DF002C1E1C /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 954422FA26F669DF002C1E1C /* FileClientLive */; };
 		9544230326F691EF002C1E1C /* PDFKitClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9544230226F691EF002C1E1C /* PDFKitClientLive */; };
 		955764DC26D7A86700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955764DB26D7A86700C8BD84 /* AVCaptureDeviceClientLive */; };
+		955CAE8E2710849B009709DB /* ClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CAE8D2710849B009709DB /* ClipApp.swift */; };
+		955CAE922710849C009709DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 955CAE912710849C009709DB /* Assets.xcassets */; };
+		955CAE952710849C009709DB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 955CAE942710849C009709DB /* Preview Assets.xcassets */; };
+		955CAE9A2710849C009709DB /* Clip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 955CAE8B2710849B009709DB /* Clip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		955CAEA327108C54009709DB /* UserDefaultsClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955CAEA227108C54009709DB /* UserDefaultsClientLive */; };
+		955CAEA527108C58009709DB /* FeedbackGeneratorClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955CAEA427108C58009709DB /* FeedbackGeneratorClientLive */; };
+		955CAEA727109847009709DB /* ClipFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 955CAEA627109847009709DB /* ClipFeature */; };
+		955CAEA92710A110009709DB /* UIApplicationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955CAEA82710A110009709DB /* UIApplicationClientLive */; };
 		9565C2DB26D989DD004DB3D9 /* AVAudioPlayerClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2DA26D989DD004DB3D9 /* AVAudioPlayerClientLive */; };
 		9565C2DD26D989E3004DB3D9 /* AVAudioRecorderClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2DC26D989E3004DB3D9 /* AVAudioRecorderClientLive */; };
 		956717DD26B1E17C00E2C1E9 /* Icon-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 956717DC26B1E17C00E2C1E9 /* Icon-2.png */; };
@@ -57,6 +65,13 @@
 			remoteGlobalIDString = 954422E826F66535002C1E1C;
 			remoteInfo = Share;
 		};
+		955CAE982710849C009709DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B05D5D5443CE6230D470EC0E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 955CAE8A2710849B009709DB;
+			remoteInfo = Clip;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -81,6 +96,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		955CAE9B2710849C009709DB /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				955CAE9A2710849C009709DB /* Clip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -97,6 +123,13 @@
 		954422F026F66535002C1E1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		95523D9226F27AF00054A5FB /* ProjectDiaryDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProjectDiaryDebug.entitlements; sourceTree = "<group>"; };
 		9553330827034F3A00D2FC02 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		955CAE8B2710849B009709DB /* Clip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		955CAE8D2710849B009709DB /* ClipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipApp.swift; sourceTree = "<group>"; };
+		955CAE912710849C009709DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		955CAE942710849C009709DB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		955CAE962710849C009709DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		955CAE972710849C009709DB /* Clip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clip.entitlements; sourceTree = "<group>"; };
+		955CAE9F271084D6009709DB /* ClipRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClipRelease.entitlements; sourceTree = "<group>"; };
 		956717DC26B1E17C00E2C1E9 /* Icon-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-2.png"; sourceTree = "<group>"; };
 		956717DE26B1E19200E2C1E9 /* Icon-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-2@2x.png"; sourceTree = "<group>"; };
 		956717E026B1E1A600E2C1E9 /* Icon-2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-2@3x.png"; sourceTree = "<group>"; };
@@ -133,6 +166,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		955CAE882710849B009709DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				955CAEA92710A110009709DB /* UIApplicationClientLive in Frameworks */,
+				955CAEA327108C54009709DB /* UserDefaultsClientLive in Frameworks */,
+				955CAEA727109847009709DB /* ClipFeature in Frameworks */,
+				955CAEA527108C58009709DB /* FeedbackGeneratorClientLive in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DA1607DD6C1A5620737671C4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -163,6 +207,7 @@
 				CCC2A4A488B16F4A3F613A15 /* ProjectDiary */,
 				9537BBB526D5419A00650CF5 /* ProjectDiaryTests */,
 				954422EA26F66535002C1E1C /* Share */,
+				955CAE8C2710849B009709DB /* Clip */,
 				58CFE8C1A116884195DCC77A /* Products */,
 				9537C214269B27AE0023139A /* Frameworks */,
 			);
@@ -182,6 +227,7 @@
 				BD2A3298447210A07EE095A2 /* ProjectDiary.app */,
 				9537BBB426D5419A00650CF5 /* ProjectDiaryTests.xctest */,
 				954422E926F66535002C1E1C /* Share.appex */,
+				955CAE8B2710849B009709DB /* Clip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -223,6 +269,27 @@
 				0EA3BD15BCD66FE0C6FD71C0 /* ProjectDiary.entitlements */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		955CAE8C2710849B009709DB /* Clip */ = {
+			isa = PBXGroup;
+			children = (
+				955CAE9F271084D6009709DB /* ClipRelease.entitlements */,
+				955CAE8D2710849B009709DB /* ClipApp.swift */,
+				955CAE912710849C009709DB /* Assets.xcassets */,
+				955CAE962710849C009709DB /* Info.plist */,
+				955CAE972710849C009709DB /* Clip.entitlements */,
+				955CAE932710849C009709DB /* Preview Content */,
+			);
+			path = Clip;
+			sourceTree = "<group>";
+		};
+		955CAE932710849C009709DB /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				955CAE942710849C009709DB /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		956717CD26B1DDD600E2C1E9 /* AlternateIcons */ = {
@@ -281,11 +348,13 @@
 				6C0119EBDD54F578ACF530AB /* Resources */,
 				DA1607DD6C1A5620737671C4 /* Frameworks */,
 				954422F426F66535002C1E1C /* Embed App Extensions */,
+				955CAE9B2710849C009709DB /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				954422F226F66535002C1E1C /* PBXTargetDependency */,
+				955CAE992710849C009709DB /* PBXTargetDependency */,
 			);
 			name = ProjectDiary;
 			packageProductDependencies = (
@@ -351,6 +420,29 @@
 			productReference = 954422E926F66535002C1E1C /* Share.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		955CAE8A2710849B009709DB /* Clip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 955CAE9E2710849C009709DB /* Build configuration list for PBXNativeTarget "Clip" */;
+			buildPhases = (
+				955CAE872710849B009709DB /* Sources */,
+				955CAE882710849B009709DB /* Frameworks */,
+				955CAE892710849B009709DB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Clip;
+			packageProductDependencies = (
+				955CAEA227108C54009709DB /* UserDefaultsClientLive */,
+				955CAEA427108C58009709DB /* FeedbackGeneratorClientLive */,
+				955CAEA627109847009709DB /* ClipFeature */,
+				955CAEA82710A110009709DB /* UIApplicationClientLive */,
+			);
+			productName = Clip;
+			productReference = 955CAE8B2710849B009709DB /* Clip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -365,6 +457,9 @@
 						TestTargetID = 63B75D206F424DB0905E10F2;
 					};
 					954422E826F66535002C1E1C = {
+						CreatedOnToolsVersion = 13.0;
+					};
+					955CAE8A2710849B009709DB = {
 						CreatedOnToolsVersion = 13.0;
 					};
 				};
@@ -388,6 +483,7 @@
 				63B75D206F424DB0905E10F2 /* ProjectDiary */,
 				9537BBB326D5419A00650CF5 /* ProjectDiaryTests */,
 				954422E826F66535002C1E1C /* Share */,
+				955CAE8A2710849B009709DB /* Clip */,
 			);
 		};
 /* End PBXProject section */
@@ -424,6 +520,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		955CAE892710849B009709DB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				955CAE952710849C009709DB /* Preview Assets.xcassets in Resources */,
+				955CAE922710849C009709DB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -440,6 +545,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				954422EC26F66535002C1E1C /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		955CAE872710849B009709DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				955CAE8E2710849B009709DB /* ClipApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,6 +578,11 @@
 			isa = PBXTargetDependency;
 			target = 954422E826F66535002C1E1C /* Share */;
 			targetProxy = 954422F126F66535002C1E1C /* PBXContainerItemProxy */;
+		};
+		955CAE992710849C009709DB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 955CAE8A2710849B009709DB /* Clip */;
+			targetProxy = 955CAE982710849C009709DB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -498,7 +616,7 @@
 				CODE_SIGN_ENTITLEMENTS = ProjectDiary/ProjectDiaryDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				INFOPLIST_FILE = ProjectDiary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -506,7 +624,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.CaroDiarioDevelopment;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -633,7 +751,7 @@
 				CODE_SIGN_ENTITLEMENTS = Share/ShareDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -649,7 +767,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.CaroDiarioDevelopment.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -666,7 +784,7 @@
 				CODE_SIGN_ENTITLEMENTS = Share/ShareRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Share/Info.plist;
@@ -678,10 +796,85 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.carodiario.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		955CAE9C2710849C009709DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = Clip/Clip.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_ASSET_PATHS = "\"Clip/Preview Content\"";
+				DEVELOPMENT_TEAM = CCGZFCU763;
+				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Clip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ProjectDiary;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.CaroDiarioDevelopment.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		955CAE9D2710849C009709DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = Clip/ClipRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_ASSET_PATHS = "\"Clip/Preview Content\"";
+				DEVELOPMENT_TEAM = CCGZFCU763;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Clip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ProjectDiary;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.carodiario.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -755,7 +948,7 @@
 				CODE_SIGN_ENTITLEMENTS = ProjectDiary/ProjectDiary.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				INFOPLIST_FILE = ProjectDiary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -763,7 +956,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.carodiario;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -801,6 +994,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		955CAE9E2710849C009709DB /* Build configuration list for PBXNativeTarget "Clip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				955CAE9C2710849C009709DB /* Debug */,
+				955CAE9D2710849C009709DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		BF09D7901BCB4F33EE598E42 /* Build configuration list for PBXProject "ProjectDiary" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -828,6 +1030,22 @@
 		955764DB26D7A86700C8BD84 /* AVCaptureDeviceClientLive */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AVCaptureDeviceClientLive;
+		};
+		955CAEA227108C54009709DB /* UserDefaultsClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserDefaultsClientLive;
+		};
+		955CAEA427108C58009709DB /* FeedbackGeneratorClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FeedbackGeneratorClientLive;
+		};
+		955CAEA627109847009709DB /* ClipFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ClipFeature;
+		};
+		955CAEA82710A110009709DB /* UIApplicationClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIApplicationClientLive;
 		};
 		9565C2DA26D989DD004DB3D9 /* AVAudioPlayerClientLive */ = {
 			isa = XCSwiftPackageProductDependency;

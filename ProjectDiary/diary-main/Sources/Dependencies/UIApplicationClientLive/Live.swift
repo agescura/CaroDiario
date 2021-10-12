@@ -39,8 +39,12 @@ extension UIApplicationClient {
         },
         share: { data, position in
                 .fireAndForget {
-                    guard let windowScene = UIApplication.shared.windows.first?.windowScene else { return }
+                    let windowScene = UIApplication.shared.connectedScenes
+                            .filter { $0.activationState == .foregroundActive }
+                            .compactMap { $0 as? UIWindowScene }.first
                     
+                    guard let windowScene = windowScene else { return }
+
                     let vc = UIActivityViewController(activityItems: [data], applicationActivities: [])
                     
                     let presentedView: UIViewController?
@@ -52,7 +56,7 @@ extension UIApplicationClient {
                     
                     if let popoverController = vc.popoverPresentationController {
                         popoverController.sourceRect = CGRect(x: position.x, y: position.y, width: 0, height: 0)
-                        popoverController.sourceView = UIApplication.shared.windows.first?.rootViewController?.view
+                        popoverController.sourceView = windowScene.keyWindow?.rootViewController?.view
                         popoverController.permittedArrowDirections = .up
                     }
                     
@@ -66,11 +70,13 @@ extension UIApplicationClient {
         },
         showTabView: { isShowing in
                 .fireAndForget {
-                    UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.allSubviews().forEach({ (v) in
-                        if let view = v as? UITabBar {
-                            view.isHidden = isShowing
-                        }
-                    })
+                    UIApplication.shared.connectedScenes
+                        .filter { $0.activationState == .foregroundActive }
+                        .compactMap { $0 as? UIWindowScene }.first?.keyWindow?.allSubviews().forEach({ (v) in
+                            if let view = v as? UITabBar {
+                                view.isHidden = isShowing
+                            }
+                        })
                 }
         }
     )
