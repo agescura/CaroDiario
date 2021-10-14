@@ -105,5 +105,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSUbiquitousContainers</key>
+        <dict>
+            <key>iCloud.com.albertgil.CaroDiarioDevelopment</key>
+            <dict>
+                <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+                <true/>
+                <key>NSUbiquitousContainerName</key>
+                <string>com.albertgil.CaroDiarioDevelopment</string>
+                <key>NSUbiquitousContainerSupportedFolderLevels</key>
+                <string>Any</string>
+            </dict>
+        </dict>
 </dict>
 </plist>

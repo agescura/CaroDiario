@@ -45,6 +45,7 @@
 		95ABFF4A26B48BD9001DAAE7 /* UserDefaultsClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF4926B48BD9001DAAE7 /* UserDefaultsClientLive */; };
 		95B9098126B7226E00CE023E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B9098026B7226E00CE023E /* AppDelegate.swift */; };
 		95B9098326B722BC00CE023E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B9098226B722BC00CE023E /* SceneDelegate.swift */; };
+		95E80F7A2718C170008D0EF4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9553330827034F3A00D2FC02 /* CloudKit.framework */; };
 		95E99B2026D7E1B200DB883F /* AVAudioSessionClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95E99B1F26D7E1B200DB883F /* AVAudioSessionClientLive */; };
 		95EFDB4826D7F02500C2B12F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 95EFDB4A26D7F02500C2B12F /* InfoPlist.strings */; };
 		B86555E7B0250F1C8F3C7CDD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D710050662204AD38B1B6B3 /* Preview Assets.xcassets */; };
@@ -181,6 +182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95E80F7A2718C170008D0EF4 /* CloudKit.framework in Frameworks */,
 				95ABFF4226B48BD9001DAAE7 /* FileClientLive in Frameworks */,
 				95ABFF4026B48BD9001DAAE7 /* CoreDataClientLive in Frameworks */,
 				9565C2DD26D989E3004DB3D9 /* AVAudioRecorderClientLive in Frameworks */,

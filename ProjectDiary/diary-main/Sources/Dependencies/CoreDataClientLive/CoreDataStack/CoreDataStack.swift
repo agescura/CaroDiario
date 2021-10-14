@@ -24,6 +24,9 @@ class CoreDataStack {
         let persistentContainer = NSPersistentContainer(name: modelName, managedObjectModel: model)
         let storeURL = URL.storeURL(for: "group.albertgil.carodiario", databaseName: modelName)
         let storeDescription = NSPersistentStoreDescription(url: storeURL)
+        storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.albertgil.CaroDiarioDevelopment")
+        storeDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+        storeDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
         persistentContainer.persistentStoreDescriptions = [storeDescription]
         persistentContainer.loadPersistentStores { _, error in
             if let error = error as NSError? {

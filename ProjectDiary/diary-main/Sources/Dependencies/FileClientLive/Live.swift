@@ -16,7 +16,17 @@ extension FileClient {
         
         return Self(
             path: { id in
-                guard let url = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.albertgil.carodiario") else {
+                if let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") {
+                    if !FileManager.default.fileExists(atPath: containerUrl.path, isDirectory: nil) {
+                        do {
+                            try FileManager.default.createDirectory(at: containerUrl, withIntermediateDirectories: true, attributes: nil)
+                        }
+                        catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+                guard let url = fileManager.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
                     fatalError()
                 }
                 return url.appendingPathComponent(id.uuidString)
@@ -90,7 +100,7 @@ extension FileClient {
 }
 
 extension UIImage {
-    private func rotateImage() -> UIImage {
+    fileprivate func rotateImage() -> UIImage {
         if (imageOrientation == UIImage.Orientation.up) {
             return self
         }
@@ -114,23 +124,3 @@ extension UIImage {
             }
     }
 }
-
-//import AVKit
-//
-//extension URL {
-//    func generateThumbnail() -> UIImage? {
-//        do {
-//            let asset = AVURLAsset(url: self)
-//            let imageGenerator = AVAssetImageGenerator(asset: asset)
-//            imageGenerator.appliesPreferredTrackTransform = true
-//
-//            let cgImage = try imageGenerator.copyCGImage(at: .zero,
-//                                                         actualTime: nil)
-//
-//            return UIImage(cgImage: cgImage)
-//        } catch {
-//            print(error.localizedDescription)
-//            return nil
-//        }
-//    }
-//}
