@@ -37,6 +37,7 @@
 		9582631D26F6222500913B2F /* StoreKitClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9582631C26F6222500913B2F /* StoreKitClientLive */; };
 		958A6C3A270A1706005CF5B5 /* AVAssetClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 958A6C39270A1706005CF5B5 /* AVAssetClientLive */; };
 		958A6C3C270A1A98005CF5B5 /* AVAssetClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 958A6C3B270A1A98005CF5B5 /* AVAssetClientLive */; };
+		95A1D71D2719BC1E008F6721 /* CloudKitClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95A1D71C2719BC1E008F6721 /* CloudKitClientLive */; };
 		95ABFF3E26B48BD0001DAAE7 /* RootFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF3D26B48BD0001DAAE7 /* RootFeature */; };
 		95ABFF4026B48BD9001DAAE7 /* CoreDataClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF3F26B48BD9001DAAE7 /* CoreDataClientLive */; };
 		95ABFF4226B48BD9001DAAE7 /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF4126B48BD9001DAAE7 /* FileClientLive */; };
@@ -182,6 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95A1D71D2719BC1E008F6721 /* CloudKitClientLive in Frameworks */,
 				95E80F7A2718C170008D0EF4 /* CloudKit.framework in Frameworks */,
 				95ABFF4226B48BD9001DAAE7 /* FileClientLive in Frameworks */,
 				95ABFF4026B48BD9001DAAE7 /* CoreDataClientLive in Frameworks */,
@@ -374,6 +376,7 @@
 				9582631C26F6222500913B2F /* StoreKitClientLive */,
 				9544230226F691EF002C1E1C /* PDFKitClientLive */,
 				958A6C3B270A1A98005CF5B5 /* AVAssetClientLive */,
+				95A1D71C2719BC1E008F6721 /* CloudKitClientLive */,
 			);
 			productName = ProjectDiary;
 			productReference = BD2A3298447210A07EE095A2 /* ProjectDiary.app */;
@@ -1072,6 +1075,10 @@
 		958A6C3B270A1A98005CF5B5 /* AVAssetClientLive */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AVAssetClientLive;
+		};
+		95A1D71C2719BC1E008F6721 /* CloudKitClientLive */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CloudKitClientLive;
 		};
 		95ABFF3D26B48BD0001DAAE7 /* RootFeature */ = {
 			isa = XCSwiftPackageProductDependency;

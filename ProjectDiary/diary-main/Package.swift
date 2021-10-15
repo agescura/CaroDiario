@@ -82,6 +82,12 @@ let package = Package(
         .library(name: "AVAssetClientLive",
                  targets: ["AVAssetClientLive"]),
         
+        .library(name: "CloudKitClient",
+                type: .dynamic,
+                targets: ["CloudKitClient"]),
+        .library(name: "CloudKitClientLive",
+                 targets: ["CloudKitClientLive"]),
+        
         .library(name: "FeedbackGeneratorClient",
                 type: .dynamic,
                 targets: ["FeedbackGeneratorClient"]),
@@ -305,6 +311,21 @@ let package = Package(
             "AVAssetClient"
         ],
             path: "Sources/Dependencies/AVAssetClientLive"
+        ),
+        
+        .target(
+            name: "CloudKitClient",
+            dependencies: [
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+        ],
+            path: "Sources/Dependencies/CloudKitClient"
+        ),
+        .target(
+            name: "CloudKitClientLive",
+            dependencies: [
+            "CloudKitClient"
+        ],
+            path: "Sources/Dependencies/CloudKitClientLive"
         ),
         
         .target(

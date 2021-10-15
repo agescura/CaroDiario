@@ -24,6 +24,7 @@ import AVAudioRecorderClient
 import StoreKitClient
 import PDFKitClient
 import AVAssetClient
+import CloudKitClient
 
 public enum AppState: Equatable {
     case splash(SplashState)
@@ -50,10 +51,11 @@ public struct AppEnvironment {
     public let avAudioSessionClient: AVAudioSessionClient
     public let avAudioPlayerClient: AVAudioPlayerClient
     public let avAudioRecorderClient: AVAudioRecorderClient
+    public let storeKitClient: StoreKitClient
     public let pdfKitClient: PDFKitClient
     public let avAssetClient: AVAssetClient
+    public let cloudKitClient: CloudKitClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let storeKitClient: StoreKitClient
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let mainRunLoop: AnySchedulerOf<RunLoop>
     public let uuid: () -> UUID
@@ -73,6 +75,7 @@ public struct AppEnvironment {
         storeKitClient: StoreKitClient,
         pdfKitClient: PDFKitClient,
         avAssetClient: AVAssetClient,
+        cloudKitClient: CloudKitClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         mainRunLoop: AnySchedulerOf<RunLoop>,
@@ -92,6 +95,7 @@ public struct AppEnvironment {
         self.storeKitClient = storeKitClient
         self.pdfKitClient = pdfKitClient
         self.avAssetClient = avAssetClient
+        self.cloudKitClient = cloudKitClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
         self.mainRunLoop = mainRunLoop
@@ -156,6 +160,7 @@ public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
                 storeKitClient: $0.storeKitClient,
                 pdfKitClient: $0.pdfKitClient,
                 avAssetClient: $0.avAssetClient,
+                cloudKitClient: $0.cloudKitClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 mainRunLoop: $0.mainRunLoop,

@@ -21,6 +21,7 @@ import PDFKitClient
 import SharedViews
 import CoreDataClient
 import FileClient
+import CloudKitClient
 
 public struct SettingsState: Equatable {
     public var showSplash: Bool
@@ -144,6 +145,7 @@ public struct SettingsEnvironment {
     public let avAudioSessionClient: AVAudioSessionClient
     public let storeKitClient: StoreKitClient
     public let pdfKitClient: PDFKitClient
+    public let cloudKitClient: CloudKitClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let mainRunLoop: AnySchedulerOf<RunLoop>
@@ -160,6 +162,7 @@ public struct SettingsEnvironment {
         avAudioSessionClient: AVAudioSessionClient,
         storeKitClient: StoreKitClient,
         pdfKitClient: PDFKitClient,
+        cloudKitClient: CloudKitClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         mainRunLoop: AnySchedulerOf<RunLoop>,
@@ -175,6 +178,7 @@ public struct SettingsEnvironment {
         self.avAudioSessionClient = avAudioSessionClient
         self.storeKitClient = storeKitClient
         self.pdfKitClient = pdfKitClient
+        self.cloudKitClient = cloudKitClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
         self.mainRunLoop = mainRunLoop
@@ -293,7 +297,9 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction, SettingsEnvir
                 environment.localAuthenticationClient.determineType()
                     .map(SettingsAction.biometricResult),
                 environment.avCaptureDeviceClient.authorizationStatus()
-                    .map(SettingsAction.requestAuthorizationCameraResponse)
+                    .map(SettingsAction.requestAuthorizationCameraResponse),
+                //environment.cloudKitClient.isCloudAvailable().fireAndForget(),
+                environment.cloudKitClient.cloudStatus().fireAndForget()
             )
             
         case let .navigateAppearance(value):
