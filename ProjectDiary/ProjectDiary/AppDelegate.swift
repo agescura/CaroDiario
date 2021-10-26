@@ -58,10 +58,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 uuid: UUID.init,
                 setUserInterfaceStyle: { userInterfaceStyle in
                     .fireAndForget {
-                        UIApplication.shared.connectedScenes
-                            .filter { $0.activationState == .foregroundActive }
-                            .compactMap { $0 as? UIWindowScene }
-                            .first?.windows.first?.overrideUserInterfaceStyle = userInterfaceStyle
+                        UIApplication
+                        .shared
+                        .connectedScenes
+                        .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
+                        .first { $0.isKeyWindow }?.overrideUserInterfaceStyle = userInterfaceStyle
                     }
                 }
             )
