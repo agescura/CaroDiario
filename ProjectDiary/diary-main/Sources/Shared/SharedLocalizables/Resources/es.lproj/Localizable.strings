@@ -135,6 +135,10 @@
 "Settings.Version" = "Versión";
 "Settings.ReportBug" = "Reportar un error";
 "Settings.Biometric.Test" = "Para poder activar el %@, primero tenemos que comprobar que funciona correctamente";
+"Settings.Language" = "Idioma";
+"Settings.Spanish" = "Español";
+"Settings.Catalan" = "Catalàn";
+"Settings.English" = "Inglés";
 
 // PasscodeFeature
 

@@ -21,6 +21,7 @@ import PDFKitClient
 import SharedViews
 import CoreDataClient
 import FileClient
+import SharedModels
 
 public struct SettingsState: Equatable {
     public var showSplash: Bool
@@ -29,6 +30,10 @@ public struct SettingsState: Equatable {
     public var layoutType: LayoutType
     public var themeType: ThemeType
     public var iconAppType: IconAppType
+    
+    public var language: Localizable = .spanish
+    public var languageState: LanguageState?
+    public var navigateLanguage = false
     
     public var authenticationType: LocalAuthenticationClient.AuthenticationType = .none
     public var hasPasscode: Bool
@@ -87,7 +92,7 @@ extension AVAudioSessionClient.AudioRecordPermission {
     
     var title: String {
         switch self {
-        
+            
         case .authorized:
             return "microphone.authorized".localized
         case .denied:
@@ -108,6 +113,9 @@ public enum SettingsAction: Equatable {
     
     case appearanceAction(AppearanceAction)
     case navigateAppearance(Bool)
+    
+    case languageAction(LanguageAction)
+    case navigateLanguage(Bool)
     
     case activatePasscodeAction(ActivatePasscodeAction)
     case navigateActivatePasscode(Bool)
@@ -284,140 +292,159 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction, SettingsEnvir
             }
         ),
     
-    .init { state, action, environment in
-        switch action {
-        
-        case .onAppear:
-            state.microphoneStatus = environment.avAudioSessionClient.recordPermission
-            return Effect.merge(
-                environment.localAuthenticationClient.determineType()
-                    .map(SettingsAction.biometricResult),
-                environment.avCaptureDeviceClient.authorizationStatus()
-                    .map(SettingsAction.requestAuthorizationCameraResponse)
-            )
-            
-        case let .navigateAppearance(value):
-            state.navigateAppearance = value
-            state.appearanceState = value ? .init(
-                styleType: state.styleType,
-                layoutType: state.layoutType,
-                themeType: state.themeType,
-                iconAppType: state.iconAppType
-            ) : nil
-            return .none
-            
-        case .appearanceAction:
-            return .none
-            
-        case let .requestAuthorizationCameraResponse(status):
-            state.cameraStatus = status
-            return .none
-            
-        case let .toggleShowSplash(isOn):
-            state.showSplash = isOn
-            return environment.userDefaultsClient
-                .setHideSplashScreen(!isOn)
-                .fireAndForget()
-            
-        case let .biometricResult(result):
-            state.authenticationType = result
-            return .none
-            
-        case .activatePasscodeAction(.insertPasscodeAction(.navigateMenuPasscode(true))):
-            state.hasPasscode = true
-            return .none
-            
-        case .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.actionSheetTurnoffTapped))):
-            state.hasPasscode = false
-            return .merge(
-                environment.userDefaultsClient.removePasscode().fireAndForget(),
-                Effect(value: SettingsAction.navigateActivatePasscode(false))
-            )
-            
-        case .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.popToRoot))),
-             .activatePasscodeAction(.insertPasscodeAction(.popToRoot)):
-            return Effect(value: SettingsAction.navigateActivatePasscode(false))
-            
-        case .activatePasscodeAction(.insertPasscodeAction(.success)):
-            return Effect(value: SettingsAction.navigateActivatePasscode(false))
-            
-        case .activatePasscodeAction:
-            return .none
-            
-        case let .navigateActivatePasscode(value):
-            state.navigateActivatePasscode = value
-            state.activatePasscodeState = value ? .init() : nil
-            return .none
-            
-        case .menuPasscodeAction(.actionSheetTurnoffTapped):
-            state.hasPasscode = false
-            state.navigateMenuPasscode = false
-            return environment.userDefaultsClient.removePasscode().fireAndForget()
-            
-        case .menuPasscodeAction(.popToRoot):
-            return Effect(value: SettingsAction.navigateMenuPasscode(false))
-            
-        case .menuPasscodeAction:
-            return .none
-            
-        case let .navigateMenuPasscode(value):
-            state.navigateMenuPasscode = value
-            state.menuPasscodeState = value ? .init(authenticationType: state.authenticationType, optionTimeForAskPasscode: state.optionTimeForAskPasscode) : nil
-            return .none
-            
-        case let .cameraSettingsAction(.requestAccessResponse(value)):
-            state.cameraStatus = value ? .authorized : .denied
-            return .none
-            
-        case let .microphoneSettingsAction(.requestAccessResponse(value)):
-            state.microphoneStatus = value ? .authorized : .denied
-            return .none
-            
-        case .cameraSettingsAction:
-            return .none
-            
-        case let .navigateCameraSettings(value):
-            state.navigateCameraSettings = value
-            state.cameraSettingsState = value ? .init(.init(cameraStatus: state.cameraStatus)) : nil
-            return .none
-            
-        case .microphoneSettingsAction:
-            return .none
-            
-        case let .navigateMicrophoneSettings(value):
-            state.navigateMicrophoneSettings = value
-            state.microphoneSettingsState = value ? .init(microphoneStatus: state.microphoneStatus) : nil
-            return .none
-            
-        case let .navigateAgreements(value):
-            state.navigateAgreements = value
-            state.agreementsState = value ? .init() : nil
-            return .none
-            
-        case .agreementsAction:
-            return .none
-            
-        case .reviewStoreKit:
-            return environment.storeKitClient.requestReview()
-                .fireAndForget()
-            
-        case let .navigateExport(value):
-            state.navigateExport = value
-            state.exportState = value ? .init() : nil
-            return .none
-            
-        case .exportAction:
-            return .none
-            
-        case let .navigateAbout(value):
-            state.navigateAbout = value
-            state.aboutState = value ? .init() : nil
-            return .none
-            
-        case .aboutAction:
-            return .none
+    languageReducer
+        .optional()
+        .pullback(
+            state: \SettingsState.languageState,
+            action: /SettingsAction.languageAction,
+            environment: { LanguageEnvironment(
+                userDefaults: $0.userDefaultsClient)
+            }
+        ),
+    
+        .init { state, action, environment in
+            switch action {
+                
+            case .onAppear:
+                state.microphoneStatus = environment.avAudioSessionClient.recordPermission
+                state.language = Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish
+                return Effect.merge(
+                    environment.localAuthenticationClient.determineType()
+                        .map(SettingsAction.biometricResult),
+                    environment.avCaptureDeviceClient.authorizationStatus()
+                        .map(SettingsAction.requestAuthorizationCameraResponse)
+                )
+                
+            case let .navigateAppearance(value):
+                state.navigateAppearance = value
+                state.appearanceState = value ? .init(
+                    styleType: state.styleType,
+                    layoutType: state.layoutType,
+                    themeType: state.themeType,
+                    iconAppType: state.iconAppType
+                ) : nil
+                return .none
+                
+            case .appearanceAction:
+                return .none
+                
+            case let .navigateLanguage(value):
+                state.navigateLanguage = value
+                state.languageState = value ? .init(language: state.language) : nil
+                return .none
+                
+            case .languageAction:
+                return .none
+                
+            case let .requestAuthorizationCameraResponse(status):
+                state.cameraStatus = status
+                return .none
+                
+            case let .toggleShowSplash(isOn):
+                state.showSplash = isOn
+                return environment.userDefaultsClient
+                    .setHideSplashScreen(!isOn)
+                    .fireAndForget()
+                
+            case let .biometricResult(result):
+                state.authenticationType = result
+                return .none
+                
+            case .activatePasscodeAction(.insertPasscodeAction(.navigateMenuPasscode(true))):
+                state.hasPasscode = true
+                return .none
+                
+            case .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.actionSheetTurnoffTapped))):
+                state.hasPasscode = false
+                return .merge(
+                    environment.userDefaultsClient.removePasscode().fireAndForget(),
+                    Effect(value: SettingsAction.navigateActivatePasscode(false))
+                )
+                
+            case .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.popToRoot))),
+                    .activatePasscodeAction(.insertPasscodeAction(.popToRoot)):
+                return Effect(value: SettingsAction.navigateActivatePasscode(false))
+                
+            case .activatePasscodeAction(.insertPasscodeAction(.success)):
+                return Effect(value: SettingsAction.navigateActivatePasscode(false))
+                
+            case .activatePasscodeAction:
+                return .none
+                
+            case let .navigateActivatePasscode(value):
+                state.navigateActivatePasscode = value
+                state.activatePasscodeState = value ? .init() : nil
+                return .none
+                
+            case .menuPasscodeAction(.actionSheetTurnoffTapped):
+                state.hasPasscode = false
+                state.navigateMenuPasscode = false
+                return environment.userDefaultsClient.removePasscode().fireAndForget()
+                
+            case .menuPasscodeAction(.popToRoot):
+                return Effect(value: SettingsAction.navigateMenuPasscode(false))
+                
+            case .menuPasscodeAction:
+                return .none
+                
+            case let .navigateMenuPasscode(value):
+                state.navigateMenuPasscode = value
+                state.menuPasscodeState = value ? .init(authenticationType: state.authenticationType, optionTimeForAskPasscode: state.optionTimeForAskPasscode) : nil
+                return .none
+                
+            case let .cameraSettingsAction(.requestAccessResponse(value)):
+                state.cameraStatus = value ? .authorized : .denied
+                return .none
+                
+            case let .microphoneSettingsAction(.requestAccessResponse(value)):
+                state.microphoneStatus = value ? .authorized : .denied
+                return .none
+                
+            case .cameraSettingsAction:
+                return .none
+                
+            case let .navigateCameraSettings(value):
+                state.navigateCameraSettings = value
+                state.cameraSettingsState = value ? .init(.init(cameraStatus: state.cameraStatus)) : nil
+                return .none
+                
+            case .microphoneSettingsAction:
+                return .none
+                
+            case let .navigateMicrophoneSettings(value):
+                state.navigateMicrophoneSettings = value
+                state.microphoneSettingsState = value ? .init(microphoneStatus: state.microphoneStatus) : nil
+                return .none
+                
+            case let .navigateAgreements(value):
+                state.navigateAgreements = value
+                state.agreementsState = value ? .init() : nil
+                return .none
+                
+            case .agreementsAction:
+                return .none
+                
+            case .reviewStoreKit:
+                return environment.storeKitClient.requestReview()
+                    .fireAndForget()
+                
+            case let .navigateExport(value):
+                state.navigateExport = value
+                state.exportState = value ? .init() : nil
+                return .none
+                
+            case .exportAction:
+                return .none
+                
+            case let .navigateAbout(value):
+                state.navigateAbout = value
+                state.aboutState = value ? .init() : nil
+                return .none
+                
+            case .aboutAction:
+                return .none
+            }
         }
-    }
 )
 
 public struct SettingsView: View {
@@ -471,6 +498,31 @@ public struct SettingsView: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 viewStore.send(.navigateAppearance(true))
+                            }
+                        }
+                        
+                        Section() {
+                            
+                            HStack(spacing: 16) {
+                                IconImageView(
+                                    systemName: "paperclip.circle",
+                                    foregroundColor: .brown
+                                )
+                                
+                                Text("Settings.Language".localized(with: [viewStore.authenticationType.rawValue]))
+                                    .foregroundColor(.chambray)
+                                    .adaptiveFont(.latoRegular, size: 12)
+                                Spacer()
+                                Text(viewStore.language.localizable.localized)
+                                    .foregroundColor(.adaptiveGray)
+                                    .adaptiveFont(.latoRegular, size: 12)
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.adaptiveGray)
+                                
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                viewStore.send(.navigateLanguage(true))
                             }
                         }
                         
@@ -762,9 +814,20 @@ public struct SettingsView: View {
                                 send: SettingsAction.navigateAbout)
                         )
                         
-                        NavigationLink(destination: EmptyView()) {
-                            EmptyView()
-                        }
+                        NavigationLink(
+                            "",
+                            destination:
+                                IfLetStore(
+                                    store.scope(
+                                        state: \.languageState,
+                                        action: SettingsAction.languageAction
+                                    ),
+                                    then: LanguageView.init(store:)
+                                ),
+                            isActive: viewStore.binding(
+                                get: \.navigateLanguage,
+                                send: SettingsAction.navigateLanguage)
+                        )
                     }
                     .frame(height: 0)
                 }

@@ -133,6 +133,14 @@ public struct UserDefaultsClient {
         remove(optionTimeForAskPasscodeKey)
     }
     
+    public var language: String {
+        stringForKey(languageCodeKey) ?? "es"
+    }
+    
+    public func setLanguage(_ value: String) -> Effect<Never, Never> {
+        setString(value, languageCodeKey)
+    }
+    
     let hasShownOnboardingKey = "hasShownOnboardingKey"
     let hideSplashScreenKey = "hideSplashScreenKey"
     let stringForStylingKey = "stringForStylingKey"
@@ -142,4 +150,5 @@ public struct UserDefaultsClient {
     let faceIDActivateKey = "isFaceIDActivateKey"
     let timeForAskPasscodeKey = "timeForAskPasscode"
     let optionTimeForAskPasscodeKey = "optionTimeForAskPasscode"
+    let languageCodeKey = "LanguageCodeKey"
 }

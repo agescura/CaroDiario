@@ -125,7 +125,7 @@ let package = Package(
         .library(name: "ClipFeature", targets: ["ClipFeature"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.28.1")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.34.0")
     ],
     targets: [
         .target(
