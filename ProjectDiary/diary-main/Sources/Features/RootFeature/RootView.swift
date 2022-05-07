@@ -83,7 +83,6 @@ public struct RootEnvironment {
     public let mainRunLoop: AnySchedulerOf<RunLoop>
     public let uuid: () -> UUID
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
-    //public var userNotifications: UserNotificationClient
     
     public init(
         coreDataClient: CoreDataClient,
@@ -139,7 +138,6 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             action: /RootAction.featureAction,
             environment: {
                 AppEnvironment(
-                    coreDataClient: $0.coreDataClient,
                     fileClient: $0.fileClient,
                     userDefaultsClient: $0.userDefaultsClient,
                     localAuthenticationClient: $0.localAuthenticationClient,
@@ -289,12 +287,12 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             return .none
             
         case let .biometricAlertPresent(value):
-            print(value)
             state.isBiometricAlertPresent = value
             return .none
         }
     }
 )
+.persistence()
 
 public struct RootView: View {
     let store: Store<RootState, RootAction>
@@ -312,5 +310,170 @@ public struct RootView: View {
                 action: RootAction.featureAction
             )
         )
+    }
+}
+
+import SharedModels
+
+extension Reducer where State == RootState, Action == RootAction, Environment == RootEnvironment {
+    struct CoreDataId: Hashable {}
+    
+    public func persistence() -> Reducer {
+        return .init { state, action, environment in
+            let effects = self.run(&state, action, environment)
+            
+            if case .home = state.featureState {
+                switch action {
+                case .featureAction(.home(.entries(.onAppear))):
+                    return .merge(
+                        environment.coreDataClient.create(CoreDataId())
+                            .receive(on: environment.mainQueue)
+                            .eraseToEffect()
+                            .map({ RootAction.featureAction(.home(.entries(.coreDataClientAction($0)))) }),
+                        effects
+                    )
+                case let .featureAction(.home(.entries(.remove(entry)))):
+                    return environment.coreDataClient.removeEntry(entry.id)
+                        .fireAndForget()
+                    
+                case .featureAction(.home(.settings(.exportAction(.processPDF)))):
+                    return .merge(
+                        environment.coreDataClient.fetchAll()
+                            .map({ RootAction.featureAction(.home(.settings(.exportAction(.generatePDF($0))))) }),
+                        effects
+                    )
+                    
+                case .featureAction(.home(.settings(.exportAction(.previewPDF)))):
+                    return .merge(
+                        environment.coreDataClient.fetchAll()
+                            .map({ RootAction.featureAction(.home(.settings(.exportAction(.generatePreview($0))))) }),
+                        effects
+                    )
+                    
+                case let .featureAction(.home(.search(.searching(newText: newText)))):
+                    return .merge(
+                        environment.coreDataClient.searchEntries(newText)
+                            .map({ RootAction.featureAction(.home(.search(.searchResponse($0)))) }),
+                        effects
+                    )
+                case .featureAction(.home(.search(.navigateImageSearch))):
+                    return .merge(
+                        environment.coreDataClient.searchImageEntries()
+                            .map({ RootAction.featureAction(.home(.search(.navigateSearch(.images, $0)))) }),
+                        effects
+                    )
+                case .featureAction(.home(.search(.navigateVideoSearch))):
+                    return .merge(
+                        environment.coreDataClient.searchVideoEntries()
+                            .map({ RootAction.featureAction(.home(.search(.navigateSearch(.videos, $0)))) }),
+                        effects
+                    )
+                case .featureAction(.home(.search(.navigateAudioSearch))):
+                    return .merge(
+                        environment.coreDataClient.searchAudioEntries()
+                            .map({ RootAction.featureAction(.home(.search(.navigateSearch(.audios, $0)))) }),
+                        effects
+                    )
+                case let .featureAction(.home(.search(.remove(entry)))):
+                    return .merge(
+                        environment.coreDataClient.removeEntry(entry.id)
+                            .fireAndForget(),
+                        effects
+                    )
+                case let .featureAction(.home(.search(.entryDetailAction(.remove(entry))))):
+                    return .merge(
+                        environment.coreDataClient.removeEntry(entry.id)
+                            .fireAndForget(),
+                        effects
+                    )
+                default:
+                    break
+                }
+            }
+            
+            if case let .home(homeState) = state.featureState,
+               let entryDetailStae = homeState.entriesState.entryDetailState {
+                switch action {
+                case .featureAction(.home(.entries(.entryDetailAction(.onAppear)))):
+                    return .merge(
+                        environment.coreDataClient.fetchEntry(entryDetailStae.entry)
+                            .map({ RootAction.featureAction(.home(.entries(.entryDetailAction(.entryResponse($0))))) }),
+                        effects
+                    )
+                case let .featureAction(.home(.entries(.entryDetailAction(.removeAttachmentResponse(id))))):
+                    return .merge(
+                        environment.coreDataClient.removeAttachmentEntry(id).fireAndForget(),
+                        effects
+                    )
+                default:
+                    break
+                }
+            }
+            
+            if case let .home(homeState) = state.featureState,
+               let addEntryState = homeState.entriesState.addEntryState ?? homeState.entriesState.entryDetailState?.addEntryState {
+                switch action {
+                case .featureAction(.home(.entries(.addEntryAction(.createDraftEntry)))),
+                    .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.createDraftEntry))))):
+                    return .merge(
+                        environment.coreDataClient.createDraft(addEntryState.entry)
+                            .fireAndForget(),
+                        effects
+                    )
+                case .featureAction(.home(.entries(.addEntryAction(.addButtonTapped)))),
+                    .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.addButtonTapped))))):
+                    let entryText = EntryText(
+                        id: environment.uuid(),
+                        message: addEntryState.text,
+                        lastUpdated: environment.mainRunLoop.now.date
+                    )
+                    return .merge(
+                        environment.coreDataClient.updateMessage(entryText, addEntryState.entry)
+                            .fireAndForget(),
+                        environment.coreDataClient.publishEntry(addEntryState.entry)
+                            .fireAndForget(),
+                        effects
+                    )
+                case let .featureAction(.home(.entries(.addEntryAction(.loadImageResponse(entryImage))))),
+                    let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadImageResponse(entryImage)))))):
+                    return .merge(
+                        environment.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id)
+                            .fireAndForget(),
+                        effects
+                    )
+                case let .featureAction(.home(.entries(.addEntryAction(.loadVideoResponse(entryVideo))))),
+                    let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadVideoResponse(entryVideo)))))):
+                    return .merge(
+                        environment.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id)
+                            .fireAndForget(),
+                        effects
+                    )
+                case let .featureAction(.home(.entries(.addEntryAction(.loadAudioResponse(entryAudio))))),
+                    let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadAudioResponse(entryAudio)))))):
+                    return .merge(
+                        environment.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id)
+                            .fireAndForget(),
+                        effects
+                    )
+                case let .featureAction(.home(.entries(.addEntryAction(.removeAttachmentResponse(id))))),
+                    let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeAttachmentResponse(id)))))):
+                    return .merge(
+                        environment.coreDataClient.removeAttachmentEntry(id)
+                            .fireAndForget(),
+                        effects
+                    )
+                case .featureAction(.home(.entries(.addEntryAction(.removeDraftEntryDismissAlert)))),
+                    .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeDraftEntryDismissAlert))))):
+                    return .merge(
+                        environment.coreDataClient.removeEntry(addEntryState.entry.id)
+                            .fireAndForget(),
+                        effects
+                    )
+                default:
+                    break
+                }
+            }
+            return effects
+        }
     }
 }

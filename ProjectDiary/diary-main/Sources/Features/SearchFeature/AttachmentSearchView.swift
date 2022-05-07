@@ -60,7 +60,6 @@ public enum AttachmentSearchAction: Equatable {
 }
 
 public struct AttachmentSearchEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let userDefaultsClient: UserDefaultsClient
     public let avCaptureDeviceClient: AVCaptureDeviceClient
@@ -75,7 +74,6 @@ public struct AttachmentSearchEnvironment {
     public let uuid: () -> UUID
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         userDefaultsClient: UserDefaultsClient,
         avCaptureDeviceClient: AVCaptureDeviceClient,
@@ -89,7 +87,6 @@ public struct AttachmentSearchEnvironment {
         mainRunLoop: AnySchedulerOf<RunLoop>,
         uuid: @escaping () -> UUID
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.userDefaultsClient = userDefaultsClient
         self.avCaptureDeviceClient = avCaptureDeviceClient
@@ -117,7 +114,6 @@ public let attachmentSearchReducer: Reducer<AttachmentSearchState, AttachmentSea
             state: \AttachmentSearchState.entries,
             action: /AttachmentSearchAction.entries,
             environment: { AttachmentSearchEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 userDefaultsClient: $0.userDefaultsClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
@@ -139,7 +135,6 @@ public let attachmentSearchReducer: Reducer<AttachmentSearchState, AttachmentSea
             state: \AttachmentSearchState.entryDetailState,
             action: /AttachmentSearchAction.entryDetailAction,
             environment: { EntryDetailEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
                 applicationClient: $0.applicationClient,
@@ -164,9 +159,8 @@ public let attachmentSearchReducer: Reducer<AttachmentSearchState, AttachmentSea
             case .entries:
                 return .none
                 
-            case let .remove(entry):
-                return environment.coreDataClient.removeEntry(entry.id)
-                    .fireAndForget()
+            case .remove:
+                return .none
                 
             case let .navigateEntryDetail(value):
                 guard let entry = state.entryDetailSelected else { return .none }
@@ -209,6 +203,7 @@ public struct AttachmentSearchView: View {
                         Text("Search.Empty".localized)
                             .foregroundColor(.chambray)
                             .adaptiveFont(.latoRegular, size: 10)
+                            .padding(.leading)
                     }
                     
                     ZStack {
@@ -220,9 +215,7 @@ public struct AttachmentSearchView: View {
                                 content: DayEntriesRowView.init(store:)
                             )
                         }
-                        
-                        
-                        
+
                         NavigationLink(
                             "", destination: IfLetStore(
                                 store.scope(

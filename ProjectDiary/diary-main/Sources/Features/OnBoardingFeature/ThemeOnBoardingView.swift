@@ -51,7 +51,6 @@ public let themeOnBoardingReducer: Reducer<ThemeOnBoardingState, ThemeOnBoarding
             state: \ThemeOnBoardingState.entries,
             action: /ThemeOnBoardingAction.entries,
             environment: { EntriesEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 avCaptureDeviceClient: .noop,

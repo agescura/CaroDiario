@@ -61,7 +61,6 @@ public let styleOnBoardingReducer: Reducer<StyleOnBoardingState, StyleOnBoarding
             state: \StyleOnBoardingState.entries,
             action: /StyleOnBoardingAction.entries,
             environment: { EntriesEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 avCaptureDeviceClient: .noop,

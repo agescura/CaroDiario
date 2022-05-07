@@ -41,7 +41,6 @@ public let layoutReducer: Reducer<LayoutState, LayoutAction, LayoutEnvironment> 
             state: \LayoutState.entries,
             action: /LayoutAction.entries,
             environment: { EntriesEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 avCaptureDeviceClient: .noop,

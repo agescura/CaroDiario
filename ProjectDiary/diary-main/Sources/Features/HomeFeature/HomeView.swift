@@ -57,7 +57,6 @@ public enum HomeAction: Equatable {
 }
 
 public struct HomeEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let userDefaultsClient: UserDefaultsClient
     public let localAuthenticationClient: LocalAuthenticationClient
@@ -77,7 +76,6 @@ public struct HomeEnvironment {
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         userDefaultsClient: UserDefaultsClient,
         localAuthenticationClient: LocalAuthenticationClient,
@@ -96,7 +94,6 @@ public struct HomeEnvironment {
         uuid: @escaping () -> UUID,
         setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.userDefaultsClient = userDefaultsClient
         self.localAuthenticationClient = localAuthenticationClient
@@ -123,7 +120,6 @@ public let homeReducer: Reducer<HomeState, HomeAction, HomeEnvironment> = .combi
         state: \HomeState.entriesState,
         action: /HomeAction.entries,
         environment: { EntriesEnvironment(
-            coreDataClient: $0.coreDataClient,
             fileClient: $0.fileClient,
             userDefaultsClient: $0.userDefaultsClient,
             avCaptureDeviceClient: $0.avCaptureDeviceClient,
@@ -143,7 +139,6 @@ public let homeReducer: Reducer<HomeState, HomeAction, HomeEnvironment> = .combi
         state: \HomeState.searchState,
         action: /HomeAction.search,
         environment: { SearchEnvironment(
-            coreDataClient: $0.coreDataClient,
             fileClient: $0.fileClient,
             userDefaultsClient: $0.userDefaultsClient,
             avCaptureDeviceClient: $0.avCaptureDeviceClient,
@@ -163,7 +158,6 @@ public let homeReducer: Reducer<HomeState, HomeAction, HomeEnvironment> = .combi
         state: \HomeState.settings,
         action: /HomeAction.settings,
         environment: { SettingsEnvironment(
-            coreDataClient: $0.coreDataClient,
             fileClient: $0.fileClient,
             userDefaultsClient: $0.userDefaultsClient,
             localAuthenticationClient: $0.localAuthenticationClient,

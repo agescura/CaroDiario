@@ -38,20 +38,17 @@ public enum ExportAction: Equatable {
 }
 
 public struct ExportEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let applicationClient: UIApplicationClient
     public let pdfKitClient: PDFKitClient
     public let mainRunLoop: AnySchedulerOf<RunLoop>
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         applicationClient: UIApplicationClient,
         pdfKitClient: PDFKitClient,
         mainRunLoop: AnySchedulerOf<RunLoop>
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.applicationClient = applicationClient
         self.pdfKitClient = pdfKitClient
@@ -73,8 +70,7 @@ public let exportReducer: Reducer<ExportState, ExportAction, ExportEnvironment> 
     .init { state, action, environment in
         switch action {
         case .processPDF:
-            return environment.coreDataClient.fetchAll()
-                .map(ExportAction.generatePDF)
+            return .none
             
         case let .generatePDF(entries):
             return environment.pdfKitClient.generatePDF(entries, environment.mainRunLoop.now.date)
@@ -85,8 +81,7 @@ public let exportReducer: Reducer<ExportState, ExportAction, ExportEnvironment> 
                 .fireAndForget()
             
         case .previewPDF:
-            return environment.coreDataClient.fetchAll()
-                .map(ExportAction.generatePreview)
+            return .none
             
         case let .generatePreview(entries):
             return environment.pdfKitClient.generatePDF(entries, environment.mainRunLoop.now.date)

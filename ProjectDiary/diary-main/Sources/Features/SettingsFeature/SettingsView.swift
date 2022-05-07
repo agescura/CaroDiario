@@ -142,7 +142,6 @@ public enum SettingsAction: Equatable {
 }
 
 public struct SettingsEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let userDefaultsClient: UserDefaultsClient
     public let localAuthenticationClient: LocalAuthenticationClient
@@ -158,7 +157,6 @@ public struct SettingsEnvironment {
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         userDefaultsClient: UserDefaultsClient,
         localAuthenticationClient: LocalAuthenticationClient,
@@ -173,7 +171,6 @@ public struct SettingsEnvironment {
         mainRunLoop: AnySchedulerOf<RunLoop>,
         setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.userDefaultsClient = userDefaultsClient
         self.localAuthenticationClient = localAuthenticationClient
@@ -274,7 +271,6 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction, SettingsEnvir
             state: \SettingsState.exportState,
             action: /SettingsAction.exportAction,
             environment: { ExportEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 applicationClient: $0.applicationClient,
                 pdfKitClient: $0.pdfKitClient,

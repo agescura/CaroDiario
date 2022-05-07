@@ -126,7 +126,7 @@
 "Settings.Camera.Privacy" = "Privacidad de la càmara";
 "Settings.GivePermission" = "Dar permiso";
 "Settings.Microphone" = "Micrófono";
-"Settings.Agreements" = "Agredecimientos";
+"Settings.Agreements" = "Agradecimientos";
 "Settings.Attachment.Image" = "Entradas con imágenes";
 "Settings.Attachment.Video" = "Entradas con videos";
 "Settings.Attachment.Audio" = "Entradas con audios";
@@ -139,6 +139,7 @@
 "Settings.Spanish" = "Español";
 "Settings.Catalan" = "Catalàn";
 "Settings.English" = "Inglés";
+"Settings.Galician" = "Gallego";
 
 // PasscodeFeature
 

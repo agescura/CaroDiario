@@ -11,6 +11,7 @@ public enum Localizable: String, CaseIterable, Identifiable {
     case english = "en"
     case spanish = "es"
     case catalan = "ca"
+    case galician = "gl"
     
     public var id: String {
         rawValue
@@ -24,6 +25,8 @@ public enum Localizable: String, CaseIterable, Identifiable {
             return "Settings.Spanish"
         case .catalan:
             return "Settings.Catalan"
+        case .galician:
+            return "Settings.Galician"
         }
     }
 }

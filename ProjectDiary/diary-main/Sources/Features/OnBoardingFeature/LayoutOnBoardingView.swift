@@ -77,7 +77,6 @@ public let layoutOnBoardingReducer: Reducer<LayoutOnBoardingState, LayoutOnBoard
             state: \LayoutOnBoardingState.entries,
             action: /LayoutOnBoardingAction.entries,
             environment: { EntriesEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: $0.userDefaultsClient,
                 avCaptureDeviceClient: .noop,

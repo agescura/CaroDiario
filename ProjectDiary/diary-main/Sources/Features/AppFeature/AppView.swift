@@ -40,7 +40,6 @@ public enum AppAction: Equatable {
 }
 
 public struct AppEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let userDefaultsClient: UserDefaultsClient
     public let localAuthenticationClient: LocalAuthenticationClient
@@ -60,7 +59,6 @@ public struct AppEnvironment {
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         userDefaultsClient: UserDefaultsClient,
         localAuthenticationClient: LocalAuthenticationClient,
@@ -79,7 +77,6 @@ public struct AppEnvironment {
         uuid: @escaping () -> UUID,
         setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.userDefaultsClient = userDefaultsClient
         self.localAuthenticationClient = localAuthenticationClient
@@ -143,7 +140,6 @@ public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
             state: /AppState.home,
             action: /AppAction.home,
             environment: { HomeEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 userDefaultsClient: $0.userDefaultsClient,
                 localAuthenticationClient: $0.localAuthenticationClient,

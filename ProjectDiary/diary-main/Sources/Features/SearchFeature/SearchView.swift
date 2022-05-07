@@ -61,7 +61,6 @@ public enum SearchAction: Equatable {
 }
 
 public struct SearchEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let userDefaultsClient: UserDefaultsClient
     public let avCaptureDeviceClient: AVCaptureDeviceClient
@@ -76,7 +75,6 @@ public struct SearchEnvironment {
     public let uuid: () -> UUID
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         userDefaultsClient: UserDefaultsClient,
         avCaptureDeviceClient: AVCaptureDeviceClient,
@@ -90,7 +88,6 @@ public struct SearchEnvironment {
         mainRunLoop: AnySchedulerOf<RunLoop>,
         uuid: @escaping () -> UUID
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.userDefaultsClient = userDefaultsClient
         self.avCaptureDeviceClient = avCaptureDeviceClient
@@ -118,7 +115,6 @@ public let searchReducer: Reducer<SearchState, SearchAction, SearchEnvironment> 
             state: \SearchState.entries,
             action: /SearchAction.entries,
             environment: { SearchEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 userDefaultsClient: $0.userDefaultsClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
@@ -140,7 +136,6 @@ public let searchReducer: Reducer<SearchState, SearchAction, SearchEnvironment> 
             state: \SearchState.attachmentSearchState,
             action: /SearchAction.attachmentSearchAction,
             environment: { AttachmentSearchEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 userDefaultsClient: $0.userDefaultsClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
@@ -156,91 +151,86 @@ public let searchReducer: Reducer<SearchState, SearchAction, SearchEnvironment> 
             }
         ),
     
-    .init { state, action, environment in
-        
-        switch action {
-        case let .searching(newText: newText):
-            state.searchText = newText
-            return environment.coreDataClient.searchEntries(newText)
-                .map(SearchAction.searchResponse)
+        .init { state, action, environment in
             
-        case let .searchResponse(response):
-            var dayResult: IdentifiedArrayOf<DayEntriesRowState> = []
-            
-            for entries in response {
-                let day = DayEntriesRowState(dayEntry: .init(
-                    entry: .init(uniqueElements: entries), style: environment.userDefaultsClient.styleType, layout: environment.userDefaultsClient.layoutType), id: environment.uuid())
-                dayResult.append(day)
+            switch action {
+            case let .searching(newText: newText):
+                state.searchText = newText
+                return .none
+                
+            case let .searchResponse(response):
+                var dayResult: IdentifiedArrayOf<DayEntriesRowState> = []
+                
+                for entries in response {
+                    let day = DayEntriesRowState(dayEntry: .init(
+                        entry: .init(uniqueElements: entries), style: environment.userDefaultsClient.styleType, layout: environment.userDefaultsClient.layoutType), id: environment.uuid())
+                    dayResult.append(day)
+                }
+                state.entries = dayResult
+                return .none
+                
+            case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
+                state.entryDetailSelected = entry
+                return Effect(value: .navigateEntryDetail(true))
+                
+            case .entries:
+                return .none
+                
+            case .attachmentSearchAction:
+                return .none
+                
+            case let .navigateAttachmentSearch(value):
+                state.attachmentSearchState = value ? .init(type: .images, entries: []) : nil
+                state.navigateAttachmentSearch = value
+                return .none
+                
+            case .navigateImageSearch:
+                return .none
+                
+            case .navigateVideoSearch:
+                return .none
+                
+            case .navigateAudioSearch:
+                return .none
+                
+            case let .navigateSearch(type, response):
+                var dayResult: IdentifiedArrayOf<DayEntriesRowState> = []
+                
+                for entries in response {
+                    let day = DayEntriesRowState(dayEntry: .init(
+                        entry: .init(uniqueElements: entries), style: environment.userDefaultsClient.styleType, layout: environment.userDefaultsClient.layoutType), id: environment.uuid())
+                    dayResult.append(day)
+                }
+                
+                state.attachmentSearchState = .init(type: type, entries: dayResult)
+                state.navigateAttachmentSearch = true
+                return .none
+                
+            case .remove:
+                return .none
+                
+            case let .navigateEntryDetail(value):
+                guard let entry = state.entryDetailSelected else { return .none }
+                state.navigateEntryDetail = value
+                state.entryDetailState = value ? .init(entry: entry) : nil
+                if value == false {
+                    state.entryDetailSelected = nil
+                }
+                return .none
+                
+            case let .entryDetailAction(.remove(entry)):
+                return .merge(
+                    environment.fileClient.removeAttachments(entry.attachments.urls, environment.backgroundQueue)
+                        .receive(on: environment.mainQueue)
+                        .eraseToEffect()
+                        .map({ SearchAction.remove(entry) }),
+                    Effect(value: .navigateEntryDetail(false))
+                )
+                
+            case .entryDetailAction:
+                return .none
             }
-            state.entries = dayResult
-            return .none
-            
-        case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
-            state.entryDetailSelected = entry
-            return Effect(value: .navigateEntryDetail(true))
-            
-        case .entries:
-            return .none
-            
-        case .attachmentSearchAction:
-            return .none
-            
-        case let .navigateAttachmentSearch(value):
-            state.attachmentSearchState = value ? .init(type: .images, entries: []) : nil
-            state.navigateAttachmentSearch = value
-            return .none
-            
-        case .navigateImageSearch:
-            return environment.coreDataClient.searchImageEntries()
-                .map({ SearchAction.navigateSearch(.images, $0) })
-            
-        case .navigateVideoSearch:
-            return environment.coreDataClient.searchVideoEntries()
-                .map({ SearchAction.navigateSearch(.videos, $0) })
-            
-        case .navigateAudioSearch:
-            return environment.coreDataClient.searchAudioEntries()
-                .map({ SearchAction.navigateSearch(.audios, $0) })
-            
-        case let .navigateSearch(type, response):
-            var dayResult: IdentifiedArrayOf<DayEntriesRowState> = []
-            
-            for entries in response {
-                let day = DayEntriesRowState(dayEntry: .init(
-                    entry: .init(uniqueElements: entries), style: environment.userDefaultsClient.styleType, layout: environment.userDefaultsClient.layoutType), id: environment.uuid())
-                dayResult.append(day)
-            }
-            
-            state.attachmentSearchState = .init(type: type, entries: dayResult)
-            state.navigateAttachmentSearch = true
-            return .none
-        
-        case let .remove(entry):
-            return environment.coreDataClient.removeEntry(entry.id)
-                .fireAndForget()
-            
-        case let .navigateEntryDetail(value):
-            guard let entry = state.entryDetailSelected else { return .none }
-            state.navigateEntryDetail = value
-            state.entryDetailState = value ? .init(entry: entry) : nil
-            if value == false {
-                state.entryDetailSelected = nil
-            }
-            return .none
-            
-        case let .entryDetailAction(.remove(entry)):
-            return .merge(
-                environment.fileClient.removeAttachments(entry.attachments.urls, environment.backgroundQueue)
-                    .receive(on: environment.mainQueue)
-                    .eraseToEffect()
-                    .map({ SearchAction.remove(entry) }),
-                Effect(value: .navigateEntryDetail(false))
-            )
-            
-        case .entryDetailAction:
-            return .none
         }
-    }
 )
 
 public struct SearchView: View {

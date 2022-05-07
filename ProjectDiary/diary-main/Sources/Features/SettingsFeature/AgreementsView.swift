@@ -14,7 +14,6 @@ public enum AgreementType {
     case composableArchitecture
     case pointfree
     case raywenderlich
-    case kingfisher
     
     public var urlString: String {
         switch self {
@@ -24,8 +23,6 @@ public enum AgreementType {
             return "https://www.pointfree.co/"
         case .raywenderlich:
             return "https://www.raywenderlich.com/"
-        case .kingfisher:
-            return "https://github.com/onevcat/Kingfisher"
         }
     }
     
@@ -37,8 +34,6 @@ public enum AgreementType {
             return "pointfree.co"
         case .raywenderlich:
             return "raywenderlich.com"
-        case .kingfisher:
-            return "Kingfisher"
         }
     }
 }
@@ -78,26 +73,6 @@ public struct AgreementsView: View {
                         )
                         
                         Text(AgreementType.composableArchitecture.title)
-                            .foregroundColor(.chambray)
-                            .adaptiveFont(.latoRegular, size: 12)
-                            .minimumScaleFactor(0.01)
-                            .lineLimit(1)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.adaptiveGray)
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        viewStore.send(.open(.composableArchitecture))
-                    }
-                    
-                    HStack(spacing: 16) {
-                        IconImageView(
-                            systemName: "square.and.arrow.up",
-                            foregroundColor: .green
-                        )
-                        
-                        Text(AgreementType.kingfisher.title)
                             .foregroundColor(.chambray)
                             .adaptiveFont(.latoRegular, size: 12)
                             .minimumScaleFactor(0.01)

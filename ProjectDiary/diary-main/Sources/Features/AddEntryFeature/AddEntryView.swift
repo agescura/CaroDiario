@@ -122,7 +122,6 @@ public enum AddEntryAction: Equatable {
 }
 
 public struct AddEntryEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let avCaptureDeviceClient: AVCaptureDeviceClient
     public let applicationClient: UIApplicationClient
@@ -136,7 +135,6 @@ public struct AddEntryEnvironment {
     public let uuid: () -> UUID
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         avCaptureDeviceClient: AVCaptureDeviceClient,
         applicationClient: UIApplicationClient,
@@ -149,7 +147,6 @@ public struct AddEntryEnvironment {
         mainRunLoop: AnySchedulerOf<RunLoop>,
         uuid: @escaping () -> UUID
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.avCaptureDeviceClient = avCaptureDeviceClient
         self.applicationClient = applicationClient
@@ -182,7 +179,6 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             state: \AddEntryState.attachments,
             action: /AddEntryAction.attachments,
             environment: { AddEntryEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
                 applicationClient: $0.applicationClient,
@@ -236,21 +232,10 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             return .none
             
         case .createDraftEntry:
-            return environment.coreDataClient.createDraft(state.entry)
-                .fireAndForget()
+            return .none
             
         case .addButtonTapped:
-            let entryText = EntryText(
-                id: environment.uuid(),
-                message: state.text,
-                lastUpdated: environment.mainRunLoop.now.date
-            )
-            return .merge(
-                environment.coreDataClient.updateMessage(entryText, state.entry)
-                    .fireAndForget(),
-                environment.coreDataClient.publishEntry(state.entry)
-                    .fireAndForget()
-            )
+            return .none
         
         case let .textEditorChange(text):
             state.text = text
@@ -263,7 +248,6 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                     .cancel(.init("Cancel".localized), action: .send(.dismissPlusActionSheet)),
                     .default(.init("AddEntry.Camera".localized), action: .send(.requestAuthorizationCamera)),
                     .default(.init("AddEntry.Photos".localized), action: .send(.presentImagePicker(true))),
-                    /*.default(.init("AddEntry.Audio".localized), action: .send(.presentAudioPicker(true))),*/
                     .default(.init("Crear un audio"), action: .send(.presentAudioRecord(true)))
                 ]
             )
@@ -365,9 +349,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             state.attachments.append(
                 .init(id: entryImage.id, attachment: .image(.init(entryImage: entryImage)))
             )
-            
-            return environment.coreDataClient.addAttachmentEntry(entryImage, state.entry.id)
-                .fireAndForget()
+            return .none
             
         case let .loadVideo(url):
             return environment.avAssetClient.generateThumbnail(url)
@@ -399,9 +381,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             state.attachments.append(
                 .init(id: entryVideo.id, attachment: .video(.init(entryVideo: entryVideo)))
             )
-            
-            return environment.coreDataClient.addAttachmentEntry(entryVideo, state.entry.id)
-                .fireAndForget()
+            return .none
             
         case let .loadAudio(url):
             let pathExtension = url.pathExtension
@@ -423,9 +403,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
         case let .loadAudioResponse(entryAudio):
             state.addAttachmentInFlight = false
             state.attachments.append(.init(id: entryAudio.id, attachment: .audio(.init(entryAudio: entryAudio))))
-        
-            return environment.coreDataClient.addAttachmentEntry(entryAudio, state.entry.id)
-                .map({ AddEntryAction.presentAudioRecord(false) })
+            return Effect(value: AddEntryAction.presentAudioRecord(false))
             
         case let .attachments(id: id, action: .attachment(.video(.remove))),
             let .attachments(id: id, action: .attachment(.image(.remove))),
@@ -445,9 +423,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             
         case let .removeAttachmentResponse(id):
             state.attachments.remove(id: id)
-            
-            return environment.coreDataClient.removeAttachmentEntry(id)
-                .fireAndForget()
+            return .none
             
         case .attachments:
             return .none
@@ -471,15 +447,8 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             
         case .removeDraftEntryDismissAlert:
             state.dismissAlert = nil
-            return .merge(
-                environment.fileClient.removeAttachments(state.entry.attachments.urls, environment.backgroundQueue)
-                    .fireAndForget(),
-                environment.coreDataClient.removeEntry(state.entry.id)
-                    .receive(on: environment.mainQueue)
-                    .eraseToEffect()
-                    .map({AddEntryAction.finishAddEntry})
-            )
-            
+            return Effect(value: AddEntryAction.finishAddEntry)
+                
         case .finishAddEntry:
             return .none
             
@@ -515,6 +484,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
         }
     }
 )
+.debug()
 
 public struct AddEntryView: View {
     public let store: Store<AddEntryState, AddEntryAction>

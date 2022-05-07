@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  ProjectDiary
+
+  Created by Albert Gil Escura on 26/8/21.
+  
+*/
+
+NSMicrophoneUsageDescription = "Caro Diario necesita acceso ao micrófono para engadir unha nota de voz ao teu diario";
+NSCameraUsageDescription = "Caro Diario precisa acceso á cámara para engadir unha foto ou vídeo ao teu diario";
+NSFaceIDUsageDescription = "Caro Diario necesita Face ID para poder desbloquear la aplicación sin introducir tu código secreto";

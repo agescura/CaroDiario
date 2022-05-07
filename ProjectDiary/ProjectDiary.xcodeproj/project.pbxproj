@@ -113,6 +113,8 @@
 		955CAE962710849C009709DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		955CAE972710849C009709DB /* Clip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clip.entitlements; sourceTree = "<group>"; };
 		955CAE9F271084D6009709DB /* ClipRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClipRelease.entitlements; sourceTree = "<group>"; };
+		955EA4E02826D3CA00AAD260 /* gl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = gl; path = gl.lproj/MainInterface.strings; sourceTree = "<group>"; };
+		955EA4E12826D3CA00AAD260 /* gl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = gl; path = gl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		956717DC26B1E17C00E2C1E9 /* Icon-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-2.png"; sourceTree = "<group>"; };
 		956717DE26B1E19200E2C1E9 /* Icon-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-2@2x.png"; sourceTree = "<group>"; };
 		956717E026B1E1A600E2C1E9 /* Icon-2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-2@3x.png"; sourceTree = "<group>"; };
@@ -417,6 +419,7 @@
 				ca,
 				en,
 				es,
+				gl,
 			);
 			mainGroup = 1291435AFB7E83FBC428F4F6;
 			packageReferences = (
@@ -512,6 +515,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				954422EE26F66535002C1E1C /* Base */,
+				955EA4E02826D3CA00AAD260 /* gl */,
 			);
 			name = MainInterface.storyboard;
 			sourceTree = "<group>";
@@ -522,6 +526,7 @@
 				95EFDB4926D7F02500C2B12F /* en */,
 				95EFDB4B26D7F02900C2B12F /* ca */,
 				95EFDB4C26D7F02D00C2B12F /* es */,
+				955EA4E12826D3CA00AAD260 /* gl */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -537,7 +542,7 @@
 				CODE_SIGN_ENTITLEMENTS = ProjectDiary/ProjectDiaryDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				INFOPLIST_FILE = ProjectDiary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -545,7 +550,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.CaroDiarioDevelopment;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -672,7 +677,7 @@
 				CODE_SIGN_ENTITLEMENTS = Share/ShareDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -688,7 +693,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.CaroDiarioDevelopment.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -705,7 +710,7 @@
 				CODE_SIGN_ENTITLEMENTS = Share/ShareRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Share/Info.plist;
@@ -717,7 +722,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.carodiario.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -794,7 +799,7 @@
 				CODE_SIGN_ENTITLEMENTS = ProjectDiary/ProjectDiary.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				INFOPLIST_FILE = ProjectDiary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -802,7 +807,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertgil.carodiario;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;

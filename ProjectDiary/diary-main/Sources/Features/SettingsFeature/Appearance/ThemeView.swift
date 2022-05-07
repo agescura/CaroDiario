@@ -41,7 +41,6 @@ public let themeReducer: Reducer<ThemeState, ThemeAction, ThemeEnvironment> = .c
             state: \ThemeState.entries,
             action: /ThemeAction.entries,
             environment: { EntriesEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 avCaptureDeviceClient: .noop,

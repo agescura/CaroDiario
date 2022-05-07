@@ -41,7 +41,6 @@ public let styleReducer: Reducer<StyleState, StyleAction, StyleEnvironment> = .c
             state: \StyleState.entries,
             action: /StyleAction.entries,
             environment: { EntriesEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 avCaptureDeviceClient: .noop,

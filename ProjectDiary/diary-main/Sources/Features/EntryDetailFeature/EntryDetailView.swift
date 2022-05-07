@@ -80,7 +80,6 @@ public enum EntryDetailAction: Equatable {
 }
 
 public struct EntryDetailEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let avCaptureDeviceClient: AVCaptureDeviceClient
     public let applicationClient: UIApplicationClient
@@ -94,7 +93,6 @@ public struct EntryDetailEnvironment {
     public let uuid: () -> UUID
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         avCaptureDeviceClient: AVCaptureDeviceClient,
         applicationClient: UIApplicationClient,
@@ -107,7 +105,6 @@ public struct EntryDetailEnvironment {
         mainRunLoop: AnySchedulerOf<RunLoop>,
         uuid: @escaping () -> UUID
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.avCaptureDeviceClient = avCaptureDeviceClient
         self.applicationClient = applicationClient
@@ -135,7 +132,6 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
             state: \EntryDetailState.attachments,
             action: /EntryDetailAction.attachments,
             environment: { EntryDetailEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
                 applicationClient: $0.applicationClient,
@@ -169,7 +165,6 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
         state: \EntryDetailState.addEntryState,
         action: /EntryDetailAction.addEntryAction,
         environment: { AddEntryEnvironment(
-            coreDataClient: $0.coreDataClient,
             fileClient: $0.fileClient,
             avCaptureDeviceClient: $0.avCaptureDeviceClient,
             applicationClient: $0.applicationClient,
@@ -215,8 +210,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
                 .fireAndForget()
         
         case .onAppear:
-            return environment.coreDataClient.fetchEntry(state.entry)
-                .map(EntryDetailAction.entryResponse)
+            return .none
             
         case let .entryResponse(entry):
             state.entry = entry
@@ -251,13 +245,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
             
         case let .removeAttachmentResponse(id):
             state.attachments.remove(id: id)
-            
-            return .merge(
-                environment.coreDataClient.removeAttachmentEntry(id).fireAndForget()
-                .receive(on: environment.mainQueue)
-                .eraseToEffect(),
-                Effect(value: .dismissAttachmentOverlayed)
-            )
+            return Effect(value: .dismissAttachmentOverlayed)
         
         case .attachments:
             return .none

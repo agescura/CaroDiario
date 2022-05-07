@@ -1,0 +1,213 @@
+/* 
+  Localizable.strings
+  ProjectDiary
+
+  Created by Albert Gil Escura on 27/6/21.
+  
+*/
+
+"Cancel" = "Cancelar";
+"Continue" = "Si, continuar";
+
+// Styles
+
+"Style.Rectangle" = "Rectángulo";
+"Style.Rounded" = "Bordeado";
+"Style.Horizontal" = "Horizontal";
+"Style.Vertical" = "Vertical";
+"Style.Dark" = "Escuro";
+"Style.Light" = "Durno";
+"Style.System" = "Sistema";
+
+// OnboardingFeature
+
+"OnBoarding.Diary" = "Caro Diario!";
+"OnBoarding.Welcome" = "Grazas por descargar esta aplicación.";
+"OnBoarding.Description.1" = "Caro Diario é unha aplicación que simula o teu diario persoal.";
+"OnBoarding.Description.2" = "Podes escribir os teus pensamentos ou o que queiras.";
+"OnBoarding.Description.3" = "Tamén pode recuperar as súas imaxes, vídeos ou audio.";
+"OnBoarding.Important" = "A túa privacidade é importante.";
+"OnBoarding.Privacy" = "Esta aplicación non recolle ningún dato persoal.";
+"OnBoarding.Continue" = "Continuar";
+"OnBoarding.Start" = "Iniciar";
+"OnBoarding.Skip" = "Omitir";
+"OnBoarding.Skip.Title" = "Ir ao xornal";
+"OnBoarding.Skip.Alert" = "Esta acción non se pode desfacer.";
+"OnBoarding.Appearance.Title" = "Aspecto";
+"OnBoarding.Layout.Title" = "Disposición";
+"OnBoarding.Style.Title" = "Estilo";
+"OnBoarding.Theme.Title" = "Tema";
+"OnBoarding.Appearance.Description" = "Podes escoller a aparencia que prefires";
+"OnBoarding.Appearance.Overview" = "Vista previa do diario";
+"OnBoarding.Style.Message" = "Podes seleccionar o estilo que desexes. Lembra que podes cambialo de novo na configuración.";
+"OnBoarding.Appearance.Message" = "Podes seleccionar a estrutura que desexes. Lembra que na configuración podes cambiala de novo.";
+
+// HomeFeature
+
+"Home.TabView.Entries" = "Xornal";
+"Home.TabView.Search" = "Buscar";
+"Home.TabView.Settings" = "Configuración";
+
+// EntriesFeature
+
+"Entries.Diary" = "Xornal";
+"Entries.ReadMore" = "Ler máis";
+"Entries.Empty" = "Para engadir unha entrada, faga clic no + na esquina superior dereita.";
+"Entries.Remove.Title" = "Está a piques de eliminar esta entrada";
+"Entries.Remove.Cancel" = "Cancelar";
+"Entries.Remove.Action" = "Eliminar";
+"Entries.ChooseOption" = "Escolle unha opción";
+"Entries.Camera" = "Cámara";
+"Entries.Photos" = "Biblioteca de fotos";
+"Entries.Edit" = "Editar";
+"Entries.FakeEntry.FirstMessage" = "Hoxe fun ao cine";
+"Entries.FakeEntry.SecondMessage" = "Empecei a ler un libro";
+"Entries.Share" = "Compartir";
+
+// AddEntryFeature
+
+"AddEntry.Title" = "Escribir unha nova entrada de diario";
+"AddEntry.Finish" = "Engadir";
+"AddEntry.ChooseOption" = "Escolla unha opción";
+"AddEntry.Camera" = "Cámara";
+"AddEntry.Photos" = "Biblioteca de fotos";
+"AddEntry.WriteSomething" = "Escribir algo...";
+"AddEntry.Add" = "Engadir";
+"AddEntry.PlayVideo" = "Reproducir vídeo";
+"AddEntry.RemoveVideo" = "Eliminar vídeo";
+"AddEntry.ShowImage" = "Mostrar imaxe";
+"AddEntry.RemoveImage" = "Eliminar imaxe";
+"AddEntry.Audio" = "Seleccione un audio";
+"AddEntry.Exit" = "Saíndo";
+"AddEntry.Exit.Message" = "Está a piques de perder os datos introducidos.";
+"AddEntry.Exit.Yes" = "Si, entendín";
+"AddEntry.Edit" = "Está editando a entrada";
+"AddEntry.Update" = "Rematando";
+"Settings.ReviewAppStore" = "Revisar App Store";
+"Settings.ExportPDF" = "Exportar PDF";
+
+// Image
+
+"Image.Remove.Description" = "Está seguro de que quere eliminar a imaxe?";
+"Image.Remove.Title" = "Eliminar";
+
+// Vídeo
+
+"Video.Remove.Description" = "Estás seguro de que queres eliminar o vídeo?";
+"Video.Remove.Title" = "Eliminar";
+
+// Audio
+
+"Audio.Remove.Description" = "Está seguro de que quere eliminar a nota de voz?";
+"Audio.Remove.Title" = "Eliminar";
+
+// cámara
+
+"Camera.Denied" = "Cámara denegada";
+"Camera.Denied.Message" = "Se queres usar a cámara, vai á configuración.";
+"Camera.Denied.GoSettings" = "Ir a Configuración";
+
+//Configuración
+
+"Settings.Behaviour" = "";
+"Settings.Splash" = "Mostrar animación ao comezo";
+"Settings.Layout" = "Disposición";
+"Settings.Style" = "Estilo";
+"Settings.Appearance" = "Aparencia";
+"Settings.Security" = "Seguridade";
+"Settings.Code" = "%@ Código de acceso";
+"Settings.Title" = "Configuración";
+"Settings.On" = "Activado";
+"Settings.Off" = "Desactivado";
+"Settings.Theme" = "Tema";
+"Settings.Icon" = "Icona";
+"Settings.Camera" = "Cámara";
+"Settings.GoToSettings" = "Ir a Configuración";
+"Settings.Camera.Privacy" = "Privacidade da cámara";
+"Settings.GivePermission" = "Dar permiso";
+"Settings.Microphone" = "Micrófono";
+"Settings.Agreements" = "Agradecementos";
+"Settings.Attachment.Image" = "Publicacións con imaxes";
+"Settings.Attachment.Video" = "Publicacións con vídeos";
+"Settings.Attachment.Audio" = "Publicacións con audios";
+"Settings.Results" = "Número de resultados:";
+"Settings.About" = "Acerca do diario de Caro";
+"Settings.Version" = "Versión";
+"Settings.ReportBug" = "Informar dun erro";
+"Settings.Biometric.Test" = "Para activar %@, primeiro debemos comprobar que funciona correctamente";
+"Settings.Language" = "Idioma";
+"Settings.Spanish" = "Español";
+"Settings.Catalan" = "Catalán";
+"Settings.English" = "Inglés";
+"Settings.Galician" = "Galego";
+
+// Función do código de acceso
+
+"Passcode.Title" = "Contrasinal";
+"Passcode.Activate.Title" = "Activar agora";
+"Passcode.Activate.Message" = "Nota: se esqueces o contrasinal, terás que eliminar a aplicación e reinstalala. Todos os datos perderanse.";
+"Passcode.Insert" = "Introduza un contrasinal";
+"Passcode.Reinsert" = "Repetir contrasinal";
+"Passcode.Dismiss" = "Cancelar";
+"Passcode.Turnoff" = "Desactivar o contrasinal";
+"Passcode.Different" = "Os contrasinal non coinciden";
+"Passcode.Turnoff.Message" = "Queres desactivar %@?";
+"Passcode.UnlockFaceId" = "Desbloquear con %@";
+"Passcode.Autolock" = "Bloqueo automático";
+"Passcode.Always" = "Sempre";
+"Passcode.Disabled" = "Só no inicio";
+"Passcode.IfAway" = "Inactivo activado ";
+
+// LockScreenFeature
+
+"LockScreen.Title" = "Introduza o código de acceso";
+
+// Atallos
+
+"Shortcuts.Add" = "Engadir entrada";
+"Shortcuts.Settings" = "Configuración";
+
+// AuthorizedVideoStatus
+
+"notDetermined" = "Non está determinado";
+"denied" = "Denegado";
+"authorized" = "Autorizado";
+"restricted" = "Restrinxido";
+"notDetermined.description" = "Non determinado significa que aínda non autorizou o uso da cámara nesta aplicación.";
+"denied.description" = "Denegado significa que non deches permiso á cámara. Non poderás usala ata que a volvas acendela. Para acendela, tes que ir á configuración do teu teléfono e activala. cámara.";
+"authorized.description" = "Autorizou a cámara, debería funcionar normalmente";
+"restricted.description" = "Parece que o dispositivo que estás a usar non ten cámara; non poderás usar a cámara con esta aplicación.";
+
+// Micrófono
+
+"microphone.notDetermined" = "Non está determinado";
+"microphone.denied" = "Denegado";
+"microphone.authorized" = "Autorizado";
+"microphone.notDetermined.description" = "Non determinado significa que aínda non autorizou o uso deste micrófono nesta aplicación";
+"microphone.denied.description" = "Denegado significa que non deches permiso ao micrófono. Non poderás usalo ata que o acendes. Para acendelo, tes que ir á configuración do teu dispositivo";
+"microphone.authorized.description" = "Autorizou o micrófono, debería funcionar normalmente";
+
+// Busca
+
+"Search.Title" = "Buscar";
+"Search.Empty" = "Non hai resultados";
+"Search.Results" = "Número de resultados: ";
+
+// PDF
+
+"PDF.Page" = "Páxina ";
+"PDF.Date" = "Introdución coa data ";
+"PDF.Preview" = "Previsualizar PDF";
+"PDF.Share" = "Compartir PDF";
+
+// AudioRecord
+
+"AudioRecord.Authorized" = "Tes permiso de micrófono autorizado";
+"AudioRecord.Denied" = "Denegou o permiso do micrófono";
+"AudioRecord.NotDetermined" = "Aínda non autorizou o permiso do micrófono";
+"AudioRecord.Alert" = "Aviso";
+"AudioRecord.Alert.Message" = "Se continúa eliminarase a gravación anterior";
+"AudioRecord.AllowMicrophone" = "Permitir micrófono";
+"AudioRecord.GoToSettings" = "Ir á configuración";
+"AudioRecord.StartRecording" = "Toca o botón de gravación para iniciar unha nota de voz";
+"AudioRecord.Add" = "Engadir";

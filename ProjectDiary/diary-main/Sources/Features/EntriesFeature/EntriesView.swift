@@ -55,7 +55,6 @@ public enum EntriesAction: Equatable {
 }
 
 public struct EntriesEnvironment {
-    public let coreDataClient: CoreDataClient
     public let fileClient: FileClient
     public let userDefaultsClient: UserDefaultsClient
     public let avCaptureDeviceClient: AVCaptureDeviceClient
@@ -70,7 +69,6 @@ public struct EntriesEnvironment {
     public let uuid: () -> UUID
     
     public init(
-        coreDataClient: CoreDataClient,
         fileClient: FileClient,
         userDefaultsClient: UserDefaultsClient,
         avCaptureDeviceClient: AVCaptureDeviceClient,
@@ -84,7 +82,6 @@ public struct EntriesEnvironment {
         mainRunLoop: AnySchedulerOf<RunLoop>,
         uuid: @escaping () -> UUID
     ) {
-        self.coreDataClient = coreDataClient
         self.fileClient = fileClient
         self.userDefaultsClient = userDefaultsClient
         self.avCaptureDeviceClient = avCaptureDeviceClient
@@ -108,7 +105,6 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
             state: \EntriesState.addEntryState,
             action: /EntriesAction.addEntryAction,
             environment: { AddEntryEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
                 applicationClient: $0.applicationClient,
@@ -133,7 +129,6 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
             state: \EntriesState.entries,
             action: /EntriesAction.entries,
             environment: { EntriesEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 userDefaultsClient: $0.userDefaultsClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
@@ -155,7 +150,6 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
             state: \EntriesState.entryDetailState,
             action: /EntriesAction.entryDetailAction,
             environment: { EntryDetailEnvironment(
-                coreDataClient: $0.coreDataClient,
                 fileClient: $0.fileClient,
                 avCaptureDeviceClient: $0.avCaptureDeviceClient,
                 applicationClient: $0.applicationClient,
@@ -176,10 +170,7 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
             switch action {
                 
             case .onAppear:
-                return environment.coreDataClient.create(CoreDataId())
-                    .receive(on: environment.mainQueue)
-                    .eraseToEffect()
-                    .map(EntriesAction.coreDataClientAction)
+                return .none
                 
             case let .coreDataClientAction(.entries(response)):
                 return Effect(value: .fetchEntriesResponse(response))
@@ -245,9 +236,8 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
             case .entries:
                 return .none
                 
-            case let .remove(entry):
-                return environment.coreDataClient.removeEntry(entry.id)
-                    .fireAndForget()
+            case .remove:
+                return .none
                 
             case let .navigateEntryDetail(value):
                 guard let entry = state.entryDetailSelected else { return .none }
