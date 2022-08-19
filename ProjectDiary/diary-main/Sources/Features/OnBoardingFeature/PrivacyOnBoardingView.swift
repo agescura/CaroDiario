@@ -46,7 +46,7 @@ public struct PrivacyOnBoardingEnvironment {
     public let feedbackGeneratorClient: FeedbackGeneratorClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let uuid: () -> UUID
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
     
@@ -55,7 +55,7 @@ public struct PrivacyOnBoardingEnvironment {
         feedbackGeneratorClient: FeedbackGeneratorClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        mainRunLoop: AnySchedulerOf<RunLoop>,
+        date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
         setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
     ) {
@@ -63,7 +63,7 @@ public struct PrivacyOnBoardingEnvironment {
         self.feedbackGeneratorClient = feedbackGeneratorClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
-        self.mainRunLoop = mainRunLoop
+        self.date = date
         self.uuid = uuid
         self.setUserInterfaceStyle = setUserInterfaceStyle
     }
@@ -81,7 +81,7 @@ let privacyOnBoardingReducer: Reducer<PrivacyOnBoardingState, PrivacyOnBoardingA
                 feedbackGeneratorClient: $0.feedbackGeneratorClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: $0.uuid,
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }

@@ -41,68 +41,70 @@ public struct ExportEnvironment {
     public let fileClient: FileClient
     public let applicationClient: UIApplicationClient
     public let pdfKitClient: PDFKitClient
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     
     public init(
         fileClient: FileClient,
         applicationClient: UIApplicationClient,
         pdfKitClient: PDFKitClient,
-        mainRunLoop: AnySchedulerOf<RunLoop>
+        date: @escaping () -> Date
     ) {
         self.fileClient = fileClient
         self.applicationClient = applicationClient
         self.pdfKitClient = pdfKitClient
-        self.mainRunLoop =  mainRunLoop
+        self.date = date
     }
 }
 
-public let exportReducer: Reducer<ExportState, ExportAction, ExportEnvironment> = .combine(
-    
+public let exportReducer: Reducer<
+    ExportState,
+    ExportAction,
+    ExportEnvironment
+> = .combine(
     pdfPreviewReducer
         .optional()
         .pullback(
             state: \.pdfPreviewState,
             action: /ExportAction.pdfPreviewAction,
-            environment: { _ in PDFPreviewEnvironment()
-            }
+            environment: { _ in PDFPreviewEnvironment() }
         ),
     
-    .init { state, action, environment in
-        switch action {
-        case .processPDF:
-            return .none
-            
-        case let .generatePDF(entries):
-            return environment.pdfKitClient.generatePDF(entries, environment.mainRunLoop.now.date)
-                        .map(ExportAction.presentActivityView)
-            
-        case let .presentActivityView(file):
-            return environment.applicationClient.share(file, .pdf)
-                .fireAndForget()
-            
-        case .previewPDF:
-            return .none
-            
-        case let .generatePreview(entries):
-            return environment.pdfKitClient.generatePDF(entries, environment.mainRunLoop.now.date)
-                        .map(ExportAction.presentPreviewView)
-            
-        case let .presentPreviewView(file):
-            state.pdf = file
-            return Effect(value: .presentPDFPreview(true))
-            
-        case let .presentPDFPreview(value):
-            state.presentPreview = value
-            state.pdfPreviewState = value ? .init(pdfData: state.pdf) : nil
-            return .none
-            
-        case .pdfPreviewAction(.dismiss):
-            return Effect(value: .presentPDFPreview(false))
-            
-        case .pdfPreviewAction:
-            return .none
+        .init { state, action, environment in
+            switch action {
+            case .processPDF:
+                return .none
+                
+            case let .generatePDF(entries):
+                return environment.pdfKitClient.generatePDF(entries, environment.date())
+                    .map(ExportAction.presentActivityView)
+                
+            case let .presentActivityView(file):
+                return environment.applicationClient.share(file, .pdf)
+                    .fireAndForget()
+                
+            case .previewPDF:
+                return .none
+                
+            case let .generatePreview(entries):
+                return environment.pdfKitClient.generatePDF(entries, environment.date())
+                    .map(ExportAction.presentPreviewView)
+                
+            case let .presentPreviewView(file):
+                state.pdf = file
+                return Effect(value: .presentPDFPreview(true))
+                
+            case let .presentPDFPreview(value):
+                state.presentPreview = value
+                state.pdfPreviewState = value ? .init(pdfData: state.pdf) : nil
+                return .none
+                
+            case .pdfPreviewAction(.dismiss):
+                return Effect(value: .presentPDFPreview(false))
+                
+            case .pdfPreviewAction:
+                return .none
+            }
         }
-    }
 )
 
 public struct ExportView: View {
@@ -132,13 +134,10 @@ public struct ExportView: View {
                             .foregroundColor(.blue)
                     }
                     .contentShape(Rectangle())
-                    .onTapGesture {
-                        viewStore.send(.previewPDF)
-                    }
+                    .onTapGesture { viewStore.send(.previewPDF) }
                 }
                 
                 Section() {
-                    
                     HStack(spacing: 16) {
                         IconImageView(
                             systemName: "square.and.arrow.up",
@@ -158,9 +157,11 @@ public struct ExportView: View {
                     }
                 }
             }
-            .fullScreenCover(isPresented: viewStore.binding(
-                                get: \.presentPreview,
-                                send: ExportAction.presentPDFPreview)
+            .fullScreenCover(
+                isPresented: viewStore.binding(
+                    get: \.presentPreview,
+                    send: ExportAction.presentPDFPreview
+                )
             ) {
                 IfLetStore(
                     store.scope(

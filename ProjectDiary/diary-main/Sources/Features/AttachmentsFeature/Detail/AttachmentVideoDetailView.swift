@@ -20,11 +20,13 @@ public struct AttachmentVideoDetailState: Equatable {
     }
 }
 
-public enum AttachmentVideoDetailAction: Equatable {
-    
-}
+public enum AttachmentVideoDetailAction: Equatable {}
 
-public let attachmentVideoDetailReducer = Reducer<AttachmentVideoDetailState, AttachmentVideoDetailAction, Void> { state, action, _ in
+public let attachmentVideoDetailReducer = Reducer<
+    AttachmentVideoDetailState,
+    AttachmentVideoDetailAction,
+    Void
+> { state, action, _ in
     return .none
 }
 

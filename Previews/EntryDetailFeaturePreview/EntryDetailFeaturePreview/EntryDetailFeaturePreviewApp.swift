@@ -73,7 +73,7 @@ struct EntryDetailFeaturePreviewApp: App {
                             avAssetClient: .live,
                             mainQueue: .main,
                             backgroundQueue: .main,
-                            mainRunLoop: .main,
+                            date: Date.init,
                             uuid: UUID.init
                         )
                     )

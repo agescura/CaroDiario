@@ -27,7 +27,7 @@ public struct StyleEnvironment {
     public let feedbackGeneratorClient: FeedbackGeneratorClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
 }
 
 public let styleReducer: Reducer<StyleState, StyleAction, StyleEnvironment> = .combine(
@@ -51,7 +51,7 @@ public let styleReducer: Reducer<StyleState, StyleAction, StyleEnvironment> = .c
                 avAssetClient: .noop,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: UUID.init)
             }
         ),

@@ -102,7 +102,7 @@ public struct AudioRecordEnvironment {
     public var avAudioPlayerClient: AVAudioPlayerClient
     public var avAudioRecorderClient: AVAudioRecorderClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let uuid: () -> UUID
     
     public init(
@@ -112,7 +112,7 @@ public struct AudioRecordEnvironment {
         avAudioPlayerClient: AVAudioPlayerClient,
         avAudioRecorderClient: AVAudioRecorderClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
-        mainRunLoop: AnySchedulerOf<RunLoop>,
+        date: @escaping () -> Date,
         uuid: @escaping () -> UUID
     ) {
         self.fileClient = fileClient
@@ -121,7 +121,7 @@ public struct AudioRecordEnvironment {
         self.avAudioPlayerClient = avAudioPlayerClient
         self.avAudioRecorderClient = avAudioRecorderClient
         self.mainQueue = mainQueue
-        self.mainRunLoop = mainRunLoop
+        self.date = date
         self.uuid = uuid
     }
 }
@@ -222,7 +222,7 @@ public let audioRecordReducer = Reducer<AudioRecordState, AudioRecordAction, Aud
         
     case .startRecorderTimer:
         state.audioRecordDuration = 0
-        return Effect.timer(id: RecorderTimerId(), every: 1, on: environment.mainRunLoop.animation())
+        return Effect.timer(id: RecorderTimerId(), every: 1, on: environment.mainQueue.animation())
             .map { _ in .addSecondRecorderTimer }
         
     case .resetRecorderTimer:

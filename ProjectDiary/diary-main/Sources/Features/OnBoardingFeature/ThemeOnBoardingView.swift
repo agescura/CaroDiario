@@ -34,7 +34,7 @@ public struct ThemeOnBoardingEnvironment {
     public let feedbackGeneratorClient: FeedbackGeneratorClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let uuid: () -> UUID
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
 }
@@ -61,7 +61,7 @@ public let themeOnBoardingReducer: Reducer<ThemeOnBoardingState, ThemeOnBoarding
                 avAssetClient: .noop,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: UUID.init)
             }
         ),

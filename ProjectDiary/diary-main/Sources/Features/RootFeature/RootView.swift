@@ -80,7 +80,7 @@ public struct RootEnvironment {
     public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let uuid: () -> UUID
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
     
@@ -100,7 +100,7 @@ public struct RootEnvironment {
         avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        mainRunLoop: AnySchedulerOf<RunLoop>,
+        date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
         setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
     ) {
@@ -119,7 +119,7 @@ public struct RootEnvironment {
         self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
-        self.mainRunLoop = mainRunLoop
+        self.date = date
         self.uuid = uuid
         self.setUserInterfaceStyle = setUserInterfaceStyle
     }
@@ -152,7 +152,7 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
                     avAssetClient: $0.avAssetClient,
                     mainQueue: $0.mainQueue,
                     backgroundQueue: $0.backgroundQueue,
-                    mainRunLoop: $0.mainRunLoop,
+                    date: $0.date,
                     uuid: $0.uuid,
                     setUserInterfaceStyle: $0.setUserInterfaceStyle
                 )
@@ -262,7 +262,7 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
                 return .none
             }
             if let timeForAskPasscode = environment.userDefaultsClient.timeForAskPasscode,
-               timeForAskPasscode > environment.mainRunLoop.now.date {
+               timeForAskPasscode > environment.date() {
                 return .none
             }
             if let code = environment.userDefaultsClient.passcodeCode {
@@ -275,7 +275,7 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             if let timeForAskPasscode = Calendar.current.date(
                 byAdding: .minute,
                 value: environment.userDefaultsClient.optionTimeForAskPasscode,
-                to: environment.mainRunLoop.now.date) {
+                to: environment.date()) {
                 return environment.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode).fireAndForget()
             }
             return environment.userDefaultsClient.removeOptionTimeForAskPasscode().fireAndForget()
@@ -425,7 +425,7 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
                     let entryText = EntryText(
                         id: environment.uuid(),
                         message: addEntryState.text,
-                        lastUpdated: environment.mainRunLoop.now.date
+                        lastUpdated: environment.date()
                     )
                     return .merge(
                         environment.coreDataClient.updateMessage(entryText, addEntryState.entry)

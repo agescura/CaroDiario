@@ -138,14 +138,15 @@ public let lockScreenReducer = Reducer<LockScreenState, LockScreenAction, LockSc
 
 public struct LockScreenView: View {
     let store: Store<LockScreenState, LockScreenAction>
-    
-    let columns = [
+    private let columns = [
             GridItem(.flexible()),
             GridItem(.flexible()),
             GridItem(.flexible())
         ]
     
-    public init(store: Store<LockScreenState, LockScreenAction>) {
+    public init(
+        store: Store<LockScreenState, LockScreenAction>
+    ) {
         self.store = store
     }
     
@@ -156,7 +157,7 @@ public struct LockScreenView: View {
                 
                 Text("LockScreen.Title".localized)
                 HStack {
-                    ForEach(0..<viewStore.code.count) { iterator in
+                    ForEach(0..<viewStore.code.count, id: \.self) { iterator in
                         Image(systemName: viewStore.codeToMatch.count > iterator ? "circle.fill" : "circle")
                     }
                 }

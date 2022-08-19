@@ -31,7 +31,11 @@ public struct AboutEnvironment {
     public let applicationClient: UIApplicationClient
 }
 
-public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment> { state, action, environment in
+public let aboutReducer = Reducer<
+    AboutState,
+    AboutAction,
+    AboutEnvironment
+> { state, action, environment in
     switch action {
     case .emailOptionSheetButtonTapped:
         var buttons: [ConfirmationDialogState<AboutAction>.Button] = [
@@ -89,7 +93,6 @@ public struct AboutView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                
                 Form {
                     Section() {
                         HStack(spacing: 16) {

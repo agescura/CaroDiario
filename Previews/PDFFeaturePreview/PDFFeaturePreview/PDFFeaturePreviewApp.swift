@@ -80,7 +80,7 @@ There are many variations of passages of Lorem Ipsum available, but the majority
                         fileClient: .noop,
                         applicationClient: .live,
                         pdfKitClient: .live,
-                        mainRunLoop: .main
+                        date: Date.init
                     )
                 )
             )

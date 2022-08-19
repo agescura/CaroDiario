@@ -42,7 +42,7 @@ struct AddEntryFeaturePreviewApp: App {
                         avAssetClient: .live,
                         mainQueue: .main,
                         backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
-                        mainRunLoop: .main,
+                        date: Date.init,
                         uuid: UUID.init
                     )
                 )

@@ -49,9 +49,12 @@ public struct AgreementsEnvironment {
     var applicationClient: UIApplicationClient
 }
 
-public let agreementsReducer = Reducer<AgreementsState, AgreementsAction, AgreementsEnvironment> { state, action, environment in
+public let agreementsReducer = Reducer<
+    AgreementsState,
+    AgreementsAction,
+    AgreementsEnvironment
+> { state, action, environment in
     switch action {
-    
     case let .open(type):
         guard let url = URL(string: type.urlString) else { return .none }
         return environment.applicationClient.open(url, [:])
@@ -65,13 +68,12 @@ public struct AgreementsView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             Form {
-                Section() {
+                Section {
                     HStack(spacing: 16) {
                         IconImageView(
                             systemName: "square.and.arrow.up",
                             foregroundColor: .green
                         )
-                        
                         Text(AgreementType.composableArchitecture.title)
                             .foregroundColor(.chambray)
                             .adaptiveFont(.latoRegular, size: 12)
@@ -86,14 +88,12 @@ public struct AgreementsView: View {
                         viewStore.send(.open(.composableArchitecture))
                     }
                 }
-                
-                Section() {
+                Section {
                     HStack(spacing: 16) {
                         IconImageView(
                             systemName: "exclamationmark.circle",
                             foregroundColor: .yellow
                         )
-                        
                         Text(AgreementType.pointfree.title)
                             .foregroundColor(.chambray)
                             .adaptiveFont(.latoRegular, size: 12)
@@ -107,13 +107,11 @@ public struct AgreementsView: View {
                     .onTapGesture {
                         viewStore.send(.open(.pointfree))
                     }
-                    
                     HStack(spacing: 16) {
                         IconImageView(
                             systemName: "exclamationmark.circle",
                             foregroundColor: .yellow
                         )
-                        
                         Text(AgreementType.raywenderlich.title)
                             .foregroundColor(.chambray)
                             .adaptiveFont(.latoRegular, size: 12)

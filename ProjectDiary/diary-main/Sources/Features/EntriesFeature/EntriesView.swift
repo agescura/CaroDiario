@@ -65,7 +65,7 @@ public struct EntriesEnvironment {
     public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let uuid: () -> UUID
     
     public init(
@@ -79,7 +79,7 @@ public struct EntriesEnvironment {
         avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        mainRunLoop: AnySchedulerOf<RunLoop>,
+        date: @escaping () -> Date,
         uuid: @escaping () -> UUID
     ) {
         self.fileClient = fileClient
@@ -92,7 +92,7 @@ public struct EntriesEnvironment {
         self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
-        self.mainRunLoop = mainRunLoop
+        self.date = date
         self.uuid = uuid
     }
 }
@@ -114,7 +114,7 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
                 avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: $0.uuid)
             }
         ),
@@ -139,7 +139,7 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
                 avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: $0.uuid)
             }
         ),
@@ -159,7 +159,7 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
                 avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: $0.uuid)
             }
         ),
@@ -208,12 +208,12 @@ public let entriesReducer: Reducer<EntriesState, EntriesAction, EntriesEnvironme
                 state.presentAddEntry = true
                 let newEntry = Entry(
                     id: environment.uuid(),
-                    date: environment.mainRunLoop.now.date,
-                    startDay: environment.mainRunLoop.now.date,
+                    date: environment.date(),
+                    startDay: environment.date(),
                     text: .init(
                         id: environment.uuid(),
                         message: "",
-                        lastUpdated: environment.mainRunLoop.now.date
+                        lastUpdated: environment.date()
                     )
                 )
                 state.addEntryState = .init(type: .add, entry: newEntry)

@@ -89,7 +89,7 @@ public struct EntryDetailEnvironment {
     public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let uuid: () -> UUID
     
     public init(
@@ -102,7 +102,7 @@ public struct EntryDetailEnvironment {
         avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        mainRunLoop: AnySchedulerOf<RunLoop>,
+        date: @escaping () -> Date,
         uuid: @escaping () -> UUID
     ) {
         self.fileClient = fileClient
@@ -114,7 +114,7 @@ public struct EntryDetailEnvironment {
         self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
-        self.mainRunLoop = mainRunLoop
+        self.date = date
         self.uuid = uuid
     }
 }
@@ -141,7 +141,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
                 avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: UUID.init)
             }
         ),
@@ -174,7 +174,7 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
             avAssetClient: $0.avAssetClient,
             mainQueue: $0.mainQueue,
             backgroundQueue: $0.backgroundQueue,
-            mainRunLoop: $0.mainRunLoop,
+            date: $0.date,
             uuid: $0.uuid)
         }
     ),

@@ -140,7 +140,7 @@ public struct InsertPasscodeView: View {
                 VStack(spacing: 32) {
                     Text(viewStore.step.title)
                     HStack {
-                        ForEach(0..<viewStore.maxNumbersCode) { iterator in
+                        ForEach(0..<viewStore.maxNumbersCode, id: \.self) { iterator in
                             Image(systemName: viewStore.code.count > iterator ? "circle.fill" : "circle")
                         }
                     }

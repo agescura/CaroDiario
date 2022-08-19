@@ -54,58 +54,66 @@ public struct AppearanceEnvironment {
     public let feedbackGeneratorClient: FeedbackGeneratorClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
 }
 
-public let appearanceReducer: Reducer<AppearanceState, AppearanceAction, AppearanceEnvironment> = .combine(
-
+public let appearanceReducer: Reducer<
+    AppearanceState,
+    AppearanceAction,
+    AppearanceEnvironment
+> = .combine(
     styleReducer
         .optional()
         .pullback(
             state: \AppearanceState.styleState,
             action: /AppearanceAction.styleAction,
-            environment: { StyleEnvironment(
-                feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop)
+            environment: {
+                StyleEnvironment(
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                    mainQueue: $0.mainQueue,
+                    backgroundQueue: $0.backgroundQueue,
+                    date: $0.date
+                )
             }
         ),
-    
     layoutReducer
         .optional()
         .pullback(
             state: \AppearanceState.layoutState,
             action: /AppearanceAction.layoutAction,
-            environment: { LayoutEnvironment(
-                feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop)
+            environment: {
+                LayoutEnvironment(
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                    mainQueue: $0.mainQueue,
+                    backgroundQueue: $0.backgroundQueue,
+                    date: $0.date
+                )
             }
         ),
-    
     iconAppReducer
         .optional()
         .pullback(
             state: \AppearanceState.iconAppState,
             action: /AppearanceAction.iconAppAction,
-            environment: { IconAppEnvironment(
-                feedbackGeneratorClient: $0.feedbackGeneratorClient)
+            environment: {
+                IconAppEnvironment(
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient
+                )
             }
         ),
-    
     themeReducer
         .optional()
         .pullback(
             state: \AppearanceState.themeState,
             action: /AppearanceAction.themeAction,
-            environment: { ThemeEnvironment(
-                feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop)
+            environment: {
+                ThemeEnvironment(
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                    mainQueue: $0.mainQueue,
+                    backgroundQueue: $0.backgroundQueue,
+                    date: $0.date
+                )
             }
         ),
     
@@ -188,7 +196,6 @@ public struct AppearanceView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                
                 Form {
                     Section() {
                         HStack(spacing: 16) {
@@ -196,7 +203,6 @@ public struct AppearanceView: View {
                                 systemName: "app",
                                 foregroundColor: .orange
                             )
-                            
                             Text("Settings.Style".localized)
                                 .foregroundColor(.chambray)
                                 .adaptiveFont(.latoRegular, size: 12)
@@ -211,13 +217,11 @@ public struct AppearanceView: View {
                         .onTapGesture {
                             viewStore.send(.navigateStyle(true))
                         }
-                        
                         HStack(spacing: 16) {
                             IconImageView(
                                 systemName: "seal",
                                 foregroundColor: .blue
                             )
-                            
                             Text("Settings.Layout".localized)
                                 .foregroundColor(.chambray)
                                 .adaptiveFont(.latoRegular, size: 12)
@@ -232,13 +236,11 @@ public struct AppearanceView: View {
                         .onTapGesture {
                             viewStore.send(.navigateLayout(true))
                         }
-                        
                         HStack(spacing: 16) {
                             IconImageView(
                                 systemName: viewStore.themeType.icon,
                                 foregroundColor: .berryRed
                             )
-                            
                             Text("Settings.Theme".localized)
                                 .foregroundColor(.chambray)
                                 .adaptiveFont(.latoRegular, size: 12)
@@ -248,19 +250,16 @@ public struct AppearanceView: View {
                                 .adaptiveFont(.latoRegular, size: 12)
                             Image(systemName: "chevron.right")
                                 .foregroundColor(.adaptiveGray)
-                            
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
                             viewStore.send(.navigateTheme(true))
                         }
-                        
                         HStack(spacing: 16) {
                             IconImageView(
                                 systemName: "app.fill",
                                 foregroundColor: .yellow
                             )
-                            
                             Text("Settings.Icon".localized)
                                 .foregroundColor(.chambray)
                                 .adaptiveFont(.latoRegular, size: 12)
@@ -279,11 +278,6 @@ public struct AppearanceView: View {
                 }
                 
                 VStack {
-                    
-                    NavigationLink(destination: EmptyView()) {
-                        EmptyView()
-                    }
-                    
                     NavigationLink(
                         "",
                         destination:
@@ -296,9 +290,9 @@ public struct AppearanceView: View {
                             ),
                         isActive: viewStore.binding(
                             get: \.navigateTheme,
-                            send: AppearanceAction.navigateTheme)
+                            send: AppearanceAction.navigateTheme
+                        )
                     )
-                    
                     NavigationLink(
                         "",
                         destination:
@@ -311,9 +305,9 @@ public struct AppearanceView: View {
                             ),
                         isActive: viewStore.binding(
                             get: \.navigateIconApp,
-                            send: AppearanceAction.navigateIconApp)
+                            send: AppearanceAction.navigateIconApp
+                        )
                     )
-                    
                     NavigationLink(
                         "",
                         destination:
@@ -326,9 +320,9 @@ public struct AppearanceView: View {
                             ),
                         isActive: viewStore.binding(
                             get: \.navigateStyle,
-                            send: AppearanceAction.navigateStyle)
+                            send: AppearanceAction.navigateStyle
+                        )
                     )
-                    
                     NavigationLink(
                         "",
                         destination:
@@ -341,12 +335,9 @@ public struct AppearanceView: View {
                             ),
                         isActive: viewStore.binding(
                             get: \.navigateLayout,
-                            send: AppearanceAction.navigateLayout)
+                            send: AppearanceAction.navigateLayout
+                        )
                     )
-                    
-                    NavigationLink(destination: EmptyView()) {
-                        EmptyView()
-                    }
                 }
                 .frame(height: 0)
             }

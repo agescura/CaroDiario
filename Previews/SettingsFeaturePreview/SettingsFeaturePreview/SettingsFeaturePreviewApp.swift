@@ -46,7 +46,7 @@ struct SettingsFeaturePreviewApp: App {
                         pdfKitClient: .live,
                         mainQueue: .main,
                         backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
-                        mainRunLoop: .main,
+                        date: Date.init,
                         setUserInterfaceStyle: { userInterfaceStyle in
                             .fireAndForget {
                                 UIApplication.shared.windows.first?.overrideUserInterfaceStyle = userInterfaceStyle

@@ -131,7 +131,7 @@ public struct AddEntryEnvironment {
     public let avAssetClient: AVAssetClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let uuid: () -> UUID
     
     public init(
@@ -144,7 +144,7 @@ public struct AddEntryEnvironment {
         avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        mainRunLoop: AnySchedulerOf<RunLoop>,
+        date: @escaping () -> Date,
         uuid: @escaping () -> UUID
     ) {
         self.fileClient = fileClient
@@ -156,7 +156,7 @@ public struct AddEntryEnvironment {
         self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
-        self.mainRunLoop = mainRunLoop
+        self.date = date
         self.uuid = uuid
     }
 }
@@ -188,7 +188,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: $0.uuid)
             }
         ),
@@ -205,7 +205,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 avAudioPlayerClient: $0.avAudioPlayerClient,
                 avAudioRecorderClient: $0.avAudioRecorderClient,
                 mainQueue: $0.mainQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: $0.uuid)
             }
         ),
@@ -334,7 +334,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             
             let entryImage = EntryImage(
                 id: id,
-                lastUpdated: environment.mainRunLoop.now.date,
+                lastUpdated: environment.date(),
                 thumbnail: thumbnail,
                 url: path
             )
@@ -366,7 +366,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             
             let entryVideo = EntryVideo(
                 id: id,
-                lastUpdated: environment.mainRunLoop.now.date,
+                lastUpdated: environment.date(),
                 thumbnail: thumbnail,
                 url: path
             )
@@ -392,7 +392,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             
             let entryAudio = EntryAudio(
                 id: id,
-                lastUpdated: environment.mainRunLoop.now.date,
+                lastUpdated: environment.date(),
                 url: path)
             
             return environment.fileClient.addAudio(url, entryAudio, environment.backgroundQueue)
@@ -461,7 +461,7 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
             
             let entryAudio = EntryAudio(
                 id: id,
-                lastUpdated: environment.mainRunLoop.now.date,
+                lastUpdated: environment.date(),
                 url: audioPath
             )
             return environment.fileClient.addAudio(audioPath, entryAudio, environment.backgroundQueue)

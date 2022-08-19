@@ -153,7 +153,7 @@ public struct SettingsEnvironment {
     public let pdfKitClient: PDFKitClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
     
     public init(
@@ -168,7 +168,7 @@ public struct SettingsEnvironment {
         pdfKitClient: PDFKitClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        mainRunLoop: AnySchedulerOf<RunLoop>,
+        date: @escaping () -> Date,
         setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
     ) {
         self.fileClient = fileClient
@@ -182,119 +182,132 @@ public struct SettingsEnvironment {
         self.pdfKitClient = pdfKitClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
-        self.mainRunLoop = mainRunLoop
+        self.date = date
         self.setUserInterfaceStyle = setUserInterfaceStyle
     }
 }
 
-public let settingsReducer: Reducer<SettingsState, SettingsAction, SettingsEnvironment> = .combine(
-    
+public let settingsReducer: Reducer<
+    SettingsState,
+    SettingsAction,
+    SettingsEnvironment
+> = .combine(
     activatePasscodeReducer
         .optional()
         .pullback(
             state: \SettingsState.activatePasscodeState,
             action: /SettingsAction.activatePasscodeAction,
-            environment: { ActivatePasscodeEnvironment(
-                userDefaultsClient: $0.userDefaultsClient,
-                localAuthenticationClient: $0.localAuthenticationClient,
-                mainQueue: $0.mainQueue)
+            environment: {
+                ActivatePasscodeEnvironment(
+                    userDefaultsClient: $0.userDefaultsClient,
+                    localAuthenticationClient: $0.localAuthenticationClient,
+                    mainQueue: $0.mainQueue
+                )
             }
         ),
-    
     menuPasscodeReducer
         .optional()
         .pullback(
             state: \SettingsState.menuPasscodeState,
             action: /SettingsAction.menuPasscodeAction,
-            environment: { MenuPasscodeEnvironment(
-                userDefaultsClient: $0.userDefaultsClient,
-                localAuthenticationClient: $0.localAuthenticationClient,
-                mainQueue: $0.mainQueue)
+            environment: {
+                MenuPasscodeEnvironment(
+                    userDefaultsClient: $0.userDefaultsClient,
+                    localAuthenticationClient: $0.localAuthenticationClient,
+                    mainQueue: $0.mainQueue
+                )
             }
         ),
-    
     cameraSettingsReducer
         .optional()
         .pullback(
             state: \SettingsState.cameraSettingsState,
             action: /SettingsAction.cameraSettingsAction,
-            environment: { CameraSettingsEnvironment(
-                avCaptureDeviceClient: $0.avCaptureDeviceClient,
-                feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                applicationClient: $0.applicationClient,
-                mainQueue: $0.mainQueue)
+            environment: {
+                CameraSettingsEnvironment(
+                    avCaptureDeviceClient: $0.avCaptureDeviceClient,
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                    applicationClient: $0.applicationClient,
+                    mainQueue: $0.mainQueue
+                )
             }
         ),
-    
     appearanceReducer
         .optional()
         .pullback(
             state: \SettingsState.appearanceState,
             action: /SettingsAction.appearanceAction,
-            environment: { AppearanceEnvironment(
-                userDefaultsClient: $0.userDefaultsClient,
-                applicationClient: $0.applicationClient,
-                feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
-                setUserInterfaceStyle: $0.setUserInterfaceStyle)
+            environment: {
+                AppearanceEnvironment(
+                    userDefaultsClient: $0.userDefaultsClient,
+                    applicationClient: $0.applicationClient,
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                    mainQueue: $0.mainQueue,
+                    backgroundQueue: $0.backgroundQueue,
+                    date: $0.date,
+                    setUserInterfaceStyle: $0.setUserInterfaceStyle
+                )
             }
         ),
-    
     microphoneSettingsReducer
         .optional()
         .pullback(
             state: \SettingsState.microphoneSettingsState,
             action: /SettingsAction.microphoneSettingsAction,
-            environment: { MicrophoneSettingsEnvironment(
-                avAudioSessionClient: $0.avAudioSessionClient,
-                feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                applicationClient: $0.applicationClient,
-                mainQueue: $0.mainQueue)
+            environment: {
+                MicrophoneSettingsEnvironment(
+                    avAudioSessionClient: $0.avAudioSessionClient,
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                    applicationClient: $0.applicationClient,
+                    mainQueue: $0.mainQueue
+                )
             }
         ),
-    
     agreementsReducer
         .optional()
         .pullback(
             state: \SettingsState.agreementsState,
             action: /SettingsAction.agreementsAction,
-            environment: { AgreementsEnvironment(
-                applicationClient: $0.applicationClient)
+            environment: {
+                AgreementsEnvironment(
+                    applicationClient: $0.applicationClient
+                )
             }
         ),
-    
     exportReducer
         .optional()
         .pullback(
             state: \SettingsState.exportState,
             action: /SettingsAction.exportAction,
-            environment: { ExportEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                pdfKitClient: $0.pdfKitClient,
-                mainRunLoop: $0.mainRunLoop)
+            environment: {
+                ExportEnvironment(
+                    fileClient: $0.fileClient,
+                    applicationClient: $0.applicationClient,
+                    pdfKitClient: $0.pdfKitClient,
+                    date: $0.date
+                )
             }
         ),
-    
     aboutReducer
         .optional()
         .pullback(
             state: \SettingsState.aboutState,
             action: /SettingsAction.aboutAction,
-            environment: { AboutEnvironment(
-                applicationClient: $0.applicationClient)
+            environment: {
+                AboutEnvironment(
+                    applicationClient: $0.applicationClient
+                )
             }
         ),
-    
     languageReducer
         .optional()
         .pullback(
             state: \SettingsState.languageState,
             action: /SettingsAction.languageAction,
-            environment: { LanguageEnvironment(
-                userDefaults: $0.userDefaultsClient)
+            environment: {
+                LanguageEnvironment(
+                    userDefaults: $0.userDefaultsClient
+                )
             }
         ),
     

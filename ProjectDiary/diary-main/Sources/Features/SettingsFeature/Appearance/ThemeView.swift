@@ -26,7 +26,7 @@ public struct ThemeEnvironment {
     public let feedbackGeneratorClient: FeedbackGeneratorClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
 }
 
 public let themeReducer: Reducer<ThemeState, ThemeAction, ThemeEnvironment> = .combine(
@@ -51,7 +51,7 @@ public let themeReducer: Reducer<ThemeState, ThemeAction, ThemeEnvironment> = .c
                 avAssetClient: .noop,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: UUID.init)
             }
         ),
