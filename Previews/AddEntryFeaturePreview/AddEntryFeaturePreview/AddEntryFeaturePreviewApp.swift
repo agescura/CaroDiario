@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import AddEntryFeature
-import SharedStyles
+import Styles
 import CoreDataClientLive
 import FileClientLive
 import AVCaptureDeviceClientLive
@@ -32,7 +32,6 @@ struct AddEntryFeaturePreviewApp: App {
                     initialState: .init(type: .add, entry: .init(id: .init(), date: .init(), startDay: .init(), text: .init(id: .init(), message: "", lastUpdated: .init()))),
                     reducer: addEntryReducer,
                     environment: .init(
-                        coreDataClient: .live,
                         fileClient: .live,
                         avCaptureDeviceClient: .live,
                         applicationClient: .live,
@@ -42,7 +41,7 @@ struct AddEntryFeaturePreviewApp: App {
                         avAssetClient: .live,
                         mainQueue: .main,
                         backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
-                        mainRunLoop: .main,
+                        date: Date.init,
                         uuid: UUID.init
                     )
                 )

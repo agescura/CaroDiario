@@ -29,7 +29,7 @@ struct AudioRecordFeaturePreviewApp: App {
                         avAudioPlayerClient: .live,
                         avAudioRecorderClient: .live,
                         mainQueue: .main,
-                        mainRunLoop: .main,
+                        date: Date.init,
                         uuid: UUID.init
                     )
                 )

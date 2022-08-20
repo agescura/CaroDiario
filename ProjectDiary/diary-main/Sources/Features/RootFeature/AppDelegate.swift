@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import UserDefaultsClient
-import SharedStyles
+import Styles
 
 public struct AppDelegateState: Equatable {
     

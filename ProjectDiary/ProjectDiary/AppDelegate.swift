@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import RootFeature
-import SharedStyles
+import Styles
 import UserDefaultsClientLive
 import CoreDataClientLive
 import FileClientLive
@@ -54,7 +54,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 avAssetClient: .live,
                 mainQueue: .main,
                 backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
-                mainRunLoop: .main,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { userInterfaceStyle in
                     .fireAndForget {

@@ -11,7 +11,7 @@ import CoreDataClientLive
 import FileClientLive
 import AVCaptureDeviceClientLive
 import UIApplicationClientLive
-import SharedStyles
+import Styles
 import AVAudioSessionClientLive
 import AVAudioPlayerClientLive
 import AVAudioRecorderClientLive
@@ -63,7 +63,6 @@ struct EntryDetailFeaturePreviewApp: App {
                         ),
                         reducer: entryDetailReducer,
                         environment: .init(
-                            coreDataClient: .live,
                             fileClient: .live,
                             avCaptureDeviceClient: .live,
                             applicationClient: .live,
@@ -73,7 +72,7 @@ struct EntryDetailFeaturePreviewApp: App {
                             avAssetClient: .live,
                             mainQueue: .main,
                             backgroundQueue: .main,
-                            mainRunLoop: .main,
+                            date: Date.init,
                             uuid: UUID.init
                         )
                     )

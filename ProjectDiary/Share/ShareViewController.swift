@@ -12,7 +12,7 @@ import CoreDataClient
 import CoreDataClientLive
 import FileClient
 import FileClientLive
-import SharedModels
+import Models
 import Combine
 import UniformTypeIdentifiers
 import AVAssetClient

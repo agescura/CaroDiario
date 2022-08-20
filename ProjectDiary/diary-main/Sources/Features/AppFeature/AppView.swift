@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import SplashFeature
-import OnBoardingFeature
+import OnboardingFeature
 import HomeFeature
 import UserDefaultsClient
 import CoreDataClient
@@ -54,7 +54,7 @@ public struct AppEnvironment {
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let storeKitClient: StoreKitClient
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let mainRunLoop: AnySchedulerOf<RunLoop>
+    public let date: () -> Date
     public let uuid: () -> UUID
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
     
@@ -73,7 +73,7 @@ public struct AppEnvironment {
         avAssetClient: AVAssetClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        mainRunLoop: AnySchedulerOf<RunLoop>,
+        date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
         setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
     ) {
@@ -91,7 +91,7 @@ public struct AppEnvironment {
         self.avAssetClient = avAssetClient
         self.mainQueue = mainQueue
         self.backgroundQueue = backgroundQueue
-        self.mainRunLoop = mainRunLoop
+        self.date = date
         self.uuid = uuid
         self.setUserInterfaceStyle = setUserInterfaceStyle
     }
@@ -118,7 +118,7 @@ public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
                 feedbackGeneratorClient: $0.feedbackGeneratorClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: $0.uuid,
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
@@ -154,7 +154,7 @@ public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
                 avAssetClient: $0.avAssetClient,
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
-                mainRunLoop: $0.mainRunLoop,
+                date: $0.date,
                 uuid: $0.uuid,
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }

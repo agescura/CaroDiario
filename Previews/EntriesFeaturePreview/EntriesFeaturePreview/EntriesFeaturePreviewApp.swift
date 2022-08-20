@@ -27,7 +27,6 @@ struct EntriesFeaturePreviewApp: App {
                     initialState: .init(entries: []),
                     reducer: entriesReducer,
                     environment: .init(
-                        coreDataClient: .live,
                         fileClient: .live,
                         userDefaultsClient: .live(userDefaults:)(),
                         avCaptureDeviceClient: .live,
@@ -38,7 +37,7 @@ struct EntriesFeaturePreviewApp: App {
                         avAssetClient: .live,
                         mainQueue: .main,
                         backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
-                        mainRunLoop: .main,
+                        date: Date.init,
                         uuid: UUID.init
                     )
                 )

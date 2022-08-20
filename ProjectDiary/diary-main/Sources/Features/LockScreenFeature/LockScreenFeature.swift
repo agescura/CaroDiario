@@ -7,18 +7,19 @@
 
 import SwiftUI
 import ComposableArchitecture
-import SharedStyles
+import Styles
 import UserDefaultsClient
-import SharedViews
+import Views
 import LocalAuthenticationClient
-import SharedLocalizables
+import Localizables
+import Models
 
 public struct LockScreenState: Equatable {
     var code: String
     var codeToMatch: String = ""
     var wrongAttempts: Int = 0
     
-    public var authenticationType: LocalAuthenticationClient.AuthenticationType = .none
+    public var authenticationType: LocalAuthenticationType = .none
     public var buttons: [LockScreenNumber] = []
     
     public init(
@@ -38,7 +39,7 @@ public enum LockScreenAction: Equatable {
     
     case onAppear
     case checkFaceId
-    case determine(LocalAuthenticationClient.AuthenticationType)
+    case determine(LocalAuthenticationType)
     case faceIdResponse(Bool)
 }
 
@@ -138,25 +139,25 @@ public let lockScreenReducer = Reducer<LockScreenState, LockScreenAction, LockSc
 
 public struct LockScreenView: View {
     let store: Store<LockScreenState, LockScreenAction>
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     
-    let columns = [
-            GridItem(.flexible()),
-            GridItem(.flexible()),
-            GridItem(.flexible())
-        ]
-    
-    public init(store: Store<LockScreenState, LockScreenAction>) {
+    public init(
+        store: Store<LockScreenState, LockScreenAction>
+    ) {
         self.store = store
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(self.store) { viewStore in
             VStack(spacing: 16) {
                 Spacer()
-                
                 Text("LockScreen.Title".localized)
                 HStack {
-                    ForEach(0..<viewStore.code.count) { iterator in
+                    ForEach(0..<viewStore.code.count, id: \.self) { iterator in
                         Image(systemName: viewStore.codeToMatch.count > iterator ? "circle.fill" : "circle")
                     }
                 }
@@ -164,13 +165,14 @@ public struct LockScreenView: View {
                 Spacer()
                 LazyVGrid(columns: columns) {
                     ForEach(viewStore.buttons) { item in
-                        Button(action: {
-                            withAnimation(.default) {
-                                viewStore.send(.numberButtonTapped(item))
+                        Button(
+                            action: {
+                                viewStore.send(.numberButtonTapped(item), animation: .default)
+                            },
+                            label: {
+                                LockScreenButton(number: item)
                             }
-                        }) {
-                            LockScreenButton(number: item)
-                        }
+                        )
                     }
                 }
                 .padding(.horizontal)
@@ -187,7 +189,7 @@ public enum LockScreenNumber: Equatable, Identifiable {
     case number(Int)
     case emptyLeft
     case emptyRight
-    case biometric(LocalAuthenticationClient.AuthenticationType)
+    case biometric(LocalAuthenticationType)
     
     public var id: String {
         switch self {

@@ -26,7 +26,7 @@ struct ClipApp: App {
                         feedbackGeneratorClient: .live,
                         mainQueue: .main,
                         backgroundQueue: .main,
-                        mainRunLoop: .main,
+                        date: Date.init,
                         uuid: UUID.init,
                         setUserInterfaceStyle: { userInterfaceStyle in
                             .fireAndForget {

@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
-import SettingsFeature
+import ExportFeature
 import ComposableArchitecture
 import UIApplicationClientLive
 import PDFKitClientLive
-import SharedModels
+import Models
 
 @main
 struct PDFFeaturePreviewApp: App {
@@ -80,7 +80,7 @@ There are many variations of passages of Lorem Ipsum available, but the majority
                         fileClient: .noop,
                         applicationClient: .live,
                         pdfKitClient: .live,
-                        mainRunLoop: .main
+                        date: Date.init
                     )
                 )
             )

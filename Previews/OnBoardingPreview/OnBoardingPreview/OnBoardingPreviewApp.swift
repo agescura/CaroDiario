@@ -7,7 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
-import OnBoardingFeature
+import OnboardingFeature
 import UserDefaultsClientLive
 
 @main
@@ -23,7 +23,7 @@ struct OnBoardingPreviewApp: App {
                         feedbackGeneratorClient: .noop,
                         mainQueue: .main,
                         backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
-                        mainRunLoop: .main,
+                        date: Date.init,
                         uuid: UUID.init,
                         setUserInterfaceStyle: { userInterfaceStyle in
                             .fireAndForget {
