@@ -32,6 +32,7 @@ public struct SettingsState: Equatable {
     
     public var cameraStatus: AuthorizedVideoStatus
     public var optionTimeForAskPasscode: Int
+    public var faceIdEnabled: Bool
     
     public var route: Route? = nil {
         didSet {
@@ -43,6 +44,13 @@ public struct SettingsState: Equatable {
             }
             if case let .language(state) = self.route {
                 self.language = state.language
+            }
+            if case let .menu(state) = self.route {
+                self.faceIdEnabled = state.faceIdEnabled
+            }
+            if case let .activate(state) = self.route {
+                self.faceIdEnabled = state.faceIdEnabled
+                self.hasPasscode = state.hasPasscode
             }
         }
     }
@@ -159,7 +167,8 @@ public struct SettingsState: Equatable {
         iconType: IconAppType,
         hasPasscode: Bool,
         cameraStatus: AuthorizedVideoStatus,
-        optionTimeForAskPasscode: Int
+        optionTimeForAskPasscode: Int,
+        faceIdEnabled: Bool
     ) {
         self.showSplash = showSplash
         self.styleType = styleType
@@ -169,5 +178,6 @@ public struct SettingsState: Equatable {
         self.iconAppType = iconType
         self.cameraStatus = cameraStatus
         self.optionTimeForAskPasscode = optionTimeForAskPasscode
+        self.faceIdEnabled = faceIdEnabled
     }
 }

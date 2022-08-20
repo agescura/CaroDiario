@@ -10,6 +10,7 @@ import ComposableArchitecture
 import UserDefaultsClient
 import Views
 import LocalAuthenticationClient
+import SwiftUIHelper
 
 public struct InsertPasscodeState: Equatable {
     public var step: Step = .firstCode
@@ -19,10 +20,40 @@ public struct InsertPasscodeState: Equatable {
     public var codeActivated: Bool = false
     public var codeNotMatched: Bool = false
     
-    public var menuPasscodeState: MenuPasscodeState?
-    public var navigateMenuPasscode: Bool = false
+    public var faceIdEnabled: Bool
+    public var hasPasscode: Bool {
+        self.code == self.firstCode && self.code.count == self.maxNumbersCode
+    }
+    public var route: Route? {
+        didSet {
+            if case let .menu(state) = self.route {
+                self.faceIdEnabled = state.faceIdEnabled
+            }
+        }
+    }
     
-    public init() {}
+    public enum Route: Equatable {
+        case menu(MenuPasscodeState)
+    }
+    
+    public var menuPasscodeState: MenuPasscodeState? {
+        get {
+            guard case let .menu(state) = self.route else { return nil }
+            return state
+        }
+        set {
+            guard let newValue = newValue else { return }
+            self.route = .menu(newValue)
+        }
+    }
+
+    public init(
+        faceIdEnabled: Bool,
+        route: Route? = nil
+    ) {
+        self.faceIdEnabled = faceIdEnabled
+        self.route = route
+    }
     
     public enum Step: Int {
         case firstCode
@@ -93,10 +124,7 @@ public let insertPasscodeReducer: Reducer<InsertPasscodeState, InsertPasscodeAct
             if state.step == .secondCode,
                state.code.count == state.maxNumbersCode {
                 if state.code == state.firstCode {
-                    return .merge(
-                        environment.userDefaultsClient.setPasscode(state.code).fireAndForget(),
-                        Effect(value: InsertPasscodeAction.navigateMenuPasscode(true))
-                    )
+                    return Effect(value: .navigateMenuPasscode(true))
                 } else {
                     state.step = .firstCode
                     state.code = ""
@@ -116,9 +144,14 @@ public let insertPasscodeReducer: Reducer<InsertPasscodeState, InsertPasscodeAct
             return .none
             
         case let .navigateMenuPasscode(value):
-            state.navigateMenuPasscode = value
-            state.menuPasscodeState = value ? .init(authenticationType: .none, optionTimeForAskPasscode: -2) : nil
-            return environment.userDefaultsClient.setOptionTimeForAskPasscode(-2).fireAndForget()
+            state.route = value ? .menu(
+                .init(
+                    authenticationType: .none,
+                    optionTimeForAskPasscode: TimeForAskPasscode.never.value,
+                    faceIdEnabled: state.faceIdEnabled
+                )
+            ) : nil
+            return .none
         }
     }
     
@@ -168,30 +201,30 @@ public struct InsertPasscodeView: View {
                 }
                 
                 NavigationLink(
-                    "",
-                    destination:
-                        IfLetStore(
-                            store.scope(
-                                state: \.menuPasscodeState,
+                    route: viewStore.route,
+                    case: /InsertPasscodeState.Route.menu,
+                    onNavigate: { viewStore.send(.navigateMenuPasscode($0)) },
+                    destination: { menuState in
+                        MenuPasscodeView(
+                            store: self.store.scope(
+                                state: { _ in menuState },
                                 action: InsertPasscodeAction.menuPasscodeAction
-                            ),
-                            then: MenuPasscodeView.init(store:)
-                        ),
-                    isActive: viewStore.binding(
-                        get: \.navigateMenuPasscode,
-                        send: InsertPasscodeAction.navigateMenuPasscode)
+                            )
+                        )
+                    },
+                    label: EmptyView.init
                 )
             }
             .padding(16)
             .navigationBarTitle("Passcode.Title".localized, displayMode: .inline)
             .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: Button(action: {
-                viewStore.send(.popToRoot)
-            }) {
-                HStack {
-                    Image(systemName: "chevron.left")
+            .navigationBarItems(
+                leading: Button(
+                    action: { viewStore.send(.popToRoot) }
+                ) {
+                    HStack { Image(systemName: "chevron.left") }
                 }
-            })
+            )
         }
     }
 }

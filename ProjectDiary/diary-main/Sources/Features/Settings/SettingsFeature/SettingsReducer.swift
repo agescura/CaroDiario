@@ -179,9 +179,7 @@ public let settingsReducer: Reducer<
                 
             case let .toggleShowSplash(isOn):
                 state.showSplash = isOn
-                return environment.userDefaultsClient
-                    .setHideSplashScreen(!isOn)
-                    .fireAndForget()
+                return .none
                 
             case let .biometricResult(result):
                 state.authenticationType = result
@@ -193,38 +191,37 @@ public let settingsReducer: Reducer<
                 
             case .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.actionSheetTurnoffTapped))):
                 state.hasPasscode = false
-                return .merge(
-                    environment.userDefaultsClient.removePasscode().fireAndForget(),
-                    Effect(value: SettingsAction.navigateActivatePasscode(false))
+                return Effect(value: .navigateActivatePasscode(false))
                         .delay(for: 0.1, scheduler: environment.mainQueue)
                         .eraseToEffect()
-                )
                 
             case .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.popToRoot))),
                     .activatePasscodeAction(.insertPasscodeAction(.popToRoot)):
-                return Effect(value: SettingsAction.navigateActivatePasscode(false))
+                return Effect(value: .navigateActivatePasscode(false))
                 
             case .activatePasscodeAction(.insertPasscodeAction(.success)):
-                return Effect(value: SettingsAction.navigateActivatePasscode(false))
+                return Effect(value: .navigateActivatePasscode(false))
                 
             case .activatePasscodeAction:
                 return .none
                 
             case let .navigateActivatePasscode(value):
-                state.route = value ? .activate(.init()) : nil
+                state.route = value ? .activate(
+                    .init(
+                        faceIdEnabled: state.faceIdEnabled,
+                        hasPasscode: state.hasPasscode
+                    )
+                ) : nil
                 return .none
                 
             case .menuPasscodeAction(.actionSheetTurnoffTapped):
                 state.hasPasscode = false
-                return .merge(
-                    environment.userDefaultsClient.removePasscode().fireAndForget(),
-                    Effect(value: SettingsAction.navigateMenuPasscode(false))
+                return Effect(value: .navigateMenuPasscode(false))
                         .delay(for: 0.1, scheduler: environment.mainQueue)
                         .eraseToEffect()
-                )
                 
             case .menuPasscodeAction(.popToRoot):
-                return Effect(value: SettingsAction.navigateMenuPasscode(false))
+                return Effect(value: .navigateMenuPasscode(false))
                 
             case .menuPasscodeAction:
                 return .none
@@ -233,7 +230,8 @@ public let settingsReducer: Reducer<
                 state.route = value ? .menu(
                     .init(
                         authenticationType: state.authenticationType,
-                        optionTimeForAskPasscode: state.optionTimeForAskPasscode
+                        optionTimeForAskPasscode: state.optionTimeForAskPasscode,
+                        faceIdEnabled: state.faceIdEnabled
                     )
                 ) : nil
                 return .none

@@ -14,10 +14,56 @@ import LocalAuthenticationClient
 import SwiftUIHelper
 import Models
 
+public enum TimeForAskPasscode: Equatable, Identifiable, Hashable {
+    case always
+    case never
+    case after(minutes: Int)
+}
+
+extension TimeForAskPasscode {
+    init(_ value: Int) {
+        if value == -1 {
+            self = .always
+        } else if value > 0 {
+            self = .after(minutes: value)
+        } else {
+            self = .never
+        }
+    }
+}
+
+extension TimeForAskPasscode {
+    public var rawValue: String {
+        switch self {
+        case .always:
+            return "Passcode.Always".localized
+        case .never:
+            return "Passcode.Disabled".localized
+        case let .after(minutes: minutes):
+            return "\("Passcode.IfAway".localized)\(minutes) min"
+        }
+    }
+    
+    public var id: String {
+        rawValue
+    }
+    
+    public var value: Int {
+        switch self {
+        case .always:
+            return -1
+        case .never:
+            return -2
+        case let .after(minutes: minutes):
+            return minutes
+        }
+    }
+}
+
 public struct MenuPasscodeState: Equatable {
     public var authenticationType: LocalAuthenticationType
     public var route: Route?
-    public var faceIdEnabled: Bool = false
+    public var faceIdEnabled: Bool
     public var optionTimeForAskPasscode: TimeForAskPasscode
     public let listTimesForAskPasscode: [TimeForAskPasscode] = [
         .never,
@@ -35,45 +81,17 @@ public struct MenuPasscodeState: Equatable {
     public init(
         authenticationType: LocalAuthenticationType,
         optionTimeForAskPasscode: Int,
+        faceIdEnabled: Bool,
         route: Route? = nil
     ) {
         self.authenticationType = authenticationType
-        
-        if optionTimeForAskPasscode == -2 {
-            self.optionTimeForAskPasscode = .never
-        } else if optionTimeForAskPasscode == -1 {
-            self.optionTimeForAskPasscode = .always
-        } else {
-            self.optionTimeForAskPasscode = .after(minutes: optionTimeForAskPasscode)
-        }
+        self.optionTimeForAskPasscode = TimeForAskPasscode(optionTimeForAskPasscode)
+        self.faceIdEnabled = faceIdEnabled
         self.route = route
-    }
-    
-    public enum TimeForAskPasscode: Equatable, Identifiable, Hashable {
-        case always
-        case never
-        case after(minutes: Int)
-        
-        public var rawValue: String {
-            switch self {
-            case .always:
-                return "Passcode.Always".localized
-            case .never:
-                return "Passcode.Disabled".localized
-            case .after(minutes: let minutes):
-                return "\("Passcode.IfAway".localized)\(minutes) min"
-            }
-        }
-        
-        public var id: String {
-            rawValue
-        }
     }
 }
 
 public enum MenuPasscodeAction: Equatable {
-    case onAppear
-    
     case popToRoot
     
     case actionSheetButtonTapped
@@ -82,7 +100,7 @@ public enum MenuPasscodeAction: Equatable {
     
     case toggleFaceId(isOn: Bool)
     case faceId(response: Bool)
-    case optionTimeForAskPasscode(changed: MenuPasscodeState.TimeForAskPasscode)
+    case optionTimeForAskPasscode(changed: TimeForAskPasscode)
 }
 
 public struct MenuPasscodeEnvironment {
@@ -103,11 +121,6 @@ public struct MenuPasscodeEnvironment {
 
 public let menuPasscodeReducer = Reducer<MenuPasscodeState, MenuPasscodeAction, MenuPasscodeEnvironment> { state, action, environment in
     switch action {
-    
-    case .onAppear:
-        state.faceIdEnabled = environment.userDefaultsClient.isFaceIDActivate
-        return .none
-        
     case .popToRoot:
         return .none
         
@@ -133,9 +146,7 @@ public let menuPasscodeReducer = Reducer<MenuPasscodeState, MenuPasscodeAction, 
         
     case let .toggleFaceId(isOn: value):
         if !value {
-            state.faceIdEnabled = value
-            return environment.userDefaultsClient.setFaceIDActivate(value)
-                .fireAndForget()
+            return Effect(value: .faceId(response: value))
         }
         return environment.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.authenticationType.rawValue]))
             .receive(on: environment.mainQueue)
@@ -144,22 +155,11 @@ public let menuPasscodeReducer = Reducer<MenuPasscodeState, MenuPasscodeAction, 
         
     case let .faceId(response: response):
         state.faceIdEnabled = response
-        return environment.userDefaultsClient.setFaceIDActivate(response)
-            .fireAndForget()
+        return .none
         
-    case let .optionTimeForAskPasscode(changed: newValue):
-        state.optionTimeForAskPasscode = newValue
-        switch newValue {
-        case .always:
-            return environment.userDefaultsClient.setOptionTimeForAskPasscode(-1)
-                .fireAndForget()
-        case .never:
-            return environment.userDefaultsClient.setOptionTimeForAskPasscode(-2)
-                .fireAndForget()
-        case .after(minutes: let minutes):
-            return environment.userDefaultsClient.setOptionTimeForAskPasscode(minutes)
-                .fireAndForget()
-        }
+    case let .optionTimeForAskPasscode(changed: newOption):
+        state.optionTimeForAskPasscode = newOption
+        return .none
     }
 }
 
@@ -222,9 +222,6 @@ public struct MenuPasscodeView: View {
                         }
                     )
                 }
-            }
-            .onAppear {
-                viewStore.send(.onAppear)
             }
             .navigationBarItems(
                 leading: Button(
