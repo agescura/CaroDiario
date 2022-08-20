@@ -83,7 +83,7 @@ public struct RootEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         coreDataClient: CoreDataClient,
@@ -103,7 +103,7 @@ public struct RootEnvironment {
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.coreDataClient = coreDataClient
         self.fileClient = fileClient
@@ -167,11 +167,10 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             return Effect(value: .setUserInterfaceStyle)
             
         case .setUserInterfaceStyle:
-            return .merge(
-                environment.setUserInterfaceStyle(environment.userDefaultsClient.themeType.userInterfaceStyle)
-                    .fireAndForget(),
-                Effect(value: .startFirstScreen)
-            )
+            return .task {
+                await environment.setUserInterfaceStyle(environment.userDefaultsClient.themeType.userInterfaceStyle)
+                return .startFirstScreen
+            }
             
         case .featureAction(.splash(.finishAnimation)):
             if environment.userDefaultsClient.hasShownFirstLaunchOnboarding {
@@ -236,8 +235,8 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             state.featureState = .home(
                 .init(
                     tabBars: [.entries, .search, .settings],
-                    entriesState: .init(entries: []),
-                    searchState: .init(searchText: "", entries: []),
+                    entriesState: .init(),
+                    searchState: .init(),
                     settings: .init(
                         showSplash: !environment.userDefaultsClient.hideSplashScreen,
                         styleType: environment.userDefaultsClient.styleType,
@@ -248,7 +247,8 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
                         cameraStatus: status,
                         optionTimeForAskPasscode: environment.userDefaultsClient.optionTimeForAskPasscode,
                         faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate,
-                        language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish
+                        language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish,
+                        microphoneStatus: .notDetermined
                     )
                 )
             )
@@ -278,10 +278,13 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             if let timeForAskPasscode = Calendar.current.date(
                 byAdding: .minute,
                 value: environment.userDefaultsClient.optionTimeForAskPasscode,
-                to: environment.date()) {
-                return environment.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode).fireAndForget()
+                to: environment.date()
+            ) {
+                return environment.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode)
+                    .fireAndForget()
             }
-            return environment.userDefaultsClient.removeOptionTimeForAskPasscode().fireAndForget()
+            return environment.userDefaultsClient.removeOptionTimeForAskPasscode()
+                .fireAndForget()
             
         case .state:
             return .none

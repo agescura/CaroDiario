@@ -21,7 +21,7 @@ import EntryDetailFeature
 import AVAssetClient
 
 public struct EntriesState: Equatable {
-    public var isLoading = true
+    public var isLoading: Bool
     public var entries: IdentifiedArrayOf<DayEntriesRowState>
     
     public var addEntryState: AddEntryState?
@@ -32,8 +32,10 @@ public struct EntriesState: Equatable {
     public var entryDetailSelected: Entry?
     
     public init(
-        entries: IdentifiedArrayOf<DayEntriesRowState>
+        isLoading: Bool = true,
+        entries: IdentifiedArrayOf<DayEntriesRowState> = []
     ) {
+        self.isLoading = isLoading
         self.entries = entries
     }
 }

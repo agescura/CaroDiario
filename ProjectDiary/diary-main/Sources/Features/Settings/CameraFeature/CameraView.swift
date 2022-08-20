@@ -59,12 +59,10 @@ public let cameraReducer = Reducer<
     case .cameraButtonTapped:
         switch state.cameraStatus {
         case .notDetermined:
-            return .merge(
-                environment.avCaptureDeviceClient.requestAccess()
-                    .map(CameraAction.requestAccessResponse),
-                environment.feedbackGeneratorClient.selectionChanged()
-                    .fireAndForget()
-            )
+            return .task {
+                await environment.feedbackGeneratorClient.selectionChanged()
+                return .requestAccessResponse(await environment.avCaptureDeviceClient.requestAccess())
+            }
             
         default:
             break

@@ -8,12 +8,12 @@
 import ComposableArchitecture
 
 public struct FeedbackGeneratorClient {
-    public var prepare: () -> Effect<Never, Never>
-    public var selectionChanged: () -> Effect<Never, Never>
+    public var prepare: () async -> Void
+    public var selectionChanged: () async -> Void
     
     public init(
-        prepare: @escaping () -> Effect<Never, Never>,
-        selectionChanged: @escaping () -> Effect<Never, Never>
+        prepare: @escaping () async -> Void,
+        selectionChanged: @escaping () async -> Void
     ) {
         self.prepare = prepare
         self.selectionChanged = selectionChanged

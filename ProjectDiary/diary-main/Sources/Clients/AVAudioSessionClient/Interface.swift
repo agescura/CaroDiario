@@ -7,21 +7,15 @@
 
 import ComposableArchitecture
 import AVFoundation
+import Models
 
 public struct AVAudioSessionClient {
-    
-    public enum AudioRecordPermission {
-        case authorized
-        case denied
-        case notDetermined
-    }
-    
-    public var recordPermission: AudioRecordPermission
-    public var requestRecordPermission: () -> Effect<Bool, Never>
+    public var recordPermission: () -> AudioRecordPermission
+    public var requestRecordPermission: () async throws -> Bool
     
     public init(
-        recordPermission: AudioRecordPermission,
-        requestRecordPermission: @escaping () -> Effect<Bool, Never>
+        recordPermission: @escaping () -> AudioRecordPermission,
+        requestRecordPermission: @escaping () async throws -> Bool
     ) {
         self.recordPermission = recordPermission
         self.requestRecordPermission = requestRecordPermission
@@ -29,8 +23,7 @@ public struct AVAudioSessionClient {
 }
 
 extension AVAudioSession.RecordPermission {
-    
-    public var permission: AVAudioSessionClient.AudioRecordPermission {
+    public var permission: AudioRecordPermission {
         switch self {
         case .granted:
             return .authorized

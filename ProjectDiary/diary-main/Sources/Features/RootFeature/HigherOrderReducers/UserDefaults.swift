@@ -78,6 +78,24 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
                         .fireAndForget(),
                     effects
                 )
+            case let .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.styleChanged(styleChanged))))):
+                return .merge(
+                    environment.userDefaultsClient.set(styleType: styleChanged)
+                        .fireAndForget(),
+                    effects
+                )
+            case let .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.layoutChanged(layoutChanged)))))):
+                return .merge(
+                    environment.userDefaultsClient.set(layoutType: layoutChanged)
+                        .fireAndForget(),
+                    effects
+                )
+            case let .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.themeChanged(themeChanged))))))):
+                return .merge(
+                    environment.userDefaultsClient.set(themeType: themeChanged)
+                        .fireAndForget(),
+                    effects
+                )
             default:
                 return effects
             }

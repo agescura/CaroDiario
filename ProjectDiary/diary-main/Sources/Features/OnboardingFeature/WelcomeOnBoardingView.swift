@@ -52,7 +52,7 @@ public struct WelcomeOnBoardingEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         userDefaultsClient: UserDefaultsClient,
@@ -61,7 +61,7 @@ public struct WelcomeOnBoardingEnvironment {
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.userDefaultsClient = userDefaultsClient
         self.feedbackGeneratorClient = feedbackGeneratorClient

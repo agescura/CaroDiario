@@ -48,7 +48,7 @@ public struct PrivacyOnBoardingEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         userDefaultsClient: UserDefaultsClient,
@@ -57,7 +57,7 @@ public struct PrivacyOnBoardingEnvironment {
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.userDefaultsClient = userDefaultsClient
         self.feedbackGeneratorClient = feedbackGeneratorClient
@@ -69,8 +69,11 @@ public struct PrivacyOnBoardingEnvironment {
     }
 }
 
-let privacyOnBoardingReducer: Reducer<PrivacyOnBoardingState, PrivacyOnBoardingAction, PrivacyOnBoardingEnvironment> = .combine(
-    
+let privacyOnBoardingReducer: Reducer<
+    PrivacyOnBoardingState,
+    PrivacyOnBoardingAction,
+    PrivacyOnBoardingEnvironment
+> = .combine(
     styleOnBoardingReducer
         .optional()
         .pullback(

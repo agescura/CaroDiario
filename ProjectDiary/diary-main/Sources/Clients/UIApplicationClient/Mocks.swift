@@ -10,7 +10,7 @@ extension UIApplicationClient {
     
     public static let noop = Self(
         alternateIconName: nil,
-        setAlternateIconName: { _ in .none },
+        setAlternateIconName: { _ in () },
         supportsAlternateIcons: { true },
         openSettings: { .fireAndForget {} },
         open: { _, _ in .fireAndForget {} },

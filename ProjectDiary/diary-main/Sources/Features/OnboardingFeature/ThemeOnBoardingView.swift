@@ -36,11 +36,14 @@ public struct ThemeOnBoardingEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
 }
 
-public let themeOnBoardingReducer: Reducer<ThemeOnBoardingState, ThemeOnBoardingAction, ThemeOnBoardingEnvironment> = .combine(
-    
+public let themeOnBoardingReducer: Reducer<
+    ThemeOnBoardingState,
+    ThemeOnBoardingAction,
+    ThemeOnBoardingEnvironment
+> = .combine(
     dayEntriesReducer
         .pullback(
             state: \DayEntriesRowState.dayEntries,
@@ -70,14 +73,10 @@ public let themeOnBoardingReducer: Reducer<ThemeOnBoardingState, ThemeOnBoarding
         switch action {
         case let .themeChanged(themeChanged):
             state.themeType = themeChanged
-            return .merge(
-                environment.setUserInterfaceStyle(themeChanged.userInterfaceStyle)
-                    .fireAndForget(),
-                environment.userDefaultsClient.set(themeType: themeChanged)
-                    .fireAndForget(),
-                environment.feedbackGeneratorClient.selectionChanged()
-                    .fireAndForget()
-            )
+            return .fireAndForget {
+                await environment.setUserInterfaceStyle(themeChanged.userInterfaceStyle)
+                await environment.feedbackGeneratorClient.selectionChanged()
+            }
             
         case .entries:
             return .none

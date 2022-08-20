@@ -44,7 +44,7 @@ public struct LayoutOnBoardingEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         userDefaultsClient: UserDefaultsClient,
@@ -53,7 +53,7 @@ public struct LayoutOnBoardingEnvironment {
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.userDefaultsClient = userDefaultsClient
         self.feedbackGeneratorClient = feedbackGeneratorClient
@@ -113,13 +113,9 @@ public let layoutOnBoardingReducer: Reducer<LayoutOnBoardingState, LayoutOnBoard
         case let .layoutChanged(layoutChanged):
             state.layoutType = layoutChanged
             state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-            
-            return .merge(
-                environment.userDefaultsClient.set(layoutType: layoutChanged)
-                    .fireAndForget(),
-                environment.feedbackGeneratorClient.selectionChanged()
-                    .fireAndForget()
-            )
+            return .fireAndForget {
+                await environment.feedbackGeneratorClient.selectionChanged()
+            }
             
         case .entries:
             return .none
@@ -135,7 +131,9 @@ public let layoutOnBoardingReducer: Reducer<LayoutOnBoardingState, LayoutOnBoard
                 entries: fakeEntries(with: environment.userDefaultsClient.styleType,
                                      layout: environment.userDefaultsClient.layoutType),
                 isAppClip: state.isAppClip) : nil
-            return environment.setUserInterfaceStyle(themeType.userInterfaceStyle).fireAndForget()
+            return .fireAndForget {
+                await environment.setUserInterfaceStyle(themeType.userInterfaceStyle)
+            }
             
         case .skipAlertButtonTapped:
             state.skipAlert = .init(

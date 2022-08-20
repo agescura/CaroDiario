@@ -35,8 +35,8 @@ public struct SearchState: Equatable {
     }
     
     public init(
-        searchText: String,
-        entries: IdentifiedArrayOf<DayEntriesRowState>
+        searchText: String = "",
+        entries: IdentifiedArrayOf<DayEntriesRowState> = []
     ) {
         self.searchText = searchText
         self.entries = entries

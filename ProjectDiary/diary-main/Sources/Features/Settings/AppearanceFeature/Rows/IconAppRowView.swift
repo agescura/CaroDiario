@@ -25,8 +25,6 @@ struct IconAppRowView: View {
             Text(self.title)
                 .foregroundColor(.adaptiveGray)
                 .adaptiveFont(.latoRegular, size: 12)
-            Image(systemName: "chevron.right")
-                .foregroundColor(.adaptiveGray)
         }
     }
 }

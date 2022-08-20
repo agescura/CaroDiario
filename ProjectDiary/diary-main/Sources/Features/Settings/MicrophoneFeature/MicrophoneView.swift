@@ -12,18 +12,19 @@ import FeedbackGeneratorClient
 import UIApplicationClient
 import Localizables
 import Styles
+import Models
 
 public struct MicrophoneState: Equatable {
-    public var microphoneStatus: AVAudioSessionClient.AudioRecordPermission
+    public var microphoneStatus: AudioRecordPermission
     
     public init(
-        microphoneStatus: AVAudioSessionClient.AudioRecordPermission
+        microphoneStatus: AudioRecordPermission
     ) {
         self.microphoneStatus = microphoneStatus
     }
 }
 
-extension AVAudioSessionClient.AudioRecordPermission {
+extension AudioRecordPermission {
     public var title: String {
         switch self {
         case .authorized:
@@ -71,14 +72,10 @@ public let microphoneReducer = Reducer<
     case .microphoneButtonTapped:
         switch state.microphoneStatus {
         case .notDetermined:
-            return .merge(
-                environment.avAudioSessionClient.requestRecordPermission()
-                    .receive(on: environment.mainQueue)
-                    .eraseToEffect()
-                    .map(MicrophoneAction.requestAccessResponse),
-                environment.feedbackGeneratorClient.selectionChanged()
-                    .fireAndForget()
-            )
+            return .task { @MainActor in
+                await  environment.feedbackGeneratorClient.selectionChanged()
+                return .requestAccessResponse(try await environment.avAudioSessionClient.requestRecordPermission())
+            }
             
         default:
             break
@@ -150,7 +147,7 @@ public struct MicrophoneView: View {
 }
 
 
-extension AVAudioSessionClient.AudioRecordPermission {
+extension AudioRecordPermission {
     public var description: String {
         switch self {
         case .authorized:

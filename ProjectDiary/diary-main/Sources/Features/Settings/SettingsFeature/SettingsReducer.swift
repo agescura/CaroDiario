@@ -137,7 +137,7 @@ public let settingsReducer: Reducer<
             switch action {
                 
             case .onAppear:
-                state.microphoneStatus = environment.avAudioSessionClient.recordPermission
+                state.microphoneStatus = environment.avAudioSessionClient.recordPermission()
                 return Effect.merge(
                     environment.localAuthenticationClient.determineType()
                         .map(SettingsAction.biometricResult),
@@ -184,17 +184,17 @@ public let settingsReducer: Reducer<
                 state.hasPasscode = true
                 return .none
                 
-            case .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.actionSheetTurnoffTapped))):
+            case .menuPasscodeAction(.actionSheetTurnoffTapped),
+                    .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.actionSheetTurnoffTapped))):
                 state.hasPasscode = false
                 return Effect(value: .navigateActivatePasscode(false))
-                        .delay(for: 0.1, scheduler: environment.mainQueue)
-                        .eraseToEffect()
+                    .delay(for: 0.1, scheduler: environment.mainQueue)
+                    .eraseToEffect()
                 
             case .activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.popToRoot))),
-                    .activatePasscodeAction(.insertPasscodeAction(.popToRoot)):
-                return Effect(value: .navigateActivatePasscode(false))
-                
-            case .activatePasscodeAction(.insertPasscodeAction(.success)):
+                    .activatePasscodeAction(.insertPasscodeAction(.popToRoot)),
+                    .menuPasscodeAction(.popToRoot),
+                    .activatePasscodeAction(.insertPasscodeAction(.success)):
                 return Effect(value: .navigateActivatePasscode(false))
                 
             case .activatePasscodeAction:
@@ -209,15 +209,6 @@ public let settingsReducer: Reducer<
                 ) : nil
                 return .none
                 
-            case .menuPasscodeAction(.actionSheetTurnoffTapped):
-                state.hasPasscode = false
-                return Effect(value: .navigateMenuPasscode(false))
-                        .delay(for: 0.1, scheduler: environment.mainQueue)
-                        .eraseToEffect()
-                
-            case .menuPasscodeAction(.popToRoot):
-                return Effect(value: .navigateMenuPasscode(false))
-                
             case .menuPasscodeAction:
                 return .none
                 
@@ -229,14 +220,6 @@ public let settingsReducer: Reducer<
                         faceIdEnabled: state.faceIdEnabled
                     )
                 ) : nil
-                return .none
-                
-            case let .cameraAction(.requestAccessResponse(value)):
-                state.cameraStatus = value ? .authorized : .denied
-                return .none
-                
-            case let .microphoneAction(.requestAccessResponse(value)):
-                state.microphoneStatus = value ? .authorized : .denied
                 return .none
                 
             case .microphoneAction:

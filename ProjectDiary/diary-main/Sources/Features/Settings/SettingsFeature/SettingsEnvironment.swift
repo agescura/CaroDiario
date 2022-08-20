@@ -30,7 +30,7 @@ public struct SettingsEnvironment {
     public let pdfKitClient: PDFKitClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         fileClient: FileClient,
@@ -43,7 +43,7 @@ public struct SettingsEnvironment {
         pdfKitClient: PDFKitClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.fileClient = fileClient
         self.localAuthenticationClient = localAuthenticationClient
