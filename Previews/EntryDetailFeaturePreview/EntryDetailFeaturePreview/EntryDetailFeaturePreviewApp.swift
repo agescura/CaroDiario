@@ -11,7 +11,7 @@ import CoreDataClientLive
 import FileClientLive
 import AVCaptureDeviceClientLive
 import UIApplicationClientLive
-import SharedStyles
+import Styles
 import AVAudioSessionClientLive
 import AVAudioPlayerClientLive
 import AVAudioRecorderClientLive

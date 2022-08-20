@@ -7,7 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
-import OnBoardingFeature
+import OnboardingFeature
 import UserDefaultsClientLive
 
 @main

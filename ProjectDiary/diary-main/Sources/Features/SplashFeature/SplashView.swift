@@ -7,7 +7,7 @@
 import SwiftUI
 import ComposableArchitecture
 import UserDefaultsClient
-import SharedStyles
+import Styles
 
 public struct SplashState: Equatable {
     public var animation: AnimationState
@@ -112,7 +112,7 @@ public struct SplashView: View {
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(self.store) { viewStore in
             ZStack {
                 Color.chambray
                 

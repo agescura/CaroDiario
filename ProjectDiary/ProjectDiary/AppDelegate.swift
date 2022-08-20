@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import RootFeature
-import SharedStyles
+import Styles
 import UserDefaultsClientLive
 import CoreDataClientLive
 import FileClientLive

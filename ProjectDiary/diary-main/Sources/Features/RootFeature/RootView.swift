@@ -13,7 +13,7 @@ import FileClient
 import AppFeature
 import LocalAuthenticationClient
 import HomeFeature
-import SharedStyles
+import Styles
 import UIApplicationClient
 import AVCaptureDeviceClient
 import FeedbackGeneratorClient
@@ -292,7 +292,8 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
         }
     }
 )
-.persistence()
+.coreData()
+.userDefaults()
 
 public struct RootView: View {
     let store: Store<RootState, RootAction>
@@ -313,12 +314,43 @@ public struct RootView: View {
     }
 }
 
-import SharedModels
+import Models
+
+extension Reducer where State == RootState, Action == RootAction, Environment == RootEnvironment {
+    public func userDefaults() -> Reducer {
+        return .init { state, action, environment in
+            let effects = self.run(&state, action, environment)
+            
+            switch action {
+            case let .featureAction(.home(.settings(.appearanceAction(.layoutAction(.layoutChanged(layout)))))):
+                return .merge(
+                    environment.userDefaultsClient.set(layoutType: layout)
+                        .fireAndForget(),
+                    effects
+                )
+            case let .featureAction(.home(.settings(.appearanceAction(.styleAction(.styleChanged(style)))))):
+                return .merge(
+                    environment.userDefaultsClient.set(styleType: style)
+                        .fireAndForget(),
+                    effects
+                )
+            case let .featureAction(.home(.settings(.appearanceAction(.themeAction(.themeChanged(theme)))))):
+                return .merge(
+                    environment.userDefaultsClient.set(themeType: theme)
+                        .fireAndForget(),
+                    effects
+                )
+            default:
+                return effects
+            }
+        }
+    }
+}
 
 extension Reducer where State == RootState, Action == RootAction, Environment == RootEnvironment {
     struct CoreDataId: Hashable {}
     
-    public func persistence() -> Reducer {
+    public func coreData() -> Reducer {
         return .init { state, action, environment in
             let effects = self.run(&state, action, environment)
             
@@ -392,11 +424,11 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
             }
             
             if case let .home(homeState) = state.featureState,
-               let entryDetailStae = homeState.entriesState.entryDetailState {
+               let entryDetailState = homeState.entriesState.entryDetailState {
                 switch action {
                 case .featureAction(.home(.entries(.entryDetailAction(.onAppear)))):
                     return .merge(
-                        environment.coreDataClient.fetchEntry(entryDetailStae.entry)
+                        environment.coreDataClient.fetchEntry(entryDetailState.entry)
                             .map({ RootAction.featureAction(.home(.entries(.entryDetailAction(.entryResponse($0))))) }),
                         effects
                     )

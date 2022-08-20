@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import SplashFeature
-import OnBoardingFeature
+import OnboardingFeature
 import HomeFeature
 import UserDefaultsClient
 import CoreDataClient

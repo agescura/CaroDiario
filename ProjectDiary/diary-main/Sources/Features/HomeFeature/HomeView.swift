@@ -13,7 +13,7 @@ import FileClient
 import EntriesFeature
 import SettingsFeature
 import AddEntryFeature
-import SharedModels
+import Models
 import LocalAuthenticationClient
 import UIApplicationClient
 import AVCaptureDeviceClient
@@ -197,7 +197,7 @@ public struct HomeView: View {
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(self.store) { viewStore in
                 TabView(
                     selection: viewStore.binding(
                         get: { $0.selectedTabBar },

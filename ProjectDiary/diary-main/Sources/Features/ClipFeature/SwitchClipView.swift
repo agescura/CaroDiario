@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import SwiftUI
 import SplashFeature
-import OnBoardingFeature
+import OnboardingFeature
 import UserDefaultsClient
 import FeedbackGeneratorClient
 

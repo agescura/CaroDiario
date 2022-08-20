@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.6
 
 import PackageDescription
 
@@ -6,245 +6,307 @@ let package = Package(
     name: "diary-main",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v10_15),
         .iOS(.v15),
     ],
     products: [
+        // Clients
+        
         .library(
-            name: "SharedStyles",
-            type: .dynamic,
-            targets: ["SharedStyles"]),
-        .library(name: "SharedModels",
-                type: .dynamic,
-                targets: ["SharedModels"]),
-        .library(name: "SharedViews",
-                 targets: ["SharedViews"]),
-        .library(name: "SharedLocalizables",
-                 targets: ["SharedLocalizables"]),
+            name: "UserDefaultsClient",
+            targets: ["UserDefaultsClient"]
+        ),
+        .library(
+            name: "UserDefaultsClientLive",
+            targets: ["UserDefaultsClientLive"]
+        ),
         
-        .library(name: "UserDefaultsClient",
-                type: .dynamic,
-                targets: ["UserDefaultsClient"]),
-        .library(name: "UserDefaultsClientLive",
-                 targets: ["UserDefaultsClientLive"]),
+        .library(
+            name: "CoreDataClient",
+            targets: ["CoreDataClient"]
+        ),
+        .library(
+            name: "CoreDataClientLive",
+            targets: ["CoreDataClientLive"]
+        ),
         
-        .library(name: "CoreDataClient",
-                type: .dynamic,
-                targets: ["CoreDataClient"]),
-        .library(name: "CoreDataClientLive",
-                 targets: ["CoreDataClientLive"]),
+        .library(
+            name: "FileClient",
+            targets: ["FileClient"]
+        ),
+        .library(
+            name: "FileClientLive",
+            targets: ["FileClientLive"]
+        ),
         
-        .library(name: "FileClient",
-                type: .dynamic,
-                targets: ["FileClient"]),
-        .library(name: "FileClientLive",
-                 targets: ["FileClientLive"]),
+        .library(
+            name: "LocalAuthenticationClient",
+            targets: ["LocalAuthenticationClient"]
+        ),
+        .library(
+            name: "LocalAuthenticationClientLive",
+            targets: ["LocalAuthenticationClientLive"]
+        ),
         
-        .library(name: "LocalAuthenticationClient",
-                type: .dynamic,
-                targets: ["LocalAuthenticationClient"]),
-        .library(name: "LocalAuthenticationClientLive",
-                targets: ["LocalAuthenticationClientLive"]),
+        .library(
+            name: "UIApplicationClient",
+            targets: ["UIApplicationClient"]
+        ),
+        .library(
+            name: "UIApplicationClientLive",
+            targets: ["UIApplicationClientLive"]
+        ),
         
-        .library(name: "UIApplicationClient",
-                type: .dynamic,
-                targets: ["UIApplicationClient"]),
-        .library(name: "UIApplicationClientLive",
-                 targets: ["UIApplicationClientLive"]),
+        .library(
+            name: "AVCaptureDeviceClient",
+            targets: ["AVCaptureDeviceClient"]
+        ),
+        .library(
+            name: "AVCaptureDeviceClientLive",
+            targets: ["AVCaptureDeviceClientLive"]
+        ),
         
-        .library(name: "AVCaptureDeviceClient",
-                type: .dynamic,
-                targets: ["AVCaptureDeviceClient"]),
-        .library(name: "AVCaptureDeviceClientLive",
-                 targets: ["AVCaptureDeviceClientLive"]),
+        .library(
+            name: "AVAudioPlayerClient",
+            targets: ["AVAudioPlayerClient"]
+        ),
+        .library(
+            name: "AVAudioPlayerClientLive",
+            targets: ["AVAudioPlayerClientLive"]
+        ),
         
-        .library(name: "AVAudioPlayerClient",
-                type: .dynamic,
-                targets: ["AVAudioPlayerClient"]),
-        .library(name: "AVAudioPlayerClientLive",
-                targets: ["AVAudioPlayerClientLive"]),
+        .library(
+            name: "AVAudioRecorderClient",
+            targets: ["AVAudioRecorderClient"]
+        ),
+        .library(
+            name: "AVAudioRecorderClientLive",
+            targets: ["AVAudioRecorderClientLive"]
+        ),
         
-        .library(name: "AVAudioRecorderClient",
-                type: .dynamic,
-                targets: ["AVAudioRecorderClient"]),
-        .library(name: "AVAudioRecorderClientLive",
-                 targets: ["AVAudioRecorderClientLive"]),
+        .library(
+            name: "AVAudioSessionClient",
+            targets: ["AVAudioSessionClient"]
+        ),
+        .library(
+            name: "AVAudioSessionClientLive",
+            targets: ["AVAudioSessionClientLive"]
+        ),
         
-        .library(name: "AVAudioSessionClient",
-                type: .dynamic,
-                targets: ["AVAudioSessionClient"]),
-        .library(name: "AVAudioSessionClientLive",
-                 targets: ["AVAudioSessionClientLive"]),
+        .library(
+            name: "AVAssetClient",
+            targets: ["AVAssetClient"]
+        ),
+        .library(
+            name: "AVAssetClientLive",
+            targets: ["AVAssetClientLive"]
+        ),
         
-        .library(name: "AVAssetClient",
-                type: .dynamic,
-                targets: ["AVAssetClient"]),
-        .library(name: "AVAssetClientLive",
-                 targets: ["AVAssetClientLive"]),
+        .library(
+            name: "FeedbackGeneratorClient",
+            targets: ["FeedbackGeneratorClient"]
+        ),
+        .library(
+            name: "FeedbackGeneratorClientLive",
+            targets: ["FeedbackGeneratorClientLive"]
+        ),
         
-        .library(name: "FeedbackGeneratorClient",
-                type: .dynamic,
-                targets: ["FeedbackGeneratorClient"]),
-        .library(name: "FeedbackGeneratorClientLive",
-                 targets: ["FeedbackGeneratorClientLive"]),
+        .library(
+            name: "StoreKitClient",
+            targets: ["StoreKitClient"]
+        ),
+        .library(
+            name: "StoreKitClientLive",
+            targets: ["StoreKitClientLive"]
+        ),
         
-        .library(name: "StoreKitClient",
-                type: .dynamic,
-                targets: ["StoreKitClient"]),
-        .library(name: "StoreKitClientLive",
-                targets: ["StoreKitClientLive"]),
+        .library(
+            name: "PDFKitClient",
+            targets: ["PDFKitClient"]
+        ),
+        .library(
+            name: "PDFKitClientLive",
+            targets: ["PDFKitClientLive"]
+        ),
         
-        .library(name: "PDFKitClient",
-                type: .dynamic,
-                targets: ["PDFKitClient"]),
-        .library(name: "PDFKitClientLive",
-                 targets: ["PDFKitClientLive"]),
+        // Features
         
-        .library(name: "RootFeature", targets: ["RootFeature"]),
-        .library(name: "AppFeature", targets: ["AppFeature"]),
-        .library(name: "SplashFeature", targets: ["SplashFeature"]),
-        .library(name: "OnBoardingFeature", targets: ["OnBoardingFeature"]),
-        .library(name: "LockScreenFeature", targets: ["LockScreenFeature"]),
-        .library(name: "HomeFeature", targets: ["HomeFeature"]),
+        // App
         
-        .library(name: "EntriesFeature", targets: ["EntriesFeature"]),
-        .library(name: "EntryDetailFeature", targets: ["EntryDetailFeature"]),
+        .library(
+            name: "AppFeature",
+            targets: ["AppFeature"]
+        ),
         
-        .library(name: "AddEntryFeature", targets: ["AddEntryFeature"]),
-        .library(name: "ImagePickerFeature", targets: ["ImagePickerFeature"]),
-        .library(name: "AudioPickerFeature", targets: ["AudioPickerFeature"]),
-        .library(name: "AttachmentsFeature", targets: ["AttachmentsFeature"]),
-        .library(name: "AudioRecordFeature", targets: ["AudioRecordFeature"]),
         
-        .library(name: "SettingsFeature", targets: ["SettingsFeature"]),
-        .library(name: "PasscodeFeature", targets: ["PasscodeFeature"]),
-        .library(name: "PDFPreviewFeature", targets: ["PDFPreviewFeature"]),
+        // Clip
         
-        .library(name: "SearchFeature", targets: ["SearchFeature"]),
+        .library(
+            name: "ClipFeature",
+            targets: ["ClipFeature"]
+        ),
         
-        .library(name: "ClipFeature", targets: ["ClipFeature"])
+        // Entries
+        
+        .library(
+            name: "AddEntryFeature",
+            targets: ["AddEntryFeature"]
+        ),
+        .library(
+            name: "AttachmentsFeature",
+            targets: ["AttachmentsFeature"]
+        ),
+        .library(
+            name: "AudioPickerFeature",
+            targets: ["AudioPickerFeature"]
+        ),
+        .library(
+            name: "AudioRecordFeature",
+            targets: ["AudioRecordFeature"]
+        ),
+        .library(
+            name: "EntriesFeature",
+            targets: ["EntriesFeature"]
+        ),
+        .library(
+            name: "EntryDetailFeature",
+            targets: ["EntryDetailFeature"]
+        ),
+        .library(
+            name: "ImagePickerFeature",
+            targets: ["ImagePickerFeature"]
+        ),
+        .library(
+            name: "SearchFeature",
+            targets: ["SearchFeature"]
+        ),
+        
+        // Home
+        
+        .library(
+            name: "HomeFeature",
+            targets: ["HomeFeature"]
+        ),
+        
+        // LockScreen
+        
+        .library(
+            name: "LockScreenFeature",
+            targets: ["LockScreenFeature"]
+        ),
+        
+        // Onboarding
+        
+        .library(
+            name: "OnboardingFeature",
+            targets: ["OnboardingFeature"]
+        ),
+        
+        // Root
+        
+        .library(
+            name: "RootFeature",
+            targets: ["RootFeature"]
+        ),
+        
+        // Settings
+        
+        .library(
+            name: "AboutFeature",
+            targets: ["AboutFeature"]
+        ),
+        .library(
+            name: "AgreementsFeature",
+            targets: ["AgreementsFeature"]
+        ),
+        .library(
+            name: "AppearanceFeature",
+            targets: ["AppearanceFeature"]
+        ),
+        .library(
+            name: "CameraFeature",
+            targets: ["CameraFeature"]
+        ),
+        .library(
+            name: "ExportFeature",
+            targets: ["ExportFeature"]
+        ),
+        .library(
+            name: "LanguageFeature",
+            targets: ["LanguageFeature"]
+        ),
+        .library(
+            name: "MicrophoneFeature",
+            targets: ["MicrophoneFeature"]
+        ),
+        .library(
+            name: "PasscodeFeature",
+            targets: ["PasscodeFeature"]
+        ),
+        .library(
+            name: "PDFPreviewFeature",
+            targets: ["PDFPreviewFeature"]
+        ),
+        .library(
+            name: "SettingsFeature",
+            targets: ["SettingsFeature"]
+        ),
+        
+        // Splash
+        
+        .library(
+            name: "SplashFeature",
+            targets: ["SplashFeature"]
+        ),
+        
+        // Helpers
+        
+        .library(
+            name: "Styles",
+            targets: ["Styles"]
+        ),
+        .library(
+            name: "SwiftHelper",
+            targets: ["SwiftHelper"]
+        ),
+        .library(
+            name: "SwiftUIHelper",
+            targets: ["SwiftUIHelper"]
+        ),
+        .library(
+            name: "Views",
+            targets: ["Views"]
+        ),
+        .library(
+            name: "Localizables",
+            targets: ["Localizables"]
+        ),
+        
+        // Models
+        
+        .library(
+            name: "Models",
+            targets: ["Models"]
+        ),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.34.0")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.39.0")
     ],
     targets: [
-        .target(
-            name: "SharedStyles",
-            dependencies: [],
-            path: "Sources/Shared/SharedStyles",
-            resources: [.process("Fonts")]
-        ),
-        .target(
-            name: "SharedModels",
-            dependencies: [],
-            path: "Sources/Shared/SharedModels"
-        ),
-        .target(
-            name: "SharedViews",
-            dependencies: [
-                "SharedStyles"
-            ],
-            path: "Sources/Shared/SharedViews"
-        ),
-        .target(
-            name: "SharedLocalizables",
-            dependencies: [],
-            path: "Sources/Shared/SharedLocalizables",
-            resources: [.process("Resources")]
-        ),
+        // Clients
         
         .target(
-            name: "UserDefaultsClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "SharedStyles"
-            ],
-            path: "Sources/Dependencies/UserDefaultsClient"),
-        .target(
-            name: "UserDefaultsClientLive",
-            dependencies: [
-            "UserDefaultsClient",
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-        ],
-            path: "Sources/Dependencies/UserDefaultsClientLive"
-        ),
-        
-        .target(
-            name: "CoreDataClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .target(name: "SharedModels")
-            ],
-            path: "Sources/Dependencies/CoreDataClient"
-        ),
-        .target(
-            name: "CoreDataClientLive",
-            dependencies: [
-                "SharedModels",
-                "CoreDataClient"
-            ],
-            path: "Sources/Dependencies/CoreDataClientLive"
-        ),
-        
-        .target(
-            name: "FileClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .target(name: "SharedModels")
-            ],
-            path: "Sources/Dependencies/FileClient"
-        ),
-        .target(
-            name: "FileClientLive",
-            dependencies: [
-                "SharedModels",
-                "FileClient"
-            ],
-            path: "Sources/Dependencies/FileClientLive"
-        ),
-        
-        .target(
-            name: "LocalAuthenticationClient",
+            name: "AVAssetClient",
             dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ],
-            path: "Sources/Dependencies/LocalAuthenticationClient"
+            path: "Sources/Clients/AVAssetClient"
         ),
         .target(
-            name: "LocalAuthenticationClientLive",
+            name: "AVAssetClientLive",
             dependencies: [
-            "LocalAuthenticationClient"
+            "AVAssetClient"
         ],
-            path: "Sources/Dependencies/LocalAuthenticationClientLive"),
-        
-        .target(
-            name: "UIApplicationClient",
-            dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ],
-            path: "Sources/Dependencies/UIApplicationClient"
-        ),
-        .target(
-            name: "UIApplicationClientLive",
-            dependencies: [
-            "UIApplicationClient"
-        ],
-            path: "Sources/Dependencies/UIApplicationClientLive"
-        ),
-        
-        .target(
-            name: "AVCaptureDeviceClient",
-            dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ],
-            path: "Sources/Dependencies/AVCaptureDeviceClient"
-        ),
-        .target(
-            name: "AVCaptureDeviceClientLive",
-            dependencies: [
-            "AVCaptureDeviceClient"
-        ],
-            path: "Sources/Dependencies/AVCaptureDeviceClientLive"
+            path: "Sources/Clients/AVAssetClientLive"
         ),
         
         .target(
@@ -252,14 +314,14 @@ let package = Package(
             dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ],
-            path: "Sources/Dependencies/AVAudioPlayerClient"
+            path: "Sources/Clients/AVAudioPlayerClient"
         ),
         .target(
             name: "AVAudioPlayerClientLive",
             dependencies: [
             "AVAudioPlayerClient"
         ],
-            path: "Sources/Dependencies/AVAudioPlayerClientLive"
+            path: "Sources/Clients/AVAudioPlayerClientLive"
         ),
         
         .target(
@@ -267,14 +329,14 @@ let package = Package(
             dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ],
-            path: "Sources/Dependencies/AVAudioRecorderClient"
+            path: "Sources/Clients/AVAudioRecorderClient"
         ),
         .target(
             name: "AVAudioRecorderClientLive",
             dependencies: [
             "AVAudioRecorderClient"
         ],
-            path: "Sources/Dependencies/AVAudioRecorderClientLive"
+            path: "Sources/Clients/AVAudioRecorderClientLive"
         ),
         
         .target(
@@ -282,29 +344,47 @@ let package = Package(
             dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ],
-            path: "Sources/Dependencies/AVAudioSessionClient"
+            path: "Sources/Clients/AVAudioSessionClient"
         ),
         .target(
             name: "AVAudioSessionClientLive",
             dependencies: [
             "AVAudioSessionClient"
         ],
-            path: "Sources/Dependencies/AVAudioSessionClientLive"
+            path: "Sources/Clients/AVAudioSessionClientLive"
         ),
         
         .target(
-            name: "AVAssetClient",
+            name: "AVCaptureDeviceClient",
             dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            "Models"
         ],
-            path: "Sources/Dependencies/AVAssetClient"
+            path: "Sources/Clients/AVCaptureDeviceClient"
         ),
         .target(
-            name: "AVAssetClientLive",
+            name: "AVCaptureDeviceClientLive",
             dependencies: [
-            "AVAssetClient"
+            "AVCaptureDeviceClient"
         ],
-            path: "Sources/Dependencies/AVAssetClientLive"
+            path: "Sources/Clients/AVCaptureDeviceClientLive"
+        ),
+
+        .target(
+            name: "CoreDataClient",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Models")
+            ],
+            path: "Sources/Clients/CoreDataClient"
+        ),
+        .target(
+            name: "CoreDataClientLive",
+            dependencies: [
+                "Models",
+                "CoreDataClient"
+            ],
+            path: "Sources/Clients/CoreDataClientLive"
         ),
         
         .target(
@@ -312,14 +392,62 @@ let package = Package(
             dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ],
-            path: "Sources/Dependencies/FeedbackGeneratorClient"
+            path: "Sources/Clients/FeedbackGeneratorClient"
         ),
         .target(
             name: "FeedbackGeneratorClientLive",
             dependencies: [
             "FeedbackGeneratorClient"
         ],
-            path: "Sources/Dependencies/FeedbackGeneratorClientLive"
+            path: "Sources/Clients/FeedbackGeneratorClientLive"
+        ),
+        
+        .target(
+            name: "FileClient",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Models")
+            ],
+            path: "Sources/Clients/FileClient"
+        ),
+        .target(
+            name: "FileClientLive",
+            dependencies: [
+                "Models",
+                "FileClient"
+            ],
+            path: "Sources/Clients/FileClientLive"
+        ),
+        
+        .target(
+            name: "LocalAuthenticationClient",
+            dependencies: [
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+        ],
+            path: "Sources/Clients/LocalAuthenticationClient"
+        ),
+        .target(
+            name: "LocalAuthenticationClientLive",
+            dependencies: [
+            "LocalAuthenticationClient"
+        ],
+            path: "Sources/Clients/LocalAuthenticationClientLive"
+        ),
+        
+        .target(
+            name: "PDFKitClient",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "Models"
+            ],
+            path: "Sources/Clients/PDFKitClient"
+        ),
+        .target(
+            name: "PDFKitClientLive",
+            dependencies: [
+                "PDFKitClient"
+            ],
+            path: "Sources/Clients/PDFKitClientLive"
         ),
         
         .target(
@@ -327,59 +455,56 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
-            path: "Sources/Dependencies/StoreKitClient"
+            path: "Sources/Clients/StoreKitClient"
         ),
         .target(
             name: "StoreKitClientLive",
             dependencies: [
                 "StoreKitClient"
             ],
-            path: "Sources/Dependencies/StoreKitClientLive"
+            path: "Sources/Clients/StoreKitClientLive"
         ),
         
         .target(
-            name: "PDFKitClient",
+            name: "UIApplicationClient",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "SharedModels"
-            ],
-            path: "Sources/Dependencies/PDFKitClient"
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+        ],
+            path: "Sources/Clients/UIApplicationClient"
         ),
         .target(
-            name: "PDFKitClientLive",
+            name: "UIApplicationClientLive",
             dependencies: [
-                "PDFKitClient"
-            ],
-            path: "Sources/Dependencies/PDFKitClientLive"
+            "UIApplicationClient"
+        ],
+            path: "Sources/Clients/UIApplicationClientLive"
         ),
         
         .target(
-            name: "RootFeature",
+            name: "UserDefaultsClient",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "AppFeature",
-                "AVCaptureDeviceClient",
-                "AVAudioSessionClient",
-                "UserDefaultsClient",
-                "CoreDataClient",
-                "FileClient",
-                "LocalAuthenticationClient",
-                "HomeFeature",
-                "SharedStyles",
-                "UIApplicationClient",
-                "FeedbackGeneratorClient",
-                "StoreKitClient",
-                "PDFKitClient"
+                "Styles"
             ],
-            path: "Sources/Features/RootFeature"
+            path: "Sources/Clients/UserDefaultsClient"
         ),
+        .target(
+            name: "UserDefaultsClientLive",
+            dependencies: [
+            "UserDefaultsClient",
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        ],
+            path: "Sources/Clients/UserDefaultsClientLive"
+        ),
+        
+        // App
         
         .target(
             name: "AppFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "SplashFeature",
-                "OnBoardingFeature",
+                "OnboardingFeature",
                 "HomeFeature",
                 "LockScreenFeature",
                 "AVCaptureDeviceClient",
@@ -397,47 +522,141 @@ let package = Package(
             path: "Sources/Features/AppFeature"
         ),
         
+        // Clip
+        
         .target(
-            name: "SplashFeature",
+            name: "ClipFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "UserDefaultsClient",
-                "SharedStyles"
+                "SplashFeature",
+                "OnboardingFeature",
             ],
-            path: "Sources/Features/SplashFeature"
+            path: "Sources/Features/ClipFeature"
+        ),
+        
+        // Entries
+        
+        .target(
+            name: "AddEntryFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "CoreDataClient",
+                "FileClient",
+                "ImagePickerFeature",
+                "Views",
+                "Localizables",
+                "AVCaptureDeviceClient",
+                "AttachmentsFeature",
+                "UIApplicationClient",
+                "AudioPickerFeature",
+                "AVAudioRecorderClient",
+                "AVAudioSessionClient",
+                "AVAudioPlayerClient",
+                "AudioRecordFeature",
+                "AVAssetClient"
+            ],
+            path: "Sources/Features/Entries/AddEntryFeature"
         ),
         
         .target(
-            name: "OnBoardingFeature",
+            name: "AttachmentsFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "CoreDataClient",
+                "FileClient",
+                "Views",
+                "Models",
+                "Localizables",
+                "AVAudioPlayerClient",
+                "UIApplicationClient",
+                "SwiftHelper"
+            ],
+            path: "Sources/Features/Entries/AttachmentsFeature"
+        ),
+        
+        .target(
+            name: "AudioPickerFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "Sources/Features/Entries/AudioPickerFeature"
+        ),
+
+        .target(
+            name: "AudioRecordFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "FileClient",
+                "AVAudioRecorderClient",
+                "AVAudioSessionClient",
+                "AVAudioPlayerClient",
+                "Views",
+                "UIApplicationClient",
+                "Localizables",
+                "SwiftHelper"
+            ],
+            path: "Sources/Features/Entries/AudioRecordFeature"
+        ),
+        
+        .target(
+            name: "EntriesFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "UserDefaultsClient",
-                "SharedStyles",
-                "SharedViews",
+                "CoreDataClient",
+                "EntryDetailFeature",
+                "AddEntryFeature",
+                "Localizables",
+                "AVCaptureDeviceClient"
+            ],
+            path: "Sources/Features/Entries/EntriesFeature"
+        ),
+        
+        .target(
+            name: "EntryDetailFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "CoreDataClient",
+                "FileClient",
+                "Styles",
+                "Views",
+                "Localizables",
+                "AVCaptureDeviceClient",
+                "AttachmentsFeature",
+                "UIApplicationClient",
+                "AddEntryFeature"
+            ],
+            path: "Sources/Features/Entries/EntryDetailFeature"
+        ),
+        
+        .target(
+            name: "ImagePickerFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "Sources/Features/Entries/ImagePickerFeature"
+        ),
+        
+        .target(
+            name: "SearchFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "EntriesFeature",
-                "FeedbackGeneratorClient"
+                "CoreDataClient",
+                "UIApplicationClient",
+                "AVCaptureDeviceClient",
+                "FileClient"
             ],
-            path: "Sources/Features/OnBoardingFeature"
+            path: "Sources/Features/Entries/SearchFeature"
         ),
         
-        .target(
-            name: "LockScreenFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "SharedStyles",
-                "SharedViews",
-                "UserDefaultsClient",
-                "LocalAuthenticationClient",
-                "SharedLocalizables"
-            ],
-            path: "Sources/Features/LockScreenFeature"
-        ),
+        // Home
         
         .target(
             name: "HomeFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "SharedStyles",
+                "Styles",
                 "UserDefaultsClient",
                 "CoreDataClient",
                 "FileClient",
@@ -454,105 +673,171 @@ let package = Package(
             path: "Sources/Features/HomeFeature"
         ),
         
+        // LockScreen
+        
         .target(
-            name: "EntriesFeature",
+            name: "LockScreenFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "Styles",
+                "Views",
+                "UserDefaultsClient",
+                "LocalAuthenticationClient",
+                "Localizables"
+            ],
+            path: "Sources/Features/LockScreenFeature"
+        ),
+        
+        // Onboarding
+        
+        .target(
+            name: "OnboardingFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "UserDefaultsClient",
-                "CoreDataClient",
-                "EntryDetailFeature",
-                "AddEntryFeature",
-                "SharedLocalizables",
-                "AVCaptureDeviceClient"
+                "Styles",
+                "Views",
+                "EntriesFeature",
+                "FeedbackGeneratorClient"
             ],
-            path: "Sources/Features/EntriesFeature"
+            path: "Sources/Features/OnboardingFeature"
         ),
         
+        // Root
+        
         .target(
-            name: "EntryDetailFeature",
+            name: "RootFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "CoreDataClient",
-                "FileClient",
-                "SharedStyles",
-                "SharedViews",
-                "SharedLocalizables",
+                "AppFeature",
                 "AVCaptureDeviceClient",
-                "AttachmentsFeature",
-                "UIApplicationClient",
-                "AddEntryFeature"
-            ],
-            path: "Sources/Features/EntryDetailFeature"
-        ),
-        
-        .target(
-            name: "AddEntryFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "AVAudioSessionClient",
+                "UserDefaultsClient",
                 "CoreDataClient",
                 "FileClient",
-                "ImagePickerFeature",
-                "SharedViews",
-                "SharedLocalizables",
+                "LocalAuthenticationClient",
+                "HomeFeature",
+                "Styles",
+                "UIApplicationClient",
+                "FeedbackGeneratorClient",
+                "StoreKitClient",
+                "PDFKitClient"
+            ],
+            path: "Sources/Features/RootFeature"
+        ),
+        
+        // Settings
+        
+        .target(
+            name: "AboutFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "UIApplicationClient",
+                "Localizables",
+                "Styles"
+            ],
+            path: "Sources/Features/Settings/AboutFeature"
+        ),
+        .target(
+            name: "AgreementsFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "UIApplicationClient",
+                "Localizables",
+                "Views"
+            ],
+            path: "Sources/Features/Settings/AgreementsFeature"
+        ),
+        .target(
+            name: "AppearanceFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "UIApplicationClient",
+                "Localizables",
+                "Views",
+                "UserDefaultsClient",
+                "FeedbackGeneratorClient",
+                "Styles",
+                "EntriesFeature",
+                "SwiftUIHelper"
+            ],
+            path: "Sources/Features/Settings/AppearanceFeature",
+            resources: [.process("Resources")]
+        ),
+        .target(
+            name: "CameraFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "AVCaptureDeviceClient",
-                "AttachmentsFeature",
                 "UIApplicationClient",
-                "AudioPickerFeature",
-                "AVAudioRecorderClient",
-                "AVAudioSessionClient",
-                "AVAudioPlayerClient",
-                "AudioRecordFeature",
-                "AVAssetClient"
+                "FeedbackGeneratorClient",
+                "Styles",
+                "Localizables"
             ],
-            path: "Sources/Features/AddEntryFeature"
+            path: "Sources/Features/Settings/CameraFeature"
         ),
-        
         .target(
-            name: "ImagePickerFeature",
+            name: "ExportFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            ],
-            path: "Sources/Features/ImagePickerFeature"
-        ),
-        
-        .target(
-            name: "AudioPickerFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            ],
-            path: "Sources/Features/AudioPickerFeature"
-        ),
-        
-        .target(
-            name: "AttachmentsFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "Views",
+                "Localizables",
+                "UIApplicationClient",
+                "PDFKitClient",
+                "PDFPreviewFeature",
                 "CoreDataClient",
                 "FileClient",
-                "SharedViews",
-                "SharedModels",
-                "SharedLocalizables",
-                "AVAudioPlayerClient",
-                "UIApplicationClient"
+                "Models"
             ],
-            path: "Sources/Features/AttachmentsFeature"
+            path: "Sources/Features/Settings/ExportFeature"
         ),
-        
         .target(
-            name: "AudioRecordFeature",
+            name: "LanguageFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "FileClient",
-                "AVAudioRecorderClient",
-                "AVAudioSessionClient",
-                "AVAudioPlayerClient",
-                "SharedViews",
-                "UIApplicationClient",
-                "SharedLocalizables"
+                "Views",
+                "Localizables",
+                "Styles",
+                "Models",
+                "UserDefaultsClient"
             ],
-            path: "Sources/Features/AudioRecordFeature"
+            path: "Sources/Features/Settings/LanguageFeature"
         ),
-        
+        .target(
+            name: "MicrophoneFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "UIApplicationClient",
+                "FeedbackGeneratorClient",
+                "AVAudioSessionClient",
+                "Localizables",
+                "Styles",
+                "Views"
+            ],
+            path: "Sources/Features/Settings/MicrophoneFeature"
+        ),
+        .target(
+            name: "PasscodeFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "LocalAuthenticationClient",
+                "UserDefaultsClient",
+                "Styles",
+                "Views",
+                "Localizables",
+                "SwiftUIHelper"
+            ],
+            path: "Sources/Features/Settings/PasscodeFeature"
+        ),
+        .target(
+            name: "PDFPreviewFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "PDFKitClient",
+                "Views"
+            ],
+            path: "Sources/Features/Settings/PDFPreviewFeature"
+        ),
         .target(
             name: "SettingsFeature",
             dependencies: [
@@ -567,123 +852,200 @@ let package = Package(
                 "AVAudioSessionClient",
                 "StoreKitClient",
                 "PDFKitClient",
-                "PDFPreviewFeature"
+                "PDFPreviewFeature",
+                "MicrophoneFeature",
+                "AboutFeature",
+                "AgreementsFeature",
+                "AppearanceFeature",
+                "CameraFeature",
+                "ExportFeature",
+                "LanguageFeature",
+                "SwiftUIHelper"
             ],
-            path: "Sources/Features/SettingsFeature"
+            path: "Sources/Features/Settings/SettingsFeature"
         ),
         
+        // Splash
+        
         .target(
-            name: "PasscodeFeature",
+            name: "SplashFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "LocalAuthenticationClient",
                 "UserDefaultsClient",
-                "SharedStyles",
-                "SharedViews",
-                "SharedLocalizables"
+                "Styles"
             ],
-            path: "Sources/Features/PasscodeFeature"
+            path: "Sources/Features/SplashFeature"
+        ),
+        
+        // Helpers
+        
+        .target(
+            name: "Styles",
+            dependencies: [],
+            path: "Sources/Helpers/Styles",
+            resources: [.process("Fonts")]
         ),
         
         .target(
-            name: "PDFPreviewFeature",
+            name: "Views",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "PDFKitClient",
-                "SharedViews"
+                "Styles"
             ],
-            path: "Sources/Features/PDFPreviewFeature"
+            path: "Sources/Helpers/Views"
         ),
         
         .target(
-            name: "SearchFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "EntriesFeature",
-                "CoreDataClient",
-                "UIApplicationClient",
-                "AVCaptureDeviceClient",
-                "FileClient"
-            ],
-            path: "Sources/Features/SearchFeature"
+            name: "SwiftHelper",
+            dependencies: [],
+            path: "Sources/Helpers/SwiftHelper"
         ),
         
         .target(
-            name: "ClipFeature",
+            name: "SwiftUIHelper",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "SplashFeature",
-                "OnBoardingFeature",
             ],
-            path: "Sources/Features/ClipFeature"
+            path: "Sources/Helpers/SwiftUIHelper"
         ),
         
-        .testTarget(
-            name: "UserDefaultsClientLiveTests",
-            dependencies: ["UserDefaultsClientLive"]
+        .target(
+            name: "Localizables",
+            dependencies: [],
+            path: "Sources/Helpers/Localizables",
+            resources: [.process("Resources")]
         ),
+        
+        // Models
+        
+        .target(
+            name: "Models",
+            dependencies: [],
+            path: "Sources/Models"
+        ),
+        
+        // Tests
+        
+        // Clients
+        
         .testTarget(
             name: "CoreDataClientLiveTests",
-            dependencies: ["CoreDataClientLive"]
+            dependencies: ["CoreDataClientLive"],
+            path: "Tests/Clients/CoreDataClientLiveTests"
         ),
         .testTarget(
-            name: "FileClientLiveTests",
-            dependencies: ["FileClientLive"]
+            name: "UserDefaultsClientLiveTests",
+            dependencies: ["UserDefaultsClientLive"],
+            path: "Tests/Clients/UserDefaultsClientLiveTests"
         ),
         
         .testTarget(
-            name: "RootFeatureTests",
-            dependencies: ["RootFeature"]
+            name: "FileClientLiveTests",
+            dependencies: ["FileClientLive"],
+            path: "Tests/Clients/FileClientLiveTests"
         ),
+        
+        // Features
+        
+        // AppFeature
+        
         .testTarget(
             name: "AppFeatureTests",
-            dependencies: ["AppFeature"]
+            dependencies: ["AppFeature"],
+            path: "Tests/Features/AppFeatureTests"
         ),
-        .testTarget(
-            name: "SplashFeatureTests",
-            dependencies: ["SplashFeature"]
-        ),
-        .testTarget(
-            name: "OnBoardingFeatureTests",
-            dependencies: ["OnBoardingFeature"]
-        ),
-        .testTarget(
-            name: "LockScreenFeatureTests",
-            dependencies: ["LockScreenFeature"]
-        ),
-        .testTarget(
-            name: "HomeFeatureTests",
-            dependencies: ["HomeFeature"]
-        ),
-        .testTarget(
-            name: "EntriesFeatureTests",
-            dependencies: ["EntriesFeature"]
-        ),
+        
+        // Entries
+        
         .testTarget(
             name: "AddEntryFeatureTests",
-            dependencies: ["AddEntryFeature"]
+            dependencies: ["AddEntryFeature"],
+            path: "Tests/Features/Entries/AddEntryFeatureTests"
         ),
         .testTarget(
             name: "AttachmentsFeatureTests",
-            dependencies: ["AttachmentsFeature"]
+            dependencies: ["AttachmentsFeature"],
+            path: "Tests/Features/Entries/AttachmentsFeatureTests"
         ),
         .testTarget(
             name: "AudioRecordFeatureTests",
-            dependencies: ["AudioRecordFeature"]
+            dependencies: ["AudioRecordFeature"],
+            path: "Tests/Features/Entries/AudioRecordFeatureTests"
+        ),
+        .testTarget(
+            name: "EntriesFeatureTests",
+            dependencies: ["EntriesFeature"],
+            path: "Tests/Features/Entries/EntriesFeatureTests"
+        ),
+        .testTarget(
+            name: "SearchFeatureTests",
+            dependencies: ["SearchFeature"],
+            path: "Tests/Features/Entries/SearchFeatureTests"
         ),
         
+        // Home
+        
         .testTarget(
-            name: "SettingsFeatureTests",
-            dependencies: ["SettingsFeature"]
+            name: "HomeFeatureTests",
+            dependencies: ["HomeFeature"],
+            path: "Tests/Features/HomeFeatureTests"
+        ),
+        
+        // LockScreen
+        
+        .testTarget(
+            name: "LockScreenFeatureTests",
+            dependencies: ["LockScreenFeature"],
+            path: "Tests/Features/LockScreenFeatureTests"
+        ),
+        
+        // Onboarding
+        
+        .testTarget(
+            name: "OnboardingFeatureTests",
+            dependencies: ["OnboardingFeature"],
+            path: "Tests/Features/OnboardingFeatureTests"
+        ),
+        
+        // Root
+        
+        .testTarget(
+            name: "RootFeatureTests",
+            dependencies: ["RootFeature"],
+            path: "Tests/Features/RootFeatureTests"
+        ),
+        
+        // Settings
+        
+        .testTarget(
+            name: "AppearanceFeatureTests",
+            dependencies: [
+                "AppearanceFeature",
+                "EntriesFeature"
+            ],
+            path: "Tests/Features/Settings/AppearanceFeatureTests"
+        ),
+        .testTarget(
+            name: "CameraFeatureTests",
+            dependencies: ["CameraFeature"],
+            path: "Tests/Features/Settings/CameraFeatureTests"
         ),
         .testTarget(
             name: "PasscodeFeatureTests",
-            dependencies: ["PasscodeFeature"]
+            dependencies: ["PasscodeFeature"],
+            path: "Tests/Features/Settings/PasscodeFeatureTests"
+        ),
+        .testTarget(
+            name: "SettingsFeatureTests",
+            dependencies: ["SettingsFeature"],
+            path: "Tests/Features/Settings/SettingsFeatureTests"
         ),
         
+        // Splash
+        
         .testTarget(
-            name: "SearchFeatureTests",
-            dependencies: ["SearchFeature"]
-        )
+            name: "SplashFeatureTests",
+            dependencies: ["SplashFeature"],
+            path: "Tests/Features/SplashFeatureTests"
+        ),
     ]
 )

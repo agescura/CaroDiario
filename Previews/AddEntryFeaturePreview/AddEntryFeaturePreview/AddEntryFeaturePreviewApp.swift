@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import AddEntryFeature
-import SharedStyles
+import Styles
 import CoreDataClientLive
 import FileClientLive
 import AVCaptureDeviceClientLive

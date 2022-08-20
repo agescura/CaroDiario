@@ -10,7 +10,7 @@ import SettingsFeature
 import ComposableArchitecture
 import UIApplicationClientLive
 import PDFKitClientLive
-import SharedModels
+import Models
 
 @main
 struct PDFFeaturePreviewApp: App {
