@@ -50,7 +50,7 @@ public struct DayEntriesRowView: View {
 private let id1 = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
 private let id2 = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
 private let id3 = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
-private let date = Date.init(timeIntervalSince1970: 1629486993)
+private let date = Date(timeIntervalSince1970: 1629486993)
 
 public func fakeEntries(with style: StyleType, layout: LayoutType) -> IdentifiedArrayOf<DayEntriesRowState> {
     [

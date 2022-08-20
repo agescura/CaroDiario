@@ -31,7 +31,7 @@ public enum AboutAction: Equatable {
 }
 
 public struct AboutEnvironment {
-    public let applicationClient: UIApplicationClient
+    public var applicationClient: UIApplicationClient
     
     public init(
         applicationClient: UIApplicationClient
@@ -64,9 +64,12 @@ public let aboutReducer = Reducer<
         return .none
         
     case .dismissEmailOptionSheet:
+        state.emailOptionSheet = nil
         return .none
         
     case .openMail:
+        state.emailOptionSheet = nil
+        
         var components = URLComponents()
         components.scheme = "mailto"
         components.path = "carodiarioapp@gmail.com"
@@ -79,6 +82,8 @@ public let aboutReducer = Reducer<
             .fireAndForget()
         
     case .openGmail:
+        state.emailOptionSheet = nil
+        
         let compose = "googlegmail:///co?subject=Bug in Caro Diario&body=<Explain your bug here>&to=carodiarioapp@gmail.com"
                     .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: compose)!
@@ -87,6 +92,8 @@ public let aboutReducer = Reducer<
             .fireAndForget()
         
     case .openOutlook:
+        state.emailOptionSheet = nil
+        
         let compose = "ms-outlook://compose?to=carodiarioapp@gmail.com&subject=Bug in Caro Diario&body=<Explain your bug here>"
                     .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: compose)!

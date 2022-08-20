@@ -29,7 +29,6 @@ public let settingsReducer: Reducer<
             action: /SettingsAction.activatePasscodeAction,
             environment: {
                 ActivatePasscodeEnvironment(
-                    userDefaultsClient: $0.userDefaultsClient,
                     localAuthenticationClient: $0.localAuthenticationClient,
                     mainQueue: $0.mainQueue
                 )
@@ -42,7 +41,6 @@ public let settingsReducer: Reducer<
             action: /SettingsAction.menuPasscodeAction,
             environment: {
                 MenuPasscodeEnvironment(
-                    userDefaultsClient: $0.userDefaultsClient,
                     localAuthenticationClient: $0.localAuthenticationClient,
                     mainQueue: $0.mainQueue
                 )
@@ -130,10 +128,8 @@ public let settingsReducer: Reducer<
         .pullback(
             state: \SettingsState.languageState,
             action: /SettingsAction.languageAction,
-            environment: {
-                LanguageEnvironment(
-                    userDefaults: $0.userDefaultsClient
-                )
+            environment: { _ in
+                LanguageEnvironment()
             }
         ),
     
@@ -142,7 +138,6 @@ public let settingsReducer: Reducer<
                 
             case .onAppear:
                 state.microphoneStatus = environment.avAudioSessionClient.recordPermission
-                state.language = Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish
                 return Effect.merge(
                     environment.localAuthenticationClient.determineType()
                         .map(SettingsAction.biometricResult),

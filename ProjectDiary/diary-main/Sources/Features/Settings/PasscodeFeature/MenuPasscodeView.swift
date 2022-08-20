@@ -104,16 +104,13 @@ public enum MenuPasscodeAction: Equatable {
 }
 
 public struct MenuPasscodeEnvironment {
-    public let userDefaultsClient: UserDefaultsClient
     public let localAuthenticationClient: LocalAuthenticationClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     
     public init(
-        userDefaultsClient: UserDefaultsClient,
         localAuthenticationClient: LocalAuthenticationClient,
         mainQueue: AnySchedulerOf<DispatchQueue>
     ) {
-        self.userDefaultsClient = userDefaultsClient
         self.localAuthenticationClient = localAuthenticationClient
         self.mainQueue = mainQueue
     }

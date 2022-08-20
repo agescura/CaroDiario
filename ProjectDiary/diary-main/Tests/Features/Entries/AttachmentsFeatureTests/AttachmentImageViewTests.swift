@@ -23,7 +23,6 @@ class AttachmentImageViewTests: XCTestCase {
             reducer: attachmentImageReducer,
             environment: ())
         
-        store.send(.presentImageFullScreen(true)) { _ in
-        }
+        store.send(.presentImageFullScreen(true))
     }
 }

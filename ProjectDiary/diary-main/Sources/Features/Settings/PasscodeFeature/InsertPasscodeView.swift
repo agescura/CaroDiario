@@ -46,7 +46,7 @@ public struct InsertPasscodeState: Equatable {
             self.route = .menu(newValue)
         }
     }
-
+    
     public init(
         faceIdEnabled: Bool,
         route: Route? = nil
@@ -80,80 +80,81 @@ public enum InsertPasscodeAction: Equatable {
 }
 
 public struct InsertPasscodeEnvironment {
-    public let userDefaultsClient: UserDefaultsClient
     public let localAuthenticationClient: LocalAuthenticationClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
     
     public init(
-        userDefaultsClient: UserDefaultsClient,
         localAuthenticationClient: LocalAuthenticationClient,
         mainQueue: AnySchedulerOf<DispatchQueue>
     ) {
-        self.userDefaultsClient = userDefaultsClient
         self.localAuthenticationClient = localAuthenticationClient
         self.mainQueue = mainQueue
     }
 }
 
-public let insertPasscodeReducer: Reducer<InsertPasscodeState, InsertPasscodeAction, InsertPasscodeEnvironment> = .combine(
-
+public let insertPasscodeReducer: Reducer<
+    InsertPasscodeState,
+    InsertPasscodeAction,
+    InsertPasscodeEnvironment
+> = .combine(
     menuPasscodeReducer
         .optional()
         .pullback(
             state: \InsertPasscodeState.menuPasscodeState,
             action: /InsertPasscodeAction.menuPasscodeAction,
-            environment: { MenuPasscodeEnvironment(
-                userDefaultsClient: $0.userDefaultsClient,
-                localAuthenticationClient: $0.localAuthenticationClient,
-                mainQueue: $0.mainQueue)
+            environment: {
+                MenuPasscodeEnvironment(
+                    localAuthenticationClient: $0.localAuthenticationClient,
+                    mainQueue: $0.mainQueue
+                )
             }
         ),
     
-    .init { state, action, environment in
-        switch action {
-        
-        case let .update(code: code):
-            state.code = code
-            if state.step == .firstCode,
-               state.code.count == state.maxNumbersCode {
-                state.codeNotMatched = false
-                state.firstCode = state.code
-                state.step = .secondCode
-                state.code = ""
-            }
-            if state.step == .secondCode,
-               state.code.count == state.maxNumbersCode {
-                if state.code == state.firstCode {
-                    return Effect(value: .navigateMenuPasscode(true))
-                } else {
-                    state.step = .firstCode
+        .init { state, action, environment in
+            switch action {
+                
+            case let .update(code: code):
+                state.code = code
+                if state.step == .firstCode,
+                   state.code.count == state.maxNumbersCode {
+                    state.codeNotMatched = false
+                    state.firstCode = state.code
+                    state.step = .secondCode
                     state.code = ""
-                    state.firstCode = ""
-                    state.codeNotMatched = true
                 }
+                if state.step == .secondCode,
+                   state.code.count == state.maxNumbersCode {
+                    if state.code == state.firstCode {
+                        return Effect(value: .navigateMenuPasscode(true))
+                    } else {
+                        state.step = .firstCode
+                        state.code = ""
+                        state.firstCode = ""
+                        state.codeNotMatched = true
+                    }
+                }
+                return .none
+                
+            case .success:
+                return .none
+                
+            case .popToRoot:
+                return .none
+                
+            case .menuPasscodeAction:
+                return .none
+                
+            case let .navigateMenuPasscode(value):
+                state.route = value ? .menu(
+                    .init(
+                        authenticationType: .none,
+                        optionTimeForAskPasscode: TimeForAskPasscode.never.value,
+                        faceIdEnabled: state.faceIdEnabled
+                    )
+                ) : nil
+                return .none
             }
-            return .none
-            
-        case .success:
-            return .none
-            
-        case .popToRoot:
-            return .none
-            
-        case .menuPasscodeAction:
-            return .none
-            
-        case let .navigateMenuPasscode(value):
-            state.route = value ? .menu(
-                .init(
-                    authenticationType: .none,
-                    optionTimeForAskPasscode: TimeForAskPasscode.never.value,
-                    faceIdEnabled: state.faceIdEnabled
-                )
-            ) : nil
-            return .none
         }
-    }
     
 )
 

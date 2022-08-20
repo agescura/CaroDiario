@@ -19,7 +19,7 @@ public enum IconAppAction: Equatable {
 }
 
 public struct IconAppEnvironment {
-    public let feedbackGeneratorClient: FeedbackGeneratorClient
+    public var feedbackGeneratorClient: FeedbackGeneratorClient
 }
 
 let iconAppReducer = Reducer<

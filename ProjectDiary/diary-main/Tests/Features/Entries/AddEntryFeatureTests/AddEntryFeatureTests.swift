@@ -54,7 +54,6 @@ class AddEntryFeatureTests: XCTestCase {
             initialState: AddEntryState(type: .add, entry: entry),
             reducer: addEntryReducer,
             environment: AddEntryEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 avCaptureDeviceClient: .noop,
                 applicationClient: .noop,
@@ -64,7 +63,7 @@ class AddEntryFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init
             )
         )

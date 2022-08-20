@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import OnBoardingFeature
+@testable import OnboardingFeature
 import ComposableArchitecture
 import SwiftUI
 import EntriesFeature
@@ -35,7 +35,7 @@ class StyleOnboardingViewTests: XCTestCase {
                 feedbackGeneratorClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .none }
             )
@@ -84,7 +84,7 @@ class StyleOnboardingViewTests: XCTestCase {
                 feedbackGeneratorClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .none }
             )

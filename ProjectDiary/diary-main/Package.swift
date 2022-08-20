@@ -289,7 +289,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.39.0")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.39.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
     ],
     targets: [
         // Clients
@@ -1017,17 +1018,43 @@ let package = Package(
         // Settings
         
         .testTarget(
+            name: "AboutFeatureTests",
+            dependencies: [
+                "AboutFeature",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+            ],
+            path: "Tests/Features/Settings/AboutFeatureTests",
+            exclude: ["__Snapshots__"]
+        ),
+        
+        .testTarget(
+            name: "AgreementsFeatureTests",
+            dependencies: [
+                "AgreementsFeature",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+            ],
+            path: "Tests/Features/Settings/AgreementsFeatureTests",
+            exclude: ["__Snapshots__"]
+        ),
+        
+        .testTarget(
             name: "AppearanceFeatureTests",
             dependencies: [
                 "AppearanceFeature",
-                "EntriesFeature"
+                "EntriesFeature",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
             ],
-            path: "Tests/Features/Settings/AppearanceFeatureTests"
+            path: "Tests/Features/Settings/AppearanceFeatureTests",
+            exclude: ["__Snapshots__"]
         ),
         .testTarget(
             name: "CameraFeatureTests",
-            dependencies: ["CameraFeature"],
-            path: "Tests/Features/Settings/CameraFeatureTests"
+            dependencies: [
+                "CameraFeature",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+            ],
+            path: "Tests/Features/Settings/CameraFeatureTests",
+            exclude: ["__Snapshots__"]
         ),
         .testTarget(
             name: "PasscodeFeatureTests",

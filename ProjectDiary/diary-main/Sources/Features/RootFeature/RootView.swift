@@ -247,7 +247,8 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
                         hasPasscode: (environment.userDefaultsClient.passcodeCode ?? "").count > 0,
                         cameraStatus: status,
                         optionTimeForAskPasscode: environment.userDefaultsClient.optionTimeForAskPasscode,
-                        faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate
+                        faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate,
+                        language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish
                     )
                 )
             )

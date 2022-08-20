@@ -27,7 +27,6 @@ struct EntriesFeaturePreviewApp: App {
                     initialState: .init(entries: []),
                     reducer: entriesReducer,
                     environment: .init(
-                        coreDataClient: .live,
                         fileClient: .live,
                         userDefaultsClient: .live(userDefaults:)(),
                         avCaptureDeviceClient: .live,

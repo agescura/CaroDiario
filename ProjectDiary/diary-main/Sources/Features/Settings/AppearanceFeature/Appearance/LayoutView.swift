@@ -33,7 +33,7 @@ public enum LayoutAction: Equatable {
 }
 
 public struct LayoutEnvironment {
-    public let feedbackGeneratorClient: FeedbackGeneratorClient
+    public var feedbackGeneratorClient: FeedbackGeneratorClient
     
     public init(
         feedbackGeneratorClient: FeedbackGeneratorClient

@@ -114,77 +114,85 @@ public struct HomeEnvironment {
     }
 }
 
-public let homeReducer: Reducer<HomeState, HomeAction, HomeEnvironment> = .combine(
-
+public let homeReducer: Reducer<
+    HomeState,
+    HomeAction,
+    HomeEnvironment
+> = .combine(
+    
     entriesReducer.pullback(
         state: \HomeState.entriesState,
         action: /HomeAction.entries,
-        environment: { EntriesEnvironment(
-            fileClient: $0.fileClient,
-            userDefaultsClient: $0.userDefaultsClient,
-            avCaptureDeviceClient: $0.avCaptureDeviceClient,
-            applicationClient: $0.applicationClient,
-            avAudioSessionClient: $0.avAudioSessionClient,
-            avAudioPlayerClient: $0.avAudioPlayerClient,
-            avAudioRecorderClient: $0.avAudioRecorderClient,
-            avAssetClient: $0.avAssetClient,
-            mainQueue: $0.mainQueue,
-            backgroundQueue: $0.backgroundQueue,
-            date: $0.date,
-            uuid: UUID.init
-        ) }
+        environment: {
+            EntriesEnvironment(
+                fileClient: $0.fileClient,
+                userDefaultsClient: $0.userDefaultsClient,
+                avCaptureDeviceClient: $0.avCaptureDeviceClient,
+                applicationClient: $0.applicationClient,
+                avAudioSessionClient: $0.avAudioSessionClient,
+                avAudioPlayerClient: $0.avAudioPlayerClient,
+                avAudioRecorderClient: $0.avAudioRecorderClient,
+                avAssetClient: $0.avAssetClient,
+                mainQueue: $0.mainQueue,
+                backgroundQueue: $0.backgroundQueue,
+                date: $0.date,
+                uuid: UUID.init
+            )
+        }
     ),
     
     searchReducer.pullback(
         state: \HomeState.searchState,
         action: /HomeAction.search,
-        environment: { SearchEnvironment(
-            fileClient: $0.fileClient,
-            userDefaultsClient: $0.userDefaultsClient,
-            avCaptureDeviceClient: $0.avCaptureDeviceClient,
-            applicationClient: $0.applicationClient,
-            avAudioSessionClient: $0.avAudioSessionClient,
-            avAudioPlayerClient: $0.avAudioPlayerClient,
-            avAudioRecorderClient: $0.avAudioRecorderClient,
-            avAssetClient: $0.avAssetClient,
-            mainQueue: $0.mainQueue,
-            backgroundQueue: $0.backgroundQueue,
-            date: $0.date,
-            uuid: $0.uuid)
+        environment: {
+            SearchEnvironment(
+                fileClient: $0.fileClient,
+                userDefaultsClient: $0.userDefaultsClient,
+                avCaptureDeviceClient: $0.avCaptureDeviceClient,
+                applicationClient: $0.applicationClient,
+                avAudioSessionClient: $0.avAudioSessionClient,
+                avAudioPlayerClient: $0.avAudioPlayerClient,
+                avAudioRecorderClient: $0.avAudioRecorderClient,
+                avAssetClient: $0.avAssetClient,
+                mainQueue: $0.mainQueue,
+                backgroundQueue: $0.backgroundQueue,
+                date: $0.date,
+                uuid: $0.uuid
+            )
         }
     ),
     
     settingsReducer.pullback(
         state: \HomeState.settings,
         action: /HomeAction.settings,
-        environment: { SettingsEnvironment(
-            fileClient: $0.fileClient,
-            userDefaultsClient: $0.userDefaultsClient,
-            localAuthenticationClient: $0.localAuthenticationClient,
-            applicationClient: $0.applicationClient,
-            avCaptureDeviceClient: $0.avCaptureDeviceClient,
-            feedbackGeneratorClient: $0.feedbackGeneratorClient,
-            avAudioSessionClient: $0.avAudioSessionClient,
-            storeKitClient: $0.storeKitClient,
-            pdfKitClient: $0.pdfKitClient,
-            mainQueue: $0.mainQueue,
-            backgroundQueue: $0.backgroundQueue,
-            date: $0.date,
-            setUserInterfaceStyle: $0.setUserInterfaceStyle)
+        environment: {
+            SettingsEnvironment(
+                fileClient: $0.fileClient,
+                localAuthenticationClient: $0.localAuthenticationClient,
+                applicationClient: $0.applicationClient,
+                avCaptureDeviceClient: $0.avCaptureDeviceClient,
+                feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                avAudioSessionClient: $0.avAudioSessionClient,
+                storeKitClient: $0.storeKitClient,
+                pdfKitClient: $0.pdfKitClient,
+                mainQueue: $0.mainQueue,
+                date: $0.date,
+                setUserInterfaceStyle: $0.setUserInterfaceStyle
+            )
         }
     ),
     
-    .init { state, action, environment in
-        switch action {
-        
-        case let .tabBarSelected(tab):
-            state.selectedTabBar = tab
-            return .none
-            
-        case .starting, .entries, .settings, .search:
-            return .none
+        .init { state, action, environment in
+            switch action {
+                
+            case let .tabBarSelected(tab):
+                state.selectedTabBar = tab
+                return .none
+                
+            case .starting, .entries, .settings, .search:
+                return .none
+            }
         }
-    }
 )
 
 public struct HomeView: View {
@@ -198,24 +206,24 @@ public struct HomeView: View {
     
     public var body: some View {
         WithViewStore(self.store) { viewStore in
-                TabView(
-                    selection: viewStore.binding(
-                        get: { $0.selectedTabBar },
-                        send: HomeAction.tabBarSelected)
-                ) {
-                    ForEach(viewStore.tabBars, id: \.self) { type in
-                        type.view(for: store)
-                            .tabItem {
-                                VStack {
-                                    Image(systemName: type.icon)
-                                    Text(type.rawValue)
-                                }
+            TabView(
+                selection: viewStore.binding(
+                    get: { $0.selectedTabBar },
+                    send: HomeAction.tabBarSelected)
+            ) {
+                ForEach(viewStore.tabBars, id: \.self) { type in
+                    type.view(for: store)
+                        .tabItem {
+                            VStack {
+                                Image(systemName: type.icon)
+                                Text(type.rawValue)
                             }
-                    }
+                        }
                 }
-                .accentColor(.chambray)
             }
             .accentColor(.chambray)
+        }
+        .accentColor(.chambray)
     }
 }
 
@@ -224,7 +232,7 @@ extension TabViewType {
     @ViewBuilder
     func view(for store: Store<HomeState, HomeAction>) -> some View {
         switch self {
-        
+            
         case .entries:
             EntriesView(
                 store: store.scope(

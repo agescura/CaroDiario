@@ -18,7 +18,6 @@ class AppFeatureTests: XCTestCase {
             initialState: .splash(.init()),
             reducer: appReducer,
             environment: AppEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 localAuthenticationClient: .noop,
@@ -33,7 +32,7 @@ class AppFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .fireAndForget {} }
             )
@@ -56,7 +55,6 @@ class AppFeatureTests: XCTestCase {
             initialState: .onBoarding(.init()),
             reducer: appReducer,
             environment: AppEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 localAuthenticationClient: .noop,
@@ -71,7 +69,7 @@ class AppFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .fireAndForget {} }
             )
@@ -101,13 +99,14 @@ class AppFeatureTests: XCTestCase {
                         iconType: .dark,
                         hasPasscode: false,
                         cameraStatus: .authorized,
-                        optionTimeForAskPasscode: 0
+                        optionTimeForAskPasscode: 0,
+                        faceIdEnabled: false,
+                        language: .spanish
                     )
                 )
             ),
             reducer: appReducer,
             environment: AppEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 localAuthenticationClient: .noop,
@@ -122,7 +121,7 @@ class AppFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .fireAndForget {} }
             )

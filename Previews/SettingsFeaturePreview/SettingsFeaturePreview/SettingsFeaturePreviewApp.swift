@@ -30,13 +30,13 @@ struct SettingsFeaturePreviewApp: App {
                         iconType: .dark,
                         hasPasscode: true,
                         cameraStatus: .notDetermined,
-                        optionTimeForAskPasscode: 0
+                        optionTimeForAskPasscode: 0,
+                        faceIdEnabled: false,
+                        language: .spanish
                     ),
                     reducer: settingsReducer,
                     environment: .init(
-                        coreDataClient: .noop,
                         fileClient: .noop,
-                        userDefaultsClient: .live(userDefaults:)(),
                         localAuthenticationClient: .live,
                         applicationClient: .live,
                         avCaptureDeviceClient: .live,
@@ -45,7 +45,6 @@ struct SettingsFeaturePreviewApp: App {
                         storeKitClient: .live,
                         pdfKitClient: .live,
                         mainQueue: .main,
-                        backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
                         date: Date.init,
                         setUserInterfaceStyle: { userInterfaceStyle in
                             .fireAndForget {

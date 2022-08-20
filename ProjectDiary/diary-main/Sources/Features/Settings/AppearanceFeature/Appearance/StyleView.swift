@@ -24,7 +24,7 @@ public enum StyleAction: Equatable {
 }
 
 public struct StyleEnvironment {
-    public let feedbackGeneratorClient: FeedbackGeneratorClient
+    public var feedbackGeneratorClient: FeedbackGeneratorClient
 }
 
 public let styleReducer: Reducer<

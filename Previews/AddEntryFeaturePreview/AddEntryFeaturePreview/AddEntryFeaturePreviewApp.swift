@@ -32,7 +32,6 @@ struct AddEntryFeaturePreviewApp: App {
                     initialState: .init(type: .add, entry: .init(id: .init(), date: .init(), startDay: .init(), text: .init(id: .init(), message: "", lastUpdated: .init()))),
                     reducer: addEntryReducer,
                     environment: .init(
-                        coreDataClient: .live,
                         fileClient: .live,
                         avCaptureDeviceClient: .live,
                         applicationClient: .live,

@@ -23,7 +23,7 @@ public enum ThemeAction: Equatable {
 }
 
 public struct ThemeEnvironment {
-    public let feedbackGeneratorClient: FeedbackGeneratorClient
+    public var feedbackGeneratorClient: FeedbackGeneratorClient
 }
 
 public let themeReducer: Reducer<

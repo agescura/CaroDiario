@@ -134,7 +134,7 @@ public struct UserDefaultsClient {
     }
     
     public var language: String {
-        stringForKey(languageCodeKey) ?? Bundle.main.preferredLocalizations[0]
+        stringForKey(languageCodeKey) ?? "en"
     }
     
     public func setLanguage(_ value: String) -> Effect<Never, Never> {

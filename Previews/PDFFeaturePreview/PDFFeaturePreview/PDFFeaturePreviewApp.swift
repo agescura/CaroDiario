@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SettingsFeature
+import ExportFeature
 import ComposableArchitecture
 import UIApplicationClientLive
 import PDFKitClientLive

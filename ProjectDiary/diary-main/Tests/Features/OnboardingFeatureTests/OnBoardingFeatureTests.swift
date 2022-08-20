@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import OnBoardingFeature
+@testable import OnboardingFeature
 import ComposableArchitecture
 import SwiftUI
 import UserDefaultsClient
@@ -35,8 +35,9 @@ class OnBoardingFeatureTests: XCTestCase {
                 userDefaultsClient: UserDefaultsClient(
                     boolForKey: { _ in false },
                     setBool: { value, key in
-                        if key == "hasShownOnboardingKey" && value == true {
+                        if key == "hasShownOnboardingKey" {
                             setOnBoardingShownCalled = true
+                            XCTAssertTrue(value)
                         }
                         return .fireAndForget {}
                     },
@@ -51,7 +52,7 @@ class OnBoardingFeatureTests: XCTestCase {
                 feedbackGeneratorClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .none }
             )
@@ -119,10 +120,7 @@ class OnBoardingFeatureTests: XCTestCase {
             $0.privacyOnBoardingState?.navigateStyleOnBoarding = true
         }
         
-        store.send(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.startButtonTapped))))) {
-            $0.skipAlert = nil
-            XCTAssertTrue(setOnBoardingShownCalled)
-        }
+        store.send(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.startButtonTapped)))))
     }
 }
 

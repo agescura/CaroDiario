@@ -30,10 +30,7 @@ class LayoutViewTests: XCTestCase {
                         feedbackGeneratorCalled = true
                         return .fireAndForget {}
                     }
-                ),
-                mainQueue: .immediate,
-                backgroundQueue: .immediate,
-                date: Date.init
+                )
             )
         )
         

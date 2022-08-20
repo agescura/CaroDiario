@@ -25,7 +25,7 @@ public struct SettingsState: Equatable {
     public var layoutType: LayoutType
     public var themeType: ThemeType
     public var iconAppType: IconAppType
-    public var language: Localizable = .spanish
+    public var language: Localizable
     
     public var authenticationType: LocalAuthenticationType = .none
     public var hasPasscode: Bool
@@ -168,7 +168,8 @@ public struct SettingsState: Equatable {
         hasPasscode: Bool,
         cameraStatus: AuthorizedVideoStatus,
         optionTimeForAskPasscode: Int,
-        faceIdEnabled: Bool
+        faceIdEnabled: Bool,
+        language: Localizable
     ) {
         self.showSplash = showSplash
         self.styleType = styleType
@@ -179,5 +180,6 @@ public struct SettingsState: Equatable {
         self.cameraStatus = cameraStatus
         self.optionTimeForAskPasscode = optionTimeForAskPasscode
         self.faceIdEnabled = faceIdEnabled
+        self.language = language
     }
 }

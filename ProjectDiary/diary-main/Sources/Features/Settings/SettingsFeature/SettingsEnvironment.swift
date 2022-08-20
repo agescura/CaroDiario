@@ -21,7 +21,6 @@ import PDFKitClient
 
 public struct SettingsEnvironment {
     public let fileClient: FileClient
-    public let userDefaultsClient: UserDefaultsClient
     public let localAuthenticationClient: LocalAuthenticationClient
     public let applicationClient: UIApplicationClient
     public let avCaptureDeviceClient: AVCaptureDeviceClient
@@ -30,13 +29,11 @@ public struct SettingsEnvironment {
     public let storeKitClient: StoreKitClient
     public let pdfKitClient: PDFKitClient
     public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
     
     public init(
         fileClient: FileClient,
-        userDefaultsClient: UserDefaultsClient,
         localAuthenticationClient: LocalAuthenticationClient,
         applicationClient: UIApplicationClient,
         avCaptureDeviceClient: AVCaptureDeviceClient,
@@ -45,12 +42,10 @@ public struct SettingsEnvironment {
         storeKitClient: StoreKitClient,
         pdfKitClient: PDFKitClient,
         mainQueue: AnySchedulerOf<DispatchQueue>,
-        backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
         setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
     ) {
         self.fileClient = fileClient
-        self.userDefaultsClient = userDefaultsClient
         self.localAuthenticationClient = localAuthenticationClient
         self.applicationClient = applicationClient
         self.avCaptureDeviceClient = avCaptureDeviceClient
@@ -59,7 +54,6 @@ public struct SettingsEnvironment {
         self.storeKitClient = storeKitClient
         self.pdfKitClient = pdfKitClient
         self.mainQueue = mainQueue
-        self.backgroundQueue = backgroundQueue
         self.date = date
         self.setUserInterfaceStyle = setUserInterfaceStyle
     }

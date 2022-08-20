@@ -27,12 +27,13 @@ class HomeFeatureTests: XCTestCase {
                     iconType: .dark,
                     hasPasscode: false,
                     cameraStatus: .authorized,
-                    optionTimeForAskPasscode: 0
+                    optionTimeForAskPasscode: 0,
+                    faceIdEnabled: false,
+                    language: .spanish
                 )
             ),
             reducer: homeReducer,
             environment: HomeEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 localAuthenticationClient: .noop,
@@ -47,14 +48,12 @@ class HomeFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .fireAndForget {} }
             )
         )
         
         store.send(.entries(.onAppear))
-        
-            
     }
 }

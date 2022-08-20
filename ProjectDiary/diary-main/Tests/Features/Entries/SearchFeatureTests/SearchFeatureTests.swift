@@ -17,7 +17,6 @@ class SearchFeatureTests: XCTestCase {
             initialState: SearchState(searchText: "", entries: []),
             reducer: searchReducer,
             environment: SearchEnvironment(
-                coreDataClient: .noop,
                 fileClient: .noop,
                 userDefaultsClient: .noop,
                 avCaptureDeviceClient: .noop,
@@ -28,7 +27,7 @@ class SearchFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init
             )
         )

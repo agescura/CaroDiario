@@ -72,6 +72,12 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
                         .fireAndForget(),
                     effects
                 )
+            case let .featureAction(.home(.settings(.languageAction(.updateLanguageTapped(language))))):
+                return .merge(
+                    environment.userDefaultsClient.setLanguage(language.rawValue)
+                        .fireAndForget(),
+                    effects
+                )
             default:
                 return effects
             }

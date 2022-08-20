@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import OnBoardingFeature
+@testable import OnboardingFeature
 import ComposableArchitecture
 import SwiftUI
 import EntriesFeature
@@ -27,8 +27,6 @@ class ThemeOnboardingViewTests: XCTestCase {
     ]
     
     func testThemeOnBoardingViewHappyPath() {
-        var setOnBoardingShownCalled = false
-        
         let store = TestStore(
             initialState: ThemeOnBoardingState(
                 themeType: .system,
@@ -39,8 +37,8 @@ class ThemeOnboardingViewTests: XCTestCase {
                 userDefaultsClient: UserDefaultsClient(
                     boolForKey: { _ in false },
                     setBool: { value, key in
-                        if key == "hasShownOnboardingKey" && value == true {
-                            setOnBoardingShownCalled = true
+                        if key == "hasShownOnboardingKey" {
+                            XCTAssertTrue(value)
                         }
                         return .fireAndForget {}
                     },
@@ -55,7 +53,7 @@ class ThemeOnboardingViewTests: XCTestCase {
                 feedbackGeneratorClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .none }
             )
@@ -65,9 +63,7 @@ class ThemeOnboardingViewTests: XCTestCase {
             $0.themeType = .dark
         }
         
-        store.send(.startButtonTapped) { _ in
-            XCTAssertTrue(setOnBoardingShownCalled)
-        }
+        store.send(.startButtonTapped)
     }
     
     func testThemeOnBoardingViewSkipAlertFlow() {
@@ -96,7 +92,7 @@ class ThemeOnboardingViewTests: XCTestCase {
                 feedbackGeneratorClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .none }
             )

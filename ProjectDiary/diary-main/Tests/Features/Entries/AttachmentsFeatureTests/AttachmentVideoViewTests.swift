@@ -23,7 +23,6 @@ class AttachmentVideoViewTests: XCTestCase {
             reducer: attachmentVideoReducer,
             environment: ())
         
-        store.send(.presentVideoPlayer(true)) { _ in
-        }
+        store.send(.presentVideoPlayer(true))
     }
 }

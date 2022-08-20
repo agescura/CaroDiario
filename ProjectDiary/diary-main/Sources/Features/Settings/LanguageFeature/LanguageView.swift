@@ -27,25 +27,18 @@ public enum LanguageAction: Equatable {
 }
 
 public struct LanguageEnvironment {
-    let userDefaults: UserDefaultsClient
-    
-    public init(
-        userDefaults: UserDefaultsClient
-    ) {
-        self.userDefaults = userDefaults
-    }
+    public init() {}
 }
 
 public let languageReducer = Reducer<
     LanguageState,
-        LanguageAction,
-        LanguageEnvironment
+    LanguageAction,
+    LanguageEnvironment
 > { state, action, environment in
     switch action {
     case let .updateLanguageTapped(language):
         state.language = language
-        return environment.userDefaults.setLanguage(language.rawValue)
-            .fireAndForget()
+        return .none
     }
 }
 

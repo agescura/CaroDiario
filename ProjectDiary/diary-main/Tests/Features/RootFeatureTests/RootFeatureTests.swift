@@ -54,7 +54,7 @@ class RootFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .fireAndForget {} }
             )
@@ -114,7 +114,7 @@ class RootFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .fireAndForget {} }
             )
@@ -177,7 +177,7 @@ class RootFeatureTests: XCTestCase {
                 avAssetClient: .noop,
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { _ in .fireAndForget {} }
             )

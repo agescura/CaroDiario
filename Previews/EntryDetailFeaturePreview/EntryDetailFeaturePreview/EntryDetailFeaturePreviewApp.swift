@@ -63,7 +63,6 @@ struct EntryDetailFeaturePreviewApp: App {
                         ),
                         reducer: entryDetailReducer,
                         environment: .init(
-                            coreDataClient: .live,
                             fileClient: .live,
                             avCaptureDeviceClient: .live,
                             applicationClient: .live,

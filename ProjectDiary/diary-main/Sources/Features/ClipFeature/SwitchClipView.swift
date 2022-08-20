@@ -50,8 +50,11 @@ public struct SwitchClipEnvironment {
     }
 }
 
-public let switchClipReducer: Reducer<SwitchClipState, SwitchClipAction, SwitchClipEnvironment> = .combine(
-
+public let switchClipReducer: Reducer<
+    SwitchClipState,
+    SwitchClipAction,
+    SwitchClipEnvironment
+> = .combine(
     splashReducer
         .pullback(
             state: /SwitchClipState.splash,
@@ -85,7 +88,9 @@ public let switchClipReducer: Reducer<SwitchClipState, SwitchClipAction, SwitchC
 public struct SwitchClipView: View {
     let store: Store<SwitchClipState, SwitchClipAction>
     
-    public init(store: Store<SwitchClipState, SwitchClipAction>) {
+    public init(
+        store: Store<SwitchClipState, SwitchClipAction>
+    ) {
         self.store = store
     }
     

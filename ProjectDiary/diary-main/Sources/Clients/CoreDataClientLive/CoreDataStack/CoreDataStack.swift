@@ -19,8 +19,7 @@ class CoreDataStack {
               let model = NSManagedObjectModel(contentsOf: modelURL) else {
             fatalError()
         }
-        
-        
+
         let persistentContainer = NSPersistentContainer(name: modelName, managedObjectModel: model)
         let storeURL = URL.storeURL(for: "group.albertgil.carodiario", databaseName: modelName)
         let storeDescription = NSPersistentStoreDescription(url: storeURL)
@@ -52,7 +51,6 @@ class CoreDataStack {
 }
 
 public extension URL {
-
     static func storeURL(for appGroup: String, databaseName: String) -> URL {
         guard let fileContainer = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup) else {
             fatalError("Shared file container could not be created.")

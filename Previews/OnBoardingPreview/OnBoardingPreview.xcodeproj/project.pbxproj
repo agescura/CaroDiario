@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9514FB7526CC02B50038B7B9 /* UserDefaultsClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9514FB7426CC02B50038B7B9 /* UserDefaultsClientLive */; };
+		955D58B328B1495F00C0A2E1 /* OnboardingFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 955D58B228B1495F00C0A2E1 /* OnboardingFeature */; };
 		95BEF22826B8911C00700352 /* OnBoardingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95BEF22726B8911C00700352 /* OnBoardingPreviewApp.swift */; };
 		95BEF22C26B8911D00700352 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95BEF22B26B8911D00700352 /* Assets.xcassets */; };
 		95BEF22F26B8911D00700352 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95BEF22E26B8911D00700352 /* Preview Assets.xcassets */; };
-		95BEF23826B891D200700352 /* OnBoardingFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 95BEF23726B891D200700352 /* OnBoardingFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,8 +27,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				955D58B328B1495F00C0A2E1 /* OnboardingFeature in Frameworks */,
 				9514FB7526CC02B50038B7B9 /* UserDefaultsClientLive in Frameworks */,
-				95BEF23826B891D200700352 /* OnBoardingFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,8 +95,8 @@
 			);
 			name = OnBoardingPreview;
 			packageProductDependencies = (
-				95BEF23726B891D200700352 /* OnBoardingFeature */,
 				9514FB7426CC02B50038B7B9 /* UserDefaultsClientLive */,
+				955D58B228B1495F00C0A2E1 /* OnboardingFeature */,
 			);
 			productName = OnBoardingPreview;
 			productReference = 95BEF22426B8911C00700352 /* OnBoardingPreview.app */;
@@ -346,9 +346,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = UserDefaultsClientLive;
 		};
-		95BEF23726B891D200700352 /* OnBoardingFeature */ = {
+		955D58B228B1495F00C0A2E1 /* OnboardingFeature */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = OnBoardingFeature;
+			productName = OnboardingFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
