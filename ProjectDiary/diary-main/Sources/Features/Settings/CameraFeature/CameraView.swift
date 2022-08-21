@@ -13,6 +13,7 @@ import FeedbackGeneratorClient
 import Localizables
 import Styles
 import Models
+import SwiftUIHelper
 
 public struct CameraState: Equatable {
     public var cameraStatus: AuthorizedVideoStatus
@@ -118,7 +119,7 @@ public struct CameraView: View {
                             Text(viewStore.cameraStatus.permission)
                                 .foregroundColor(.adaptiveGray)
                                 .adaptiveFont(.latoRegular, size: 12)
-                            Image(systemName: "chevron.right")
+                            Image(.chevronRight)
                                 .foregroundColor(.adaptiveGray)
                         }
                     }

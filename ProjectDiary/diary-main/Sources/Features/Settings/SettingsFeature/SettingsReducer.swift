@@ -137,13 +137,8 @@ public let settingsReducer: Reducer<
             switch action {
                 
             case .onAppear:
-                state.microphoneStatus = environment.avAudioSessionClient.recordPermission()
-                return Effect.merge(
-                    environment.localAuthenticationClient.determineType()
-                        .map(SettingsAction.biometricResult),
-                    environment.avCaptureDeviceClient.authorizationStatus()
-                        .map(SettingsAction.requestAuthorizationCameraResponse)
-                )
+                return environment.localAuthenticationClient.determineType()
+                        .map(SettingsAction.biometricResult)
                 
             case let .navigateAppearance(value):
                 state.route = value ? .appearance(
@@ -166,10 +161,6 @@ public let settingsReducer: Reducer<
                 return .none
                 
             case .languageAction:
-                return .none
-                
-            case let .requestAuthorizationCameraResponse(status):
-                state.cameraStatus = status
                 return .none
                 
             case let .toggleShowSplash(isOn):

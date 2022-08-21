@@ -5,6 +5,7 @@
 //
 
 import SwiftUI
+import SwiftUIHelper
 
 public struct IconImageView: View {
     let systemName: String
@@ -21,11 +22,24 @@ public struct IconImageView: View {
         self.size = size
     }
     
+    public init(
+        _ systemImage: SystemImage,
+        foregroundColor: Color,
+        size: CGFloat = 24
+    ) {
+        self.systemName = systemImage.rawValue
+        self.foregroundColor = foregroundColor
+        self.size = size
+    }
+    
     public var body: some View {
-        Image(systemName: systemName)
+        Image(systemName: self.systemName)
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: size, height: size)
-            .foregroundColor(foregroundColor)
+            .frame(
+                width: self.size,
+                height: self.size
+            )
+            .foregroundColor(self.foregroundColor)
     }
 }

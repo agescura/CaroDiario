@@ -19,8 +19,6 @@ import PasscodeFeature
 public enum SettingsAction: Equatable {
     case onAppear
     
-    case requestAuthorizationCameraResponse(AuthorizedVideoStatus)
-    
     case toggleShowSplash(isOn: Bool)
     case biometricResult(LocalAuthenticationType)
     

@@ -13,6 +13,7 @@ import UIApplicationClient
 import Localizables
 import Styles
 import Models
+import SwiftUIHelper
 
 public struct MicrophoneState: Equatable {
     public var microphoneStatus: AudioRecordPermission
@@ -135,7 +136,7 @@ public struct MicrophoneView: View {
                             Text("Settings.GivePermission".localized)
                                 .foregroundColor(.adaptiveGray)
                                 .adaptiveFont(.latoRegular, size: 8)
-                            Image(systemName: "chevron.right")
+                            Image(.chevronRight)
                                 .foregroundColor(.adaptiveGray)
                         }
                     }

@@ -15,7 +15,6 @@ import CameraFeature
 import ExportFeature
 import LanguageFeature
 import PasscodeFeature
-import Styles
 import AVAudioSessionClient
 
 public struct SettingsState: Equatable {

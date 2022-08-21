@@ -230,7 +230,7 @@ public struct MenuPasscodeView: View {
                         viewStore.send(.popToRoot)
                     }
                 ) {
-                    Image(systemName: "chevron.left")
+                    Image(.chevronRight)
                 }
             )
         }

@@ -15,7 +15,7 @@ struct CameraRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "camera",
+                .camera,
                 foregroundColor: .pink
             )
             Text("Settings.Camera".localized)

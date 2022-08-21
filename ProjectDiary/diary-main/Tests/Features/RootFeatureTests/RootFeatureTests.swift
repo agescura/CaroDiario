@@ -12,8 +12,9 @@ import SwiftUI
 import UserDefaultsClient
 import EntriesFeature
 
+@MainActor
 class RootFeatureTests: XCTestCase {
-    func testOpeningFirstTime() {
+    func testOpeningFirstTime() async {
         var setBoolCalled = false
         let emptyUserDefaultsClient = UserDefaultsClient(
             boolForKey: { _ in false },
@@ -56,26 +57,26 @@ class RootFeatureTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
-        store.send(.appDelegate(.didFinishLaunching))
-        store.receive(.setUserInterfaceStyle)
-        store.receive(.startFirstScreen)
-        store.receive(.featureAction(.splash(.startAnimation)))
-        store.receive(.featureAction(.splash(.verticalLineAnimation))) {
+        await store.send(.appDelegate(.didFinishLaunching))
+        await store.receive(.setUserInterfaceStyle)
+        await store.receive(.startFirstScreen)
+        await store.receive(.featureAction(.splash(.startAnimation)))
+        await store.receive(.featureAction(.splash(.verticalLineAnimation))) {
             $0.featureState = .splash(.init(animation: .verticalLine))
         }
-        store.receive(.featureAction(.splash(.areaAnimation))) {
+        await store.receive(.featureAction(.splash(.areaAnimation))) {
             $0.featureState = .splash(.init(animation: .horizontalArea))
         }
-        store.receive(.featureAction(.splash(.finishAnimation))) {
+        await store.receive(.featureAction(.splash(.finishAnimation))) {
             $0.featureState = .onBoarding(.init())
         }
     }
     
-    func testReopeningWithSplashEnabled() {
+    func testReopeningWithSplashEnabled() async {
         let emptyUserDefaultsClient = UserDefaultsClient(
             boolForKey: { key in
                 if key == "hasShownOnboardingKey" {
@@ -116,26 +117,26 @@ class RootFeatureTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
-        store.send(.appDelegate(.didFinishLaunching))
-        store.receive(.setUserInterfaceStyle)
-        store.receive(.startFirstScreen)
-        store.receive(.featureAction(.splash(.startAnimation)))
-        store.receive(.featureAction(.splash(.verticalLineAnimation))) {
+        await store.send(.appDelegate(.didFinishLaunching))
+        await store.receive(.setUserInterfaceStyle)
+        await store.receive(.startFirstScreen)
+        await store.receive(.featureAction(.splash(.startAnimation)))
+        await store.receive(.featureAction(.splash(.verticalLineAnimation))) {
             $0.featureState = .splash(.init(animation: .verticalLine))
         }
-        store.receive(.featureAction(.splash(.areaAnimation))) {
+        await store.receive(.featureAction(.splash(.areaAnimation))) {
             $0.featureState = .splash(.init(animation: .horizontalArea))
         }
-        store.receive(.featureAction(.splash(.finishAnimation))) {
+        await store.receive(.featureAction(.splash(.finishAnimation))) {
             $0.featureState = .splash(.init(animation: .finish))
         }
     }
     
-    func testReopeningAppWithSplashDisabled() {
+    func testReopeningAppWithSplashDisabled() async {
         let emptyUserDefaultsClient = UserDefaultsClient(
             boolForKey: { key in
                 if key == "hasShownOnboardingKey" {
@@ -179,12 +180,12 @@ class RootFeatureTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
-        store.send(.appDelegate(.didFinishLaunching))
-        store.receive(.setUserInterfaceStyle)
-        store.receive(.startFirstScreen)
+        await store.send(.appDelegate(.didFinishLaunching))
+        await store.receive(.setUserInterfaceStyle)
+        await store.receive(.startFirstScreen)
     }
 }

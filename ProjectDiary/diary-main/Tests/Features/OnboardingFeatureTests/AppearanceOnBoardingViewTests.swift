@@ -12,6 +12,7 @@ import SwiftUI
 import EntriesFeature
 import UserDefaultsClient
 
+@MainActor
 class AppearanceOnboardingViewTests: XCTestCase {
     
     private let id1 = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
@@ -33,7 +34,7 @@ class AppearanceOnboardingViewTests: XCTestCase {
         ], style: .rectangle, layout: .horizontal), id: id3)
     ]
     
-    func testAppearanceOnBoardingViewHappyPath() {
+    func testAppearanceOnBoardingViewHappyPath() async {
         let store = TestStore(
             initialState: LayoutOnBoardingState(styleType: .rectangle, layoutType: .horizontal, entries: []),
             reducer: layoutOnBoardingReducer,
@@ -44,16 +45,16 @@ class AppearanceOnboardingViewTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
-        store.send(.layoutChanged(.vertical)) {
+        await store.send(.layoutChanged(.vertical)) {
             $0.layoutType = .vertical
             $0.entries = self.fakeEntries
         }
         
-        store.send(.navigateThemeOnBoarding(true)) {
+        await store.send(.navigateThemeOnBoarding(true)) {
             $0.themeOnBoardingState = .init(
                 themeType: .system,
                 entries: self.fakeEntriesHorizontal
@@ -90,7 +91,7 @@ class AppearanceOnboardingViewTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         

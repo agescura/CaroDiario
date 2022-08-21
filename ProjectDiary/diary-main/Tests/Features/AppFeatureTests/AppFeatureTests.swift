@@ -34,7 +34,7 @@ class AppFeatureTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
@@ -71,7 +71,7 @@ class AppFeatureTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
@@ -89,19 +89,19 @@ class AppFeatureTests: XCTestCase {
         let store = TestStore(
             initialState: .home(
                 .init(
-                    tabBars: [.entries, .settings],
-                    entriesState: .init(entries: []),
-                    searchState: .init(searchText: "", entries: .init()),
-                    settings: .init(
+                    tabBars: [.entries, .search, .settings],
+                    sharedState: .init(
+                        showSplash: false,
                         styleType: .rectangle,
                         layoutType: .horizontal,
                         themeType: .dark,
-                        iconType: .dark,
+                        iconAppType: .dark,
+                        language: .spanish,
                         hasPasscode: false,
-                        cameraStatus: .authorized,
+                        cameraStatus: .notDetermined,
+                        microphoneStatus: .notDetermined,
                         optionTimeForAskPasscode: 0,
-                        faceIdEnabled: false,
-                        language: .spanish
+                        faceIdEnabled: false
                     )
                 )
             ),
@@ -123,7 +123,7 @@ class AppFeatureTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         

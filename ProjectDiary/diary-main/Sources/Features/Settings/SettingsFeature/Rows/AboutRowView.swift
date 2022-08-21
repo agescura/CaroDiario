@@ -13,7 +13,7 @@ struct AboutRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "message",
+                .message,
                 foregroundColor: .purple
             )
             Text("Settings.About".localized)

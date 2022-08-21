@@ -121,7 +121,7 @@ public struct ExportView: View {
                 Section() {
                     HStack(spacing: 16) {
                         IconImageView(
-                            systemName: "doc.text.magnifyingglass",
+                            .docTextMagnifyingglass,
                             foregroundColor: .berryRed
                         )
                         
@@ -129,7 +129,7 @@ public struct ExportView: View {
                             .foregroundColor(.chambray)
                             .adaptiveFont(.latoRegular, size: 12)
                         Spacer()
-                        Image(systemName: "info.circle")
+                        Image(.infoCircle)
                             .foregroundColor(.blue)
                     }
                     .contentShape(Rectangle())
@@ -139,7 +139,7 @@ public struct ExportView: View {
                 Section() {
                     HStack(spacing: 16) {
                         IconImageView(
-                            systemName: "square.and.arrow.up",
+                            .squareAndArrowUp,
                             foregroundColor: .green
                         )
                         
@@ -147,7 +147,7 @@ public struct ExportView: View {
                             .foregroundColor(.chambray)
                             .adaptiveFont(.latoRegular, size: 12)
                         Spacer()
-                        Image(systemName: "info.circle")
+                        Image(.infoCircle)
                             .foregroundColor(.blue)
                     }
                     .contentShape(Rectangle())

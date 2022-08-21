@@ -15,7 +15,7 @@ struct StyleRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "app",
+                .app,
                 foregroundColor: .orange
             )
             Text("Settings.Style".localized)

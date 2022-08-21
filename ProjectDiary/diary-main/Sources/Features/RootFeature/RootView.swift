@@ -248,7 +248,7 @@ public let rootReducer: Reducer<
                         language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish,
                         hasPasscode: (environment.userDefaultsClient.passcodeCode ?? "").count > 0,
                         cameraStatus: status,
-                        microphoneStatus: .notDetermined,
+                        microphoneStatus: environment.avAudioSessionClient.recordPermission(),
                         optionTimeForAskPasscode: environment.userDefaultsClient.optionTimeForAskPasscode,
                         faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate
                     )

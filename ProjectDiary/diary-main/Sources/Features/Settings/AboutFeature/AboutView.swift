@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Views
 import UIApplicationClient
 import Localizables
+import SwiftUIHelper
 
 enum MailType: String {
     case mail = "mailto"
@@ -135,7 +136,7 @@ public struct AboutView: View {
                                 .foregroundColor(.chambray)
                                 .adaptiveFont(.latoRegular, size: 12)
                             Spacer()
-                            Image(systemName: "chevron.right")
+                            Image(.chevronRight)
                                 .foregroundColor(.adaptiveGray)
                         }
                         .contentShape(Rectangle())

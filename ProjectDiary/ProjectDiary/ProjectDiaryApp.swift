@@ -16,11 +16,11 @@ struct ProjectDiaryApp: App {
     
     var body: some Scene {
         WindowGroup {            
-            RootView(store: appDelegate.store)
-                .onOpenURL(perform: appDelegate.process(url:))
+            RootView(store: self.appDelegate.store)
+                .onOpenURL(perform: self.appDelegate.process(url:))
                 .onChange(
                     of: self.scenePhase,
-                    perform: appDelegate.update(state:)
+                    perform: self.appDelegate.update(state:)
                 )
         }
     }

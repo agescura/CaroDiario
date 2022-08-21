@@ -10,6 +10,7 @@ import SwiftUI
 import Styles
 import FeedbackGeneratorClient
 import UIApplicationClient
+import Models
 
 public struct IconAppState: Equatable {
     public var iconAppType: IconAppType

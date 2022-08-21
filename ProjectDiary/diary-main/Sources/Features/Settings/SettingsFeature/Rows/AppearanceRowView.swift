@@ -13,7 +13,7 @@ struct AppearanceRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "rectangle.on.rectangle",
+                .rectangleOnRectangle,
                 foregroundColor: .orange
             )
             Text("Settings.Appearance".localized)

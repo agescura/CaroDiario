@@ -10,6 +10,7 @@ import SwiftUI
 import UIApplicationClient
 import Views
 import Localizables
+import SwiftUIHelper
 
 public enum AgreementType {
     case composableArchitecture
@@ -85,7 +86,7 @@ public struct AgreementsView: View {
                 Section {
                     HStack(spacing: 16) {
                         IconImageView(
-                            systemName: "square.and.arrow.up",
+                            .squareAndArrowUp,
                             foregroundColor: .green
                         )
                         Text(AgreementType.composableArchitecture.title)
@@ -94,7 +95,7 @@ public struct AgreementsView: View {
                             .minimumScaleFactor(0.01)
                             .lineLimit(1)
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        Image(.chevronRight)
                             .foregroundColor(.adaptiveGray)
                     }
                     .contentShape(Rectangle())
@@ -105,7 +106,7 @@ public struct AgreementsView: View {
                 Section {
                     HStack(spacing: 16) {
                         IconImageView(
-                            systemName: "exclamationmark.circle",
+                            .exclamationMarkCircle,
                             foregroundColor: .yellow
                         )
                         Text(AgreementType.pointfree.title)
@@ -114,7 +115,7 @@ public struct AgreementsView: View {
                             .minimumScaleFactor(0.01)
                             .lineLimit(1)
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        Image(.chevronRight)
                             .foregroundColor(.adaptiveGray)
                     }
                     .contentShape(Rectangle())
@@ -123,14 +124,14 @@ public struct AgreementsView: View {
                     }
                     HStack(spacing: 16) {
                         IconImageView(
-                            systemName: "exclamationmark.circle",
+                            .exclamationMarkCircle,
                             foregroundColor: .yellow
                         )
                         Text(AgreementType.raywenderlich.title)
                             .foregroundColor(.chambray)
                             .adaptiveFont(.latoRegular, size: 12)
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        Image(.chevronRight)
                             .foregroundColor(.adaptiveGray)
                     }
                     .contentShape(Rectangle())

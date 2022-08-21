@@ -60,7 +60,7 @@ public struct PDFPreviewView: View {
                     Button(action: {
                         viewStore.send(.dismiss)
                     }, label: {
-                        Image(systemName: "xmark")
+                        Image(.xmark)
                             .resizable()
                             .frame(width: 18, height: 18)
                             .foregroundColor(.chambray)

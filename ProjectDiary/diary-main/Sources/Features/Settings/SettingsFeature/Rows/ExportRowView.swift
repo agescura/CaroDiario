@@ -13,7 +13,7 @@ struct ExportRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "doc.richtext",
+                .docRichtext,
                 foregroundColor: .adaptiveBlack)
             Text("Settings.ExportPDF".localized)
                 .foregroundColor(.chambray)

@@ -14,6 +14,7 @@ import Styles
 import EntriesFeature
 import Views
 import SwiftUIHelper
+import Models
 
 public struct AppearanceState: Equatable {
     public var styleType: StyleType

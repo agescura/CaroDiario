@@ -11,6 +11,7 @@ import Styles
 import UserDefaultsClient
 import EntriesFeature
 import FeedbackGeneratorClient
+import Models
 
 public struct ThemeState: Equatable {
     public var themeType: ThemeType = .system

@@ -12,6 +12,7 @@ import SwiftUI
 import EntriesFeature
 import UserDefaultsClient
 
+@MainActor
 class ThemeOnboardingViewTests: XCTestCase {
     
     private let id1 = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
@@ -26,7 +27,7 @@ class ThemeOnboardingViewTests: XCTestCase {
         ], style: .rectangle, layout: .horizontal), id: id3)
     ]
     
-    func testThemeOnBoardingViewHappyPath() {
+    func testThemeOnBoardingViewHappyPath() async {
         let store = TestStore(
             initialState: ThemeOnBoardingState(
                 themeType: .system,
@@ -55,15 +56,15 @@ class ThemeOnboardingViewTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
-        store.send(.themeChanged(.dark)) {
+        await store.send(.themeChanged(.dark)) {
             $0.themeType = .dark
         }
         
-        store.send(.startButtonTapped)
+        await store.send(.startButtonTapped)
     }
     
     func testThemeOnBoardingViewSkipAlertFlow() {
@@ -94,7 +95,7 @@ class ThemeOnboardingViewTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         

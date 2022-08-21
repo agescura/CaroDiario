@@ -12,6 +12,7 @@ import Views
 import Styles
 import UserDefaultsClient
 import FeedbackGeneratorClient
+import Models
 
 public struct LayoutOnBoardingState: Equatable {
     public var styleType: StyleType

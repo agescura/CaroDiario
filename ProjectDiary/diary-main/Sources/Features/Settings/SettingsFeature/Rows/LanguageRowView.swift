@@ -16,7 +16,7 @@ struct LanguageRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "paperclip.circle",
+                .paperclipCircle,
                 foregroundColor: .brown
             )
             Text(self.title)

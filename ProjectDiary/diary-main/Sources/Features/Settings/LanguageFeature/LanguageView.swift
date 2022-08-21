@@ -11,6 +11,8 @@ import Models
 import UserDefaultsClient
 import Models
 import Localizables
+import SwiftUIHelper
+import Styles
 
 public struct LanguageState: Equatable {
     public var language: Localizable
@@ -61,7 +63,7 @@ public struct LanguageView: View {
                             .adaptiveFont(.latoRegular, size: 12)
                         Spacer()
                         if viewStore.language == language {
-                            Image(systemName: "checkmark")
+                            Image(.checkmark)
                                 .foregroundColor(.adaptiveGray)
                         }
                     }

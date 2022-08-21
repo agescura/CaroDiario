@@ -140,7 +140,6 @@ public let audioRecordReducer = Reducer<
     
     switch action {
     case .onAppear:
-        state.audioRecordPermission = environment.avAudioSessionClient.recordPermission()
         return environment.avAudioRecorderClient.create(id: RecorderManagerId())
             .map(AudioRecordAction.recorderPlayer)
         

@@ -10,6 +10,7 @@ import SwiftUI
 import Styles
 import EntriesFeature
 import FeedbackGeneratorClient
+import Models
 
 public struct LayoutState: Equatable {
     public var layoutType: LayoutType

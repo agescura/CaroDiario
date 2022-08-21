@@ -11,8 +11,8 @@ import ComposableArchitecture
 import AVAudioSessionClient
 import Combine
 
+@MainActor
 class AudioRecordFeatureTests: XCTestCase {
-    
     func testCreateAndDestroyAudioDependencies() {
         var audioRecorderCreateCalled = false
         
@@ -39,17 +39,15 @@ class AudioRecordFeatureTests: XCTestCase {
                     stop: { _ in .fireAndForget {} }
                 ),
                 mainQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init
             )
         )
         
-        store.send(.onAppear) { _ in
-            XCTAssertTrue(audioRecorderCreateCalled)
-        }
+        store.send(.onAppear)
     }
     
-    func testRequestPermissionsResponseDenied() {
+    func testRequestPermissionsResponseDenied() async {
         var openSettingsCalled = false
         
         let store = TestStore(
@@ -59,7 +57,7 @@ class AudioRecordFeatureTests: XCTestCase {
                 fileClient: .noop,
                 applicationClient: .init(
                     alternateIconName: nil,
-                    setAlternateIconName: { _ in .fireAndForget {} },
+                    setAlternateIconName: { _ in () },
                     supportsAlternateIcons: { false },
                     openSettings: {
                         openSettingsCalled = true
@@ -67,32 +65,30 @@ class AudioRecordFeatureTests: XCTestCase {
                     },
                     open: { _,_  in .fireAndForget {} },
                     canOpen: { _ in false },
-                    share: { _ in .fireAndForget {} },
+                    share: { _, _ in .fireAndForget {} },
                     showTabView: { _ in .fireAndForget {} }
                 ),
                 avAudioSessionClient: .init(
-                    recordPermission: .notDetermined,
-                    requestRecordPermission: { Effect(value: false) }
+                    recordPermission: { .notDetermined },
+                    requestRecordPermission: { false }
                 ),
                 avAudioPlayerClient: .noop,
                 avAudioRecorderClient: .noop,
                 mainQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init
             )
         )
 
-        store.send(.requestMicrophonePermissionButtonTapped)
-        store.receive(.requestMicrophonePermissionResponse(false)) {
+        await store.send(.requestMicrophonePermissionButtonTapped)
+        await store.receive(.requestMicrophonePermissionResponse(false)) {
             $0.audioRecordPermission = .denied
         }
 
-        store.send(.goToSettings) { _ in
-            XCTAssertTrue(openSettingsCalled)
-        }
+        await store.send(.goToSettings)
     }
 
-    func testRequestPermissionsResponseAuthorized() {
+    func testRequestPermissionsResponseAuthorized() async {
         let store = TestStore(
             initialState: AudioRecordState(),
             reducer: audioRecordReducer,
@@ -100,24 +96,24 @@ class AudioRecordFeatureTests: XCTestCase {
                 fileClient: .noop,
                 applicationClient: .noop,
                 avAudioSessionClient: .init(
-                    recordPermission: .notDetermined,
-                    requestRecordPermission: { Effect(value: true) }
+                    recordPermission: { .notDetermined },
+                    requestRecordPermission: { true }
                 ),
                 avAudioPlayerClient: .noop,
                 avAudioRecorderClient: .noop,
                 mainQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init
             )
         )
 
-        store.send(.requestMicrophonePermissionButtonTapped)
-        store.receive(.requestMicrophonePermissionResponse(true)) {
+        await store.send(.requestMicrophonePermissionButtonTapped)
+        await store.receive(.requestMicrophonePermissionResponse(true)) {
             $0.audioRecordPermission = .authorized
         }
     }
     
-    func testRecordAudioAndPlay() {
+    func testRecordAudioAndPlay() async {
         var audioPlayerIsPlaying = false
         
         let store = TestStore(
@@ -127,8 +123,8 @@ class AudioRecordFeatureTests: XCTestCase {
                 fileClient: .noop,
                 applicationClient: .noop,
                 avAudioSessionClient: .init(
-                    recordPermission: .notDetermined,
-                    requestRecordPermission: { Effect(value: true) }
+                    recordPermission: { .notDetermined },
+                    requestRecordPermission: { false }
                 ),
                 avAudioPlayerClient: .init(
                     create: { _, _ in .fireAndForget {}},
@@ -159,146 +155,36 @@ class AudioRecordFeatureTests: XCTestCase {
                     stop: { _ in .fireAndForget {}}
                 ),
                 mainQueue: .immediate,
-                mainRunLoop: .immediate,
+                date: Date.init,
                 uuid: UUID.init
             )
         )
         
-        store.send(.onAppear)
-        store.send(.recordButtonTapped)
-        store.receive(.record) {
+        await store.send(.onAppear)
+        await store.send(.recordButtonTapped)
+        await store.receive(.record) {
             $0.isRecording = true
             $0.audioPath = URL(string: "www.apple.com.caf")
         }
-        store.receive(.startRecorderTimer)
+        await store.receive(.startRecorderTimer)
+        await store.receive(.addSecondRecorderTimer) {
+            $0.audioRecordDuration = 1.0
+        }
         
-        store.send(.recordButtonTapped)
-        store.receive(.stopRecording) {
+        await store.send(.recordButtonTapped)
+        await store.receive(.stopRecording) {
             $0.isRecording = false
             $0.hasAudioRecorded = true
         }
         
-        store.send(.playButtonTapped)
-        store.receive(.isPlayingResponse(false)) {
+        await store.send(.playButtonTapped)
+        await store.receive(.isPlayingResponse(false)) {
             $0.isPlaying = true
         }
         
-        store.send(.playButtonTapped)
-        store.receive(.isPlayingResponse(true)) {
+        await store.send(.playButtonTapped)
+        await store.receive(.isPlayingResponse(true)) {
             $0.isPlaying = false
         }
     }
-//
-//    func testRecordAudioAndPlay() {
-//        var audioRecorderRecordCalled = false
-//        var audioRecorderStopCalled = false
-//        var audioPlayerPlayCalled = false
-//        var audioPlayerStopCalled = false
-//        let mainQueue: AnySchedulerOf<DispatchQueue> = .immediate
-//
-//        let recorderStopSubject = PassthroughSubject<Void, Never>()
-//        let playerStopSubject = PassthroughSubject<Void, Never>()
-//        var bag1 = Set<AnyCancellable>()
-//        var bag2 = Set<AnyCancellable>()
-//
-//        let store = TestStore(
-//            initialState: AudioRecordState(audioRecordPermission: .authorized),
-//            reducer: audioRecordReducer,
-//            environment: AudioRecordEnvironment(
-//                applicationClient: .noop,
-//                avAudioSessionClient: .init(
-//                    recordPermission: .authorized,
-//                    requestRecordPermission: { .fireAndForget {} }
-//                ),
-//                avAudioPlayerClient: .init(
-//                    create: { _ in
-//                        .future { callback in
-//                            playerStopSubject
-//                                .receive(on: mainQueue)
-//                                .sink(receiveValue: {
-//                                    callback(.success(.didFinishPlaying(successfully: true)))
-//                            })
-//                            .store(in: &bag1)
-//                        }
-//
-//                    },
-//                    destroy: { _ in
-//                        playerStopSubject.send(completion: .finished)
-//                        return .fireAndForget {}
-//                    },
-//                    play: { _, _ in
-//                        audioPlayerPlayCalled = true
-//                        return .fireAndForget {}
-//                    },
-//                    stop: { _ in
-//                        audioPlayerStopCalled = true
-//                        playerStopSubject.send()
-//                        return .fireAndForget {}
-//                    }
-//                ),
-//                avAudioRecorderClient: .init(
-//                    create: { _ in
-//                        .future { callback in
-//                            recorderStopSubject
-//                                .receive(on: mainQueue)
-//                                .sink(receiveValue: {
-//                                    callback(.success(.didFinishRecording(successfully: true)))
-//                            })
-//                            .store(in: &bag2)
-//                        }
-//
-//                    },
-//                    destroy: { _ in
-//                        recorderStopSubject.send(completion: .finished)
-//                        return .fireAndForget {}
-//                    },
-//                    record: { _, _ in
-//                        audioRecorderRecordCalled = true
-//                        return .fireAndForget {}
-//                    },
-//                    stop: { _ in
-//                        audioRecorderStopCalled = true
-//                        recorderStopSubject.send()
-//                        return .fireAndForget {}
-//                    }
-//                ),
-//                mainQueue: mainQueue,
-//                mainRunLoop: .immediate
-//            )
-//        )
-//
-//        store.send(.onAppear)
-//
-//        store.send(.recordButtonTapped) {
-//            $0.recordButtonState = .recording
-//        }
-//        store.receive(.record) { _ in
-//            XCTAssertTrue(audioRecorderRecordCalled)
-//        }
-//        store.receive(.startTimer)
-//        store.send(.stopRecording) {
-//            XCTAssertTrue(audioRecorderStopCalled)
-//            $0.playButtonState = .stop
-//            $0.recordButtonState = .recorded
-//        }
-//        store.receive(.recorderPlayer(.didFinishRecording(successfully: true))) {
-//            $0.playButtonState = .stop
-//        }
-//        store.receive(.resetTimer)
-//        store.send(.playButtonTapped)
-//        store.receive(.play) {
-//            XCTAssertTrue(audioPlayerPlayCalled)
-//            $0.playButtonState = .play
-//        }
-//
-//        store.receive(.startTimer)
-//        store.send(.stopPlaying) {
-//            $0.playButtonState = .stop
-//            XCTAssertTrue(audioPlayerStopCalled)
-//        }
-//        store.receive(.audioPlayer(.didFinishPlaying(successfully: true)))
-//        store.receive(.resetTimer)
-//
-//        store.send(.onDissapear)
-//    }
 }
