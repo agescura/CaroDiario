@@ -37,8 +37,8 @@ public enum AttachmentAddVideoAction: Equatable {
 
 public let attachmentAddVideoReducer = Reducer<
     AttachmentAddVideoState,
-        AttachmentAddVideoAction,
-        Void
+    AttachmentAddVideoAction,
+    Void
 > { state, action, _ in
     switch action {
     case let .presentVideoPlayer(value):

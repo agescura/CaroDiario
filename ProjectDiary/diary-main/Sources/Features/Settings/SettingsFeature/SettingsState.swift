@@ -36,7 +36,7 @@ public struct SettingsState: Equatable {
     public var faceIdEnabled: Bool
     
     public var route: Route? = nil {
-        didSet {
+        didSet {    
             if case let .appearance(state) = self.route {
                 self.styleType = state.styleType
                 self.layoutType = state.layoutType
@@ -175,7 +175,8 @@ public struct SettingsState: Equatable {
         optionTimeForAskPasscode: Int,
         faceIdEnabled: Bool,
         language: Localizable,
-        microphoneStatus: AudioRecordPermission
+        microphoneStatus: AudioRecordPermission,
+        route: Route? = nil
     ) {
         self.showSplash = showSplash
         self.styleType = styleType
@@ -188,5 +189,6 @@ public struct SettingsState: Equatable {
         self.faceIdEnabled = faceIdEnabled
         self.language = language
         self.microphoneStatus = microphoneStatus
+        self.route = route
     }
 }

@@ -25,26 +25,133 @@ import AVAudioRecorderClient
 import StoreKitClient
 import PDFKitClient
 import AVAssetClient
+import Styles
+import EntryDetailFeature
+
+public struct SharedState: Equatable {
+    public var isLoading: Bool = true
+    public var entries: IdentifiedArrayOf<DayEntriesRowState> = []
+    public var addEntryState: AddEntryState?
+    public var presentAddEntry = false
+    public var entryDetailState: EntryDetailState?
+    public var navigateEntryDetail = false
+    public var entryDetailSelected: Entry?
+    
+    public var searchState: SearchState = SearchState()
+    
+    public var showSplash: Bool
+    public var styleType: StyleType
+    public var layoutType: LayoutType
+    public var themeType: ThemeType
+    public var iconAppType: IconAppType
+    public var language: Localizable
+    public var authenticationType: LocalAuthenticationType = .none
+    public var hasPasscode: Bool
+    public var cameraStatus: AuthorizedVideoStatus
+    public var microphoneStatus: AudioRecordPermission
+    public var optionTimeForAskPasscode: Int
+    public var faceIdEnabled: Bool
+    public var route: SettingsState.Route? = nil
+    
+    public init(
+        showSplash: Bool,
+        styleType: StyleType,
+        layoutType: LayoutType,
+        themeType: ThemeType,
+        iconAppType: IconAppType,
+        language: Localizable,
+        hasPasscode: Bool,
+        cameraStatus: AuthorizedVideoStatus,
+        microphoneStatus: AudioRecordPermission,
+        optionTimeForAskPasscode: Int,
+        faceIdEnabled: Bool
+    ) {
+        self.showSplash = showSplash
+        self.styleType = styleType
+        self.layoutType = layoutType
+        self.themeType = themeType
+        self.iconAppType = iconAppType
+        self.language = language
+        self.hasPasscode = hasPasscode
+        self.cameraStatus = cameraStatus
+        self.microphoneStatus = microphoneStatus
+        self.optionTimeForAskPasscode = optionTimeForAskPasscode
+        self.faceIdEnabled = faceIdEnabled
+    }
+}
 
 public struct HomeState: Equatable {
     public var tabBars: [TabViewType]
     public var selectedTabBar: TabViewType
-    public var entriesState: EntriesState
-    public var searchState: SearchState
-    public var settings: SettingsState
+    public var sharedState: SharedState
+    
+    public var entriesState: EntriesState {
+        get {
+            .init(
+                isLoading: self.sharedState.isLoading,
+                entries: self.sharedState.entries,
+                addEntryState: self.sharedState.addEntryState,
+                presentAddEntry: self.sharedState.presentAddEntry,
+                entryDetailState: self.sharedState.entryDetailState,
+                navigateEntryDetail: self.sharedState.navigateEntryDetail,
+                entryDetailSelected: self.sharedState.entryDetailSelected
+            )
+        }
+        set {
+            self.sharedState.isLoading = newValue.isLoading
+            self.sharedState.entries = newValue.entries
+            self.sharedState.addEntryState = newValue.addEntryState
+            self.sharedState.presentAddEntry = newValue.presentAddEntry
+            self.sharedState.entryDetailState = newValue.entryDetailState
+            self.sharedState.navigateEntryDetail = newValue.navigateEntryDetail
+            self.sharedState.entryDetailSelected = newValue.entryDetailSelected
+        }
+    }
+    public var searchState: SearchState {
+        get { self.sharedState.searchState }
+        set { self.sharedState.searchState = newValue }
+    }
+    public var settingsState: SettingsState {
+        get {
+            .init(
+                showSplash: self.sharedState.showSplash,
+                styleType: self.sharedState.styleType,
+                layoutType: self.sharedState.layoutType,
+                themeType: self.sharedState.themeType,
+                iconType: self.sharedState.iconAppType,
+                hasPasscode: self.sharedState.hasPasscode,
+                cameraStatus: self.sharedState.cameraStatus,
+                optionTimeForAskPasscode: self.sharedState.optionTimeForAskPasscode,
+                faceIdEnabled: self.sharedState.faceIdEnabled,
+                language: self.sharedState.language,
+                microphoneStatus: self.sharedState.microphoneStatus,
+                route: self.sharedState.route
+            )
+        }
+        set {
+            self.sharedState.showSplash = newValue.showSplash
+            self.sharedState.styleType = newValue.styleType
+            self.sharedState.layoutType = newValue.layoutType
+            self.sharedState.themeType = newValue.themeType
+            self.sharedState.iconAppType = newValue.iconAppType
+            self.sharedState.hasPasscode = newValue.hasPasscode
+            self.sharedState.cameraStatus = newValue.cameraStatus
+            self.sharedState.optionTimeForAskPasscode = newValue.optionTimeForAskPasscode
+            self.sharedState.faceIdEnabled = newValue.faceIdEnabled
+            self.sharedState.language = newValue.language
+            self.sharedState.microphoneStatus = newValue.microphoneStatus
+            self.sharedState.route = newValue.route
+        }
+    }
     
     public init(
         tabBars: [TabViewType],
-        entriesState: EntriesState,
-        searchState: SearchState,
-        settings: SettingsState,
-        selectedTabBar: TabViewType = .entries
+        selectedTabBar: TabViewType = .entries,
+        sharedState: SharedState
     ) {
         self.tabBars = tabBars
-        self.entriesState = entriesState
-        self.searchState = searchState
-        self.settings = settings
         self.selectedTabBar = selectedTabBar
+        self.sharedState = sharedState
     }
 }
 
@@ -119,7 +226,6 @@ public let homeReducer: Reducer<
     HomeAction,
     HomeEnvironment
 > = .combine(
-    
     entriesReducer.pullback(
         state: \HomeState.entriesState,
         action: /HomeAction.entries,
@@ -140,7 +246,6 @@ public let homeReducer: Reducer<
             )
         }
     ),
-    
     searchReducer.pullback(
         state: \HomeState.searchState,
         action: /HomeAction.search,
@@ -161,9 +266,8 @@ public let homeReducer: Reducer<
             )
         }
     ),
-    
     settingsReducer.pullback(
-        state: \HomeState.settings,
+        state: \HomeState.settingsState,
         action: /HomeAction.settings,
         environment: {
             SettingsEnvironment(
@@ -252,7 +356,7 @@ extension TabViewType {
         case .settings:
             SettingsView(
                 store: store.scope(
-                    state: \.settings,
+                    state: \.settingsState,
                     action: HomeAction.settings
                 )
             )

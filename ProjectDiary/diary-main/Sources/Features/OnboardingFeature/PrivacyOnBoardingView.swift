@@ -89,7 +89,6 @@ let privacyOnBoardingReducer: Reducer<
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
         ),
-    
     .init { state, action, environment in
         switch action {
         

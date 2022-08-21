@@ -32,10 +32,12 @@ public enum DayEntriesAction: Equatable {
     case navigateDetail(Entry)
 }
 
-public let dayEntriesReducer = Reducer<DayEntriesState, DayEntriesAction, Void> { state, action, _ in
-    
+public let dayEntriesReducer = Reducer<
+    DayEntriesState,
+    DayEntriesAction,
+    Void
+> { state, action, _ in
     switch action {
-        
     case .toggleLongDate:
         state.showLongDate = !state.showLongDate
         return .none

@@ -73,7 +73,6 @@ public let layoutReducer: Reducer<
                 )
             }
         ),
-    
         .init { state, action, environment in
             switch action {
                 

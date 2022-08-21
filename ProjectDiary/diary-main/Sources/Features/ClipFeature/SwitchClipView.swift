@@ -64,7 +64,6 @@ public let switchClipReducer: Reducer<
                 mainQueue: $0.mainQueue)
             }
         ),
-    
     welcomeOnBoardingReducer
         .pullback(
             state: /SwitchClipState.onBoarding,

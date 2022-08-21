@@ -73,8 +73,12 @@ public let microphoneReducer = Reducer<
         switch state.microphoneStatus {
         case .notDetermined:
             return .task { @MainActor in
-                await  environment.feedbackGeneratorClient.selectionChanged()
-                return .requestAccessResponse(try await environment.avAudioSessionClient.requestRecordPermission())
+                await environment.feedbackGeneratorClient.selectionChanged()
+                do {
+                    return .requestAccessResponse(try await environment.avAudioSessionClient.requestRecordPermission())
+                } catch {
+                    return .requestAccessResponse(false)
+                }
             }
             
         default:
@@ -108,7 +112,7 @@ public struct MicrophoneView: View {
                 Section(
                     footer:
                         Group {
-                            if viewStore.microphoneStatus == .notDetermined || viewStore.microphoneStatus == .authorized || viewStore.microphoneStatus == .denied {
+                            if viewStore.microphoneStatus != .denied {
                                 Text(viewStore.microphoneStatus.description)
                             } else {
                                 Text(viewStore.microphoneStatus.description)

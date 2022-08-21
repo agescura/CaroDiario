@@ -30,13 +30,14 @@ let iconAppReducer = Reducer<
     IconAppEnvironment
 > { state, action, environment in
     switch action {
-    
     case let .iconAppChanged(newIconApp):
         state.iconAppType = newIconApp
         return .fireAndForget {
-            try await environment.applicationClient.setAlternateIconName(
-                newIconApp == .dark ? "AppIcon-2" : nil
-            )
+            do {
+                try await environment.applicationClient.setAlternateIconName(
+                    newIconApp == .dark ? "AppIcon-2" : nil
+                )
+            } catch {}
             await environment.feedbackGeneratorClient.selectionChanged()
         }
     }

@@ -67,8 +67,11 @@ public struct ActivatePasscodeEnvironment {
     }
 }
 
-public let activatePasscodeReducer: Reducer<ActivatePasscodeState, ActivatePasscodeAction, ActivatePasscodeEnvironment> = .combine(
-    
+public let activatePasscodeReducer: Reducer<
+    ActivatePasscodeState,
+    ActivatePasscodeAction,
+    ActivatePasscodeEnvironment
+> = .combine(
     insertPasscodeReducer
         .optional()
         .pullback(

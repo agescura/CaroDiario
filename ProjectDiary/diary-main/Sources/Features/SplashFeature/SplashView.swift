@@ -75,10 +75,12 @@ public struct SplashEnvironment {
     }
 }
 
-public let splashReducer = Reducer<SplashState, SplashAction, SplashEnvironment> { state, action, environment in
-    
+public let splashReducer = Reducer<
+    SplashState,
+    SplashAction,
+    SplashEnvironment
+> { state, action, environment in
     switch action {
-    
     case .startAnimation:
         return Effect(value: SplashAction.verticalLineAnimation)
             .delay(for: 1, scheduler: environment.mainQueue)

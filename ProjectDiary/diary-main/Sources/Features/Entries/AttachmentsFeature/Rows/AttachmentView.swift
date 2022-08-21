@@ -81,8 +81,11 @@ public enum AttachmentAction: Equatable {
     case audio(AttachmentAudioAction)
 }
 
-public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, Void> = .combine(
-    
+public let attachmentReducer: Reducer<
+    AttachmentState,
+    AttachmentAction,
+    Void
+> = .combine(
     attachmentImageReducer
         .pullback(
             state: /AttachmentState.image,
@@ -90,7 +93,6 @@ public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, Void> =
             environment: { _ in ()
             }
         ),
-    
     attachmentVideoReducer
         .pullback(
             state: /AttachmentState.video,
@@ -98,7 +100,6 @@ public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, Void> =
             environment: { _ in ()
             }
         ),
-    
     attachmentAudioReducer
         .pullback(
             state: /AttachmentState.audio,
@@ -106,7 +107,6 @@ public let attachmentReducer: Reducer<AttachmentState, AttachmentAction, Void> =
             environment: { _ in ()
             }
         ),
-    
     .init { state, action, _ in
         return .none
     }

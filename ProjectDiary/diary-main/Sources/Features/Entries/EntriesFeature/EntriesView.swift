@@ -33,10 +33,20 @@ public struct EntriesState: Equatable {
     
     public init(
         isLoading: Bool = true,
-        entries: IdentifiedArrayOf<DayEntriesRowState> = []
+        entries: IdentifiedArrayOf<DayEntriesRowState> = [],
+        addEntryState: AddEntryState? = nil,
+        presentAddEntry: Bool = false,
+        entryDetailState: EntryDetailState? = nil,
+        navigateEntryDetail: Bool = false,
+        entryDetailSelected: Entry? = nil
     ) {
         self.isLoading = isLoading
         self.entries = entries
+        self.addEntryState = addEntryState
+        self.presentAddEntry = presentAddEntry
+        self.entryDetailState = entryDetailState
+        self.navigateEntryDetail = navigateEntryDetail
+        self.entryDetailSelected = entryDetailSelected
     }
 }
 

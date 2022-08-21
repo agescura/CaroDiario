@@ -128,15 +128,17 @@ public struct AudioRecordEnvironment {
     }
 }
 
-public let audioRecordReducer = Reducer<AudioRecordState, AudioRecordAction, AudioRecordEnvironment> { state, action, environment in
-    
+public let audioRecordReducer = Reducer<
+    AudioRecordState,
+    AudioRecordAction,
+    AudioRecordEnvironment
+> { state, action, environment in
     struct RecorderManagerId: Hashable {}
     struct RecorderTimerId: Hashable {}
     struct PlayerManagerId: Hashable {}
     struct PlayerTimerId: Hashable {}
     
     switch action {
-    
     case .onAppear:
         state.audioRecordPermission = environment.avAudioSessionClient.recordPermission()
         return environment.avAudioRecorderClient.create(id: RecorderManagerId())
@@ -144,7 +146,11 @@ public let audioRecordReducer = Reducer<AudioRecordState, AudioRecordAction, Aud
         
     case .requestMicrophonePermissionButtonTapped:
         return .task { @MainActor in
-            return .requestMicrophonePermissionResponse(try await environment.avAudioSessionClient.requestRecordPermission())
+            do {
+                return .requestMicrophonePermissionResponse(try await environment.avAudioSessionClient.requestRecordPermission())
+            } catch {
+                return .requestMicrophonePermissionResponse(false)
+            }
         }
         
     case let .requestMicrophonePermissionResponse(response):

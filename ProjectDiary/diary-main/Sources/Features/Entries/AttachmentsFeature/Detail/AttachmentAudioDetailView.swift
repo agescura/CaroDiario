@@ -65,7 +65,11 @@ public struct AttachmentAudioDetailEnvironment {
     }
 }
 
-public let attachmentAudioDetailReducer = Reducer<AttachmentAudioDetailState, AttachmentAudioDetailAction, AttachmentAudioDetailEnvironment> { state, action, environment in
+public let attachmentAudioDetailReducer = Reducer<
+    AttachmentAudioDetailState,
+    AttachmentAudioDetailAction,
+    AttachmentAudioDetailEnvironment
+> { state, action, environment in
     struct PlayerManagerId: Hashable {}
     struct PlayerTimerId: Hashable {}
     

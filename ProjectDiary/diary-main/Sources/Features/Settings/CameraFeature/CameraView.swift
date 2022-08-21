@@ -59,7 +59,7 @@ public let cameraReducer = Reducer<
     case .cameraButtonTapped:
         switch state.cameraStatus {
         case .notDetermined:
-            return .task {
+            return .task { @MainActor in
                 await environment.feedbackGeneratorClient.selectionChanged()
                 return .requestAccessResponse(await environment.avCaptureDeviceClient.requestAccess())
             }
@@ -95,7 +95,7 @@ public struct CameraView: View {
                 Section(
                     footer:
                         Group {
-                            if viewStore.cameraStatus == .notDetermined || viewStore.cameraStatus == .authorized || viewStore.cameraStatus == .restricted {
+                            if viewStore.cameraStatus != .denied {
                                 Text(viewStore.cameraStatus.description)
                             } else {
                                 Text(viewStore.cameraStatus.description)

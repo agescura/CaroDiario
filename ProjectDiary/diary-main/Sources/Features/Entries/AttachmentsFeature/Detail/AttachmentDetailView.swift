@@ -56,8 +56,11 @@ public struct AttachmentDetailEnvironment {
     }
 }
 
-public let attachmentDetailReducer: Reducer<AttachmentDetailState, AttachmentDetailAction, AttachmentDetailEnvironment> = .combine(
-    
+public let attachmentDetailReducer: Reducer<
+    AttachmentDetailState,
+    AttachmentDetailAction,
+    AttachmentDetailEnvironment
+> = .combine(
     attachmentImageDetailReducer
         .pullback(
             state: /AttachmentDetailState.image,
@@ -65,7 +68,6 @@ public let attachmentDetailReducer: Reducer<AttachmentDetailState, AttachmentDet
             environment: { _ in ()
             }
         ),
-    
     attachmentVideoDetailReducer
         .pullback(
             state: /AttachmentDetailState.video,
@@ -73,7 +75,6 @@ public let attachmentDetailReducer: Reducer<AttachmentDetailState, AttachmentDet
             environment: { _ in ()
             }
         ),
-    
     attachmentAudioDetailReducer
         .pullback(
             state: /AttachmentDetailState.audio,
@@ -86,7 +87,6 @@ public let attachmentDetailReducer: Reducer<AttachmentDetailState, AttachmentDet
                 backgroundQueue: $0.backgroundQueue)
             }
         ),
-    
     .init { state, action, _ in
         return .none
     }

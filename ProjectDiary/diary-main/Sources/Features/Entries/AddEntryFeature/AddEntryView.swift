@@ -161,8 +161,11 @@ public struct AddEntryEnvironment {
     }
 }
 
-public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvironment> = .combine(
-    
+public let addEntryReducer: Reducer<
+    AddEntryState,
+    AddEntryAction,
+    AddEntryEnvironment
+> = .combine(
     attachmentAddReducer
         .pullback(
             state: \AttachmentAddRowState.attachment,
@@ -192,7 +195,6 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 uuid: $0.uuid)
             }
         ),
-    
     audioRecordReducer
         .optional()
         .pullback(
@@ -209,7 +211,6 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 uuid: $0.uuid)
             }
         ),
-    
     .init { state, action, environment in
         switch action {
         

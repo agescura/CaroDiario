@@ -65,8 +65,11 @@ public struct LayoutOnBoardingEnvironment {
     }
 }
 
-public let layoutOnBoardingReducer: Reducer<LayoutOnBoardingState, LayoutOnBoardingAction, LayoutOnBoardingEnvironment> = .combine(
-    
+public let layoutOnBoardingReducer: Reducer<
+    LayoutOnBoardingState,
+    LayoutOnBoardingAction,
+    LayoutOnBoardingEnvironment
+> = .combine(
     dayEntriesReducer
         .pullback(
             state: \DayEntriesRowState.dayEntries,
@@ -91,7 +94,6 @@ public let layoutOnBoardingReducer: Reducer<LayoutOnBoardingState, LayoutOnBoard
                 uuid: UUID.init)
             }
         ),
-    
     themeOnBoardingReducer
         .optional()
         .pullback(
@@ -107,7 +109,6 @@ public let layoutOnBoardingReducer: Reducer<LayoutOnBoardingState, LayoutOnBoard
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
         ),
-    
     .init { state, action, environment in
         switch action {
         case let .layoutChanged(layoutChanged):

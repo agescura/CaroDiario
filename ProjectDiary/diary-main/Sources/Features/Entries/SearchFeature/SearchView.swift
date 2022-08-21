@@ -103,8 +103,11 @@ public struct SearchEnvironment {
     }
 }
 
-public let searchReducer: Reducer<SearchState, SearchAction, SearchEnvironment> = .combine(
-    
+public let searchReducer: Reducer<
+    SearchState,
+    SearchAction,
+    SearchEnvironment
+> = .combine(
     dayEntriesReducer
         .pullback(
             state: \DayEntriesRowState.dayEntries,
@@ -129,7 +132,6 @@ public let searchReducer: Reducer<SearchState, SearchAction, SearchEnvironment> 
                 uuid: $0.uuid)
             }
         ),
-    
     attachmentSearchReducer
         .optional()
         .pullback(
@@ -150,9 +152,7 @@ public let searchReducer: Reducer<SearchState, SearchAction, SearchEnvironment> 
                 uuid: $0.uuid)
             }
         ),
-    
         .init { state, action, environment in
-            
             switch action {
             case let .searching(newText: newText):
                 state.searchText = newText

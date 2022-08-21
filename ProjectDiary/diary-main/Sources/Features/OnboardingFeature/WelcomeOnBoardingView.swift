@@ -73,8 +73,11 @@ public struct WelcomeOnBoardingEnvironment {
     }
 }
 
-public let welcomeOnBoardingReducer: Reducer<WelcomeOnBoardingState, WelcomeOnBoardingAction, WelcomeOnBoardingEnvironment> = .combine(
-    
+public let welcomeOnBoardingReducer: Reducer<
+    WelcomeOnBoardingState,
+    WelcomeOnBoardingAction,
+    WelcomeOnBoardingEnvironment
+> = .combine(
     privacyOnBoardingReducer
         .optional()
         .pullback(
@@ -90,7 +93,6 @@ public let welcomeOnBoardingReducer: Reducer<WelcomeOnBoardingState, WelcomeOnBo
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
         ),
-    
     .init { state, action, environment in
         struct TimerId: Hashable {}
         

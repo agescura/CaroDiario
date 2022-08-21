@@ -31,7 +31,11 @@ public struct PDFPreviewEnvironment {
     }
 }
 
-public let pdfPreviewReducer = Reducer<PDFPreviewState, PDFPreviewAction, PDFPreviewEnvironment> { state, action, environment in
+public let pdfPreviewReducer = Reducer<
+    PDFPreviewState,
+    PDFPreviewAction,
+    PDFPreviewEnvironment
+> { state, action, environment in
     switch action {
     case .dismiss:
         return .none

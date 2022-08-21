@@ -26,7 +26,8 @@ class SettingsFeatureTests: XCTestCase {
                 cameraStatus: .notDetermined,
                 optionTimeForAskPasscode: 0,
                 faceIdEnabled: false,
-                language: .spanish
+                language: .spanish,
+                microphoneStatus: .notDetermined
             ),
             reducer: settingsReducer,
             environment: SettingsEnvironment(
@@ -34,9 +35,7 @@ class SettingsFeatureTests: XCTestCase {
                 localAuthenticationClient: .noop,
                 applicationClient: .init(
                     alternateIconName: nil,
-                    setAlternateIconName: { _ in
-                        return .fireAndForget {}
-                    },
+                    setAlternateIconName: { _ in () },
                     supportsAlternateIcons: { true },
                     openSettings: { .fireAndForget {} },
                     open: { _, _  in .fireAndForget {} },
@@ -51,8 +50,8 @@ class SettingsFeatureTests: XCTestCase {
                 pdfKitClient: .noop,
                 mainQueue: .immediate,
                 date: Date.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} }
-                )
+                setUserInterfaceStyle: { _ in () }
+            )
         )
         
         store.send(.toggleShowSplash(isOn: false)) {

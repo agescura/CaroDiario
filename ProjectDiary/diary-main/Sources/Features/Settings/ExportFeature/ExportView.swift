@@ -68,7 +68,6 @@ public let exportReducer: Reducer<
             action: /ExportAction.pdfPreviewAction,
             environment: { _ in PDFPreviewEnvironment() }
         ),
-    
         .init { state, action, environment in
             switch action {
             case .processPDF:

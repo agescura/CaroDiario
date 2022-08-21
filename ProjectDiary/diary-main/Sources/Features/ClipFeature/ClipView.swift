@@ -57,8 +57,11 @@ public struct ClipEnvironment {
     }
 }
 
-public let clipReducer: Reducer<ClipState, ClipAction, ClipEnvironment> = .combine(
-    
+public let clipReducer: Reducer<
+    ClipState,
+    ClipAction,
+    ClipEnvironment
+> = .combine(
     switchClipReducer
         .pullback(
             state: \ClipState.featureState,
@@ -74,7 +77,6 @@ public let clipReducer: Reducer<ClipState, ClipAction, ClipEnvironment> = .combi
                     setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
         ),
-    
     .init { state, action, environment in
         switch action {
         case .onAppear:

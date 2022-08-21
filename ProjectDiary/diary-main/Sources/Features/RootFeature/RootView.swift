@@ -126,7 +126,11 @@ public struct RootEnvironment {
     }
 }
 
-public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combine(
+public let rootReducer: Reducer<
+    RootState,
+    RootAction,
+    RootEnvironment
+> = .combine(
     appDelegateReducer
         .pullback(
             state: \.appDelegate,
@@ -167,7 +171,7 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             return Effect(value: .setUserInterfaceStyle)
             
         case .setUserInterfaceStyle:
-            return .task {
+            return .task { @MainActor in
                 await environment.setUserInterfaceStyle(environment.userDefaultsClient.themeType.userInterfaceStyle)
                 return .startFirstScreen
             }
@@ -235,20 +239,18 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             state.featureState = .home(
                 .init(
                     tabBars: [.entries, .search, .settings],
-                    entriesState: .init(),
-                    searchState: .init(),
-                    settings: .init(
+                    sharedState: .init(
                         showSplash: !environment.userDefaultsClient.hideSplashScreen,
                         styleType: environment.userDefaultsClient.styleType,
                         layoutType: environment.userDefaultsClient.layoutType,
                         themeType: environment.userDefaultsClient.themeType,
-                        iconType: environment.applicationClient.alternateIconName != nil ? .dark : .light ,
+                        iconAppType: environment.applicationClient.alternateIconName != nil ? .dark : .light,
+                        language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish,
                         hasPasscode: (environment.userDefaultsClient.passcodeCode ?? "").count > 0,
                         cameraStatus: status,
+                        microphoneStatus: .notDetermined,
                         optionTimeForAskPasscode: environment.userDefaultsClient.optionTimeForAskPasscode,
-                        faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate,
-                        language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish,
-                        microphoneStatus: .notDetermined
+                        faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate
                     )
                 )
             )

@@ -97,8 +97,11 @@ public struct AppEnvironment {
     }
 }
 
-public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
-    
+public let appReducer: Reducer<
+    AppState,
+    AppAction,
+    AppEnvironment
+> = .combine(
     splashReducer
         .pullback(
             state: /AppState.splash,
@@ -108,7 +111,6 @@ public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
                 mainQueue: $0.mainQueue)
             }
         ),
-    
     welcomeOnBoardingReducer
         .pullback(
             state: /AppState.onBoarding,
@@ -123,7 +125,6 @@ public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
         ),
-    
     lockScreenReducer
         .pullback(
             state: /AppState.lockScreen,
@@ -134,7 +135,6 @@ public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
                 mainQueue: $0.mainQueue)
             }
         ),
-    
     homeReducer
         .pullback(
             state: /AppState.home,
@@ -159,7 +159,6 @@ public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
         ),
-    
     .init { state, action, environment in
         return .none
     }
@@ -179,19 +178,16 @@ public struct AppView: View {
                 action: AppAction.splash,
                 then: SplashView.init(store:)
             )
-            
             CaseLet(
                 state: /AppState.onBoarding,
                 action: AppAction.onBoarding,
                 then: WelcomeOnBoardingView.init(store:)
             )
-            
             CaseLet(
                 state: /AppState.lockScreen,
                 action: AppAction.lockScreen,
                 then: LockScreenView.init(store:)
             )
-            
             CaseLet(
                 state: /AppState.home,
                 action: AppAction.home,

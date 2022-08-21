@@ -102,8 +102,11 @@ public struct AttachmentSearchEnvironment {
     }
 }
 
-public let attachmentSearchReducer: Reducer<AttachmentSearchState, AttachmentSearchAction, AttachmentSearchEnvironment> = .combine(
-    
+public let attachmentSearchReducer: Reducer<
+    AttachmentSearchState,
+    AttachmentSearchAction,
+    AttachmentSearchEnvironment
+> = .combine(
     dayEntriesReducer
         .pullback(
             state: \DayEntriesRowState.dayEntries,
@@ -128,7 +131,6 @@ public let attachmentSearchReducer: Reducer<AttachmentSearchState, AttachmentSea
                 uuid: $0.uuid)
             }
         ),
-    
     entryDetailReducer
         .optional()
         .pullback(
@@ -148,42 +150,41 @@ public let attachmentSearchReducer: Reducer<AttachmentSearchState, AttachmentSea
                 uuid: $0.uuid)
             }
         ),
-    
-        .init { state, action, environment in
-            switch action {
-                
-            case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
-                state.entryDetailSelected = entry
-                return Effect(value: .navigateEntryDetail(true))
-                
-            case .entries:
-                return .none
-                
-            case .remove:
-                return .none
-                
-            case let .navigateEntryDetail(value):
-                guard let entry = state.entryDetailSelected else { return .none }
-                state.navigateEntryDetail = value
-                state.entryDetailState = value ? .init(entry: entry) : nil
-                if value == false {
-                    state.entryDetailSelected = nil
-                }
-                return .none
-                
-            case let .entryDetailAction(.remove(entry)):
-                return .merge(
-                    environment.fileClient.removeAttachments(entry.attachments.urls, environment.backgroundQueue)
-                        .receive(on: environment.mainQueue)
-                        .eraseToEffect()
-                        .map({ AttachmentSearchAction.remove(entry) }),
-                    Effect(value: .navigateEntryDetail(false))
-                )
-                
-            case .entryDetailAction:
-                return .none
+    .init { state, action, environment in
+        switch action {
+            
+        case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
+            state.entryDetailSelected = entry
+            return Effect(value: .navigateEntryDetail(true))
+            
+        case .entries:
+            return .none
+            
+        case .remove:
+            return .none
+            
+        case let .navigateEntryDetail(value):
+            guard let entry = state.entryDetailSelected else { return .none }
+            state.navigateEntryDetail = value
+            state.entryDetailState = value ? .init(entry: entry) : nil
+            if value == false {
+                state.entryDetailSelected = nil
             }
+            return .none
+            
+        case let .entryDetailAction(.remove(entry)):
+            return .merge(
+                environment.fileClient.removeAttachments(entry.attachments.urls, environment.backgroundQueue)
+                    .receive(on: environment.mainQueue)
+                    .eraseToEffect()
+                    .map({ AttachmentSearchAction.remove(entry) }),
+                Effect(value: .navigateEntryDetail(false))
+            )
+            
+        case .entryDetailAction:
+            return .none
         }
+    }
 )
 
 public struct AttachmentSearchView: View {
@@ -215,7 +216,7 @@ public struct AttachmentSearchView: View {
                                 content: DayEntriesRowView.init(store:)
                             )
                         }
-
+                        
                         NavigationLink(
                             "", destination: IfLetStore(
                                 store.scope(
