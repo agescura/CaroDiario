@@ -52,7 +52,7 @@ public struct WelcomeOnBoardingEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         userDefaultsClient: UserDefaultsClient,
@@ -61,7 +61,7 @@ public struct WelcomeOnBoardingEnvironment {
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.userDefaultsClient = userDefaultsClient
         self.feedbackGeneratorClient = feedbackGeneratorClient
@@ -73,8 +73,11 @@ public struct WelcomeOnBoardingEnvironment {
     }
 }
 
-public let welcomeOnBoardingReducer: Reducer<WelcomeOnBoardingState, WelcomeOnBoardingAction, WelcomeOnBoardingEnvironment> = .combine(
-    
+public let welcomeOnBoardingReducer: Reducer<
+    WelcomeOnBoardingState,
+    WelcomeOnBoardingAction,
+    WelcomeOnBoardingEnvironment
+> = .combine(
     privacyOnBoardingReducer
         .optional()
         .pullback(
@@ -90,7 +93,6 @@ public let welcomeOnBoardingReducer: Reducer<WelcomeOnBoardingState, WelcomeOnBo
                 setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
         ),
-    
     .init { state, action, environment in
         struct TimerId: Hashable {}
         

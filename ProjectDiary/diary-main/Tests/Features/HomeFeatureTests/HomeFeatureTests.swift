@@ -16,20 +16,20 @@ class HomeFeatureTests: XCTestCase {
     
     func testAppScreenHappyPath() {
         let store = TestStore(
-            initialState: HomeState(
+            initialState: .init(
                 tabBars: [],
-                entriesState: .init(entries: []),
-                searchState: .init(searchText: "", entries: .init()),
-                settings: .init(
+                sharedState: .init(
+                    showSplash: false,
                     styleType: .rectangle,
                     layoutType: .horizontal,
                     themeType: .dark,
-                    iconType: .dark,
+                    iconAppType: .dark,
+                    language: .spanish,
                     hasPasscode: false,
                     cameraStatus: .authorized,
+                    microphoneStatus: .authorized,
                     optionTimeForAskPasscode: 0,
-                    faceIdEnabled: false,
-                    language: .spanish
+                    faceIdEnabled: false
                 )
             ),
             reducer: homeReducer,
@@ -50,7 +50,7 @@ class HomeFeatureTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         

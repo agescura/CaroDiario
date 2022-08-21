@@ -65,9 +65,9 @@ public let styleReducer: Reducer<
         case let .styleChanged(styleChanged):
             state.styleType = styleChanged
             state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-            
-            return environment.feedbackGeneratorClient.selectionChanged()
-                .fireAndForget()
+            return .fireAndForget {
+                await environment.feedbackGeneratorClient.selectionChanged()
+            }
             
         case .entries:
             return .none

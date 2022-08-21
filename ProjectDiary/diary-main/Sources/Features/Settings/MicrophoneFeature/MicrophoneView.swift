@@ -12,18 +12,20 @@ import FeedbackGeneratorClient
 import UIApplicationClient
 import Localizables
 import Styles
+import Models
+import SwiftUIHelper
 
 public struct MicrophoneState: Equatable {
-    public var microphoneStatus: AVAudioSessionClient.AudioRecordPermission
+    public var microphoneStatus: AudioRecordPermission
     
     public init(
-        microphoneStatus: AVAudioSessionClient.AudioRecordPermission
+        microphoneStatus: AudioRecordPermission
     ) {
         self.microphoneStatus = microphoneStatus
     }
 }
 
-extension AVAudioSessionClient.AudioRecordPermission {
+extension AudioRecordPermission {
     public var title: String {
         switch self {
         case .authorized:
@@ -71,14 +73,14 @@ public let microphoneReducer = Reducer<
     case .microphoneButtonTapped:
         switch state.microphoneStatus {
         case .notDetermined:
-            return .merge(
-                environment.avAudioSessionClient.requestRecordPermission()
-                    .receive(on: environment.mainQueue)
-                    .eraseToEffect()
-                    .map(MicrophoneAction.requestAccessResponse),
-                environment.feedbackGeneratorClient.selectionChanged()
-                    .fireAndForget()
-            )
+            return .task { @MainActor in
+                await environment.feedbackGeneratorClient.selectionChanged()
+                do {
+                    return .requestAccessResponse(try await environment.avAudioSessionClient.requestRecordPermission())
+                } catch {
+                    return .requestAccessResponse(false)
+                }
+            }
             
         default:
             break
@@ -111,7 +113,7 @@ public struct MicrophoneView: View {
                 Section(
                     footer:
                         Group {
-                            if viewStore.microphoneStatus == .notDetermined || viewStore.microphoneStatus == .authorized || viewStore.microphoneStatus == .denied {
+                            if viewStore.microphoneStatus != .denied {
                                 Text(viewStore.microphoneStatus.description)
                             } else {
                                 Text(viewStore.microphoneStatus.description)
@@ -134,7 +136,7 @@ public struct MicrophoneView: View {
                             Text("Settings.GivePermission".localized)
                                 .foregroundColor(.adaptiveGray)
                                 .adaptiveFont(.latoRegular, size: 8)
-                            Image(systemName: "chevron.right")
+                            Image(.chevronRight)
                                 .foregroundColor(.adaptiveGray)
                         }
                     }
@@ -150,7 +152,7 @@ public struct MicrophoneView: View {
 }
 
 
-extension AVAudioSessionClient.AudioRecordPermission {
+extension AudioRecordPermission {
     public var description: String {
         switch self {
         case .authorized:

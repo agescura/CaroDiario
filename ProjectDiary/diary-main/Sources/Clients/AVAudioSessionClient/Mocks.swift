@@ -9,7 +9,7 @@ import Foundation
 
 extension AVAudioSessionClient {
     public static var noop = Self(
-        recordPermission: .notDetermined,
-        requestRecordPermission: { .fireAndForget {} }
+        recordPermission: { .notDetermined },
+        requestRecordPermission: { false }
     )
 }

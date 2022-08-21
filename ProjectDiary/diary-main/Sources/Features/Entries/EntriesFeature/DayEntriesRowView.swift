@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import Localizables
 import Styles
+import Models
 
 public struct DayEntriesRowState: Identifiable, Equatable {
     public var dayEntries: DayEntriesState

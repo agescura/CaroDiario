@@ -15,7 +15,7 @@ struct MicrophoneRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "mic",
+                .mic,
                 foregroundColor: .blue
             )
             Text("Settings.Microphone".localized)

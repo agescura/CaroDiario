@@ -20,20 +20,11 @@ extension AVAudioSessionClient {
         }
         
         return Self(
-            recordPermission: {
-                let session = AVAudioSession.sharedInstance()
-                do {
-                    try session.setCategory(.playAndRecord, options: .defaultToSpeaker)
-                    try session.setActive(true)
-                } catch {
-                    print("AVAudioSession configuration error: \(error.localizedDescription)")
-                }
-                return session.recordPermission.permission
-            }(),
+            recordPermission: { session.recordPermission.permission },
             requestRecordPermission: {
-                .future { callback in
+                try await withCheckedThrowingContinuation { continuation in
                     session.requestRecordPermission { granted in
-                        callback(.success(granted))
+                        continuation.resume(with: .success(granted))
                     }
                 }
             }

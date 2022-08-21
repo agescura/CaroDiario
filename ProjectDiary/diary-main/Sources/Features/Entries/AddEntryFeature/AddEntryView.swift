@@ -161,8 +161,11 @@ public struct AddEntryEnvironment {
     }
 }
 
-public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvironment> = .combine(
-    
+public let addEntryReducer: Reducer<
+    AddEntryState,
+    AddEntryAction,
+    AddEntryEnvironment
+> = .combine(
     attachmentAddReducer
         .pullback(
             state: \AttachmentAddRowState.attachment,
@@ -192,7 +195,6 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 uuid: $0.uuid)
             }
         ),
-    
     audioRecordReducer
         .optional()
         .pullback(
@@ -209,7 +211,6 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
                 uuid: $0.uuid)
             }
         ),
-    
     .init { state, action, environment in
         switch action {
         
@@ -284,8 +285,9 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
         case let .requestAuthorizationCameraResponse(response):
             switch response {
             case .notDetermined:
-                return environment.avCaptureDeviceClient.requestAccess()
-                    .map(AddEntryAction.requestAccessCameraResponse)
+                return .task {
+                    .requestAccessCameraResponse(await environment.avCaptureDeviceClient.requestAccess())
+                }
             case .denied:
                 return Effect(value: .deniedCameraAlertButtonTapped)
             case .authorized:
@@ -484,7 +486,6 @@ public let addEntryReducer: Reducer<AddEntryState, AddEntryAction, AddEntryEnvir
         }
     }
 )
-.debug()
 
 public struct AddEntryView: View {
     public let store: Store<AddEntryState, AddEntryAction>

@@ -34,7 +34,7 @@ public struct ClipEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         userDefaultsClient: UserDefaultsClient,
@@ -44,7 +44,7 @@ public struct ClipEnvironment {
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.userDefaultsClient = userDefaultsClient
         self.applicationClient = applicationClient
@@ -57,8 +57,11 @@ public struct ClipEnvironment {
     }
 }
 
-public let clipReducer: Reducer<ClipState, ClipAction, ClipEnvironment> = .combine(
-    
+public let clipReducer: Reducer<
+    ClipState,
+    ClipAction,
+    ClipEnvironment
+> = .combine(
     switchClipReducer
         .pullback(
             state: \ClipState.featureState,
@@ -74,7 +77,6 @@ public let clipReducer: Reducer<ClipState, ClipAction, ClipEnvironment> = .combi
                     setUserInterfaceStyle: $0.setUserInterfaceStyle)
             }
         ),
-    
     .init { state, action, environment in
         switch action {
         case .onAppear:

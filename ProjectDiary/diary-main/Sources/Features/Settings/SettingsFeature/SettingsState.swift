@@ -15,7 +15,6 @@ import CameraFeature
 import ExportFeature
 import LanguageFeature
 import PasscodeFeature
-import Styles
 import AVAudioSessionClient
 
 public struct SettingsState: Equatable {
@@ -31,11 +30,12 @@ public struct SettingsState: Equatable {
     public var hasPasscode: Bool
     
     public var cameraStatus: AuthorizedVideoStatus
+    public var microphoneStatus: AudioRecordPermission
     public var optionTimeForAskPasscode: Int
     public var faceIdEnabled: Bool
     
     public var route: Route? = nil {
-        didSet {
+        didSet {    
             if case let .appearance(state) = self.route {
                 self.styleType = state.styleType
                 self.layoutType = state.layoutType
@@ -51,6 +51,12 @@ public struct SettingsState: Equatable {
             if case let .activate(state) = self.route {
                 self.faceIdEnabled = state.faceIdEnabled
                 self.hasPasscode = state.hasPasscode
+            }
+            if case let .camera(state) = self.route {
+                self.cameraStatus = state.cameraStatus
+            }
+            if case let .microphone(state) = self.route {
+                self.microphoneStatus = state.microphoneStatus
             }
         }
     }
@@ -157,8 +163,6 @@ public struct SettingsState: Equatable {
         }
     }
 
-    public var microphoneStatus: AVAudioSessionClient.AudioRecordPermission = .notDetermined
-    
     public init(
         showSplash: Bool = false,
         styleType: StyleType,
@@ -169,7 +173,9 @@ public struct SettingsState: Equatable {
         cameraStatus: AuthorizedVideoStatus,
         optionTimeForAskPasscode: Int,
         faceIdEnabled: Bool,
-        language: Localizable
+        language: Localizable,
+        microphoneStatus: AudioRecordPermission,
+        route: Route? = nil
     ) {
         self.showSplash = showSplash
         self.styleType = styleType
@@ -181,5 +187,7 @@ public struct SettingsState: Equatable {
         self.optionTimeForAskPasscode = optionTimeForAskPasscode
         self.faceIdEnabled = faceIdEnabled
         self.language = language
+        self.microphoneStatus = microphoneStatus
+        self.route = route
     }
 }

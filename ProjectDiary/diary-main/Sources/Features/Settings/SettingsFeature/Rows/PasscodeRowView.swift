@@ -16,7 +16,7 @@ struct PasscodeRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "faceid",
+                .faceid,
                 foregroundColor: .green
             )
             Text(self.title)

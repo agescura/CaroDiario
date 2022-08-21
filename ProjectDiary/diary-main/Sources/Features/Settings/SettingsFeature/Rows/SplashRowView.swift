@@ -13,7 +13,7 @@ struct SplashRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "book",
+                .book,
                 foregroundColor: .berryRed
             )
             Text("Settings.Splash".localized)

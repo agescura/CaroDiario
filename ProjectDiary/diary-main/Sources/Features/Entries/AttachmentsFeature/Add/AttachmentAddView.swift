@@ -103,8 +103,11 @@ public struct AttachmentAddEnvironment {
     }
 }
 
-public let attachmentAddReducer: Reducer<AttachmentAddState, AttachmentAddAction, AttachmentAddEnvironment> = .combine(
-    
+public let attachmentAddReducer: Reducer<
+    AttachmentAddState,
+    AttachmentAddAction,
+    AttachmentAddEnvironment
+> = .combine(
     attachmentAddImageReducer
         .pullback(
             state: /AttachmentAddState.image,
@@ -112,7 +115,6 @@ public let attachmentAddReducer: Reducer<AttachmentAddState, AttachmentAddAction
             environment: { _ in ()
             }
         ),
-    
     attachmentAddVideoReducer
         .pullback(
             state: /AttachmentAddState.video,
@@ -120,7 +122,6 @@ public let attachmentAddReducer: Reducer<AttachmentAddState, AttachmentAddAction
             environment: { _ in ()
             }
         ),
-    
     attachmentAddAudioReducer
         .pullback(
             state: /AttachmentAddState.audio,

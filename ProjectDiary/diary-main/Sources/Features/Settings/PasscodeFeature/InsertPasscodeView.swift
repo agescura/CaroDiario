@@ -175,7 +175,7 @@ public struct InsertPasscodeView: View {
                     Text(viewStore.step.title)
                     HStack {
                         ForEach(0..<viewStore.maxNumbersCode, id: \.self) { iterator in
-                            Image(systemName: viewStore.code.count > iterator ? "circle.fill" : "circle")
+                            Image(viewStore.code.count > iterator ? .circleFill : .circle)
                         }
                     }
                     if viewStore.codeNotMatched {
@@ -223,7 +223,7 @@ public struct InsertPasscodeView: View {
                 leading: Button(
                     action: { viewStore.send(.popToRoot) }
                 ) {
-                    HStack { Image(systemName: "chevron.left") }
+                    HStack { Image(.chevronRight) }
                 }
             )
         }

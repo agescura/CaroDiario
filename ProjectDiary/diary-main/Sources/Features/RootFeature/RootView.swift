@@ -83,7 +83,7 @@ public struct RootEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         coreDataClient: CoreDataClient,
@@ -103,7 +103,7 @@ public struct RootEnvironment {
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
         uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.coreDataClient = coreDataClient
         self.fileClient = fileClient
@@ -126,7 +126,11 @@ public struct RootEnvironment {
     }
 }
 
-public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combine(
+public let rootReducer: Reducer<
+    RootState,
+    RootAction,
+    RootEnvironment
+> = .combine(
     appDelegateReducer
         .pullback(
             state: \.appDelegate,
@@ -167,11 +171,10 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             return Effect(value: .setUserInterfaceStyle)
             
         case .setUserInterfaceStyle:
-            return .merge(
-                environment.setUserInterfaceStyle(environment.userDefaultsClient.themeType.userInterfaceStyle)
-                    .fireAndForget(),
-                Effect(value: .startFirstScreen)
-            )
+            return .task { @MainActor in
+                await environment.setUserInterfaceStyle(environment.userDefaultsClient.themeType.userInterfaceStyle)
+                return .startFirstScreen
+            }
             
         case .featureAction(.splash(.finishAnimation)):
             if environment.userDefaultsClient.hasShownFirstLaunchOnboarding {
@@ -236,19 +239,18 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             state.featureState = .home(
                 .init(
                     tabBars: [.entries, .search, .settings],
-                    entriesState: .init(entries: []),
-                    searchState: .init(searchText: "", entries: []),
-                    settings: .init(
+                    sharedState: .init(
                         showSplash: !environment.userDefaultsClient.hideSplashScreen,
                         styleType: environment.userDefaultsClient.styleType,
                         layoutType: environment.userDefaultsClient.layoutType,
                         themeType: environment.userDefaultsClient.themeType,
-                        iconType: environment.applicationClient.alternateIconName != nil ? .dark : .light ,
+                        iconAppType: environment.applicationClient.alternateIconName != nil ? .dark : .light,
+                        language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish,
                         hasPasscode: (environment.userDefaultsClient.passcodeCode ?? "").count > 0,
                         cameraStatus: status,
+                        microphoneStatus: environment.avAudioSessionClient.recordPermission(),
                         optionTimeForAskPasscode: environment.userDefaultsClient.optionTimeForAskPasscode,
-                        faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate,
-                        language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish
+                        faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate
                     )
                 )
             )
@@ -278,10 +280,13 @@ public let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combi
             if let timeForAskPasscode = Calendar.current.date(
                 byAdding: .minute,
                 value: environment.userDefaultsClient.optionTimeForAskPasscode,
-                to: environment.date()) {
-                return environment.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode).fireAndForget()
+                to: environment.date()
+            ) {
+                return environment.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode)
+                    .fireAndForget()
             }
-            return environment.userDefaultsClient.removeOptionTimeForAskPasscode().fireAndForget()
+            return environment.userDefaultsClient.removeOptionTimeForAskPasscode()
+                .fireAndForget()
             
         case .state:
             return .none

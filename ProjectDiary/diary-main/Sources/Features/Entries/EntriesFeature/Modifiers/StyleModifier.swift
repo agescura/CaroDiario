@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Styles
+import Models
 
 struct StyleModifier: ViewModifier {
     let style: StyleType

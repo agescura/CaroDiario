@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 import ComposableArchitecture
-import Styles
+import Models
 
 public struct UserDefaultsClient {
     public var boolForKey: (String) -> Bool

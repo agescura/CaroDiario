@@ -11,11 +11,11 @@ import Models
 
 public struct AVCaptureDeviceClient {
     public var authorizationStatus: () -> Effect<AuthorizedVideoStatus, Never>
-    public var requestAccess: () -> Effect<Bool, Never>
+    public var requestAccess: () async -> Bool
     
     public init(
         authorizationStatus: @escaping () -> Effect<AuthorizedVideoStatus, Never>,
-        requestAccess: @escaping () -> Effect<Bool, Never>
+        requestAccess: @escaping () async -> Bool
     ) {
         self.authorizationStatus = authorizationStatus
         self.requestAccess = requestAccess

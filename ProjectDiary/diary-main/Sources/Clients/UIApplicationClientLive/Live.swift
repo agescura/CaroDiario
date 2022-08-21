@@ -12,16 +12,7 @@ extension UIApplicationClient {
     public static let live = Self(
         alternateIconName: UIApplication.shared.alternateIconName,
         setAlternateIconName: { iconName in
-                .run { subscriber in
-                    UIApplication.shared.setAlternateIconName(iconName) { error in
-                        if let error = error {
-                            subscriber.send(completion: .failure(error))
-                        } else {
-                            subscriber.send(completion: .finished)
-                        }
-                    }
-                    return AnyCancellable {}
-                }
+            try await UIApplication.shared.setAlternateIconName(iconName)
         },
         supportsAlternateIcons: { UIApplication.shared.supportsAlternateIcons },
         openSettings: {

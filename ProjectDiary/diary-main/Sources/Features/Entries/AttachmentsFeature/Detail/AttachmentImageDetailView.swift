@@ -37,7 +37,11 @@ public enum AttachmentImageDetailAction: Equatable {
     case dragGesture(DragGesture.Value)
 }
 
-public let attachmentImageDetailReducer = Reducer<AttachmentImageDetailState, AttachmentImageDetailAction, Void> { state, action, _ in
+public let attachmentImageDetailReducer = Reducer<
+    AttachmentImageDetailState,
+    AttachmentImageDetailAction,
+    Void
+> { state, action, _ in
     switch action {
     case let .scaleOnChanged(value):
         let maxScale: CGFloat = 3.0

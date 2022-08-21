@@ -14,13 +14,29 @@ import Styles
 import EntriesFeature
 import Views
 import SwiftUIHelper
+import Models
 
 public struct AppearanceState: Equatable {
     public var styleType: StyleType
     public var layoutType: LayoutType
     public var themeType: ThemeType
     public var iconAppType: IconAppType
-    public var route: Route?
+    public var route: Route? {
+        didSet {
+            if case let .style(state) = self.route {
+                self.styleType = state.styleType
+            }
+            if case let .layout(state) = self.route {
+                self.layoutType = state.layoutType
+            }
+            if case let .theme(state) = self.route {
+                self.themeType = state.themeType
+            }
+            if case let .iconApp(state) = self.route {
+                self.iconAppType = state.iconAppType
+            }
+        }
+    }
     
     public enum Route: Equatable {
         case style(StyleState)
@@ -93,7 +109,6 @@ public enum AppearanceAction: Equatable {
     
     case iconAppAction(IconAppAction)
     case navigateIconApp(Bool)
-    case iconAlternateIconChanged
     
     case themeAction(ThemeAction)
     case navigateTheme(Bool)
@@ -102,12 +117,12 @@ public enum AppearanceAction: Equatable {
 public struct AppearanceEnvironment {
     public let applicationClient: UIApplicationClient
     public let feedbackGeneratorClient: FeedbackGeneratorClient
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         applicationClient: UIApplicationClient,
         feedbackGeneratorClient: FeedbackGeneratorClient,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) -> Effect<Never, Never>
+        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
     ) {
         self.applicationClient = applicationClient
         self.feedbackGeneratorClient = feedbackGeneratorClient
@@ -149,7 +164,8 @@ public let appearanceReducer: Reducer<
             action: /AppearanceAction.iconAppAction,
             environment: {
                 IconAppEnvironment(
-                    feedbackGeneratorClient: $0.feedbackGeneratorClient
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                    applicationClient: $0.applicationClient
                 )
             }
         ),
@@ -160,18 +176,14 @@ public let appearanceReducer: Reducer<
             action: /AppearanceAction.themeAction,
             environment: {
                 ThemeEnvironment(
-                    feedbackGeneratorClient: $0.feedbackGeneratorClient
+                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
+                    setUserInterfaceStyle: $0.setUserInterfaceStyle
                 )
             }
         ),
     
     .init { state, action, environment in
         switch action {
-        
-        case let.themeAction(.themeChanged(themeChanged)):
-            state.themeType = themeChanged
-            return environment.setUserInterfaceStyle(themeChanged.userInterfaceStyle)
-                .fireAndForget()
             
         case .themeAction:
             return .none
@@ -185,28 +197,13 @@ public let appearanceReducer: Reducer<
             ) : nil
             return .none
             
-        case let .iconAppAction(.iconAppChanged(iconAppChanged)):
-            state.iconAppType = iconAppChanged
-            
-            return Effect(value: .iconAlternateIconChanged)
-            
         case .iconAppAction:
             return .none
-            
-        case .iconAlternateIconChanged:
-            return environment.applicationClient.setAlternateIconName(
-                state.iconAppType == .dark ? "AppIcon-2" : nil
-            )
-            .fireAndForget()
             
         case let .navigateIconApp(value):
             state.route = value ? .iconApp(
                 .init(iconAppType: state.iconAppType)
             ) : nil
-            return .none
-            
-        case let .styleAction(.styleChanged(styleChanged)):
-            state.styleType = styleChanged
             return .none
             
         case .styleAction:
@@ -220,10 +217,6 @@ public let appearanceReducer: Reducer<
                     entries: fakeEntries(with: state.styleType, layout: state.layoutType)
                 )
             ) : nil
-            return .none
-            
-        case let .layoutAction(.layoutChanged(layoutChanged)):
-            state.layoutType = layoutChanged
             return .none
             
         case .layoutAction:

@@ -11,6 +11,7 @@ import Styles
 import UserDefaultsClient
 import EntriesFeature
 import FeedbackGeneratorClient
+import Models
 
 public struct ThemeState: Equatable {
     public var themeType: ThemeType = .system
@@ -24,6 +25,7 @@ public enum ThemeAction: Equatable {
 
 public struct ThemeEnvironment {
     public var feedbackGeneratorClient: FeedbackGeneratorClient
+    public var setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
 }
 
 public let themeReducer: Reducer<
@@ -42,34 +44,36 @@ public let themeReducer: Reducer<
             action: /ThemeAction.entries,
             environment: { _ in
                 EntriesEnvironment(
-                fileClient: .noop,
-                userDefaultsClient: .noop,
-                avCaptureDeviceClient: .noop,
-                applicationClient: .noop,
-                avAudioSessionClient: .noop,
-                avAudioPlayerClient: .noop,
-                avAudioRecorderClient: .noop,
-                avAssetClient: .noop,
-                mainQueue: .unimplemented,
-                backgroundQueue: .unimplemented,
-                date: Date.init,
-                uuid: UUID.init
+                    fileClient: .noop,
+                    userDefaultsClient: .noop,
+                    avCaptureDeviceClient: .noop,
+                    applicationClient: .noop,
+                    avAudioSessionClient: .noop,
+                    avAudioPlayerClient: .noop,
+                    avAudioRecorderClient: .noop,
+                    avAssetClient: .noop,
+                    mainQueue: .unimplemented,
+                    backgroundQueue: .unimplemented,
+                    date: Date.init,
+                    uuid: UUID.init
                 )
             }
         ),
     
-    .init { state, action, environment in
-        switch action {
-        
-        case let .themeChanged(newTheme):
-            state.themeType = newTheme
-            return environment.feedbackGeneratorClient.selectionChanged()
-                .fireAndForget()
-            
-        case .entries:
-            return .none
+        .init { state, action, environment in
+            switch action {
+                
+            case let .themeChanged(newTheme):
+                state.themeType = newTheme
+                return .fireAndForget {
+                    await environment.setUserInterfaceStyle(newTheme.userInterfaceStyle)
+                    await environment.feedbackGeneratorClient.selectionChanged()
+                }
+                
+            case .entries:
+                return .none
+            }
         }
-    }
 )
 
 public struct ThemeView: View {

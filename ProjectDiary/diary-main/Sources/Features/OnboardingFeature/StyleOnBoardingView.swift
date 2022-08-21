@@ -46,11 +46,14 @@ public struct StyleOnBoardingEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) -> Effect<Never, Never>
+    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
 }
 
-public let styleOnBoardingReducer: Reducer<StyleOnBoardingState, StyleOnBoardingAction, StyleOnBoardingEnvironment> = .combine(
-    
+public let styleOnBoardingReducer: Reducer<
+    StyleOnBoardingState,
+    StyleOnBoardingAction,
+    StyleOnBoardingEnvironment
+> = .combine(
     dayEntriesReducer
         .pullback(
             state: \DayEntriesRowState.dayEntries,
@@ -97,13 +100,9 @@ public let styleOnBoardingReducer: Reducer<StyleOnBoardingState, StyleOnBoarding
         case let .styleChanged(styleChanged):
             state.styleType = styleChanged
             state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-
-            return .merge(
-                environment.userDefaultsClient.set(styleType: styleChanged)
-                    .fireAndForget(),
-                environment.feedbackGeneratorClient.selectionChanged()
-                    .fireAndForget()
-            )
+            return .fireAndForget {
+                await environment.feedbackGeneratorClient.selectionChanged()
+            }
             
         case .entries:
             return .none
@@ -132,8 +131,9 @@ public let styleOnBoardingReducer: Reducer<StyleOnBoardingState, StyleOnBoarding
             
         case .cancelSkipAlert:
             state.skipAlert = nil
-            return environment.feedbackGeneratorClient.selectionChanged()
-                .fireAndForget()
+            return .fireAndForget {
+                await environment.feedbackGeneratorClient.selectionChanged()
+            }
             
         case .skipAlertAction:
             state.skipAlert = nil

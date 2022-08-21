@@ -10,6 +10,7 @@ import SwiftUI
 import Styles
 import EntriesFeature
 import FeedbackGeneratorClient
+import Models
 
 public struct LayoutState: Equatable {
     public var layoutType: LayoutType
@@ -73,26 +74,26 @@ public let layoutReducer: Reducer<
                 )
             }
         ),
-    
         .init { state, action, environment in
             switch action {
                 
-        case let .layoutChanged(appearanceChanged):
-            state.layoutType = appearanceChanged
-            state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-            
-            return environment.feedbackGeneratorClient.selectionChanged()
-                .fireAndForget()
-            
-        case .entries:
-            return .none
+            case let .layoutChanged(appearanceChanged):
+                state.layoutType = appearanceChanged
+                state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
+                
+                return .fireAndForget {
+                    await environment.feedbackGeneratorClient.selectionChanged()
+                }
+                
+            case .entries:
+                return .none
+            }
         }
-    }
 )
 
 public struct LayoutView: View {
     let store: Store<LayoutState, LayoutAction>
-
+    
     public var body: some View {
         WithViewStore(self.store) { viewStore in
             

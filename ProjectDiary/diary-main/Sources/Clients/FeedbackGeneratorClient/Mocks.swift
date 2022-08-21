@@ -9,7 +9,7 @@ import Foundation
 
 extension FeedbackGeneratorClient {
     public static let noop = Self(
-        prepare: { .none },
-        selectionChanged: { .none }
+        prepare: { () },
+        selectionChanged: { () }
     )
 }

@@ -9,7 +9,7 @@ import UIKit
 
 public struct UIApplicationClient {
     public let alternateIconName: String?
-    public let setAlternateIconName: (String?) -> Effect<Never, Error>
+    public let setAlternateIconName: (String?) async throws -> Void
     public let supportsAlternateIcons: () -> Bool
     public let openSettings: () -> Effect<Never, Never>
     public var open: (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>
@@ -25,7 +25,7 @@ public struct UIApplicationClient {
     
     public init(
         alternateIconName: String?,
-        setAlternateIconName: @escaping (String?) -> Effect<Never, Error>,
+        setAlternateIconName: @escaping (String?) async throws -> Void,
         supportsAlternateIcons: @escaping () -> Bool,
         openSettings: @escaping () -> Effect<Never, Never>,
         open: @escaping (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>,

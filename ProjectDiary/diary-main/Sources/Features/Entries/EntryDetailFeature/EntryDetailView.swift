@@ -119,8 +119,11 @@ public struct EntryDetailEnvironment {
     }
 }
 
-public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, EntryDetailEnvironment> = .combine(
-    
+public let entryDetailReducer: Reducer<
+    EntryDetailState,
+    EntryDetailAction,
+    EntryDetailEnvironment
+> = .combine(
     attachmentReducer
         .pullback(
             state: \AttachmentRowState.attachment,
@@ -145,7 +148,6 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
                 uuid: UUID.init)
             }
         ),
-    
     attachmentDetailReducer
         .pullback(
             state: \EntryDetailState.selectedAttachmentDetailState,
@@ -158,7 +160,6 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
                 backgroundQueue: $0.backgroundQueue)
             }
         ),
-    
     addEntryReducer
         .optional()
         .pullback(
@@ -178,11 +179,8 @@ public let entryDetailReducer: Reducer<EntryDetailState, EntryDetailAction, Entr
             uuid: $0.uuid)
         }
     ),
-    
     .init { state, action, environment in
-        
         switch action {
-            
         case let .attachments(id: id, action: .attachment(.image(.presentImageFullScreen(true)))),
             let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),
             let .attachments(id: id, action: .attachment(.audio(.presentAudioFullScreen(true)))):

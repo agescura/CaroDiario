@@ -57,12 +57,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 date: Date.init,
                 uuid: UUID.init,
                 setUserInterfaceStyle: { userInterfaceStyle in
-                    .fireAndForget {
-                        UIApplication
-                        .shared
-                        .connectedScenes
-                        .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
-                        .first { $0.isKeyWindow }?.overrideUserInterfaceStyle = userInterfaceStyle
+                    await MainActor.run {
+                        guard
+                            let scene = UIApplication.shared.connectedScenes.first(where: { $0 is UIWindowScene })
+                                as? UIWindowScene
+                        else { return }
+                        scene.keyWindow?.overrideUserInterfaceStyle = userInterfaceStyle
                     }
                 }
             )

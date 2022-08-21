@@ -19,7 +19,11 @@ public enum AppDelegateAction: Equatable {
     case didFinishLaunching
 }
 
-public let appDelegateReducer = Reducer<AppDelegateState, AppDelegateAction, Void> { state, action, _ in
+public let appDelegateReducer = Reducer<
+    AppDelegateState,
+    AppDelegateAction,
+    Void
+> { state, action, _ in
     switch action {
     case .didFinishLaunching:
         

@@ -49,8 +49,8 @@ public enum AttachmentAddImageAction: Equatable {
 
 public let attachmentAddImageReducer = Reducer<
     AttachmentAddImageState,
-        AttachmentAddImageAction,
-        Void
+    AttachmentAddImageAction,
+    Void
 > { state, action, _ in
     switch action {
         case let .presentImageFullScreen(value):

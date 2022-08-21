@@ -28,11 +28,7 @@ extension AVCaptureDeviceClient {
             }
         },
         requestAccess: {
-            .future { promise in
-                AVCaptureDevice.requestAccess(for: AVMediaType.video) {  granted in
-                    promise(.success(granted))
-                }
-            }
+            await AVCaptureDevice.requestAccess(for: AVMediaType.video)
         }
     )
     

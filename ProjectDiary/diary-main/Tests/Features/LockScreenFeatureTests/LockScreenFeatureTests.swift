@@ -9,7 +9,6 @@ import XCTest
 @testable import LockScreenFeature
 import ComposableArchitecture
 import SwiftUI
-import LocalAuthenticationClient
 
 class LockScreenFeatureTests: XCTestCase {
     func testLockScreenHappyPath() {

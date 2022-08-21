@@ -13,14 +13,8 @@ extension FeedbackGeneratorClient {
     public static var live: Self {
         let generator = UISelectionFeedbackGenerator()
         return Self(
-            prepare: {
-                .fireAndForget { generator.prepare() }
-            },
-            selectionChanged: {
-                .fireAndForget {
-                    generator.selectionChanged()
-                }
-            }
+            prepare: { generator.prepare() },
+            selectionChanged: { generator.selectionChanged() }
         )
     }
 }

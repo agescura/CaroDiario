@@ -28,9 +28,12 @@ public enum AttachmentAudioAction: Equatable {
     case presentAudioFullScreen(Bool)
 }
 
-public let attachmentAudioReducer = Reducer<AttachmentAudioState, AttachmentAudioAction, Void> { state, action, _ in
+public let attachmentAudioReducer = Reducer<
+    AttachmentAudioState,
+    AttachmentAudioAction,
+    Void
+> { state, action, _ in
     switch action {
-        
     case let .presentAudioFullScreen(value):
         return .none
     }

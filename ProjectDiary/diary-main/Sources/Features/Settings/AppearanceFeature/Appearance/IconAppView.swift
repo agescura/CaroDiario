@@ -9,6 +9,8 @@ import ComposableArchitecture
 import SwiftUI
 import Styles
 import FeedbackGeneratorClient
+import UIApplicationClient
+import Models
 
 public struct IconAppState: Equatable {
     public var iconAppType: IconAppType
@@ -20,6 +22,7 @@ public enum IconAppAction: Equatable {
 
 public struct IconAppEnvironment {
     public var feedbackGeneratorClient: FeedbackGeneratorClient
+    public let applicationClient: UIApplicationClient
 }
 
 let iconAppReducer = Reducer<
@@ -28,11 +31,16 @@ let iconAppReducer = Reducer<
     IconAppEnvironment
 > { state, action, environment in
     switch action {
-    
     case let .iconAppChanged(newIconApp):
         state.iconAppType = newIconApp
-        return environment.feedbackGeneratorClient.selectionChanged()
-            .fireAndForget()
+        return .fireAndForget {
+            do {
+                try await environment.applicationClient.setAlternateIconName(
+                    newIconApp == .dark ? "AppIcon-2" : nil
+                )
+            } catch {}
+            await environment.feedbackGeneratorClient.selectionChanged()
+        }
     }
 }
 

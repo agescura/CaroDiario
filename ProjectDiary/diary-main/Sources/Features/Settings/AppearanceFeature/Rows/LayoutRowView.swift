@@ -15,7 +15,7 @@ struct LayoutRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "seal",
+                .seal,
                 foregroundColor: .blue
             )
             Text("Settings.Layout".localized)
@@ -25,8 +25,6 @@ struct LayoutRowView: View {
             Text(self.title)
                 .foregroundColor(.adaptiveGray)
                 .adaptiveFont(.latoRegular, size: 12)
-            Image(systemName: "chevron.right")
-                .foregroundColor(.adaptiveGray)
         }
     }
 }

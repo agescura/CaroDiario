@@ -13,6 +13,7 @@ import FeedbackGeneratorClient
 import Localizables
 import Styles
 import Models
+import SwiftUIHelper
 
 public struct CameraState: Equatable {
     public var cameraStatus: AuthorizedVideoStatus
@@ -59,12 +60,10 @@ public let cameraReducer = Reducer<
     case .cameraButtonTapped:
         switch state.cameraStatus {
         case .notDetermined:
-            return .merge(
-                environment.avCaptureDeviceClient.requestAccess()
-                    .map(CameraAction.requestAccessResponse),
-                environment.feedbackGeneratorClient.selectionChanged()
-                    .fireAndForget()
-            )
+            return .task { @MainActor in
+                await environment.feedbackGeneratorClient.selectionChanged()
+                return .requestAccessResponse(await environment.avCaptureDeviceClient.requestAccess())
+            }
             
         default:
             break
@@ -97,7 +96,7 @@ public struct CameraView: View {
                 Section(
                     footer:
                         Group {
-                            if viewStore.cameraStatus == .notDetermined || viewStore.cameraStatus == .authorized || viewStore.cameraStatus == .restricted {
+                            if viewStore.cameraStatus != .denied {
                                 Text(viewStore.cameraStatus.description)
                             } else {
                                 Text(viewStore.cameraStatus.description)
@@ -120,7 +119,7 @@ public struct CameraView: View {
                             Text(viewStore.cameraStatus.permission)
                                 .foregroundColor(.adaptiveGray)
                                 .adaptiveFont(.latoRegular, size: 12)
-                            Image(systemName: "chevron.right")
+                            Image(.chevronRight)
                                 .foregroundColor(.adaptiveGray)
                         }
                     }

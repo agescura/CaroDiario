@@ -423,8 +423,9 @@ let package = Package(
         .target(
             name: "LocalAuthenticationClient",
             dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ],
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "Models"
+            ],
             path: "Sources/Clients/LocalAuthenticationClient"
         ),
         .target(
@@ -485,7 +486,7 @@ let package = Package(
             name: "UserDefaultsClient",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "Styles"
+                "Models"
             ],
             path: "Sources/Clients/UserDefaultsClient"
         ),
@@ -890,7 +891,8 @@ let package = Package(
         .target(
             name: "Views",
             dependencies: [
-                "Styles"
+                "Styles",
+                "SwiftUIHelper"
             ],
             path: "Sources/Helpers/Views"
         ),
@@ -925,25 +927,6 @@ let package = Package(
         ),
         
         // Tests
-        
-        // Clients
-        
-        .testTarget(
-            name: "CoreDataClientLiveTests",
-            dependencies: ["CoreDataClientLive"],
-            path: "Tests/Clients/CoreDataClientLiveTests"
-        ),
-        .testTarget(
-            name: "UserDefaultsClientLiveTests",
-            dependencies: ["UserDefaultsClientLive"],
-            path: "Tests/Clients/UserDefaultsClientLiveTests"
-        ),
-        
-        .testTarget(
-            name: "FileClientLiveTests",
-            dependencies: ["FileClientLive"],
-            path: "Tests/Clients/FileClientLiveTests"
-        ),
         
         // Features
         

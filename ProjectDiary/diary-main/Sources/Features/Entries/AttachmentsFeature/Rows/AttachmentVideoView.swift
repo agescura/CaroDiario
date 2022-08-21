@@ -29,9 +29,12 @@ public enum AttachmentVideoAction: Equatable {
     case presentVideoPlayer(Bool)
 }
 
-public let attachmentVideoReducer = Reducer<AttachmentVideoState, AttachmentVideoAction, Void> { state, action, _ in
+public let attachmentVideoReducer = Reducer<
+    AttachmentVideoState,
+    AttachmentVideoAction,
+    Void
+> { state, action, _ in
     switch action {
-    
     case let .presentVideoPlayer(value):
         return .none
     }

@@ -37,7 +37,7 @@ class PrivacyOnboardingViewTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
@@ -81,7 +81,7 @@ class PrivacyOnboardingViewTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         

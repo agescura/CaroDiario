@@ -31,7 +31,11 @@ public struct PDFPreviewEnvironment {
     }
 }
 
-public let pdfPreviewReducer = Reducer<PDFPreviewState, PDFPreviewAction, PDFPreviewEnvironment> { state, action, environment in
+public let pdfPreviewReducer = Reducer<
+    PDFPreviewState,
+    PDFPreviewAction,
+    PDFPreviewEnvironment
+> { state, action, environment in
     switch action {
     case .dismiss:
         return .none
@@ -56,7 +60,7 @@ public struct PDFPreviewView: View {
                     Button(action: {
                         viewStore.send(.dismiss)
                     }, label: {
-                        Image(systemName: "xmark")
+                        Image(.xmark)
                             .resizable()
                             .frame(width: 18, height: 18)
                             .foregroundColor(.chambray)

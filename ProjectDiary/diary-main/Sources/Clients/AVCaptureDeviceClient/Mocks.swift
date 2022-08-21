@@ -10,6 +10,6 @@ import Foundation
 extension AVCaptureDeviceClient {
     public static let noop = Self(
         authorizationStatus: { .fireAndForget {} },
-        requestAccess: { .fireAndForget {} }
+        requestAccess: { false }
     )
 }

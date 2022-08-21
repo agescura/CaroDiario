@@ -12,6 +12,7 @@ import SwiftUI
 import EntriesFeature
 import UserDefaultsClient
 
+@MainActor
 class StyleOnboardingViewTests: XCTestCase {
     
     private let id1 = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
@@ -26,7 +27,7 @@ class StyleOnboardingViewTests: XCTestCase {
         ], style: .rounded, layout: .horizontal), id: id3)
     ]
     
-    func testStyleOnBoardingViewHappyPath() {
+    func testStyleOnBoardingViewHappyPath() async {
         let store = TestStore(
             initialState: StyleOnBoardingState(styleType: .rectangle, layoutType: .horizontal, entries: []),
             reducer: styleOnBoardingReducer,
@@ -37,16 +38,16 @@ class StyleOnboardingViewTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
-        store.send(.styleChanged(.rounded)) {
+        await store.send(.styleChanged(.rounded)) {
             $0.styleType = .rounded
             $0.entries = self.fakeEntries
         }
         
-        store.send(.navigationLayoutOnBoarding(true)) {
+        await store.send(.navigationLayoutOnBoarding(true)) {
             $0.layoutOnBoardingState = .init(
                 styleType: .rounded, layoutType: .horizontal,
                 entries: self.fakeEntries,
@@ -58,7 +59,7 @@ class StyleOnboardingViewTests: XCTestCase {
         }
     }
     
-    func testStyleOnBoardingViewSkipAlertFlow() {
+    func testStyleOnBoardingViewSkipAlertFlow() async {
         var setOnBoardingShownCalled = false
         
         let store = TestStore(
@@ -86,11 +87,11 @@ class StyleOnboardingViewTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
-        store.send(.skipAlertButtonTapped) {
+        await store.send(.skipAlertButtonTapped) {
             $0.skipAlert = .init(
                 title: .init("Go to diary"),
                 message: .init("This action cannot be undone."),
@@ -99,11 +100,11 @@ class StyleOnboardingViewTests: XCTestCase {
             )
         }
         
-        store.send(.cancelSkipAlert) {
+        await store.send(.cancelSkipAlert) {
             $0.skipAlert = nil
         }
         
-        store.send(.skipAlertButtonTapped) {
+        await store.send(.skipAlertButtonTapped) {
             $0.skipAlert = .init(
                 title: .init("Go to diary"),
                 message: .init("This action cannot be undone."),
@@ -112,7 +113,7 @@ class StyleOnboardingViewTests: XCTestCase {
             )
         }
         
-        store.send(.skipAlertAction) {
+        await store.send(.skipAlertAction) {
             $0.skipAlert = nil
             XCTAssertTrue(setOnBoardingShownCalled)
         }

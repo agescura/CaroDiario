@@ -13,7 +13,7 @@ struct AgreementsRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             IconImageView(
-                systemName: "heart.fill",
+                .heartFill,
                 foregroundColor: .purple
             )
             Text("Settings.Agreements".localized)

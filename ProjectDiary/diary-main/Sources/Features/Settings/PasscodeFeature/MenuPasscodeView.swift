@@ -116,7 +116,11 @@ public struct MenuPasscodeEnvironment {
     }
 }
 
-public let menuPasscodeReducer = Reducer<MenuPasscodeState, MenuPasscodeAction, MenuPasscodeEnvironment> { state, action, environment in
+public let menuPasscodeReducer = Reducer<
+    MenuPasscodeState,
+    MenuPasscodeAction,
+    MenuPasscodeEnvironment
+> { state, action, environment in
     switch action {
     case .popToRoot:
         return .none
@@ -226,7 +230,7 @@ public struct MenuPasscodeView: View {
                         viewStore.send(.popToRoot)
                     }
                 ) {
-                    Image(systemName: "chevron.left")
+                    Image(.chevronRight)
                 }
             )
         }

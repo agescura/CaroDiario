@@ -16,9 +16,10 @@ import Styles
 import FileClient
 import Localizables
 import SwiftHelper
+import Models
 
 public struct AudioRecordState: Equatable {
-    public var audioRecordPermission: AVAudioSessionClient.AudioRecordPermission
+    public var audioRecordPermission: AudioRecordPermission
     
     public var isRecording: Bool = false
     public var audioPath: URL?
@@ -40,7 +41,7 @@ public struct AudioRecordState: Equatable {
     
     
     public init(
-        audioRecordPermission: AVAudioSessionClient.AudioRecordPermission = .notDetermined
+        audioRecordPermission: AudioRecordPermission = .notDetermined
     ) {
         self.audioRecordPermission = audioRecordPermission
     }
@@ -83,7 +84,7 @@ public enum AudioRecordAction: Equatable {
     case addAudio
 }
 
-extension AVAudioSessionClient.AudioRecordPermission {
+extension AudioRecordPermission {
     var description: String {
         switch self {
         case .authorized:
@@ -127,25 +128,29 @@ public struct AudioRecordEnvironment {
     }
 }
 
-public let audioRecordReducer = Reducer<AudioRecordState, AudioRecordAction, AudioRecordEnvironment> { state, action, environment in
-    
+public let audioRecordReducer = Reducer<
+    AudioRecordState,
+    AudioRecordAction,
+    AudioRecordEnvironment
+> { state, action, environment in
     struct RecorderManagerId: Hashable {}
     struct RecorderTimerId: Hashable {}
     struct PlayerManagerId: Hashable {}
     struct PlayerTimerId: Hashable {}
     
     switch action {
-    
     case .onAppear:
-        state.audioRecordPermission = environment.avAudioSessionClient.recordPermission
         return environment.avAudioRecorderClient.create(id: RecorderManagerId())
             .map(AudioRecordAction.recorderPlayer)
         
     case .requestMicrophonePermissionButtonTapped:
-        return environment.avAudioSessionClient.requestRecordPermission()
-            .receive(on: environment.mainQueue)
-            .eraseToEffect()
-            .map(AudioRecordAction.requestMicrophonePermissionResponse)
+        return .task { @MainActor in
+            do {
+                return .requestMicrophonePermissionResponse(try await environment.avAudioSessionClient.requestRecordPermission())
+            } catch {
+                return .requestMicrophonePermissionResponse(false)
+            }
+        }
         
     case let .requestMicrophonePermissionResponse(response):
         state.audioRecordPermission = response ? .authorized : .denied

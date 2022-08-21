@@ -12,6 +12,7 @@ import SwiftUI
 import UserDefaultsClient
 import EntriesFeature
 
+@MainActor
 class OnBoardingFeatureTests: XCTestCase {
     
     private let id1 = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
@@ -26,7 +27,7 @@ class OnBoardingFeatureTests: XCTestCase {
         ], style: .rectangle, layout: .horizontal), id: id3)
     ]
     
-    func testOnBoardingNavigatingAppearanceAndHappyPath() {
+    func testOnBoardingNavigatingAppearanceAndHappyPath() async {
         var setOnBoardingShownCalled = false
         let store = TestStore(
             initialState: WelcomeOnBoardingState(),
@@ -54,11 +55,11 @@ class OnBoardingFeatureTests: XCTestCase {
                 backgroundQueue: .immediate,
                 date: Date.init,
                 uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .none }
+                setUserInterfaceStyle: { _ in () }
             )
         )
         
-        store.send(.navigationPrivacyOnBoarding(true)) {
+        await store.send(.navigationPrivacyOnBoarding(true)) {
             $0.privacyOnBoardingState = .init(
                 styleOnBoardingState: nil,
                 navigateStyleOnBoarding: false
@@ -66,7 +67,7 @@ class OnBoardingFeatureTests: XCTestCase {
             $0.navigatePrivacyOnBoarding = true
         }
         
-        store.send(.privacyOnBoardingAction(.navigationStyleOnBoarding(true))) {
+        await store.send(.privacyOnBoardingAction(.navigationStyleOnBoarding(true))) {
             $0.privacyOnBoardingState?.navigateStyleOnBoarding = true
             $0.privacyOnBoardingState = .init(
                 styleOnBoardingState: .init(
@@ -79,7 +80,7 @@ class OnBoardingFeatureTests: XCTestCase {
             $0.privacyOnBoardingState?.navigateStyleOnBoarding = true
         }
         
-        store.send(.privacyOnBoardingAction(.styleOnBoardingAction(.navigationLayoutOnBoarding(true)))) {
+        await store.send(.privacyOnBoardingAction(.styleOnBoardingAction(.navigationLayoutOnBoarding(true)))) {
             $0.privacyOnBoardingState?.navigateStyleOnBoarding = true
             $0.privacyOnBoardingState = .init(
                 styleOnBoardingState: .init(
@@ -97,7 +98,7 @@ class OnBoardingFeatureTests: XCTestCase {
             $0.privacyOnBoardingState?.navigateStyleOnBoarding = true
         }
         
-        store.send(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.navigateThemeOnBoarding(true))))) {
+        await store.send(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.navigateThemeOnBoarding(true))))) {
             $0.privacyOnBoardingState?.navigateStyleOnBoarding = true
             $0.privacyOnBoardingState = .init(
                 styleOnBoardingState: .init(
@@ -120,7 +121,7 @@ class OnBoardingFeatureTests: XCTestCase {
             $0.privacyOnBoardingState?.navigateStyleOnBoarding = true
         }
         
-        store.send(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.startButtonTapped)))))
+        await store.send(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.startButtonTapped)))))
     }
 }
 
