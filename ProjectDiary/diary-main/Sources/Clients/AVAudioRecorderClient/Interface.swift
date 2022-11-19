@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Foundation
 
 public struct AVAudioRecorderClient {
     public enum Action: Equatable {

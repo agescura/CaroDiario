@@ -10,7 +10,7 @@ import ComposableArchitecture
 import PasscodeFeature
 
 extension Reducer where State == RootState, Action == RootAction, Environment == RootEnvironment {
-    public func userDefaults() -> Reducer {
+    public func userDefaults() -> Reducer<RootState, RootAction, RootEnvironment> {
         return .init { state, action, environment in
             let effects = self.run(&state, action, environment)
             

@@ -6,6 +6,7 @@
 
 import ComposableArchitecture
 import Models
+import Foundation
 
 public struct PDFKitClient {
     public var generatePDF: ([[Entry]], Date) -> Effect<Data, Never>

@@ -289,8 +289,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.39.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.46.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.10.0"),
     ],
     targets: [
         // Clients
@@ -736,7 +736,8 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "UIApplicationClient",
                 "Localizables",
-                "Styles"
+                "Styles",
+                "Views"
             ],
             path: "Sources/Features/Settings/AboutFeature"
         ),

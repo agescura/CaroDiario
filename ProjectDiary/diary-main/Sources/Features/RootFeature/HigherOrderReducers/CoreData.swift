@@ -12,7 +12,7 @@ import Models
 extension Reducer where State == RootState, Action == RootAction, Environment == RootEnvironment {
     struct CoreDataId: Hashable {}
     
-    public func coreData() -> Reducer {
+    public func coreData() -> Reducer<RootState, RootAction, RootEnvironment> {
         return .init { state, action, environment in
             let effects = self.run(&state, action, environment)
             
