@@ -20,7 +20,7 @@ public struct UIApplicationClient {
     public let setAlternateIconName: (String?) async throws -> Void
     public let supportsAlternateIcons: () -> Bool
     public let openSettings: () -> Effect<Never, Never>
-    public var open: (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>
+    public var open: @Sendable (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Void
     public var canOpen: (URL) -> Bool
     public let share: (Any, UIApplicationClient.PopoverPosition) -> Effect<Never, Never>
     public let showTabView: (Bool) -> Effect<Never, Never>
@@ -36,7 +36,7 @@ public struct UIApplicationClient {
         setAlternateIconName: @escaping (String?) async throws -> Void,
         supportsAlternateIcons: @escaping () -> Bool,
         openSettings: @escaping () -> Effect<Never, Never>,
-        open: @escaping (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) -> Effect<Never, Never>,
+        open: @escaping @Sendable (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Void,
         canOpen: @escaping (URL) -> Bool,
         share: @escaping (Any, UIApplicationClient.PopoverPosition) -> Effect<Never, Never>,
         showTabView: @escaping (Bool) -> Effect<Never, Never>

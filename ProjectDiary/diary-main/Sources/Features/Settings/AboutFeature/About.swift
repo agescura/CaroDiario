@@ -61,37 +61,34 @@ public struct About: ReducerProtocol {
       
     case .openMail:
       state.emailOptionSheet = nil
-      
-      var components = URLComponents()
-      components.scheme = "mailto"
-      components.path = "carodiarioapp@gmail.com"
-      components.queryItems = [
-        URLQueryItem(name: "subject", value: "Bug in Caro Diario"),
-        URLQueryItem(name: "body", value: "<Explain your bug here>"),
-      ]
-      
-      return self.applicationClient.open(components.url!, [:])
-        .fireAndForget()
+      return .fireAndForget {
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = "carodiarioapp@gmail.com"
+        components.queryItems = [
+          URLQueryItem(name: "subject", value: "Bug in Caro Diario"),
+          URLQueryItem(name: "body", value: "<Explain your bug here>"),
+        ]
+        await self.applicationClient.open(components.url!, [:])
+      }
       
     case .openGmail:
       state.emailOptionSheet = nil
-      
-      let compose = "googlegmail:///co?subject=Bug in Caro Diario&body=<Explain your bug here>&to=carodiarioapp@gmail.com"
-        .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-      let url = URL(string: compose)!
-      
-      return self.applicationClient.open(url, [:])
-        .fireAndForget()
+      return .fireAndForget {
+        let compose = "googlegmail:///co?subject=Bug in Caro Diario&body=<Explain your bug here>&to=carodiarioapp@gmail.com"
+          .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let url = URL(string: compose)!
+        await self.applicationClient.open(url, [:])
+      }
       
     case .openOutlook:
       state.emailOptionSheet = nil
-      
-      let compose = "ms-outlook://compose?to=carodiarioapp@gmail.com&subject=Bug in Caro Diario&body=<Explain your bug here>"
-        .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-      let url = URL(string: compose)!
-      
-      return self.applicationClient.open(url, [:])
-        .fireAndForget()
+      return .fireAndForget {
+        let compose = "ms-outlook://compose?to=carodiarioapp@gmail.com&subject=Bug in Caro Diario&body=<Explain your bug here>"
+          .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let url = URL(string: compose)!
+        await self.applicationClient.open(url, [:])
+      }
     }
   }
 }

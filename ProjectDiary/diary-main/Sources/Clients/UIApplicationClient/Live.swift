@@ -24,11 +24,7 @@ extension UIApplicationClient {
         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:])
       }
     },
-    open: { url, options in
-        .fireAndForget {
-          UIApplication.shared.open(url, options: options)
-        }
-    },
+    open: { @MainActor in await UIApplication.shared.open($0, options: $1) },
     canOpen: {
       UIApplication.shared.canOpenURL($0)
     },

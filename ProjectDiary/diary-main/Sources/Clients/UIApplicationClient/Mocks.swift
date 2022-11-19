@@ -29,7 +29,7 @@ extension UIApplicationClient {
     setAlternateIconName: { _ in () },
     supportsAlternateIcons: { true },
     openSettings: { .fireAndForget {} },
-    open: { _, _ in .fireAndForget {} },
+    open: { _, _ in },
     canOpen: { _ in true },
     share: { _, _ in .fireAndForget {} },
     showTabView: { _ in .fireAndForget {} }

@@ -3,8 +3,9 @@ import XCTest
 import ComposableArchitecture
 import SwiftUI
 
-class AgreementsFeatureTests: XCTestCase {
-  func testOpenConfirmationDialogAndOpenMail() {
+@MainActor
+class AboutFeatureTests: XCTestCase {
+  func testOpenConfirmationDialogAndOpenMail() async {
     let store = TestStore(
       initialState: .init(),
       reducer: About()
@@ -12,10 +13,9 @@ class AgreementsFeatureTests: XCTestCase {
     store.dependencies.applicationClient.canOpen = { _ in true }
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "mailto:carodiarioapp@gmail.com?subject=Bug%20in%20Caro%20Diario&body=%3CExplain%20your%20bug%20here%3E")
-      return .fireAndForget {}
     }
     
-    store.send(.emailOptionSheetButtonTapped) {
+    await store.send(.emailOptionSheetButtonTapped) {
       $0.emailOptionSheet = .init(
         title: .init("Choose an option"),
         message: nil,
@@ -40,12 +40,12 @@ class AgreementsFeatureTests: XCTestCase {
       )
     }
     
-    store.send(.openMail) {
+    await store.send(.openMail) {
       $0.emailOptionSheet = nil
     }
   }
   
-  func testOpenConfirmationDialogAndGmailMail() {
+  func testOpenConfirmationDialogAndGmailMail() async {
     let store = TestStore(
       initialState: .init(),
       reducer: About()
@@ -53,10 +53,9 @@ class AgreementsFeatureTests: XCTestCase {
     store.dependencies.applicationClient.canOpen = { _ in true }
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "googlegmail:///co?subject=Bug%20in%20Caro%20Diario&body=%3CExplain%20your%20bug%20here%3E&to=carodiarioapp@gmail.com")
-      return .fireAndForget {}
     }
     
-    store.send(.emailOptionSheetButtonTapped) {
+    await store.send(.emailOptionSheetButtonTapped) {
       $0.emailOptionSheet = .init(
         title: .init("Choose an option"),
         message: nil,
@@ -81,12 +80,12 @@ class AgreementsFeatureTests: XCTestCase {
       )
     }
     
-    store.send(.openGmail) {
+    await store.send(.openGmail) {
       $0.emailOptionSheet = nil
     }
   }
   
-  func testOpenConfirmationDialogAndOutlookMail() {
+  func testOpenConfirmationDialogAndOutlookMail() async {
     let store = TestStore(
       initialState: .init(),
       reducer: About()
@@ -94,10 +93,9 @@ class AgreementsFeatureTests: XCTestCase {
     store.dependencies.applicationClient.canOpen = { _ in true }
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "ms-outlook://compose?to=carodiarioapp@gmail.com&subject=Bug%20in%20Caro%20Diario&body=%3CExplain%20your%20bug%20here%3E")
-      return .fireAndForget {}
     }
     
-    store.send(.emailOptionSheetButtonTapped) {
+    await store.send(.emailOptionSheetButtonTapped) {
       $0.emailOptionSheet = .init(
         title: .init("Choose an option"),
         message: nil,
@@ -122,19 +120,19 @@ class AgreementsFeatureTests: XCTestCase {
       )
     }
     
-    store.send(.openOutlook) {
+    await store.send(.openOutlook) {
       $0.emailOptionSheet = nil
     }
   }
   
-  func testOpenConfirmationDialogAndDimiss() {
+  func testOpenConfirmationDialogAndDimiss() async {
     let store = TestStore(
       initialState: .init(),
       reducer: About()
     )
     store.dependencies.applicationClient.canOpen = { _ in true }
     
-    store.send(.emailOptionSheetButtonTapped) {
+    await store.send(.emailOptionSheetButtonTapped) {
       $0.emailOptionSheet = .init(
         title: .init("Choose an option"),
         message: nil,
@@ -159,7 +157,7 @@ class AgreementsFeatureTests: XCTestCase {
       )
     }
     
-    store.send(.dismissEmailOptionSheet) {
+    await store.send(.dismissEmailOptionSheet) {
       $0.emailOptionSheet = nil
     }
   }
