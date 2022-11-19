@@ -6,6 +6,14 @@
 
 import ComposableArchitecture
 import UIKit
+import Dependencies
+
+extension DependencyValues {
+  public var applicationClient: UIApplicationClient {
+    get { self[UIApplicationClient.self] }
+    set { self[UIApplicationClient.self] = newValue }
+  }
+}
 
 public struct UIApplicationClient {
     public let alternateIconName: String?

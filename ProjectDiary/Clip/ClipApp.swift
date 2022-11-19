@@ -10,7 +10,7 @@ import ComposableArchitecture
 import ClipFeature
 import UserDefaultsClientLive
 import FeedbackGeneratorClientLive
-import UIApplicationClientLive
+import UIApplicationClient
 
 @main
 struct ClipApp: App {

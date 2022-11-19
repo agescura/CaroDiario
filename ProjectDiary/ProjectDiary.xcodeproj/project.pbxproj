@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		06DCEF3AC372F0887410EC77 /* ProjectDiaryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB841C347FD8D298EFFE0DFA /* ProjectDiaryApp.swift */; };
 		3A2FC9491B8464A369CEF6FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 383C79C9989491DECCF849A8 /* Assets.xcassets */; };
+		95171CEE2928E1A700098B06 /* UIApplicationClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95171CED2928E1A700098B06 /* UIApplicationClient */; };
+		95171CF02928E1E700098B06 /* UIApplicationClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95171CEF2928E1E700098B06 /* UIApplicationClient */; };
 		9537BBB726D5419A00650CF5 /* ProjectDiaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537BBB626D5419A00650CF5 /* ProjectDiaryTests.swift */; };
 		954422EC26F66535002C1E1C /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954422EB26F66535002C1E1C /* ShareViewController.swift */; };
 		954422EF26F66535002C1E1C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 954422ED26F66535002C1E1C /* MainInterface.storyboard */; };
@@ -33,7 +35,6 @@
 		95ABFF4026B48BD9001DAAE7 /* CoreDataClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF3F26B48BD9001DAAE7 /* CoreDataClientLive */; };
 		95ABFF4226B48BD9001DAAE7 /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF4126B48BD9001DAAE7 /* FileClientLive */; };
 		95ABFF4426B48BD9001DAAE7 /* LocalAuthenticationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF4326B48BD9001DAAE7 /* LocalAuthenticationClientLive */; };
-		95ABFF4826B48BD9001DAAE7 /* UIApplicationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF4726B48BD9001DAAE7 /* UIApplicationClientLive */; };
 		95ABFF4A26B48BD9001DAAE7 /* UserDefaultsClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF4926B48BD9001DAAE7 /* UserDefaultsClientLive */; };
 		95B9098126B7226E00CE023E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B9098026B7226E00CE023E /* AppDelegate.swift */; };
 		95B9098326B722BC00CE023E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B9098226B722BC00CE023E /* SceneDelegate.swift */; };
@@ -145,6 +146,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95171CEE2928E1A700098B06 /* UIApplicationClient in Frameworks */,
 				958A6C3A270A1706005CF5B5 /* AVAssetClientLive in Frameworks */,
 				954422F926F669D9002C1E1C /* CoreDataClientLive in Frameworks */,
 				954422FB26F669DF002C1E1C /* FileClientLive in Frameworks */,
@@ -162,8 +164,8 @@
 				95ABFF3E26B48BD0001DAAE7 /* RootFeature in Frameworks */,
 				955764DC26D7A86700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */,
 				9565C2DB26D989DD004DB3D9 /* AVAudioPlayerClientLive in Frameworks */,
-				95ABFF4826B48BD9001DAAE7 /* UIApplicationClientLive in Frameworks */,
 				9544230326F691EF002C1E1C /* PDFKitClientLive in Frameworks */,
+				95171CF02928E1E700098B06 /* UIApplicationClient in Frameworks */,
 				95ABFF4A26B48BD9001DAAE7 /* UserDefaultsClientLive in Frameworks */,
 				956952BE26C0788300D73FAD /* FeedbackGeneratorClientLive in Frameworks */,
 				95ABFF4426B48BD9001DAAE7 /* LocalAuthenticationClientLive in Frameworks */,
@@ -334,7 +336,6 @@
 				95ABFF3F26B48BD9001DAAE7 /* CoreDataClientLive */,
 				95ABFF4126B48BD9001DAAE7 /* FileClientLive */,
 				95ABFF4326B48BD9001DAAE7 /* LocalAuthenticationClientLive */,
-				95ABFF4726B48BD9001DAAE7 /* UIApplicationClientLive */,
 				95ABFF4926B48BD9001DAAE7 /* UserDefaultsClientLive */,
 				956952BD26C0788300D73FAD /* FeedbackGeneratorClientLive */,
 				955764DB26D7A86700C8BD84 /* AVCaptureDeviceClientLive */,
@@ -344,6 +345,7 @@
 				9582631C26F6222500913B2F /* StoreKitClientLive */,
 				9544230226F691EF002C1E1C /* PDFKitClientLive */,
 				958A6C3B270A1A98005CF5B5 /* AVAssetClientLive */,
+				95171CEF2928E1E700098B06 /* UIApplicationClient */,
 			);
 			productName = ProjectDiary;
 			productReference = BD2A3298447210A07EE095A2 /* ProjectDiary.app */;
@@ -387,6 +389,7 @@
 				954422F826F669D9002C1E1C /* CoreDataClientLive */,
 				954422FA26F669DF002C1E1C /* FileClientLive */,
 				958A6C39270A1706005CF5B5 /* AVAssetClientLive */,
+				95171CED2928E1A700098B06 /* UIApplicationClient */,
 			);
 			productName = Share;
 			productReference = 954422E926F66535002C1E1C /* Share.appex */;
@@ -857,6 +860,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		95171CED2928E1A700098B06 /* UIApplicationClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIApplicationClient;
+		};
+		95171CEF2928E1E700098B06 /* UIApplicationClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIApplicationClient;
+		};
 		954422F826F669D9002C1E1C /* CoreDataClientLive */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CoreDataClientLive;
@@ -912,10 +923,6 @@
 		95ABFF4326B48BD9001DAAE7 /* LocalAuthenticationClientLive */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LocalAuthenticationClientLive;
-		};
-		95ABFF4726B48BD9001DAAE7 /* UIApplicationClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UIApplicationClientLive;
 		};
 		95ABFF4926B48BD9001DAAE7 /* UserDefaultsClientLive */ = {
 			isa = XCSwiftPackageProductDependency;

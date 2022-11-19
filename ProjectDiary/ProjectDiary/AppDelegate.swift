@@ -13,7 +13,7 @@ import UserDefaultsClientLive
 import CoreDataClientLive
 import FileClientLive
 import LocalAuthenticationClientLive
-import UIApplicationClientLive
+import UIApplicationClient
 import AVCaptureDeviceClientLive
 import FeedbackGeneratorClientLive
 import AVAudioSessionClientLive

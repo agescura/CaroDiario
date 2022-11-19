@@ -17,37 +17,37 @@ import LanguageFeature
 import PasscodeFeature
 
 public enum SettingsAction: Equatable {
-    case onAppear
-    
-    case toggleShowSplash(isOn: Bool)
-    case biometricResult(LocalAuthenticationType)
-    
-    case appearanceAction(AppearanceAction)
-    case navigateAppearance(Bool)
-    
-    case languageAction(LanguageAction)
-    case navigateLanguage(Bool)
-    
-    case activatePasscodeAction(ActivatePasscodeAction)
-    case navigateActivatePasscode(Bool)
-    
-    case menuPasscodeAction(MenuPasscodeAction)
-    case navigateMenuPasscode(Bool)
-    
-    case cameraAction(CameraAction)
-    case navigateCamera(Bool)
-    
-    case microphoneAction(MicrophoneAction)
-    case navigateMicrophone(Bool)
-    
-    case agreementsAction(AgreementsAction)
-    case navigateAgreements(Bool)
-    
-    case reviewStoreKit
-    
-    case exportAction(ExportAction)
-    case navigateExport(Bool)
-    
-    case aboutAction(AboutAction)
-    case navigateAbout(Bool)
+  case onAppear
+  
+  case toggleShowSplash(isOn: Bool)
+  case biometricResult(LocalAuthenticationType)
+  
+  case appearanceAction(AppearanceAction)
+  case navigateAppearance(Bool)
+  
+  case languageAction(LanguageAction)
+  case navigateLanguage(Bool)
+  
+  case activatePasscodeAction(ActivatePasscodeAction)
+  case navigateActivatePasscode(Bool)
+  
+  case menuPasscodeAction(MenuPasscodeAction)
+  case navigateMenuPasscode(Bool)
+  
+  case cameraAction(CameraAction)
+  case navigateCamera(Bool)
+  
+  case microphoneAction(MicrophoneAction)
+  case navigateMicrophone(Bool)
+  
+  case agreementsAction(AgreementsAction)
+  case navigateAgreements(Bool)
+  
+  case reviewStoreKit
+  
+  case exportAction(ExportAction)
+  case navigateExport(Bool)
+  
+  case aboutAction(About.Action)
+  case navigateAbout(Bool)
 }

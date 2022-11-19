@@ -51,10 +51,6 @@ let package = Package(
             name: "UIApplicationClient",
             targets: ["UIApplicationClient"]
         ),
-        .library(
-            name: "UIApplicationClientLive",
-            targets: ["UIApplicationClientLive"]
-        ),
         
         .library(
             name: "AVCaptureDeviceClient",
@@ -473,13 +469,6 @@ let package = Package(
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ],
             path: "Sources/Clients/UIApplicationClient"
-        ),
-        .target(
-            name: "UIApplicationClientLive",
-            dependencies: [
-            "UIApplicationClient"
-        ],
-            path: "Sources/Clients/UIApplicationClientLive"
         ),
         
         .target(
