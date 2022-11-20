@@ -1,40 +1,33 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 4/10/21.
-//
-
 import ComposableArchitecture
 import SwiftUI
 import AVKit
 import Models
 
-public struct AttachmentVideoDetailState: Equatable {
-    public var entryVideo: EntryVideo
-    
-    public init(
-        attachment: AttachmentVideoState
-    ) {
-        self.entryVideo = attachment.entryVideo
-    }
-}
+public struct AttachmentVideoDetail: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Equatable {
+      public var entryVideo: EntryVideo
+      
+      public init(
+          attachment: AttachmentVideoState
+      ) {
+          self.entryVideo = attachment.entryVideo
+      }
+  }
 
-public enum AttachmentVideoDetailAction: Equatable {}
-
-public let attachmentVideoDetailReducer = Reducer<
-    AttachmentVideoDetailState,
-    AttachmentVideoDetailAction,
-    Void
-> { state, action, _ in
-    return .none
+  public enum Action: Equatable {}
+  
+  public var body: some ReducerProtocolOf<Self> {
+    EmptyReducer()
+  }
 }
 
 public struct AttachmentVideoDetailView: View {
-    let store: Store<AttachmentVideoDetailState, AttachmentVideoDetailAction>
+    let store: StoreOf<AttachmentVideoDetail>
     
     public var body: some View {
-        WithViewStore(self.store) { viewStore in
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
             VideoPlayer(player: AVPlayer(url: viewStore.entryVideo.url))
                 .padding(.bottom, 32)
         }

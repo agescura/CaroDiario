@@ -25,10 +25,9 @@ class LayoutViewTests: XCTestCase {
             reducer: layoutReducer,
             environment: LayoutEnvironment(
                 feedbackGeneratorClient: .init(
-                    prepare: { .fireAndForget {} },
+                    prepare: { },
                     selectionChanged: {
                         feedbackGeneratorCalled = true
-                        return .fireAndForget {}
                     }
                 )
             )

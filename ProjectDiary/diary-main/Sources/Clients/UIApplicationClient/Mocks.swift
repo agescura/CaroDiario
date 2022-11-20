@@ -1,9 +1,3 @@
-//
-//  Mocks.swift
-//
-//  Created by Albert Gil Escura on 28/7/21.
-//
-
 import Foundation
 import Dependencies
 import XCTestDynamicOverlay

@@ -40,7 +40,7 @@ public enum SettingsAction: Equatable {
   case microphoneAction(MicrophoneAction)
   case navigateMicrophone(Bool)
   
-  case agreementsAction(AgreementsAction)
+  case agreements(Agreements.Action)
   case navigateAgreements(Bool)
   
   case reviewStoreKit
@@ -48,6 +48,6 @@ public enum SettingsAction: Equatable {
   case exportAction(ExportAction)
   case navigateExport(Bool)
   
-  case aboutAction(About.Action)
+  case about(About.Action)
   case navigateAbout(Bool)
 }

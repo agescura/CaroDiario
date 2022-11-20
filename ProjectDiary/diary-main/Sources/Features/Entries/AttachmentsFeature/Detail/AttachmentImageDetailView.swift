@@ -1,20 +1,16 @@
-//
-//  AttachmentAudioDetailView.swift
-//  
-//
-//  Created by Albert Gil Escura on 4/10/21.
-//
-
 import ComposableArchitecture
 import SwiftUI
 import Models
 import Views
 
-public struct AttachmentImageDetailState: Equatable {
+public struct AttachmentImageDetail: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Equatable {
     public var entryImage: EntryImage
     
-    public var removeFullScreenAlert: AlertState<AttachmentImageDetailAction>?
-    public var removeAlert: AlertState<AttachmentImageDetailAction>?
+    public var removeFullScreenAlert: AlertState<AttachmentImageDetail.Action>?
+    public var removeAlert: AlertState<AttachmentImageDetail.Action>?
     
     public var imageScale: CGFloat = 1
     public var lastValue: CGFloat = 1
@@ -25,66 +21,70 @@ public struct AttachmentImageDetailState: Equatable {
     public var currentPosition: CGSize = .zero
     
     public init(
-        attachment: AttachmentImageState
+      attachment: AttachmentImageState
     ) {
-        self.entryImage = attachment.entryImage
+      self.entryImage = attachment.entryImage
     }
-}
-
-public enum AttachmentImageDetailAction: Equatable {
+  }
+  
+  public enum Action: Equatable {
     case scaleOnChanged(CGFloat)
     case scaleTapGestureCount
     case dragGesture(DragGesture.Value)
-}
-
-public let attachmentImageDetailReducer = Reducer<
-    AttachmentImageDetailState,
-    AttachmentImageDetailAction,
-    Void
-> { state, action, _ in
+  }
+  
+  public var body: some ReducerProtocolOf<Self> {
+    Reduce(self.core)
+  }
+  
+  private func core(
+    state: inout State,
+    action: Action
+  ) -> Effect<Action, Never> {
     switch action {
     case let .scaleOnChanged(value):
-        let maxScale: CGFloat = 3.0
-        let minScale: CGFloat = 1.0
-        
-        let resolvedDelta = value / state.imageScale
-        state.lastValue = value
-        let newScale = state.imageScale * resolvedDelta
-        state.imageScale = min(maxScale, max(minScale, newScale))
-        return .none
-        
+      let maxScale: CGFloat = 3.0
+      let minScale: CGFloat = 1.0
+      
+      let resolvedDelta = value / state.imageScale
+      state.lastValue = value
+      let newScale = state.imageScale * resolvedDelta
+      state.imageScale = min(maxScale, max(minScale, newScale))
+      return .none
+      
     case .scaleTapGestureCount:
-        state.isTapped.toggle()
-        state.imageScale = state.imageScale > 1 ? 1 : 2
-        state.currentPosition = .zero
-        return .none
-        
+      state.isTapped.toggle()
+      state.imageScale = state.imageScale > 1 ? 1 : 2
+      state.currentPosition = .zero
+      return .none
+      
     case let .dragGesture(value):
-        state.currentPosition = .init(width: value.translation.width, height: value.translation.height)
-        return .none
+      state.currentPosition = .init(width: value.translation.width, height: value.translation.height)
+      return .none
     }
+  }
 }
 
 public struct AttachmentImageDetailView: View {
-    let store: Store<AttachmentImageDetailState, AttachmentImageDetailAction>
-    
-    public var body: some View {
-        WithViewStore(self.store) { viewStore in
-            ImageView(url: viewStore.entryImage.url)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .animation(.easeIn(duration: 1.0), value: UUID())
-                .scaleEffect(viewStore.imageScale)
-                .offset(viewStore.currentPosition)
-                .gesture(
-                    
-                    MagnificationGesture(minimumScaleDelta: 0.1)
-                        .onChanged({ value in
-                            viewStore.send(.scaleOnChanged(value))
-                        })
-                        .simultaneously(with: TapGesture(count: 2).onEnded({
-                            viewStore.send(.scaleTapGestureCount, animation: .spring())
-                        }))
-                )
-        }
+  let store: StoreOf<AttachmentImageDetail>
+  
+  public var body: some View {
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+      ImageView(url: viewStore.entryImage.url)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .animation(.easeIn(duration: 1.0), value: UUID())
+        .scaleEffect(viewStore.imageScale)
+        .offset(viewStore.currentPosition)
+        .gesture(
+          
+          MagnificationGesture(minimumScaleDelta: 0.1)
+            .onChanged({ value in
+              viewStore.send(.scaleOnChanged(value))
+            })
+            .simultaneously(with: TapGesture(count: 2).onEnded({
+              viewStore.send(.scaleTapGestureCount, animation: .spring())
+            }))
+        )
     }
+  }
 }

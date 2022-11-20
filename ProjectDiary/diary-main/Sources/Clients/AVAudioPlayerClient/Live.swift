@@ -10,6 +10,12 @@ import Combine
 import ComposableArchitecture
 import AVAudioPlayerClient
 
+import Dependencies
+
+extension AVAudioPlayerClient: DependencyKey {
+  public static var liveValue: AVAudioPlayerClient { .live }
+}
+
 extension AVAudioPlayerClient {
     public static var live: Self = {
         Self(

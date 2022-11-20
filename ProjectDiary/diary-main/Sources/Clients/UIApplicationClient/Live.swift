@@ -1,9 +1,3 @@
-//
-//  Live.swift  
-//
-//  Created by Albert Gil Escura on 28/7/21.
-//
-
 import Combine
 import UIKit
 import Dependencies
@@ -25,9 +19,7 @@ extension UIApplicationClient {
       }
     },
     open: { @MainActor in await UIApplication.shared.open($0, options: $1) },
-    canOpen: {
-      UIApplication.shared.canOpenURL($0)
-    },
+    canOpen: { UIApplication.shared.canOpenURL($0) },
     share: { data, position in
         .fireAndForget {
           let windowScene = UIApplication.shared.connectedScenes

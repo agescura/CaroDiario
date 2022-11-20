@@ -1,9 +1,3 @@
-//
-//  Interface.swift
-//
-//  Created by Albert Gil Escura on 28/7/21.
-//
-
 import ComposableArchitecture
 import UIKit
 import Dependencies
@@ -17,7 +11,7 @@ extension DependencyValues {
 
 public struct UIApplicationClient {
     public let alternateIconName: String?
-    public let setAlternateIconName: (String?) async throws -> Void
+    public var setAlternateIconName: (String?) async throws -> Void
     public let supportsAlternateIcons: () -> Bool
     public let openSettings: () -> Effect<Never, Never>
     public var open: @Sendable (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Void

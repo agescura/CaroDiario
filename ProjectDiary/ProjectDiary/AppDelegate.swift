@@ -11,13 +11,13 @@ import RootFeature
 import Styles
 import UserDefaultsClientLive
 import CoreDataClientLive
-import FileClientLive
+import FileClient
 import LocalAuthenticationClientLive
 import UIApplicationClient
 import AVCaptureDeviceClientLive
-import FeedbackGeneratorClientLive
+import FeedbackGeneratorClient
 import AVAudioSessionClientLive
-import AVAudioPlayerClientLive
+import AVAudioPlayerClient
 import AVAudioRecorderClientLive
 import StoreKitClientLive
 import PDFKitClientLive

@@ -1,10 +1,3 @@
-//
-//  AppearanceView.swift
-//  
-//
-//  Created by Albert Gil Escura on 16/8/21.
-//
-
 import ComposableArchitecture
 import SwiftUI
 import Styles

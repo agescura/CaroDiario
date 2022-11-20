@@ -33,10 +33,6 @@ let package = Package(
             name: "FileClient",
             targets: ["FileClient"]
         ),
-        .library(
-            name: "FileClientLive",
-            targets: ["FileClientLive"]
-        ),
         
         .library(
             name: "LocalAuthenticationClient",
@@ -64,10 +60,6 @@ let package = Package(
         .library(
             name: "AVAudioPlayerClient",
             targets: ["AVAudioPlayerClient"]
-        ),
-        .library(
-            name: "AVAudioPlayerClientLive",
-            targets: ["AVAudioPlayerClientLive"]
         ),
         
         .library(
@@ -100,10 +92,6 @@ let package = Package(
         .library(
             name: "FeedbackGeneratorClient",
             targets: ["FeedbackGeneratorClient"]
-        ),
-        .library(
-            name: "FeedbackGeneratorClientLive",
-            targets: ["FeedbackGeneratorClientLive"]
         ),
         
         .library(
@@ -313,13 +301,6 @@ let package = Package(
         ],
             path: "Sources/Clients/AVAudioPlayerClient"
         ),
-        .target(
-            name: "AVAudioPlayerClientLive",
-            dependencies: [
-            "AVAudioPlayerClient"
-        ],
-            path: "Sources/Clients/AVAudioPlayerClientLive"
-        ),
         
         .target(
             name: "AVAudioRecorderClient",
@@ -339,7 +320,8 @@ let package = Package(
         .target(
             name: "AVAudioSessionClient",
             dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+              .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+              "Models"
         ],
             path: "Sources/Clients/AVAudioSessionClient"
         ),
@@ -391,13 +373,6 @@ let package = Package(
         ],
             path: "Sources/Clients/FeedbackGeneratorClient"
         ),
-        .target(
-            name: "FeedbackGeneratorClientLive",
-            dependencies: [
-            "FeedbackGeneratorClient"
-        ],
-            path: "Sources/Clients/FeedbackGeneratorClientLive"
-        ),
         
         .target(
             name: "FileClient",
@@ -406,14 +381,6 @@ let package = Package(
                 .target(name: "Models")
             ],
             path: "Sources/Clients/FileClient"
-        ),
-        .target(
-            name: "FileClientLive",
-            dependencies: [
-                "Models",
-                "FileClient"
-            ],
-            path: "Sources/Clients/FileClientLive"
         ),
         
         .target(

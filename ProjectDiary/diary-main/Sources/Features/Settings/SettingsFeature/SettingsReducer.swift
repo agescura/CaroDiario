@@ -87,17 +87,12 @@ public let settingsReducer: Reducer<
         )
       }
     ),
-  agreementsReducer
-    .optional()
-    .pullback(
-      state: \SettingsState.agreementsState,
-      action: /SettingsAction.agreementsAction,
-      environment: {
-        AgreementsEnvironment(
-          applicationClient: $0.applicationClient
-        )
+  AnyReducer(
+    EmptyReducer()
+      .ifLet(\SettingsState.agreements, action: /SettingsAction.agreements) {
+        Agreements()
       }
-    ),
+  ),
   exportReducer
     .optional()
     .pullback(
@@ -114,7 +109,7 @@ public let settingsReducer: Reducer<
     ),
   AnyReducer(
     EmptyReducer()
-      .ifLet(\SettingsState.aboutState, action: /SettingsAction.aboutAction) {
+      .ifLet(\SettingsState.about, action: /SettingsAction.about) {
         About()
       }
   ),
@@ -230,7 +225,7 @@ public let settingsReducer: Reducer<
         state.route = value ? .agreements(.init()) : nil
         return .none
         
-      case .agreementsAction:
+      case .agreements:
         return .none
         
       case .reviewStoreKit:
@@ -248,7 +243,7 @@ public let settingsReducer: Reducer<
         state.route = value ? .about(.init()) : nil
         return .none
         
-      case .aboutAction:
+      case .about:
         return .none
       }
     }

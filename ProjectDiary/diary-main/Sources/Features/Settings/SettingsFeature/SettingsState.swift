@@ -68,7 +68,7 @@ public struct SettingsState: Equatable {
     case camera(CameraState)
     case microphone(MicrophoneState)
     case export(ExportState)
-    case agreements(AgreementsState)
+    case agreements(Agreements.State)
     case about(About.State)
   }
   
@@ -142,7 +142,7 @@ public struct SettingsState: Equatable {
       self.route = .export(newValue)
     }
   }
-  var agreementsState: AgreementsState? {
+  var agreements: Agreements.State? {
     get {
       guard case let .agreements(state) = self.route else { return nil }
       return state
@@ -152,7 +152,7 @@ public struct SettingsState: Equatable {
       self.route = .agreements(newValue)
     }
   }
-  var aboutState: About.State? {
+  var about: About.State? {
     get {
       guard case let .about(state) = self.route else { return nil }
       return state

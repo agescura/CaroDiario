@@ -19,7 +19,6 @@ class StyleViewTests: XCTestCase {
         var selectionChangedCalled = false
         environment.feedbackGeneratorClient.selectionChanged = {
             selectionChangedCalled = true
-            return .fireAndForget {}
         }
         let store = TestStore(
             initialState: StyleState(styleType: .rectangle, layoutType: .horizontal, entries: []),

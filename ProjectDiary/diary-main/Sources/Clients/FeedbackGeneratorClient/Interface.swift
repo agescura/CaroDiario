@@ -1,11 +1,12 @@
-//
-//  Interface.swift
-//  
-//
-//  Created by Albert Gil Escura on 8/8/21.
-//
-
 import ComposableArchitecture
+import Dependencies
+
+extension DependencyValues {
+  public var feedbackGeneratorClient: FeedbackGeneratorClient {
+    get { self[FeedbackGeneratorClient.self] }
+    set { self[FeedbackGeneratorClient.self] = newValue }
+  }
+}
 
 public struct FeedbackGeneratorClient {
     public var prepare: () async -> Void

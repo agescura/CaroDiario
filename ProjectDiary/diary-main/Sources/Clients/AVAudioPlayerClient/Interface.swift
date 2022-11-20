@@ -1,12 +1,13 @@
-//
-//  Mocks.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/8/21.
-//
-
 import AVFoundation
 import ComposableArchitecture
+import Dependencies
+
+extension DependencyValues {
+  public var avAudioPlayerClient: AVAudioPlayerClient {
+    get { self[AVAudioPlayerClient.self] }
+    set { self[AVAudioPlayerClient.self] = newValue }
+  }
+}
 
 public struct AVAudioPlayerClient {
     public enum Action: Equatable {

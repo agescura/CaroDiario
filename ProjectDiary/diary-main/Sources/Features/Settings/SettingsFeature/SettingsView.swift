@@ -166,7 +166,7 @@ public struct SettingsView: View {
                                     AgreementsView(
                                         store: self.store.scope(
                                             state: { _ in agreementsState },
-                                            action: SettingsAction.agreementsAction
+                                            action: SettingsAction.agreements
                                         )
                                     )
                                 },
@@ -180,7 +180,7 @@ public struct SettingsView: View {
                                     AboutView(
                                         store: self.store.scope(
                                             state: { _ in aboutState },
-                                            action: SettingsAction.aboutAction
+                                            action: SettingsAction.about
                                         )
                                     )
                                 },

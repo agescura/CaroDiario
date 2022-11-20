@@ -1,17 +1,9 @@
-//
-//  ShareViewController.swift
-//  Share
-//
-//  Created by Albert Gil Escura on 18/9/21.
-//
-
 import UIKit
 import Social
 import MobileCoreServices
 import CoreDataClient
 import CoreDataClientLive
 import FileClient
-import FileClientLive
 import Models
 import Combine
 import UniformTypeIdentifiers

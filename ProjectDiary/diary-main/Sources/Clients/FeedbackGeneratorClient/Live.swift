@@ -1,13 +1,9 @@
-//
-//  Live.swift
-//  
-//
-//  Created by Albert Gil Escura on 8/8/21.
-//
-
 import UIKit
-import FeedbackGeneratorClient
+import Dependencies
 
+extension FeedbackGeneratorClient: DependencyKey {
+  public static var liveValue: FeedbackGeneratorClient { .live }
+}
 
 extension FeedbackGeneratorClient {
     public static var live: Self {

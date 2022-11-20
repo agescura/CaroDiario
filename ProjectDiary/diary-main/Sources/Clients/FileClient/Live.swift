@@ -1,14 +1,11 @@
-//
-//  FileClientLive.swift
-//  FileClientLive
-//
-//  Created by Albert Gil Escura on 3/7/21.
-//
-
 import Foundation
 import ComposableArchitecture
 import UIKit
-import FileClient
+import Dependencies
+
+extension FileClient: DependencyKey {
+  public static var liveValue: FileClient { .live }
+}
 
 extension FileClient {
     public static var live: Self {

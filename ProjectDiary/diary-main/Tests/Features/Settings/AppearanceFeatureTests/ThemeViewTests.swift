@@ -10,16 +10,17 @@ import XCTest
 import ComposableArchitecture
 import EntriesFeature
 
+@MainActor
 class ThemeViewTests: XCTestCase {
     
-    func testThemeHappyPath() {
+    func testThemeHappyPath() async {
         var environment = ThemeEnvironment(
-            feedbackGeneratorClient: .noop
+          feedbackGeneratorClient: .noop,
+          setUserInterfaceStyle: { _ in }
         )
         var selectionChangedCalled = false
         environment.feedbackGeneratorClient.selectionChanged = {
             selectionChangedCalled = true
-            return .fireAndForget {}
         }
         let store = TestStore(
             initialState: ThemeState(entries: []),
@@ -27,13 +28,13 @@ class ThemeViewTests: XCTestCase {
             environment: environment
         )
         
-        store.send(.themeChanged(.dark)) {
+        await store.send(.themeChanged(.dark)) {
             $0.themeType = .dark
             XCTAssertTrue(selectionChangedCalled)
             selectionChangedCalled = false
         }
         
-        store.send(.themeChanged(.light)) {
+        await store.send(.themeChanged(.light)) {
             $0.themeType = .light
             XCTAssertTrue(selectionChangedCalled)
         }
@@ -45,7 +46,7 @@ class ThemeViewTests: XCTestCase {
                 entries: fakeEntries(with: .rectangle, layout: .vertical)
             ),
             reducer: themeReducer,
-            environment: .init(feedbackGeneratorClient: .noop)
+            environment: .init(feedbackGeneratorClient: .noop, setUserInterfaceStyle: { _ in })
         )
         let view = ThemeView(store: store)
         

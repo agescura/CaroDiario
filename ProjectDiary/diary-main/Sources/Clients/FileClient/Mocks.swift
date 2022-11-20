@@ -1,12 +1,20 @@
-//
-//  Mocks.swift
-//  
-//
-//  Created by Albert Gil Escura on 22/7/21.
-//
-
 import Foundation
 import ComposableArchitecture
+import Dependencies
+import XCTestDynamicOverlay
+
+extension FileClient: TestDependencyKey {
+  public static let previewValue = Self.noop
+
+  public static let testValue = Self(
+    path: XCTUnimplemented("\(Self.self).path"),
+    removeAttachments: XCTUnimplemented("\(Self.self).removeAttachments"),
+    addImage: XCTUnimplemented("\(Self.self).addImage"),
+    loadImage: XCTUnimplemented("\(Self.self).loadImage"),
+    addVideo: XCTUnimplemented("\(Self.self).addVideo"),
+    addAudio: XCTUnimplemented("\(Self.self).addAudio")
+  )
+}
 
 extension FileClient {
     public static let noop: FileClient = Self(
