@@ -9,7 +9,7 @@ public struct AttachmentDetail: ReducerProtocol {
     case video(AttachmentVideoDetail.State)
     case audio(AttachmentAudioDetail.State)
     
-    public init(row: AttachmentRowState) {
+    public init(row: AttachmentRow.State) {
       switch row.attachment {
       case let .image(attachmentImageState):
         self = .image(AttachmentImageDetail.State(attachment: attachmentImageState))

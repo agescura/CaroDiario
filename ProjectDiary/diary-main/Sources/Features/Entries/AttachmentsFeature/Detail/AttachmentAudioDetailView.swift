@@ -20,7 +20,7 @@ public struct AttachmentAudioDetail: ReducerProtocol {
     var playerProgressTime: Double = 0
     
     public init(
-      attachment: AttachmentAudioState
+      attachment: AttachmentAudio.State
     ) {
       self.entryAudio = attachment.entryAudio
     }

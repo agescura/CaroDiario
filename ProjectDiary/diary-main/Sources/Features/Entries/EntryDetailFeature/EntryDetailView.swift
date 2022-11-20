@@ -17,7 +17,7 @@ import UIApplicationClient
 
 public struct EntryDetailState: Equatable {
   public var entry: Entry
-  public var attachments: IdentifiedArrayOf<AttachmentRowState> = []
+  public var attachments: IdentifiedArrayOf<AttachmentRow.State> = []
   
   public var meatballActionSheet: ConfirmationDialogState<EntryDetailAction>?
   public var removeAlert: AlertState<EntryDetailAction>?
@@ -26,13 +26,13 @@ public struct EntryDetailState: Equatable {
   public var presentAddEntry = false
   
   public var showAttachmentOverlayed = false
-  public var seletedAttachmentRowState: AttachmentRowState! = AttachmentRowState(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))) {
+  public var seletedAttachmentRowState: AttachmentRow.State! = AttachmentRow.State(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))) {
     didSet {
       self.selectedAttachmentDetailState = AttachmentDetail.State(row: seletedAttachmentRowState)
     }
   }
   
-  public var selectedAttachmentDetailState: AttachmentDetail.State! = AttachmentDetail.State(row: AttachmentRowState(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))))
+  public var selectedAttachmentDetailState: AttachmentDetail.State! = AttachmentDetail.State(row: AttachmentRow.State(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))))
   
   public init(
     entry: Entry
@@ -49,7 +49,7 @@ public enum EntryDetailAction: Equatable {
   case onAppear
   case entryResponse(Entry)
   
-  case attachments(id: UUID, action: AttachmentRowAction)
+  case attachments(id: UUID, action: AttachmentRow.Action)
   case removeAttachmentResponse(UUID)
   
   case meatballActionSheetButtonTapped
@@ -65,7 +65,7 @@ public enum EntryDetailAction: Equatable {
   
   case processShare
   
-  case selectedAttachmentRowAction(AttachmentRowState)
+  case selectedAttachmentRowAction(AttachmentRow.State)
   case dismissAttachmentOverlayed
   case attachmentDetail(AttachmentDetail.Action)
   case removeAttachment
@@ -117,30 +117,12 @@ public let entryDetailReducer: Reducer<
   EntryDetailAction,
   EntryDetailEnvironment
 > = .combine(
-  attachmentReducer
-    .pullback(
-      state: \AttachmentRowState.attachment,
-      action: /AttachmentRowAction.attachment,
-      environment: { _ in ()
+  AnyReducer(
+    EmptyReducer()
+      .forEach(\.attachments, action: /EntryDetailAction.attachments) {
+        AttachmentRow()
       }
-    )
-    .forEach(
-      state: \EntryDetailState.attachments,
-      action: /EntryDetailAction.attachments,
-      environment: { EntryDetailEnvironment(
-        fileClient: $0.fileClient,
-        avCaptureDeviceClient: $0.avCaptureDeviceClient,
-        applicationClient: $0.applicationClient,
-        avAudioSessionClient: $0.avAudioSessionClient,
-        avAudioPlayerClient: $0.avAudioPlayerClient,
-        avAudioRecorderClient: $0.avAudioRecorderClient,
-        avAssetClient: $0.avAssetClient,
-        mainQueue: $0.mainQueue,
-        backgroundQueue: $0.backgroundQueue,
-        date: $0.date,
-        uuid: UUID.init)
-      }
-    ),
+  ),
   AnyReducer(
     Scope(state: \EntryDetailState.selectedAttachmentDetailState, action: /EntryDetailAction.attachmentDetail) {
       AttachmentDetail()
@@ -199,11 +181,11 @@ public let entryDetailReducer: Reducer<
     case let .entryResponse(entry):
       state.entry = entry
       
-      var attachments: IdentifiedArrayOf<AttachmentRowState> = []
+      var attachments: IdentifiedArrayOf<AttachmentRow.State> = []
       
-      let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentRowState? in
+      let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentRow.State? in
         if let detailState = attachment.detail {
-          return AttachmentRowState(id: attachment.id, attachment: detailState)
+          return AttachmentRow.State(id: attachment.id, attachment: detailState)
         }
         return nil
       }

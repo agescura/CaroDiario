@@ -21,7 +21,7 @@ public struct AttachmentImageDetail: ReducerProtocol {
     public var currentPosition: CGSize = .zero
     
     public init(
-      attachment: AttachmentImageState
+      attachment: AttachmentImage.State
     ) {
       self.entryImage = attachment.entryImage
     }

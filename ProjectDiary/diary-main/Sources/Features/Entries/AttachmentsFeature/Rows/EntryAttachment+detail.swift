@@ -1,16 +1,8 @@
-//
-//  EntryAttachment+detail.swift
-//  
-//
-//  Created by Albert Gil Escura on 14/8/21.
-//
-
 import Foundation
 import Models
 
 extension EntryAttachment {
-  
-  public var detail: AttachmentState? {
+  public var detail: Attachment.State? {
     if let image = self as? EntryImage {
       return .image(.init(entryImage: image))
     }
@@ -25,7 +17,6 @@ extension EntryAttachment {
 }
 
 extension EntryAttachment {
-  
   public var addDetail: AttachmentAdd.State? {
     if let image = self as? EntryImage {
       return .image(.init(entryImage: image))
