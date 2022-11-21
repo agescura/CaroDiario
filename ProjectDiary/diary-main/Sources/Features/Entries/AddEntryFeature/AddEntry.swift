@@ -277,7 +277,6 @@ public struct AddEntry: ReducerProtocol {
       
     case let .loadAudio(url):
       let id = self.uuid()
-      let thumbnailId = self.uuid()
       let path = self.fileClient.path(id).appendingPathComponent(url.pathExtension)
       
       let entryAudio = EntryAudio(

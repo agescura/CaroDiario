@@ -86,7 +86,7 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
             }
             
             if case let .home(homeState) = state.featureState,
-               let entryDetailState = homeState.entriesState.entryDetailState {
+               let entryDetailState = homeState.entries.entryDetailState {
                 switch action {
                 case .featureAction(.home(.entries(.entryDetailAction(.onAppear)))):
                     return .merge(
@@ -105,7 +105,7 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
             }
             
             if case let .home(homeState) = state.featureState,
-               let addEntryState = homeState.entriesState.addEntryState ?? homeState.entriesState.entryDetailState?.addEntryState {
+               let addEntryState = homeState.entries.addEntryState ?? homeState.entries.entryDetailState?.addEntryState {
                 switch action {
                 case .featureAction(.home(.entries(.addEntryAction(.createDraftEntry)))),
                     .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.createDraftEntry))))):

@@ -1,15 +1,6 @@
-//
-//  Live.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/8/21.
-//
-
 import AVFoundation
 import Combine
 import ComposableArchitecture
-import AVAudioPlayerClient
-
 import Dependencies
 
 extension AVAudioPlayerClient: DependencyKey {

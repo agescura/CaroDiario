@@ -7,7 +7,6 @@
 
 import Foundation
 import ComposableArchitecture
-import LocalAuthenticationClient
 import LocalAuthentication
 import Models
 import Dependencies
