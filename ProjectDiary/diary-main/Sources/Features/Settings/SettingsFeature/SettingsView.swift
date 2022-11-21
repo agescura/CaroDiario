@@ -14,16 +14,16 @@ import LanguageFeature
 import SwiftUIHelper
 
 public struct SettingsView: View {
-  let store: Store<SettingsState, SettingsAction>
+  let store: StoreOf<Settings>
   
   public init(
-    store: Store<SettingsState, SettingsAction>
+    store: StoreOf<Settings>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       NavigationView {
         VStack {
           Form {
@@ -31,7 +31,7 @@ public struct SettingsView: View {
               Toggle(
                 isOn: viewStore.binding(
                   get: \.showSplash,
-                  send: SettingsAction.toggleShowSplash
+                  send: Settings.Action.toggleShowSplash
                 ),
                 label: SplashRowView.init
               )
@@ -39,13 +39,13 @@ public struct SettingsView: View {
               
               NavigationLink(
                 route: viewStore.route,
-                case: /SettingsState.Route.appearance,
+                case: /Settings.State.Route.appearance,
                 onNavigate: { viewStore.send(.navigateAppearance($0)) },
                 destination: { appearanceState in
                   AppearanceView(
                     store: self.store.scope(
                       state: { _ in appearanceState },
-                      action: SettingsAction.appearance
+                      action: Settings.Action.appearance
                     )
                   )
                 },
@@ -56,13 +56,13 @@ public struct SettingsView: View {
             Section {
               NavigationLink(
                 route: viewStore.route,
-                case: /SettingsState.Route.language,
+                case: /Settings.State.Route.language,
                 onNavigate: { viewStore.send(.navigateLanguage($0)) },
                 destination: { languageState in
                   LanguageView(
                     store: self.store.scope(
                       state: { _ in languageState },
-                      action: SettingsAction.language
+                      action: Settings.Action.language
                     )
                   )
                 },
@@ -93,13 +93,13 @@ public struct SettingsView: View {
             Section {
               NavigationLink(
                 route: viewStore.route,
-                case: /SettingsState.Route.camera,
+                case: /Settings.State.Route.camera,
                 onNavigate: { viewStore.send(.navigateCamera($0)) },
                 destination: { cameraState in
                   CameraView(
                     store: self.store.scope(
                       state: { _ in cameraState },
-                      action: SettingsAction.camera
+                      action: Settings.Action.camera
                     )
                   )
                 },
@@ -109,13 +109,13 @@ public struct SettingsView: View {
               )
               NavigationLink(
                 route: viewStore.route,
-                case: /SettingsState.Route.microphone,
+                case: /Settings.State.Route.microphone,
                 onNavigate: { viewStore.send(.navigateMicrophone($0)) },
                 destination: { microphoneState in
                   MicrophoneView(
                     store: self.store.scope(
                       state: { _ in microphoneState },
-                      action: SettingsAction.microphoneAction
+                      action: Settings.Action.microphoneAction
                     )
                   )
                 },
@@ -128,13 +128,13 @@ public struct SettingsView: View {
             Section {
               NavigationLink(
                 route: viewStore.route,
-                case: /SettingsState.Route.export,
+                case: /Settings.State.Route.export,
                 onNavigate: { viewStore.send(.navigateExport($0)) },
                 destination: { exportState in
                   ExportView(
                     store: self.store.scope(
                       state: { _ in exportState },
-                      action: SettingsAction.export
+                      action: Settings.Action.export
                     )
                   )
                 },
@@ -153,13 +153,13 @@ public struct SettingsView: View {
             Section {
               NavigationLink(
                 route: viewStore.route,
-                case: /SettingsState.Route.agreements,
+                case: /Settings.State.Route.agreements,
                 onNavigate: { viewStore.send(.navigateAgreements($0)) },
                 destination: { agreementsState in
                   AgreementsView(
                     store: self.store.scope(
                       state: { _ in agreementsState },
-                      action: SettingsAction.agreements
+                      action: Settings.Action.agreements
                     )
                   )
                 },
@@ -167,13 +167,13 @@ public struct SettingsView: View {
               )
               NavigationLink(
                 route: viewStore.route,
-                case: /SettingsState.Route.about,
+                case: /Settings.State.Route.about,
                 onNavigate: { viewStore.send(.navigateAbout($0)) },
                 destination: { aboutState in
                   AboutView(
                     store: self.store.scope(
                       state: { _ in aboutState },
-                      action: SettingsAction.about
+                      action: Settings.Action.about
                     )
                   )
                 },
@@ -185,13 +185,13 @@ public struct SettingsView: View {
           VStack {
             NavigationLink(
               route: viewStore.route,
-              case: /SettingsState.Route.activate,
+              case: /Settings.State.Route.activate,
               onNavigate: { viewStore.send(.navigateActivatePasscode($0)) },
               destination: { activateState in
-                ActivatePasscodeView(
+                ActivateView(
                   store: self.store.scope(
                     state: { _ in activateState },
-                    action: SettingsAction.activatePasscodeAction
+                    action: Settings.Action.activatePasscodeAction
                   )
                 )
               },
@@ -199,13 +199,13 @@ public struct SettingsView: View {
             )
             NavigationLink(
               route: viewStore.route,
-              case: /SettingsState.Route.menu,
+              case: /Settings.State.Route.menu,
               onNavigate: { viewStore.send(.navigateMenuPasscode($0)) },
               destination: { menuState in
                 MenuPasscodeView(
                   store: self.store.scope(
                     state: { _ in menuState },
-                    action: SettingsAction.menuPasscodeAction
+                    action: Settings.Action.menuPasscodeAction
                   )
                 )
               },

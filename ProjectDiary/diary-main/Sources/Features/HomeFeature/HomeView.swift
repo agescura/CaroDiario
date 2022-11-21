@@ -51,7 +51,7 @@ public struct SharedState: Equatable {
   public var microphoneStatus: AudioRecordPermission
   public var optionTimeForAskPasscode: Int
   public var faceIdEnabled: Bool
-  public var route: SettingsState.Route? = nil
+  public var route: Settings.State.Route? = nil
   
   public init(
     showSplash: Bool,
@@ -111,7 +111,7 @@ public struct HomeState: Equatable {
     get { self.sharedState.searchState }
     set { self.sharedState.searchState = newValue }
   }
-  public var settingsState: SettingsState {
+  public var settingsState: Settings.State {
     get {
       .init(
         showSplash: self.sharedState.showSplash,
@@ -160,7 +160,7 @@ public enum HomeAction: Equatable {
   case starting
   case entries(EntriesAction)
   case search(SearchAction)
-  case settings(SettingsAction)
+  case settings(Settings.Action)
 }
 
 public struct HomeEnvironment {
@@ -263,22 +263,9 @@ public let homeReducer: Reducer<
       )
     }
   ),
-  settingsReducer.pullback(
-    state: \HomeState.settingsState,
-    action: /HomeAction.settings,
-    environment: {
-      SettingsEnvironment(
-        fileClient: $0.fileClient,
-        localAuthenticationClient: $0.localAuthenticationClient,
-        applicationClient: $0.applicationClient,
-        avCaptureDeviceClient: $0.avCaptureDeviceClient,
-        feedbackGeneratorClient: $0.feedbackGeneratorClient,
-        avAudioSessionClient: $0.avAudioSessionClient,
-        storeKitClient: $0.storeKitClient,
-        pdfKitClient: $0.pdfKitClient,
-        mainQueue: $0.mainQueue,
-        date: $0.date
-      )
+  AnyReducer(
+    Scope(state: \HomeState.settingsState, action: /HomeAction.settings) {
+      Settings()
     }
   ),
   

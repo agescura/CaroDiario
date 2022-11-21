@@ -199,12 +199,12 @@ public let rootReducer: Reducer<
             return Effect(value: RootAction.requestCameraStatus)
 
         case .featureAction(.home(.settings(.menuPasscodeAction(.toggleFaceId(true))))),
-                .featureAction(.home(.settings(.activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.toggleFaceId(isOn: true))))))),
+                .featureAction(.home(.settings(.activatePasscodeAction(.insert(.menuPasscodeAction(.toggleFaceId(isOn: true))))))),
                 .featureAction(.lockScreen(.checkFaceId)):
             return Effect(value: .biometricAlertPresent(true))
             
         case .featureAction(.home(.settings(.menuPasscodeAction(.faceId(response:))))),
-                .featureAction(.home(.settings(.activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.faceId(response:))))))),
+                .featureAction(.home(.settings(.activatePasscodeAction(.insert(.menuPasscodeAction(.faceId(response:))))))),
                 .featureAction(.lockScreen(.faceIdResponse)):
             return Effect(value: .biometricAlertPresent(false))
                 .delay(for: 10, scheduler: environment.mainQueue)
