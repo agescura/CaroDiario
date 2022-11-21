@@ -198,13 +198,13 @@ public let rootReducer: Reducer<
         case .featureAction(.lockScreen(.matchedCode)):
             return Effect(value: RootAction.requestCameraStatus)
 
-        case .featureAction(.home(.settings(.menuPasscodeAction(.toggleFaceId(true))))),
-                .featureAction(.home(.settings(.activatePasscodeAction(.insert(.menuPasscodeAction(.toggleFaceId(isOn: true))))))),
+        case .featureAction(.home(.settings(.menu(.toggleFaceId(true))))),
+                .featureAction(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
                 .featureAction(.lockScreen(.checkFaceId)):
             return Effect(value: .biometricAlertPresent(true))
             
-        case .featureAction(.home(.settings(.menuPasscodeAction(.faceId(response:))))),
-                .featureAction(.home(.settings(.activatePasscodeAction(.insert(.menuPasscodeAction(.faceId(response:))))))),
+        case .featureAction(.home(.settings(.menu(.faceId(response:))))),
+                .featureAction(.home(.settings(.activate(.insert(.menu(.faceId(response:))))))),
                 .featureAction(.lockScreen(.faceIdResponse)):
             return Effect(value: .biometricAlertPresent(false))
                 .delay(for: 10, scheduler: environment.mainQueue)

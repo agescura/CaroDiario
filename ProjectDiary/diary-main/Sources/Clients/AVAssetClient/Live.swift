@@ -1,15 +1,12 @@
-//
-//  Live.swift
-//  
-//
-//  Created by Albert Gil Escura on 5/9/21.
-//
-
 import ComposableArchitecture
 import AVKit
-import AVAssetClient
 import Models
 import Combine
+import Dependencies
+
+extension AVAssetClient: DependencyKey {
+  public static var liveValue: AVAssetClient { .live }
+}
 
 extension AVAssetClient {
     public static let live = Self(

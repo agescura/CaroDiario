@@ -9,6 +9,11 @@ let package = Package(
         .iOS(.v15),
     ],
     products: [
+      
+      // Schedulers
+      
+      .library(name: "BackgroundQueue", targets: ["BackgroundQueue"]),
+      
         // Clients
         
         .library(
@@ -34,10 +39,6 @@ let package = Package(
             name: "LocalAuthenticationClient",
             targets: ["LocalAuthenticationClient"]
         ),
-        .library(
-            name: "LocalAuthenticationClientLive",
-            targets: ["LocalAuthenticationClientLive"]
-        ),
         
         .library(
             name: "UIApplicationClient",
@@ -58,10 +59,6 @@ let package = Package(
             name: "AVAudioRecorderClient",
             targets: ["AVAudioRecorderClient"]
         ),
-        .library(
-            name: "AVAudioRecorderClientLive",
-            targets: ["AVAudioRecorderClientLive"]
-        ),
         
         .library(
             name: "AVAudioSessionClient",
@@ -72,10 +69,6 @@ let package = Package(
             name: "AVAssetClient",
             targets: ["AVAssetClient"]
         ),
-        .library(
-            name: "AVAssetClientLive",
-            targets: ["AVAssetClientLive"]
-        ),
         
         .library(
             name: "FeedbackGeneratorClient",
@@ -85,10 +78,6 @@ let package = Package(
         .library(
             name: "StoreKitClient",
             targets: ["StoreKitClient"]
-        ),
-        .library(
-            name: "StoreKitClientLive",
-            targets: ["StoreKitClientLive"]
         ),
         
         .library(
@@ -261,6 +250,16 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.10.0"),
     ],
     targets: [
+      
+      // Schedulers
+      
+      .target(
+        name: "BackgroundQueue",
+        dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+    ],
+        path: "Sources/Clients/BackgroundQueue"
+      ),
         // Clients
         
         .target(
@@ -269,13 +268,6 @@ let package = Package(
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ],
             path: "Sources/Clients/AVAssetClient"
-        ),
-        .target(
-            name: "AVAssetClientLive",
-            dependencies: [
-            "AVAssetClient"
-        ],
-            path: "Sources/Clients/AVAssetClientLive"
         ),
         
         .target(
@@ -292,13 +284,6 @@ let package = Package(
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ],
             path: "Sources/Clients/AVAudioRecorderClient"
-        ),
-        .target(
-            name: "AVAudioRecorderClientLive",
-            dependencies: [
-            "AVAudioRecorderClient"
-        ],
-            path: "Sources/Clients/AVAudioRecorderClientLive"
         ),
         
         .target(
@@ -361,13 +346,6 @@ let package = Package(
             ],
             path: "Sources/Clients/LocalAuthenticationClient"
         ),
-        .target(
-            name: "LocalAuthenticationClientLive",
-            dependencies: [
-            "LocalAuthenticationClient"
-        ],
-            path: "Sources/Clients/LocalAuthenticationClientLive"
-        ),
         
         .target(
             name: "PDFKitClient",
@@ -384,13 +362,6 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Clients/StoreKitClient"
-        ),
-        .target(
-            name: "StoreKitClientLive",
-            dependencies: [
-                "StoreKitClient"
-            ],
-            path: "Sources/Clients/StoreKitClientLive"
         ),
         
         .target(
@@ -466,7 +437,8 @@ let package = Package(
                 "AVAudioSessionClient",
                 "AVAudioPlayerClient",
                 "AudioRecordFeature",
-                "AVAssetClient"
+                "AVAssetClient",
+                "BackgroundQueue"
             ],
             path: "Sources/Features/Entries/AddEntryFeature"
         ),
@@ -482,7 +454,8 @@ let package = Package(
                 "Localizables",
                 "AVAudioPlayerClient",
                 "UIApplicationClient",
-                "SwiftHelper"
+                "SwiftHelper",
+                "BackgroundQueue"
             ],
             path: "Sources/Features/Entries/AttachmentsFeature"
         ),
@@ -558,7 +531,8 @@ let package = Package(
                 "CoreDataClient",
                 "UIApplicationClient",
                 "AVCaptureDeviceClient",
-                "FileClient"
+                "FileClient",
+                "BackgroundQueue"
             ],
             path: "Sources/Features/Entries/SearchFeature"
         ),

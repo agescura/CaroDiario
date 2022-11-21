@@ -1,10 +1,3 @@
-//
-//  Live.swift
-//  UserdefaultsClient
-//
-//  Created by Albert Gil Escura on 29/6/21.
-//
-
 import Foundation
 import Dependencies
 

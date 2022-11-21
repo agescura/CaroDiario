@@ -29,7 +29,7 @@ public struct Insert: ReducerProtocol {
       case menu(Menu.State)
     }
     
-    public var menuPasscodeState: Menu.State? {
+    public var menu: Menu.State? {
       get {
         guard case let .menu(state) = self.route else { return nil }
         return state
@@ -67,13 +67,13 @@ public struct Insert: ReducerProtocol {
     case update(code: String)
     case success
     case popToRoot
-    case menuPasscodeAction(Menu.Action)
-    case navigateMenuPasscode(Bool)
+    case menu(Menu.Action)
+    case navigateMenu(Bool)
   }
   
   public var body: some ReducerProtocolOf<Self> {
     Reduce(self.core)
-      .ifLet(\.menuPasscodeState, action: /Action.menuPasscodeAction) {
+      .ifLet(\.menu, action: /Action.menu) {
         Menu()
       }
   }
@@ -95,7 +95,7 @@ public struct Insert: ReducerProtocol {
       if state.step == .secondCode,
          state.code.count == state.maxNumbersCode {
         if state.code == state.firstCode {
-          return Effect(value: .navigateMenuPasscode(true))
+          return Effect(value: .navigateMenu(true))
         } else {
           state.step = .firstCode
           state.code = ""
@@ -111,10 +111,10 @@ public struct Insert: ReducerProtocol {
     case .popToRoot:
       return .none
       
-    case .menuPasscodeAction:
+    case .menu:
       return .none
       
-    case let .navigateMenuPasscode(value):
+    case let .navigateMenu(value):
       state.route = value ? .menu(
         .init(
           authenticationType: .none,

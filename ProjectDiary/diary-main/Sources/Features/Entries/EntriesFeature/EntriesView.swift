@@ -24,19 +24,19 @@ public struct EntriesState: Equatable {
   public var isLoading: Bool
   public var entries: IdentifiedArrayOf<DayEntriesRow.State>
   
-  public var addEntryState: AddEntryState?
+  public var addEntryState: AddEntry.State?
   public var presentAddEntry = false
   
-  public var entryDetailState: EntryDetailState?
+  public var entryDetailState: EntryDetail.State?
   public var navigateEntryDetail = false
   public var entryDetailSelected: Entry?
   
   public init(
     isLoading: Bool = true,
     entries: IdentifiedArrayOf<DayEntriesRow.State> = [],
-    addEntryState: AddEntryState? = nil,
+    addEntryState: AddEntry.State? = nil,
     presentAddEntry: Bool = false,
-    entryDetailState: EntryDetailState? = nil,
+    entryDetailState: EntryDetail.State? = nil,
     navigateEntryDetail: Bool = false,
     entryDetailSelected: Entry? = nil
   ) {
@@ -55,14 +55,14 @@ public enum EntriesAction: Equatable {
   case coreDataClientAction(CoreDataClient.Action)
   case fetchEntriesResponse([[Entry]])
   
-  case addEntryAction(AddEntryAction)
+  case addEntryAction(AddEntry.Action)
   case presentAddEntry(Bool)
   case presentAddEntryCompleted
   
   case entries(id: UUID, action: DayEntriesRow.Action)
   case remove(Entry)
   
-  case entryDetailAction(EntryDetailAction)
+  case entryDetailAction(EntryDetail.Action)
   case navigateEntryDetail(Bool)
 }
 
@@ -114,54 +114,21 @@ public let entriesReducer: Reducer<
   EntriesAction,
   EntriesEnvironment
 > = .combine(
-  addEntryReducer
-    .optional()
-    .pullback(
-      state: \EntriesState.addEntryState,
-      action: /EntriesAction.addEntryAction,
-      environment: {
-        AddEntryEnvironment(
-          fileClient: $0.fileClient,
-          avCaptureDeviceClient: $0.avCaptureDeviceClient,
-          applicationClient: $0.applicationClient,
-          avAudioSessionClient: $0.avAudioSessionClient,
-          avAudioPlayerClient: $0.avAudioPlayerClient,
-          avAudioRecorderClient: $0.avAudioRecorderClient,
-          avAssetClient: $0.avAssetClient,
-          mainQueue: $0.mainQueue,
-          backgroundQueue: $0.backgroundQueue,
-          date: $0.date,
-          uuid: $0.uuid
-        )
-      }
-    ),
   AnyReducer(
     EmptyReducer()
       .forEach(\.entries, action: /EntriesAction.entries) {
         DayEntriesRow()
       }
   ),
-  entryDetailReducer
-    .optional()
-    .pullback(
-      state: \EntriesState.entryDetailState,
-      action: /EntriesAction.entryDetailAction,
-      environment: {
-        EntryDetailEnvironment(
-          fileClient: $0.fileClient,
-          avCaptureDeviceClient: $0.avCaptureDeviceClient,
-          applicationClient: $0.applicationClient,
-          avAudioSessionClient: $0.avAudioSessionClient,
-          avAudioPlayerClient: $0.avAudioPlayerClient,
-          avAudioRecorderClient: $0.avAudioRecorderClient,
-          avAssetClient: $0.avAssetClient,
-          mainQueue: $0.mainQueue,
-          backgroundQueue: $0.backgroundQueue,
-          date: $0.date,
-          uuid: $0.uuid
-        )
+  AnyReducer(
+    EmptyReducer()
+      .ifLet(\.addEntryState, action: /EntriesAction.addEntryAction) {
+        AddEntry()
       }
-    ),
+      .ifLet(\.entryDetailState, action: /EntriesAction.entryDetailAction) {
+        EntryDetail()
+      }
+  ),
   
     .init { state, action, environment in
       struct CoreDataId: Hashable {}

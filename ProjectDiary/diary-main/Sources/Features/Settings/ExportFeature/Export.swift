@@ -27,7 +27,7 @@ public struct Export: ReducerProtocol {
     case pdfPreview(PDFPreview.Action)
   }
   
-  @Dependency(\.mainRunLoop.now.date) var now
+  @Dependency(\.mainRunLoop.now.date) private var now
   @Dependency(\.applicationClient) private var applicationClient
   @Dependency(\.pdfKitClient) private var pdfKitClient
   

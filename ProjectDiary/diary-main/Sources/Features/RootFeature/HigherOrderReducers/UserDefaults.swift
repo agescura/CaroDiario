@@ -39,34 +39,34 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
                         .fireAndForget(),
                     effects
                 )
-            case .featureAction(.home(.settings(.activatePasscodeAction(.insert(.menuPasscodeAction(.actionSheetTurnoffTapped)))))),
-                    .featureAction(.home(.settings(.menuPasscodeAction(.actionSheetTurnoffTapped)))):
+            case .featureAction(.home(.settings(.activate(.insert(.menu(.actionSheetTurnoffTapped)))))),
+                    .featureAction(.home(.settings(.menu(.actionSheetTurnoffTapped)))):
                 return .merge(
                     environment.userDefaultsClient.removePasscode()
                         .fireAndForget(),
                     effects
                 )
-            case let .featureAction(.home(.settings(.activatePasscodeAction(.insert(.update(code: code)))))):
+            case let .featureAction(.home(.settings(.activate(.insert(.update(code: code)))))):
                 return .merge(
                     environment.userDefaultsClient.setPasscode(code)
                         .fireAndForget(),
                     effects
                 )
-            case let .featureAction(.home(.settings(.menuPasscodeAction(.faceId(response: faceId))))),
-                let .featureAction(.home(.settings(.activatePasscodeAction(.insert(.menuPasscodeAction(.faceId(response: faceId))))))):
+            case let .featureAction(.home(.settings(.menu(.faceId(response: faceId))))),
+                let .featureAction(.home(.settings(.activate(.insert(.menu(.faceId(response: faceId))))))):
                 return .merge(
                     environment.userDefaultsClient.setFaceIDActivate(faceId)
                         .fireAndForget(),
                     effects
                 )
-            case let .featureAction(.home(.settings(.menuPasscodeAction(.optionTimeForAskPasscode(changed: newOption))))),
-                let .featureAction(.home(.settings(.activatePasscodeAction(.insert(.menuPasscodeAction(.optionTimeForAskPasscode(changed: newOption))))))):
+            case let .featureAction(.home(.settings(.menu(.optionTimeForAskPasscode(changed: newOption))))),
+                let .featureAction(.home(.settings(.activate(.insert(.menu(.optionTimeForAskPasscode(changed: newOption))))))):
                 return .merge(
                     environment.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value)
                         .fireAndForget(),
                     effects
                 )
-            case .featureAction(.home(.settings(.activatePasscodeAction(.insert(.navigateMenuPasscode(true)))))):
+            case .featureAction(.home(.settings(.activate(.insert(.navigateMenu(true)))))):
                 return .merge(
                     environment.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value)
                         .fireAndForget(),

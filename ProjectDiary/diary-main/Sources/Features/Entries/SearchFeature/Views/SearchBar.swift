@@ -54,7 +54,7 @@ extension View {
     }
 }
 
-final class ViewControllerResolver: UIViewControllerRepresentable {
+struct ViewControllerResolver: UIViewControllerRepresentable {
     
     let onResolve: (UIViewController) -> Void
     

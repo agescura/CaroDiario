@@ -200,7 +200,6 @@ public struct AttachmentAudioDetailView: View {
               
               
               Button(action: {
-                print(viewStore.playerDuration)
                 viewStore.send(.playButtonTapped)
               }, label: {
                 Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")

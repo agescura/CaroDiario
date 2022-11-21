@@ -1,16 +1,13 @@
-//
-//  Live.swift  
-//
-//  Created by Albert Gil Escura on 18/9/21.
-//
-
 import Foundation
 import ComposableArchitecture
-import StoreKitClient
 import StoreKit
+import Dependencies
+
+extension StoreKitClient: DependencyKey {
+  public static var liveValue: StoreKitClient { .live }
+}
 
 extension StoreKitClient {
-    
     public static var live = Self(
         requestReview: {
             .fireAndForget {

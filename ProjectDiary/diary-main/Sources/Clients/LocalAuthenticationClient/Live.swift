@@ -10,6 +10,11 @@ import ComposableArchitecture
 import LocalAuthenticationClient
 import LocalAuthentication
 import Models
+import Dependencies
+
+extension LocalAuthenticationClient: DependencyKey {
+  public static var liveValue: LocalAuthenticationClient { .live }
+}
 
 extension LocalAuthenticationClient {
     

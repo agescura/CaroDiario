@@ -90,7 +90,7 @@ public struct Settings: ReducerProtocol {
         self.route = .language(newValue)
       }
     }
-    var activateState: Activate.State? {
+    var activate: Activate.State? {
       get {
         guard case let .activate(state) = self.route else { return nil }
         return state
@@ -100,7 +100,7 @@ public struct Settings: ReducerProtocol {
         self.route = .activate(newValue)
       }
     }
-    var menuState: Menu.State? {
+    var menu: Menu.State? {
       get {
         guard case let .menu(state) = self.route else { return nil }
         return state
@@ -120,7 +120,7 @@ public struct Settings: ReducerProtocol {
         self.route = .camera(newValue)
       }
     }
-    var microphoneState: Microphone.State? {
+    var microphone: Microphone.State? {
       get {
         guard case let .microphone(state) = self.route else { return nil }
         return state
@@ -202,16 +202,16 @@ public struct Settings: ReducerProtocol {
     case language(Language.Action)
     case navigateLanguage(Bool)
     
-    case activatePasscodeAction(Activate.Action)
-    case navigateActivatePasscode(Bool)
+    case activate(Activate.Action)
+    case navigateActivate(Bool)
     
-    case menuPasscodeAction(Menu.Action)
-    case navigateMenuPasscode(Bool)
+    case menu(Menu.Action)
+    case navigateMenu(Bool)
     
     case camera(Camera.Action)
     case navigateCamera(Bool)
     
-    case microphoneAction(Microphone.Action)
+    case microphone(Microphone.Action)
     case navigateMicrophone(Bool)
     
     case agreements(Agreements.Action)
@@ -227,8 +227,8 @@ public struct Settings: ReducerProtocol {
   }
   
   @Dependency(\.mainQueue) private var mainQueue
-  private var localAuthenticationClient: LocalAuthenticationClient = .noop
-  private var storeKitClient: StoreKitClient = .noop
+  @Dependency(\.localAuthenticationClient) private var localAuthenticationClient
+  @Dependency(\.storeKitClient) private var storeKitClient
   
   public var body: some ReducerProtocolOf<Self> {
     Reduce(self.core)
@@ -250,13 +250,13 @@ public struct Settings: ReducerProtocol {
       .ifLet(\.languageState, action: /Settings.Action.language) {
         Language()
       }
-      .ifLet(\.microphoneState, action: /Settings.Action.microphoneAction) {
+      .ifLet(\.microphone, action: /Settings.Action.microphone) {
         Microphone()
       }
-      .ifLet(\.activateState, action: /Settings.Action.activatePasscodeAction) {
+      .ifLet(\.activate, action: /Settings.Action.activate) {
         Activate()
       }
-      .ifLet(\.menuState, action: /Settings.Action.menuPasscodeAction) {
+      .ifLet(\.menu, action: /Settings.Action.menu) {
         Menu()
       }
   }
@@ -302,27 +302,27 @@ public struct Settings: ReducerProtocol {
       state.authenticationType = result
       return .none
       
-    case .activatePasscodeAction(.insert(.navigateMenuPasscode(true))):
+    case .activate(.insert(.navigateMenu(true))):
       state.hasPasscode = true
       return .none
       
-    case .menuPasscodeAction(.actionSheetTurnoffTapped),
-        .activatePasscodeAction(.insert(.menuPasscodeAction(.actionSheetTurnoffTapped))):
+    case .menu(.actionSheetTurnoffTapped),
+        .activate(.insert(.menu(.actionSheetTurnoffTapped))):
       state.hasPasscode = false
-      return Effect(value: .navigateActivatePasscode(false))
+      return Effect(value: .navigateActivate(false))
         .delay(for: 0.1, scheduler: self.mainQueue)
         .eraseToEffect()
       
-    case .activatePasscodeAction(.insert(.menuPasscodeAction(.popToRoot))),
-        .activatePasscodeAction(.insert(.popToRoot)),
-        .menuPasscodeAction(.popToRoot),
-        .activatePasscodeAction(.insert(.success)):
-      return Effect(value: .navigateActivatePasscode(false))
+    case .activate(.insert(.menu(.popToRoot))),
+        .activate(.insert(.popToRoot)),
+        .menu(.popToRoot),
+        .activate(.insert(.success)):
+      return Effect(value: .navigateActivate(false))
       
-    case .activatePasscodeAction:
+    case .activate:
       return .none
       
-    case let .navigateActivatePasscode(value):
+    case let .navigateActivate(value):
       state.route = value ? .activate(
         .init(
           faceIdEnabled: state.faceIdEnabled,
@@ -331,10 +331,10 @@ public struct Settings: ReducerProtocol {
       ) : nil
       return .none
       
-    case .menuPasscodeAction:
+    case .menu:
       return .none
       
-    case let .navigateMenuPasscode(value):
+    case let .navigateMenu(value):
       state.route = value ? .menu(
         .init(
           authenticationType: state.authenticationType,
@@ -344,7 +344,7 @@ public struct Settings: ReducerProtocol {
       ) : nil
       return .none
       
-    case .microphoneAction:
+    case .microphone:
       return .none
       
     case let .navigateMicrophone(value):

@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  ProjectDiary
-//
-//  Created by Albert Gil Escura on 1/8/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import RootFeature
@@ -12,16 +5,16 @@ import Styles
 import UserDefaultsClient
 import CoreDataClientLive
 import FileClient
-import LocalAuthenticationClientLive
+import LocalAuthenticationClient
 import UIApplicationClient
 import AVCaptureDeviceClient
 import FeedbackGeneratorClient
 import AVAudioSessionClient
 import AVAudioPlayerClient
-import AVAudioRecorderClientLive
-import StoreKitClientLive
+import AVAudioRecorderClient
+import StoreKitClient
 import PDFKitClient
-import AVAssetClientLive
+import AVAssetClient
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let store: Store<RootState, RootAction>

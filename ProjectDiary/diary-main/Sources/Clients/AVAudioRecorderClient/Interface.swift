@@ -1,12 +1,13 @@
-//
-//  Interface.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/8/21.
-//
-
 import ComposableArchitecture
 import Foundation
+import Dependencies
+
+extension DependencyValues {
+  public var avAudioRecorderClient: AVAudioRecorderClient {
+    get { self[AVAudioRecorderClient.self] }
+    set { self[AVAudioRecorderClient.self] = newValue }
+  }
+}
 
 public struct AVAudioRecorderClient {
     public enum Action: Equatable {

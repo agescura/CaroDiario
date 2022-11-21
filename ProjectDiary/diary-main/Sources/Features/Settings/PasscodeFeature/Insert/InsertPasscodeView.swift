@@ -49,12 +49,12 @@ public struct InsertView: View {
         NavigationLink(
           route: viewStore.route,
           case: /Insert.State.Route.menu,
-          onNavigate: { viewStore.send(.navigateMenuPasscode($0)) },
+          onNavigate: { viewStore.send(.navigateMenu($0)) },
           destination: { menuState in
             MenuPasscodeView(
               store: self.store.scope(
                 state: { _ in menuState },
-                action: Insert.Action.menuPasscodeAction
+                action: Insert.Action.menu
               )
             )
           },

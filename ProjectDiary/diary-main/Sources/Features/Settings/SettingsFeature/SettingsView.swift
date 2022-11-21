@@ -83,9 +83,9 @@ public struct SettingsView: View {
               .contentShape(Rectangle())
               .onTapGesture {
                 if viewStore.hasPasscode {
-                  viewStore.send(.navigateMenuPasscode(true))
+                  viewStore.send(.navigateMenu(true))
                 } else {
-                  viewStore.send(.navigateActivatePasscode(true))
+                  viewStore.send(.navigateActivate(true))
                 }
               }
             }
@@ -115,7 +115,7 @@ public struct SettingsView: View {
                   MicrophoneView(
                     store: self.store.scope(
                       state: { _ in microphoneState },
-                      action: Settings.Action.microphoneAction
+                      action: Settings.Action.microphone
                     )
                   )
                 },
@@ -186,12 +186,12 @@ public struct SettingsView: View {
             NavigationLink(
               route: viewStore.route,
               case: /Settings.State.Route.activate,
-              onNavigate: { viewStore.send(.navigateActivatePasscode($0)) },
+              onNavigate: { viewStore.send(.navigateActivate($0)) },
               destination: { activateState in
                 ActivateView(
                   store: self.store.scope(
                     state: { _ in activateState },
-                    action: Settings.Action.activatePasscodeAction
+                    action: Settings.Action.activate
                   )
                 )
               },
@@ -200,12 +200,12 @@ public struct SettingsView: View {
             NavigationLink(
               route: viewStore.route,
               case: /Settings.State.Route.menu,
-              onNavigate: { viewStore.send(.navigateMenuPasscode($0)) },
+              onNavigate: { viewStore.send(.navigateMenu($0)) },
               destination: { menuState in
                 MenuPasscodeView(
                   store: self.store.scope(
                     state: { _ in menuState },
-                    action: Settings.Action.menuPasscodeAction
+                    action: Settings.Action.menu
                   )
                 )
               },

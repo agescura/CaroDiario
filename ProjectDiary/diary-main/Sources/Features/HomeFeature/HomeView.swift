@@ -31,13 +31,13 @@ import EntryDetailFeature
 public struct SharedState: Equatable {
   public var isLoading: Bool = true
   public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
-  public var addEntryState: AddEntryState?
+  public var addEntryState: AddEntry.State?
   public var presentAddEntry = false
-  public var entryDetailState: EntryDetailState?
+  public var entryDetailState: EntryDetail.State?
   public var navigateEntryDetail = false
   public var entryDetailSelected: Entry?
   
-  public var searchState: SearchState = SearchState()
+  public var search: Search.State = Search.State()
   
   public var showSplash: Bool
   public var styleType: StyleType
@@ -107,11 +107,11 @@ public struct HomeState: Equatable {
       self.sharedState.entryDetailSelected = newValue.entryDetailSelected
     }
   }
-  public var searchState: SearchState {
-    get { self.sharedState.searchState }
-    set { self.sharedState.searchState = newValue }
+  public var search: Search.State {
+    get { self.sharedState.search }
+    set { self.sharedState.search = newValue }
   }
-  public var settingsState: Settings.State {
+  public var settings: Settings.State {
     get {
       .init(
         showSplash: self.sharedState.showSplash,
@@ -159,7 +159,7 @@ public enum HomeAction: Equatable {
   case tabBarSelected(TabViewType)
   case starting
   case entries(EntriesAction)
-  case search(SearchAction)
+  case search(Search.Action)
   case settings(Settings.Action)
 }
 
@@ -243,29 +243,14 @@ public let homeReducer: Reducer<
       )
     }
   ),
-  searchReducer.pullback(
-    state: \HomeState.searchState,
-    action: /HomeAction.search,
-    environment: {
-      SearchEnvironment(
-        fileClient: $0.fileClient,
-        userDefaultsClient: $0.userDefaultsClient,
-        avCaptureDeviceClient: $0.avCaptureDeviceClient,
-        applicationClient: $0.applicationClient,
-        avAudioSessionClient: $0.avAudioSessionClient,
-        avAudioPlayerClient: $0.avAudioPlayerClient,
-        avAudioRecorderClient: $0.avAudioRecorderClient,
-        avAssetClient: $0.avAssetClient,
-        mainQueue: $0.mainQueue,
-        backgroundQueue: $0.backgroundQueue,
-        date: $0.date,
-        uuid: $0.uuid
-      )
+  AnyReducer(
+    Scope(state: \HomeState.settings, action: /HomeAction.settings) {
+      Settings()
     }
   ),
   AnyReducer(
-    Scope(state: \HomeState.settingsState, action: /HomeAction.settings) {
-      Settings()
+    Scope(state: \HomeState.search, action: /HomeAction.search) {
+      Search()
     }
   ),
   
@@ -331,7 +316,7 @@ extension TabViewType {
     case .search:
       SearchView(
         store: store.scope(
-          state: \.searchState,
+          state: \.search,
           action: HomeAction.search
         )
       )
@@ -339,7 +324,7 @@ extension TabViewType {
     case .settings:
       SettingsView(
         store: store.scope(
-          state: \.settingsState,
+          state: \.settings,
           action: HomeAction.settings
         )
       )

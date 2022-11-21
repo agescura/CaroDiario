@@ -14,147 +14,97 @@ import AVAudioPlayerClient
 import AVAudioRecorderClient
 import AVAssetClient
 import UIApplicationClient
+import BackgroundQueue
 
-public struct EntryDetailState: Equatable {
-  public var entry: Entry
-  public var attachments: IdentifiedArrayOf<AttachmentRow.State> = []
+public struct EntryDetail: ReducerProtocol {
+  public init() {}
   
-  public var meatballActionSheet: ConfirmationDialogState<EntryDetailAction>?
-  public var removeAlert: AlertState<EntryDetailAction>?
-  
-  public var addEntryState: AddEntryState?
-  public var presentAddEntry = false
-  
-  public var showAttachmentOverlayed = false
-  public var seletedAttachmentRowState: AttachmentRow.State! = AttachmentRow.State(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))) {
-    didSet {
-      self.selectedAttachmentDetailState = AttachmentDetail.State(row: seletedAttachmentRowState)
+  public struct State: Equatable {
+    public var entry: Entry
+    public var attachments: IdentifiedArrayOf<AttachmentRow.State> = []
+    
+    public var meatballActionSheet: ConfirmationDialogState<EntryDetail.Action>?
+    public var removeAlert: AlertState<EntryDetail.Action>?
+    
+    public var addEntryState: AddEntry.State?
+    public var presentAddEntry = false
+    
+    public var showAttachmentOverlayed = false
+    public var seletedAttachmentRowState: AttachmentRow.State! = AttachmentRow.State(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))) {
+      didSet {
+        self.selectedAttachmentDetailState = AttachmentDetail.State(row: seletedAttachmentRowState)
+      }
+    }
+    
+    public var selectedAttachmentDetailState: AttachmentDetail.State! = AttachmentDetail.State(row: AttachmentRow.State(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))))
+    
+    public init(
+      entry: Entry
+    ) {
+      self.entry = entry
+    }
+    
+    var message: String {
+      entry.text.message
     }
   }
-  
-  public var selectedAttachmentDetailState: AttachmentDetail.State! = AttachmentDetail.State(row: AttachmentRow.State(id: UUID(), attachment: .image(.init(entryImage: .init(id: UUID(), lastUpdated: .init(), thumbnail: URL(string: "www.google.es")!, url: URL(string: "www.google.es")!)))))
-  
-  public init(
-    entry: Entry
-  ) {
-    self.entry = entry
+
+  public enum Action: Equatable {
+    case onAppear
+    case entryResponse(Entry)
+    
+    case attachments(id: UUID, action: AttachmentRow.Action)
+    case removeAttachmentResponse(UUID)
+    
+    case meatballActionSheetButtonTapped
+    case dismissMeatballActionSheet
+    
+    case alertRemoveButtonTapped
+    case dismissRemoveAlert
+    case remove(Entry)
+    
+    case addEntryAction(AddEntry.Action)
+    case presentAddEntry(Bool)
+    case presentAddEntryCompleted
+    
+    case processShare
+    
+    case selectedAttachmentRowAction(AttachmentRow.State)
+    case dismissAttachmentOverlayed
+    case attachmentDetail(AttachmentDetail.Action)
+    case removeAttachment
+    case processShareAttachment
   }
   
-  var message: String {
-    entry.text.message
-  }
-}
-
-public enum EntryDetailAction: Equatable {
-  case onAppear
-  case entryResponse(Entry)
+  @Dependency(\.applicationClient) private var applicationClient
+  @Dependency(\.fileClient) private var fileClient
+  @Dependency(\.backgroundQueue) private var backgroundQueue
+  @Dependency(\.mainQueue) private var mainQueue
   
-  case attachments(id: UUID, action: AttachmentRow.Action)
-  case removeAttachmentResponse(UUID)
-  
-  case meatballActionSheetButtonTapped
-  case dismissMeatballActionSheet
-  
-  case alertRemoveButtonTapped
-  case dismissRemoveAlert
-  case remove(Entry)
-  
-  case addEntryAction(AddEntryAction)
-  case presentAddEntry(Bool)
-  case presentAddEntryCompleted
-  
-  case processShare
-  
-  case selectedAttachmentRowAction(AttachmentRow.State)
-  case dismissAttachmentOverlayed
-  case attachmentDetail(AttachmentDetail.Action)
-  case removeAttachment
-  case processShareAttachment
-}
-
-public struct EntryDetailEnvironment {
-  public let fileClient: FileClient
-  public let avCaptureDeviceClient: AVCaptureDeviceClient
-  public let applicationClient: UIApplicationClient
-  public let avAudioSessionClient: AVAudioSessionClient
-  public let avAudioPlayerClient: AVAudioPlayerClient
-  public let avAudioRecorderClient: AVAudioRecorderClient
-  public let avAssetClient: AVAssetClient
-  public let mainQueue: AnySchedulerOf<DispatchQueue>
-  public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-  public let date: () -> Date
-  public let uuid: () -> UUID
-  
-  public init(
-    fileClient: FileClient,
-    avCaptureDeviceClient: AVCaptureDeviceClient,
-    applicationClient: UIApplicationClient,
-    avAudioSessionClient: AVAudioSessionClient,
-    avAudioPlayerClient: AVAudioPlayerClient,
-    avAudioRecorderClient: AVAudioRecorderClient,
-    avAssetClient: AVAssetClient,
-    mainQueue: AnySchedulerOf<DispatchQueue>,
-    backgroundQueue: AnySchedulerOf<DispatchQueue>,
-    date: @escaping () -> Date,
-    uuid: @escaping () -> UUID
-  ) {
-    self.fileClient = fileClient
-    self.avCaptureDeviceClient = avCaptureDeviceClient
-    self.applicationClient = applicationClient
-    self.avAudioSessionClient = avAudioSessionClient
-    self.avAudioPlayerClient = avAudioPlayerClient
-    self.avAudioRecorderClient = avAudioRecorderClient
-    self.avAssetClient = avAssetClient
-    self.mainQueue = mainQueue
-    self.backgroundQueue = backgroundQueue
-    self.date = date
-    self.uuid = uuid
-  }
-}
-
-public let entryDetailReducer: Reducer<
-  EntryDetailState,
-  EntryDetailAction,
-  EntryDetailEnvironment
-> = .combine(
-  AnyReducer(
-    EmptyReducer()
-      .forEach(\.attachments, action: /EntryDetailAction.attachments) {
+  public var body: some ReducerProtocolOf<Self> {
+    Reduce(self.core)
+      .forEach(\.attachments, action: /Action.attachments) {
         AttachmentRow()
       }
-  ),
-  AnyReducer(
-    Scope(state: \EntryDetailState.selectedAttachmentDetailState, action: /EntryDetailAction.attachmentDetail) {
+      .ifLet(\.addEntryState, action: /EntryDetail.Action.addEntryAction) {
+        AddEntry()
+      }
+    Scope(state: \.selectedAttachmentDetailState, action: /Action.attachmentDetail) {
       AttachmentDetail()
     }
-  ),
-  addEntryReducer
-    .optional()
-    .pullback(
-      state: \EntryDetailState.addEntryState,
-      action: /EntryDetailAction.addEntryAction,
-      environment: { AddEntryEnvironment(
-        fileClient: $0.fileClient,
-        avCaptureDeviceClient: $0.avCaptureDeviceClient,
-        applicationClient: $0.applicationClient,
-        avAudioSessionClient: $0.avAudioSessionClient,
-        avAudioPlayerClient: $0.avAudioPlayerClient,
-        avAudioRecorderClient: $0.avAudioRecorderClient,
-        avAssetClient: $0.avAssetClient,
-        mainQueue: $0.mainQueue,
-        backgroundQueue: $0.backgroundQueue,
-        date: $0.date,
-        uuid: $0.uuid)
-      }
-    ),
-  .init { state, action, environment in
+  }
+  
+  private func core(
+    state: inout State,
+    action: Action
+  ) -> Effect<Action, Never> {
     switch action {
     case let .attachments(id: id, action: .attachment(.image(.presentImageFullScreen(true)))),
       let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),
       let .attachments(id: id, action: .attachment(.audio(.presentAudioFullScreen(true)))):
       state.seletedAttachmentRowState = state.attachments[id: id]
       state.showAttachmentOverlayed = true
-      return environment.applicationClient.showTabView(true)
+      return self.applicationClient.showTabView(true)
         .fireAndForget()
       
     case let .selectedAttachmentRowAction(selected):
@@ -163,7 +113,7 @@ public let entryDetailReducer: Reducer<
       
     case .dismissAttachmentOverlayed:
       state.showAttachmentOverlayed = false
-      return environment.applicationClient.showTabView(false)
+      return self.applicationClient.showTabView(false)
         .fireAndForget()
       
     case .attachmentDetail:
@@ -172,7 +122,7 @@ public let entryDetailReducer: Reducer<
     case .processShareAttachment:
       let attachmentState = state.seletedAttachmentRowState.attachment
       
-      return environment.applicationClient.share(attachmentState.url, .attachment)
+      return self.applicationClient.share(attachmentState.url, .attachment)
         .fireAndForget()
       
     case .onAppear:
@@ -200,14 +150,14 @@ public let entryDetailReducer: Reducer<
     case .removeAttachment:
       let attachmentState = state.seletedAttachmentRowState.attachment
       
-      return environment.fileClient.removeAttachments(
+      return self.fileClient.removeAttachments(
         [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-        environment.backgroundQueue
+        self.backgroundQueue
       )
-      .receive(on: environment.mainQueue)
+      .receive(on: self.mainQueue)
       .eraseToEffect()
       .map { _ in attachmentState.attachment.id }
-      .map(EntryDetailAction.removeAttachmentResponse)
+      .map(Action.removeAttachmentResponse)
       
     case let .removeAttachmentResponse(id):
       state.attachments.remove(id: id)
@@ -266,7 +216,7 @@ public let entryDetailReducer: Reducer<
     case .presentAddEntry(false):
       state.presentAddEntry = false
       return Effect(value: .presentAddEntryCompleted)
-        .delay(for: 0.3, scheduler: environment.mainQueue)
+        .delay(for: 0.3, scheduler: self.mainQueue)
         .eraseToEffect()
       
     case .presentAddEntryCompleted:
@@ -274,16 +224,18 @@ public let entryDetailReducer: Reducer<
       return Effect(value: .onAppear)
       
     case .processShare:
-      return environment.applicationClient.share(state.entry.text.message, .text)
+      return self.applicationClient.share(state.entry.text.message, .text)
         .fireAndForget()
     }
   }
-)
+}
 
 public struct EntryDetailView: View {
-  public let store: Store<EntryDetailState, EntryDetailAction>
+  public let store: StoreOf<EntryDetail>
   
-  public init(store: Store<EntryDetailState, EntryDetailAction>) {
+  public init(
+    store: StoreOf<EntryDetail>
+  ) {
     self.store = store
   }
   
@@ -299,7 +251,7 @@ public struct EntryDetailView: View {
                 ForEachStore(
                   store.scope(
                     state: \.attachments,
-                    action: EntryDetailAction.attachments(id:action:)),
+                    action: EntryDetail.Action.attachments(id:action:)),
                   content: AttachmentRowView.init(store:)
                 )
               }
@@ -331,12 +283,12 @@ public struct EntryDetailView: View {
             
             ZStack {
               ScrollView(.init()) {
-                TabView(selection: viewStore.binding(get: \.seletedAttachmentRowState, send: EntryDetailAction.selectedAttachmentRowAction)) {
+                TabView(selection: viewStore.binding(get: \.seletedAttachmentRowState, send: EntryDetail.Action.selectedAttachmentRowAction)) {
                   ForEach(viewStore.attachments) { attachment in
                     AttachmentDetailView(
                       store: store.scope(
                         state: \.selectedAttachmentDetailState,
-                        action: EntryDetailAction.attachmentDetail))
+                        action: EntryDetail.Action.attachmentDetail))
                     .tag(attachment)
                   }
                 }
@@ -385,13 +337,13 @@ public struct EntryDetailView: View {
       .fullScreenCover(
         isPresented: viewStore.binding(
           get: { $0.presentAddEntry },
-          send: EntryDetailAction.presentAddEntry
+          send: EntryDetail.Action.presentAddEntry
         )
       ) {
         IfLetStore(
           store.scope(
             state: { $0.addEntryState },
-            action: EntryDetailAction.addEntryAction),
+            action: EntryDetail.Action.addEntryAction),
           then: AddEntryView.init(store:)
         )
       }
