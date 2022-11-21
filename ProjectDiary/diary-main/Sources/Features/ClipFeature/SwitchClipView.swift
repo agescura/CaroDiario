@@ -29,7 +29,6 @@ public struct SwitchClipEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         userDefaultsClient: UserDefaultsClient,
@@ -37,8 +36,7 @@ public struct SwitchClipEnvironment {
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
-        uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
+        uuid: @escaping () -> UUID
     ) {
         self.userDefaultsClient = userDefaultsClient
         self.feedbackGeneratorClient = feedbackGeneratorClient
@@ -46,7 +44,6 @@ public struct SwitchClipEnvironment {
         self.backgroundQueue = backgroundQueue
         self.date = date
         self.uuid = uuid
-        self.setUserInterfaceStyle = setUserInterfaceStyle
     }
 }
 
@@ -74,8 +71,7 @@ public let switchClipReducer: Reducer<
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 date: $0.date,
-                uuid: $0.uuid,
-                setUserInterfaceStyle: $0.setUserInterfaceStyle)
+                uuid: $0.uuid)
             }
         ),
     

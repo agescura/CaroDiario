@@ -15,10 +15,6 @@ let package = Package(
             name: "UserDefaultsClient",
             targets: ["UserDefaultsClient"]
         ),
-        .library(
-            name: "UserDefaultsClientLive",
-            targets: ["UserDefaultsClientLive"]
-        ),
         
         .library(
             name: "CoreDataClient",
@@ -51,10 +47,6 @@ let package = Package(
         .library(
             name: "AVCaptureDeviceClient",
             targets: ["AVCaptureDeviceClient"]
-        ),
-        .library(
-            name: "AVCaptureDeviceClientLive",
-            targets: ["AVCaptureDeviceClientLive"]
         ),
         
         .library(
@@ -106,10 +98,6 @@ let package = Package(
         .library(
             name: "PDFKitClient",
             targets: ["PDFKitClient"]
-        ),
-        .library(
-            name: "PDFKitClientLive",
-            targets: ["PDFKitClientLive"]
         ),
         
         // Features
@@ -341,13 +329,6 @@ let package = Package(
         ],
             path: "Sources/Clients/AVCaptureDeviceClient"
         ),
-        .target(
-            name: "AVCaptureDeviceClientLive",
-            dependencies: [
-            "AVCaptureDeviceClient"
-        ],
-            path: "Sources/Clients/AVCaptureDeviceClientLive"
-        ),
 
         .target(
             name: "CoreDataClient",
@@ -407,13 +388,6 @@ let package = Package(
             ],
             path: "Sources/Clients/PDFKitClient"
         ),
-        .target(
-            name: "PDFKitClientLive",
-            dependencies: [
-                "PDFKitClient"
-            ],
-            path: "Sources/Clients/PDFKitClientLive"
-        ),
         
         .target(
             name: "StoreKitClient",
@@ -445,14 +419,6 @@ let package = Package(
                 "Models"
             ],
             path: "Sources/Clients/UserDefaultsClient"
-        ),
-        .target(
-            name: "UserDefaultsClientLive",
-            dependencies: [
-            "UserDefaultsClient",
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-        ],
-            path: "Sources/Clients/UserDefaultsClientLive"
         ),
         
         // App

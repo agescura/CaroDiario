@@ -40,7 +40,7 @@ extension AttachmentSearchType {
 
 public struct AttachmentSearchState: Equatable {
     public var type: AttachmentSearchType
-    public var entries: IdentifiedArrayOf<DayEntriesRowState>
+  public var entries: IdentifiedArrayOf<DayEntriesRow.State>
     
     public var entryDetailState: EntryDetailState?
     public var navigateEntryDetail = false
@@ -52,7 +52,7 @@ public struct AttachmentSearchState: Equatable {
 }
 
 public enum AttachmentSearchAction: Equatable {
-    case entries(id: UUID, action: DayEntriesRowAction)
+  case entries(id: UUID, action: DayEntriesRow.Action)
     case remove(Entry)
     
     case entryDetailAction(EntryDetailAction)
@@ -107,30 +107,12 @@ public let attachmentSearchReducer: Reducer<
     AttachmentSearchAction,
     AttachmentSearchEnvironment
 > = .combine(
-    dayEntriesReducer
-        .pullback(
-            state: \DayEntriesRowState.dayEntries,
-            action: /DayEntriesRowAction.dayEntry,
-            environment: { _ in () }
-        )
-        .forEach(
-            state: \AttachmentSearchState.entries,
-            action: /AttachmentSearchAction.entries,
-            environment: { AttachmentSearchEnvironment(
-                fileClient: $0.fileClient,
-                userDefaultsClient: $0.userDefaultsClient,
-                avCaptureDeviceClient: $0.avCaptureDeviceClient,
-                applicationClient: $0.applicationClient,
-                avAudioSessionClient: $0.avAudioSessionClient,
-                avAudioPlayerClient: $0.avAudioPlayerClient,
-                avAudioRecorderClient: $0.avAudioRecorderClient,
-                avAssetClient: $0.avAssetClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue,
-                date: $0.date,
-                uuid: $0.uuid)
-            }
-        ),
+  AnyReducer(
+    EmptyReducer()
+      .forEach(\.entries, action: /AttachmentSearchAction.entries) {
+        DayEntriesRow()
+      }
+  ),
     entryDetailReducer
         .optional()
         .pullback(

@@ -61,18 +61,18 @@ public struct SettingsState: Equatable {
     }
   }
   public enum Route: Equatable {
-    case appearance(AppearanceState)
+    case appearance(Appearance.State)
     case language(LanguageState)
     case activate(ActivatePasscodeState)
     case menu(MenuPasscodeState)
-    case camera(CameraState)
+    case camera(Camera.State)
     case microphone(MicrophoneState)
-    case export(ExportState)
+    case export(Export.State)
     case agreements(Agreements.State)
     case about(About.State)
   }
   
-  var appearanceState: AppearanceState? {
+  var appearance: Appearance.State? {
     get {
       guard case let .appearance(state) = self.route else { return nil }
       return state
@@ -112,7 +112,7 @@ public struct SettingsState: Equatable {
       self.route = .menu(newValue)
     }
   }
-  var cameraState: CameraState? {
+  var camera: Camera.State? {
     get {
       guard case let .camera(state) = self.route else { return nil }
       return state
@@ -132,7 +132,7 @@ public struct SettingsState: Equatable {
       self.route = .microphone(newValue)
     }
   }
-  var exportState: ExportState? {
+  var export: Export.State? {
     get {
       guard case let .export(state) = self.route else { return nil }
       return state

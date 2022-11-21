@@ -9,18 +9,18 @@ import SwiftUI
 import ComposableArchitecture
 import RootFeature
 import Styles
-import UserDefaultsClientLive
+import UserDefaultsClient
 import CoreDataClientLive
 import FileClient
 import LocalAuthenticationClientLive
 import UIApplicationClient
-import AVCaptureDeviceClientLive
+import AVCaptureDeviceClient
 import FeedbackGeneratorClient
 import AVAudioSessionClientLive
 import AVAudioPlayerClient
 import AVAudioRecorderClientLive
 import StoreKitClientLive
-import PDFKitClientLive
+import PDFKitClient
 import AVAssetClientLive
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -55,16 +55,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 mainQueue: .main,
                 backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
                 date: Date.init,
-                uuid: UUID.init,
-                setUserInterfaceStyle: { userInterfaceStyle in
-                    await MainActor.run {
-                        guard
-                            let scene = UIApplication.shared.connectedScenes.first(where: { $0 is UIWindowScene })
-                                as? UIWindowScene
-                        else { return }
-                        scene.keyWindow?.overrideUserInterfaceStyle = userInterfaceStyle
-                    }
-                }
+                uuid: UUID.init
             )
         )
     }

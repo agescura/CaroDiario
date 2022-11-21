@@ -15,19 +15,19 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
             let effects = self.run(&state, action, environment)
             
             switch action {
-            case let .featureAction(.home(.settings(.appearanceAction(.layoutAction(.layoutChanged(layout)))))):
+            case let .featureAction(.home(.settings(.appearance(.layout(.layoutChanged(layout)))))):
                 return .merge(
                     environment.userDefaultsClient.set(layoutType: layout)
                         .fireAndForget(),
                     effects
                 )
-            case let .featureAction(.home(.settings(.appearanceAction(.styleAction(.styleChanged(style)))))):
+            case let .featureAction(.home(.settings(.appearance(.style(.styleChanged(style)))))):
                 return .merge(
                     environment.userDefaultsClient.set(styleType: style)
                         .fireAndForget(),
                     effects
                 )
-            case let .featureAction(.home(.settings(.appearanceAction(.themeAction(.themeChanged(theme)))))):
+            case let .featureAction(.home(.settings(.appearance(.theme(.themeChanged(theme)))))):
                 return .merge(
                     environment.userDefaultsClient.set(themeType: theme)
                         .fireAndForget(),
@@ -78,19 +78,19 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
                         .fireAndForget(),
                     effects
                 )
-            case let .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.styleChanged(styleChanged))))):
+            case let .featureAction(.onBoarding(.privacy(.style(.styleChanged(styleChanged))))):
                 return .merge(
                     environment.userDefaultsClient.set(styleType: styleChanged)
                         .fireAndForget(),
                     effects
                 )
-            case let .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.layoutChanged(layoutChanged)))))):
+            case let .featureAction(.onBoarding(.privacy(.style(.layout(.layoutChanged(layoutChanged)))))):
                 return .merge(
                     environment.userDefaultsClient.set(layoutType: layoutChanged)
                         .fireAndForget(),
                     effects
                 )
-            case let .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.themeChanged(themeChanged))))))):
+            case let .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.themeChanged(themeChanged))))))):
                 return .merge(
                     environment.userDefaultsClient.set(themeType: themeChanged)
                         .fireAndForget(),

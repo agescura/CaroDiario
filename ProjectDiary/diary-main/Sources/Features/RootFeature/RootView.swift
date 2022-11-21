@@ -83,7 +83,6 @@ public struct RootEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         coreDataClient: CoreDataClient,
@@ -102,8 +101,7 @@ public struct RootEnvironment {
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
-        uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
+        uuid: @escaping () -> UUID
     ) {
         self.coreDataClient = coreDataClient
         self.fileClient = fileClient
@@ -122,7 +120,6 @@ public struct RootEnvironment {
         self.backgroundQueue = backgroundQueue
         self.date = date
         self.uuid = uuid
-        self.setUserInterfaceStyle = setUserInterfaceStyle
     }
 }
 
@@ -158,8 +155,7 @@ public let rootReducer: Reducer<
                     mainQueue: $0.mainQueue,
                     backgroundQueue: $0.backgroundQueue,
                     date: $0.date,
-                    uuid: $0.uuid,
-                    setUserInterfaceStyle: $0.setUserInterfaceStyle
+                    uuid: $0.uuid
                 )
             }
         ),
@@ -172,7 +168,7 @@ public let rootReducer: Reducer<
             
         case .setUserInterfaceStyle:
             return .task { @MainActor in
-                await environment.setUserInterfaceStyle(environment.userDefaultsClient.themeType.userInterfaceStyle)
+              await environment.applicationClient.setUserInterfaceStyle(environment.userDefaultsClient.themeType.userInterfaceStyle)
                 return .startFirstScreen
             }
             
@@ -191,10 +187,10 @@ public let rootReducer: Reducer<
             return .none
             
         case .featureAction(.onBoarding(.skipAlertAction)),
-             .featureAction(.onBoarding(.privacyOnBoardingAction(.skipAlertAction))):
+             .featureAction(.onBoarding(.privacy(.skipAlertAction))):
             return Effect(value: RootAction.requestCameraStatus)
             
-        case .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.startButtonTapped)))))):
+        case .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.startButtonTapped)))))):
             return Effect(value: RootAction.requestCameraStatus)
                 .delay(for: 0.001, scheduler: environment.mainQueue)
                 .eraseToEffect()

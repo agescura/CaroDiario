@@ -21,7 +21,7 @@ import AVAssetClient
 
 public struct SearchState: Equatable {
     public var searchText: String = ""
-    public var entries: IdentifiedArrayOf<DayEntriesRowState>
+  public var entries: IdentifiedArrayOf<DayEntriesRow.State>
     
     public var attachmentSearchState: AttachmentSearchState?
     public var navigateAttachmentSearch = false
@@ -36,7 +36,7 @@ public struct SearchState: Equatable {
     
     public init(
         searchText: String = "",
-        entries: IdentifiedArrayOf<DayEntriesRowState> = []
+        entries: IdentifiedArrayOf<DayEntriesRow.State> = []
     ) {
         self.searchText = searchText
         self.entries = entries
@@ -46,7 +46,7 @@ public struct SearchState: Equatable {
 public enum SearchAction: Equatable {
     case searching(newText: String)
     case searchResponse([[Entry]])
-    case entries(id: UUID, action: DayEntriesRowAction)
+  case entries(id: UUID, action: DayEntriesRow.Action)
     case remove(Entry)
     
     case attachmentSearchAction(AttachmentSearchAction)
@@ -108,30 +108,12 @@ public let searchReducer: Reducer<
     SearchAction,
     SearchEnvironment
 > = .combine(
-    dayEntriesReducer
-        .pullback(
-            state: \DayEntriesRowState.dayEntries,
-            action: /DayEntriesRowAction.dayEntry,
-            environment: { _ in () }
-        )
-        .forEach(
-            state: \SearchState.entries,
-            action: /SearchAction.entries,
-            environment: { SearchEnvironment(
-                fileClient: $0.fileClient,
-                userDefaultsClient: $0.userDefaultsClient,
-                avCaptureDeviceClient: $0.avCaptureDeviceClient,
-                applicationClient: $0.applicationClient,
-                avAudioSessionClient: $0.avAudioSessionClient,
-                avAudioPlayerClient: $0.avAudioPlayerClient,
-                avAudioRecorderClient: $0.avAudioRecorderClient,
-                avAssetClient: $0.avAssetClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue,
-                date: $0.date,
-                uuid: $0.uuid)
-            }
-        ),
+  AnyReducer(
+    EmptyReducer()
+      .forEach(\.entries, action: /SearchAction.entries) {
+        DayEntriesRow()
+      }
+  ),
     attachmentSearchReducer
         .optional()
         .pullback(
@@ -159,10 +141,10 @@ public let searchReducer: Reducer<
                 return .none
                 
             case let .searchResponse(response):
-                var dayResult: IdentifiedArrayOf<DayEntriesRowState> = []
+              var dayResult: IdentifiedArrayOf<DayEntriesRow.State> = []
                 
                 for entries in response {
-                    let day = DayEntriesRowState(dayEntry: .init(
+                  let day = DayEntriesRow.State(dayEntry: .init(
                         entry: .init(uniqueElements: entries), style: environment.userDefaultsClient.styleType, layout: environment.userDefaultsClient.layoutType), id: environment.uuid())
                     dayResult.append(day)
                 }
@@ -194,10 +176,10 @@ public let searchReducer: Reducer<
                 return .none
                 
             case let .navigateSearch(type, response):
-                var dayResult: IdentifiedArrayOf<DayEntriesRowState> = []
+              var dayResult: IdentifiedArrayOf<DayEntriesRow.State> = []
                 
                 for entries in response {
-                    let day = DayEntriesRowState(dayEntry: .init(
+                  let day = DayEntriesRow.State(dayEntry: .init(
                         entry: .init(uniqueElements: entries), style: environment.userDefaultsClient.styleType, layout: environment.userDefaultsClient.layoutType), id: environment.uuid())
                     dayResult.append(day)
                 }

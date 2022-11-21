@@ -54,8 +54,7 @@ class OnBoardingFeatureTests: XCTestCase {
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 date: Date.init,
-                uuid: UUID.init,
-                setUserInterfaceStyle: { _ in () }
+                uuid: UUID.init
             )
         )
         

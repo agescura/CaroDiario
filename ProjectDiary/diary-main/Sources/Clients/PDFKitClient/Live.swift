@@ -10,6 +10,11 @@ import PDFKit
 import ComposableArchitecture
 import Models
 import Localizables
+import Dependencies
+
+extension PDFKitClient: DependencyKey {
+  public static var liveValue: PDFKitClient { .live }
+}
 
 extension PDFKitClient {
     

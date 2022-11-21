@@ -30,17 +30,17 @@ extension Reducer where State == RootState, Action == RootAction, Environment ==
                     return environment.coreDataClient.removeEntry(entry.id)
                         .fireAndForget()
                     
-                case .featureAction(.home(.settings(.exportAction(.processPDF)))):
+                case .featureAction(.home(.settings(.export(.processPDF)))):
                     return .merge(
                         environment.coreDataClient.fetchAll()
-                            .map({ RootAction.featureAction(.home(.settings(.exportAction(.generatePDF($0))))) }),
+                            .map({ RootAction.featureAction(.home(.settings(.export(.generatePDF($0))))) }),
                         effects
                     )
                     
-                case .featureAction(.home(.settings(.exportAction(.previewPDF)))):
+                case .featureAction(.home(.settings(.export(.previewPDF)))):
                     return .merge(
                         environment.coreDataClient.fetchAll()
-                            .map({ RootAction.featureAction(.home(.settings(.exportAction(.generatePreview($0))))) }),
+                            .map({ RootAction.featureAction(.home(.settings(.export(.generatePreview($0))))) }),
                         effects
                     )
                     

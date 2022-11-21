@@ -1,13 +1,14 @@
-//
-//  Interface.swift
-//  
-//
-//  Created by Albert Gil Escura on 6/8/21.
-//
-
 import Foundation
 import ComposableArchitecture
 import Models
+import Dependencies
+
+extension DependencyValues {
+  public var avCaptureDeviceClient: AVCaptureDeviceClient {
+    get { self[AVCaptureDeviceClient.self] }
+    set { self[AVCaptureDeviceClient.self] = newValue }
+  }
+}
 
 public struct AVCaptureDeviceClient {
     public var authorizationStatus: () -> Effect<AuthorizedVideoStatus, Never>

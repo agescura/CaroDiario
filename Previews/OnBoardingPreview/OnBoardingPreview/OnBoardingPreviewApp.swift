@@ -24,12 +24,7 @@ struct OnBoardingPreviewApp: App {
                         mainQueue: .main,
                         backgroundQueue: DispatchQueue(label: "background-queue").eraseToAnyScheduler(),
                         date: Date.init,
-                        uuid: UUID.init,
-                        setUserInterfaceStyle: { userInterfaceStyle in
-                            .fireAndForget {
-                                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = userInterfaceStyle
-                            }
-                        }
+                        uuid: UUID.init
                     )
                 )
             )

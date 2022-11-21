@@ -27,14 +27,14 @@ import AVAssetClient
 
 public enum AppState: Equatable {
     case splash(SplashState)
-    case onBoarding(WelcomeOnBoardingState)
+  case onBoarding(Welcome.State)
     case lockScreen(LockScreenState)
     case home(HomeState)
 }
 
 public enum AppAction: Equatable {
     case splash(SplashAction)
-    case onBoarding(WelcomeOnBoardingAction)
+  case onBoarding(Welcome.Action)
     case lockScreen(LockScreenAction)
     case home(HomeAction)
 }
@@ -56,7 +56,6 @@ public struct AppEnvironment {
     public let backgroundQueue: AnySchedulerOf<DispatchQueue>
     public let date: () -> Date
     public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
     
     public init(
         fileClient: FileClient,
@@ -74,8 +73,7 @@ public struct AppEnvironment {
         mainQueue: AnySchedulerOf<DispatchQueue>,
         backgroundQueue: AnySchedulerOf<DispatchQueue>,
         date: @escaping () -> Date,
-        uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
+        uuid: @escaping () -> UUID
     ) {
         self.fileClient = fileClient
         self.userDefaultsClient = userDefaultsClient
@@ -93,7 +91,6 @@ public struct AppEnvironment {
         self.backgroundQueue = backgroundQueue
         self.date = date
         self.uuid = uuid
-        self.setUserInterfaceStyle = setUserInterfaceStyle
     }
 }
 
@@ -111,20 +108,11 @@ public let appReducer: Reducer<
                 mainQueue: $0.mainQueue)
             }
         ),
-    welcomeOnBoardingReducer
-        .pullback(
-            state: /AppState.onBoarding,
-            action: /AppAction.onBoarding,
-            environment: { WelcomeOnBoardingEnvironment(
-                userDefaultsClient: $0.userDefaultsClient,
-                feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue,
-                date: $0.date,
-                uuid: $0.uuid,
-                setUserInterfaceStyle: $0.setUserInterfaceStyle)
-            }
-        ),
+    AnyReducer(
+      Scope(state: /AppState.onBoarding, action: /AppAction.onBoarding) {
+        Welcome()
+      }
+    ),
     lockScreenReducer
         .pullback(
             state: /AppState.lockScreen,
@@ -155,8 +143,7 @@ public let appReducer: Reducer<
                 mainQueue: $0.mainQueue,
                 backgroundQueue: $0.backgroundQueue,
                 date: $0.date,
-                uuid: $0.uuid,
-                setUserInterfaceStyle: $0.setUserInterfaceStyle)
+                uuid: $0.uuid)
             }
         ),
     .init { state, action, environment in
@@ -181,7 +168,7 @@ public struct AppView: View {
             CaseLet(
                 state: /AppState.onBoarding,
                 action: AppAction.onBoarding,
-                then: WelcomeOnBoardingView.init(store:)
+                then: WelcomeView.init(store:)
             )
             CaseLet(
                 state: /AppState.lockScreen,

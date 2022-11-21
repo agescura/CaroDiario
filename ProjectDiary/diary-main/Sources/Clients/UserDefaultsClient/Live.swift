@@ -6,7 +6,11 @@
 //
 
 import Foundation
-import UserDefaultsClient
+import Dependencies
+
+extension UserDefaultsClient: DependencyKey {
+  public static var liveValue: UserDefaultsClient { .live() }
+}
 
 extension UserDefaultsClient {
     public static func live(userDefaults: UserDefaults = UserDefaults(suiteName: "group.albertgil.carodiario")!) -> Self {

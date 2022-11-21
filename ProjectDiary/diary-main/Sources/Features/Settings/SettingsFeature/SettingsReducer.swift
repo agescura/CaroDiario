@@ -46,33 +46,6 @@ public let settingsReducer: Reducer<
         )
       }
     ),
-  cameraReducer
-    .optional()
-    .pullback(
-      state: \SettingsState.cameraState,
-      action: /SettingsAction.cameraAction,
-      environment: {
-        CameraEnvironment(
-          avCaptureDeviceClient: $0.avCaptureDeviceClient,
-          feedbackGeneratorClient: $0.feedbackGeneratorClient,
-          applicationClient: $0.applicationClient,
-          mainQueue: $0.mainQueue
-        )
-      }
-    ),
-  appearanceReducer
-    .optional()
-    .pullback(
-      state: \SettingsState.appearanceState,
-      action: /SettingsAction.appearanceAction,
-      environment: {
-        AppearanceEnvironment(
-          applicationClient: $0.applicationClient,
-          feedbackGeneratorClient: $0.feedbackGeneratorClient,
-          setUserInterfaceStyle: $0.setUserInterfaceStyle
-        )
-      }
-    ),
   microphoneReducer
     .optional()
     .pullback(
@@ -89,28 +62,20 @@ public let settingsReducer: Reducer<
     ),
   AnyReducer(
     EmptyReducer()
-      .ifLet(\SettingsState.agreements, action: /SettingsAction.agreements) {
+      .ifLet(\.appearance, action: /SettingsAction.appearance) {
+        Appearance()
+      }
+      .ifLet(\.agreements, action: /SettingsAction.agreements) {
         Agreements()
       }
-  ),
-  exportReducer
-    .optional()
-    .pullback(
-      state: \SettingsState.exportState,
-      action: /SettingsAction.exportAction,
-      environment: {
-        ExportEnvironment(
-          fileClient: $0.fileClient,
-          applicationClient: $0.applicationClient,
-          pdfKitClient: $0.pdfKitClient,
-          date: $0.date
-        )
+      .ifLet(\.camera, action: /SettingsAction.camera) {
+        Camera()
       }
-    ),
-  AnyReducer(
-    EmptyReducer()
-      .ifLet(\SettingsState.about, action: /SettingsAction.about) {
+      .ifLet(\.about, action: /SettingsAction.about) {
         About()
+      }
+      .ifLet(\.export, action: /SettingsAction.export) {
+        Export()
       }
   ),
   languageReducer
@@ -141,7 +106,7 @@ public let settingsReducer: Reducer<
         ) : nil
         return .none
         
-      case .appearanceAction:
+      case .appearance:
         return .none
         
       case let .navigateLanguage(value):
@@ -212,7 +177,7 @@ public let settingsReducer: Reducer<
         ) : nil
         return .none
         
-      case .cameraAction:
+      case .camera:
         return .none
         
       case let .navigateCamera(value):
@@ -236,7 +201,7 @@ public let settingsReducer: Reducer<
         state.route = value ? .export(.init()) : nil
         return .none
         
-      case .exportAction:
+      case .export:
         return .none
         
       case let .navigateAbout(value):

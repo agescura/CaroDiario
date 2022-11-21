@@ -45,12 +45,7 @@ struct SettingsFeaturePreviewApp: App {
                         storeKitClient: .live,
                         pdfKitClient: .live,
                         mainQueue: .main,
-                        date: Date.init,
-                        setUserInterfaceStyle: { userInterfaceStyle in
-                            .fireAndForget {
-                                UIApplication.shared.windows.first?.overrideUserInterfaceStyle = userInterfaceStyle
-                            }
-                        }
+                        date: Date.init
                     )
                 )
             )

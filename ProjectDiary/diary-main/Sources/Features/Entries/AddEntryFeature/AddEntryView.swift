@@ -168,7 +168,7 @@ public let addEntryReducer: Reducer<
 > = .combine(
   AnyReducer(
     EmptyReducer()
-      .forEach(\.attachments, action: /AddEntryAction.attachments(id:action:)) {
+      .forEach(\.attachments, action: /AddEntryAction.attachments) {
         AttachmentAddRow()
       }
   ),

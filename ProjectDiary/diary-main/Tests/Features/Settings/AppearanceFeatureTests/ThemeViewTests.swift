@@ -15,8 +15,7 @@ class ThemeViewTests: XCTestCase {
     
     func testThemeHappyPath() async {
         var environment = ThemeEnvironment(
-          feedbackGeneratorClient: .noop,
-          setUserInterfaceStyle: { _ in }
+          feedbackGeneratorClient: .noop
         )
         var selectionChangedCalled = false
         environment.feedbackGeneratorClient.selectionChanged = {
@@ -46,7 +45,9 @@ class ThemeViewTests: XCTestCase {
                 entries: fakeEntries(with: .rectangle, layout: .vertical)
             ),
             reducer: themeReducer,
-            environment: .init(feedbackGeneratorClient: .noop, setUserInterfaceStyle: { _ in })
+            environment: .init(
+              feedbackGeneratorClient: .noop
+            )
         )
         let view = ThemeView(store: store)
         

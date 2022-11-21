@@ -1,14 +1,11 @@
-//
-//  Live.swift
-//  
-//
-//  Created by Albert Gil Escura on 6/8/21.
-//
-
 import Foundation
 import AVFoundation
-import AVCaptureDeviceClient
 import ComposableArchitecture
+import Dependencies
+
+extension AVCaptureDeviceClient: DependencyKey {
+  public static var liveValue: AVCaptureDeviceClient { .live }
+}
 
 extension AVCaptureDeviceClient {
     public static let live = Self(

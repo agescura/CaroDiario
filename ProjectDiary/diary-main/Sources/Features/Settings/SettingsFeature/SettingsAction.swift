@@ -22,7 +22,7 @@ public enum SettingsAction: Equatable {
   case toggleShowSplash(isOn: Bool)
   case biometricResult(LocalAuthenticationType)
   
-  case appearanceAction(AppearanceAction)
+  case appearance(Appearance.Action)
   case navigateAppearance(Bool)
   
   case languageAction(LanguageAction)
@@ -34,7 +34,7 @@ public enum SettingsAction: Equatable {
   case menuPasscodeAction(MenuPasscodeAction)
   case navigateMenuPasscode(Bool)
   
-  case cameraAction(CameraAction)
+  case camera(Camera.Action)
   case navigateCamera(Bool)
   
   case microphoneAction(MicrophoneAction)
@@ -45,7 +45,7 @@ public enum SettingsAction: Equatable {
   
   case reviewStoreKit
   
-  case exportAction(ExportAction)
+  case export(Export.Action)
   case navigateExport(Bool)
   
   case about(About.Action)
