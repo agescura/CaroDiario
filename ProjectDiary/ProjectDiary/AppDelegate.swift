@@ -16,7 +16,7 @@ import LocalAuthenticationClientLive
 import UIApplicationClient
 import AVCaptureDeviceClient
 import FeedbackGeneratorClient
-import AVAudioSessionClientLive
+import AVAudioSessionClient
 import AVAudioPlayerClient
 import AVAudioRecorderClientLive
 import StoreKitClientLive

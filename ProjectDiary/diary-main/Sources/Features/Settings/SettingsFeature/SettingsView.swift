@@ -1,10 +1,3 @@
-//
-//  SettingsView.swift
-//  AddEntryFeature
-//
-//  Created by Albert Gil Escura on 29/6/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import Styles
@@ -69,7 +62,7 @@ public struct SettingsView: View {
                   LanguageView(
                     store: self.store.scope(
                       state: { _ in languageState },
-                      action: SettingsAction.languageAction
+                      action: SettingsAction.language
                     )
                   )
                 },

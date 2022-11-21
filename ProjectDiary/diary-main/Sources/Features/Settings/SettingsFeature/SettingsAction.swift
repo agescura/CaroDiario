@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 20/8/22.
-//
-
 import Foundation
 import Models
 import MicrophoneFeature
@@ -25,7 +18,7 @@ public enum SettingsAction: Equatable {
   case appearance(Appearance.Action)
   case navigateAppearance(Bool)
   
-  case languageAction(LanguageAction)
+  case language(Language.Action)
   case navigateLanguage(Bool)
   
   case activatePasscodeAction(ActivatePasscodeAction)
@@ -37,7 +30,7 @@ public enum SettingsAction: Equatable {
   case camera(Camera.Action)
   case navigateCamera(Bool)
   
-  case microphoneAction(MicrophoneAction)
+  case microphoneAction(Microphone.Action)
   case navigateMicrophone(Bool)
   
   case agreements(Agreements.Action)

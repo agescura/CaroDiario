@@ -67,10 +67,6 @@ let package = Package(
             name: "AVAudioSessionClient",
             targets: ["AVAudioSessionClient"]
         ),
-        .library(
-            name: "AVAudioSessionClientLive",
-            targets: ["AVAudioSessionClientLive"]
-        ),
         
         .library(
             name: "AVAssetClient",
@@ -312,13 +308,6 @@ let package = Package(
               "Models"
         ],
             path: "Sources/Clients/AVAudioSessionClient"
-        ),
-        .target(
-            name: "AVAudioSessionClientLive",
-            dependencies: [
-            "AVAudioSessionClient"
-        ],
-            path: "Sources/Clients/AVAudioSessionClientLive"
         ),
         
         .target(

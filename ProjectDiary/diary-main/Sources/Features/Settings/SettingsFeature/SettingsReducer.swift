@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 20/8/22.
-//
-
 import Foundation
 import ComposableArchitecture
 import MicrophoneFeature
@@ -46,20 +39,6 @@ public let settingsReducer: Reducer<
         )
       }
     ),
-  microphoneReducer
-    .optional()
-    .pullback(
-      state: \SettingsState.microphoneState,
-      action: /SettingsAction.microphoneAction,
-      environment: {
-        MicrophoneEnvironment(
-          avAudioSessionClient: $0.avAudioSessionClient,
-          feedbackGeneratorClient: $0.feedbackGeneratorClient,
-          applicationClient: $0.applicationClient,
-          mainQueue: $0.mainQueue
-        )
-      }
-    ),
   AnyReducer(
     EmptyReducer()
       .ifLet(\.appearance, action: /SettingsAction.appearance) {
@@ -77,16 +56,13 @@ public let settingsReducer: Reducer<
       .ifLet(\.export, action: /SettingsAction.export) {
         Export()
       }
-  ),
-  languageReducer
-    .optional()
-    .pullback(
-      state: \SettingsState.languageState,
-      action: /SettingsAction.languageAction,
-      environment: { _ in
-        LanguageEnvironment()
+      .ifLet(\.languageState, action: /SettingsAction.language) {
+        Language()
       }
-    ),
+      .ifLet(\.microphoneState, action: /SettingsAction.microphoneAction) {
+        Microphone()
+      }
+  ),
   
     .init { state, action, environment in
       switch action {
@@ -115,7 +91,7 @@ public let settingsReducer: Reducer<
         ) : nil
         return .none
         
-      case .languageAction:
+      case .language:
         return .none
         
       case let .toggleShowSplash(isOn):

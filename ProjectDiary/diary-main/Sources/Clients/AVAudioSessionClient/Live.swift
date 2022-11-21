@@ -1,13 +1,9 @@
-//
-//  Live.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/8/21.
-//
-
 import ComposableArchitecture
 import AVFoundation
-import AVAudioSessionClient
+
+extension AVAudioSessionClient: DependencyKey {
+  public static var liveValue: AVAudioSessionClient { .live }
+}
 
 extension AVAudioSessionClient {
     public static var live: Self = {

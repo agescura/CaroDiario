@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 20/8/22.
-//
-
 import Foundation
 import Models
 import MicrophoneFeature
@@ -62,11 +55,11 @@ public struct SettingsState: Equatable {
   }
   public enum Route: Equatable {
     case appearance(Appearance.State)
-    case language(LanguageState)
+    case language(Language.State)
     case activate(ActivatePasscodeState)
     case menu(MenuPasscodeState)
     case camera(Camera.State)
-    case microphone(MicrophoneState)
+    case microphone(Microphone.State)
     case export(Export.State)
     case agreements(Agreements.State)
     case about(About.State)
@@ -82,7 +75,7 @@ public struct SettingsState: Equatable {
       self.route = .appearance(newValue)
     }
   }
-  var languageState: LanguageState? {
+  var languageState: Language.State? {
     get {
       guard case let .language(state) = self.route else { return nil }
       return state
@@ -122,7 +115,7 @@ public struct SettingsState: Equatable {
       self.route = .camera(newValue)
     }
   }
-  var microphoneState: MicrophoneState? {
+  var microphoneState: Microphone.State? {
     get {
       guard case let .microphone(state) = self.route else { return nil }
       return state
