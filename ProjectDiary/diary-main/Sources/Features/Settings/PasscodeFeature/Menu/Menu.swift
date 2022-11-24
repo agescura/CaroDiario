@@ -134,10 +134,9 @@ public struct Menu: ReducerProtocol {
       if !value {
         return Effect(value: .faceId(response: value))
       }
-      return self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.authenticationType.rawValue]))
-        .receive(on: self.mainQueue)
-        .eraseToEffect()
-        .map(Menu.Action.faceId(response:))
+      return .run { [state] send in
+        await send(.faceId(response: self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.authenticationType.rawValue]))))
+      }
       
     case let .faceId(response: response):
       state.faceIdEnabled = response

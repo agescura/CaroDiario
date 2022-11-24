@@ -268,8 +268,9 @@ public struct Settings: ReducerProtocol {
     switch action {
       
     case .onAppear:
-      return self.localAuthenticationClient.determineType()
-        .map(Settings.Action.biometricResult)
+      return .run { send in
+        await send(.biometricResult(self.localAuthenticationClient.determineType()))
+      }
       
     case let .navigateAppearance(value):
       state.route = value ? .appearance(

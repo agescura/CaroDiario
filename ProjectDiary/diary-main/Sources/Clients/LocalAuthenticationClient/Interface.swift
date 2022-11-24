@@ -11,12 +11,12 @@ extension DependencyValues {
 }
 
 public struct LocalAuthenticationClient {
-    public var determineType: () -> Effect<LocalAuthenticationType, Never>
-    public var evaluate: (String) -> Effect<Bool, Never>
+    public var determineType: @Sendable () async -> LocalAuthenticationType
+    public var evaluate: @Sendable (String) async -> Bool
     
     public init(
-        determineType: @escaping () -> Effect<LocalAuthenticationType, Never>,
-        evaluate: @escaping (String) -> Effect<Bool, Never>
+        determineType: @escaping @Sendable () async -> LocalAuthenticationType,
+        evaluate: @escaping @Sendable (String) async -> Bool
     ) {
         self.determineType = determineType
         self.evaluate = evaluate

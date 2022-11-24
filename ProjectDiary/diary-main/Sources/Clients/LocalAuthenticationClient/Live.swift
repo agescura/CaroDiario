@@ -16,35 +16,37 @@ extension LocalAuthenticationClient: DependencyKey {
 }
 
 extension LocalAuthenticationClient {
+  
+  public static var live: Self {
+    let context = LAContext()
     
-    public static var live: Self {
-        var context = LAContext()
-        var error: NSError?
-        
-        return Self(
-            determineType: {
-                var type = LocalAuthenticationType.none
-                guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
-                    return Effect(value: .none)
-                }
-                switch context.biometryType {
-                case .touchID:
-                    type = .touchId
-                case .faceID:
-                    type = .faceId
-                default:
-                    type = .none
-                }
-                return Effect(value: type)
-            },
-            evaluate: { reason in
-                return .future { promise in
-                    context = LAContext()
-                    context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
-                        promise(.success(success))
-                    }
-                }
-            }
-        )
-    }
+    return Self(
+      determineType: {
+        await withCheckedContinuation { [context] continuation in
+          var type = LocalAuthenticationType.none
+          var error: NSError?
+          guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            continuation.resume(with: .success(.none))
+            return
+          }
+          switch context.biometryType {
+          case .touchID:
+            type = .touchId
+          case .faceID:
+            type = .faceId
+          default:
+            type = .none
+          }
+          continuation.resume(with: .success(type))
+        }
+      },
+      evaluate: { reason in
+        await withCheckedContinuation { [context] continuation in
+          context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+            continuation.resume(with: .success(success))
+          }
+        }
+      }
+    )
+  }
 }

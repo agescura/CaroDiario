@@ -14,34 +14,22 @@ extension LocalAuthenticationClient: TestDependencyKey {
 
 extension LocalAuthenticationClient {
     public static let noop = Self(
-        determineType: { Effect(value: .none) },
-        evaluate: { _ in .fireAndForget {} }
+        determineType: { .none },
+        evaluate: { _ in false }
     )
     
     public static let faceIdSuccess = Self(
-        determineType: {
-            Effect(value: .faceId)
-        },
-        evaluate: { _ in
-            Effect(value: true)
-        }
+        determineType: { .faceId },
+        evaluate: { _ in true }
     )
     
     public static let faceIdFailed = Self(
-        determineType: {
-            Effect(value: .faceId)
-        },
-        evaluate: { _ in
-            Effect(value: true)
-        }
+        determineType: { .faceId },
+        evaluate: { _ in false }
     )
     
     public static let touchIdSuccess = Self(
-        determineType: {
-            Effect(value: .touchId)
-        },
-        evaluate: { _ in
-            Effect(value: false)
-        }
+        determineType: { .touchId },
+        evaluate: { _ in false }
     )
 }
