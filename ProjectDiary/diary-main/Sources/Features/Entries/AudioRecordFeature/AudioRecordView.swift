@@ -1,10 +1,3 @@
-//
-//  AudioRecordView.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/8/21.
-//
-
 import ComposableArchitecture
 import SwiftUI
 import AVAudioRecorderClient
@@ -116,8 +109,7 @@ public struct AudioRecord: ReducerProtocol {
       return .none
       
     case .goToSettings:
-      return self.applicationClient.openSettings()
-        .fireAndForget()
+      return .fireAndForget { await self.applicationClient.openSettings() }
       
     case .recorderPlayer(.didFinishRecording):
       state.isRecording = false
