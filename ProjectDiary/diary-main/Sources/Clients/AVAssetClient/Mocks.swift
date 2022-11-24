@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import Dependencies
 import XCTestDynamicOverlay
+import UIKit
 
 extension AVAssetClient: TestDependencyKey {
   public static let previewValue = Self.noop
@@ -13,7 +14,7 @@ extension AVAssetClient: TestDependencyKey {
 
 extension AVAssetClient {
     public static let noop = Self(
-        commonMetadata: { _ in .fireAndForget {} },
-        generateThumbnail: { _ in .fireAndForget {} }
+      commonMetadata: { _ in .init() },
+      generateThumbnail: { _ in UIImage() }
     )
 }

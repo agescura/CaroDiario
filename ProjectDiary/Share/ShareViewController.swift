@@ -24,7 +24,7 @@ class ShareViewController: SLComposeServiceViewController {
     }
     
     override func didSelectPost() {
-        processPost()
+      processPost()
     }
     
     override func configurationItems() -> [Any]! {
@@ -47,33 +47,30 @@ class ShareViewController: SLComposeServiceViewController {
                     
                     let entryVideo = EntryVideo(id: id, lastUpdated: date, thumbnail: thumbnailPath, url: path)
                     
-                    self.avAssetClient.generateThumbnail(url)
-                        .replaceError(with: UIImage())
-                        .eraseToEffect()
-                        .flatMap(maxPublishers: .max(1)) { [unowned self] image in
-                            self.fileClientLive.addVideo(url, image, entryVideo, .main)
-                                .eraseToEffect()
-                        }
-                        .flatMap(maxPublishers: .max(1)) { [unowned self] entryVideo -> Effect<Void, Never> in
-                            let entry = Entry(
-                                id: UUID(),
-                                date: date,
-                                startDay: date,
-                                text: EntryText(id: UUID(), message: self.textView.text!, lastUpdated: date),
-                                attachments: [entryVideo]
-                            )
-                            self.entry = entry
-                            return self.coreDataClientLive.createDraft(entry)
-                                .eraseToEffect()
-                        }
-                        .flatMap(maxPublishers: .max(1)) { [unowned self] in
-                            return self.coreDataClientLive.publishEntry(self.entry!)
-                                .eraseToEffect()
-                        }
-                        .sink(receiveValue: { [unowned self] _ in
-                            self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-                        })
-                        .store(in: &self.bag)
+                  Task {
+                    let thumbnail = try? await self.avAssetClient.generateThumbnail(url)
+                    self.fileClientLive.addVideo(url, thumbnail ?? UIImage(), entryVideo, .main)
+                      .flatMap(maxPublishers: .max(1)) { [unowned self] entryVideo -> Effect<Void, Never> in
+                          let entry = Entry(
+                              id: UUID(),
+                              date: date,
+                              startDay: date,
+                              text: EntryText(id: UUID(), message: self.textView.text!, lastUpdated: date),
+                              attachments: [entryVideo]
+                          )
+                          self.entry = entry
+                          return self.coreDataClientLive.createDraft(entry)
+                              .eraseToEffect()
+                      }
+                      .flatMap(maxPublishers: .max(1)) { [unowned self] in
+                          return self.coreDataClientLive.publishEntry(self.entry!)
+                              .eraseToEffect()
+                      }
+                      .sink(receiveValue: { [unowned self] _ in
+                          self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+                      })
+                      .store(in: &self.bag)
+                  }
                 }
             }
         }

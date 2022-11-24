@@ -26,8 +26,8 @@ extension UIApplicationClient {
     openSettings: { },
     open: { _, _ in },
     canOpen: { _ in true },
-    share: { _, _ in .fireAndForget {} },
-    showTabView: { _ in .fireAndForget {} },
+    share: { _, _ in },
+    showTabView: { _ in },
     setUserInterfaceStyle: { _ in }
   )
 }

@@ -29,7 +29,7 @@ public struct AttachmentVideoDetailView: View {
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
       VideoPlayer(player: AVPlayer(url: viewStore.entryVideo.url))
-        .padding(.bottom, 32)
+        .edgesIgnoringSafeArea([.bottom, .horizontal])
     }
   }
 }

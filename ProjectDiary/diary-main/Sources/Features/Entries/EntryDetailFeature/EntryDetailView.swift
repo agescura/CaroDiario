@@ -1,6 +1,5 @@
 import SwiftUI
 import ComposableArchitecture
-import Combine
 import Models
 import CoreDataClient
 import FileClient
@@ -104,8 +103,8 @@ public struct EntryDetail: ReducerProtocol {
       let .attachments(id: id, action: .attachment(.audio(.presentAudioFullScreen(true)))):
       state.seletedAttachmentRowState = state.attachments[id: id]
       state.showAttachmentOverlayed = true
-      return self.applicationClient.showTabView(true)
-        .fireAndForget()
+      self.applicationClient.showTabView(true)
+      return .none
       
     case let .selectedAttachmentRowAction(selected):
       state.seletedAttachmentRowState = selected
@@ -113,8 +112,8 @@ public struct EntryDetail: ReducerProtocol {
       
     case .dismissAttachmentOverlayed:
       state.showAttachmentOverlayed = false
-      return self.applicationClient.showTabView(false)
-        .fireAndForget()
+      self.applicationClient.showTabView(false)
+      return .none
       
     case .attachmentDetail:
       return .none
@@ -122,8 +121,8 @@ public struct EntryDetail: ReducerProtocol {
     case .processShareAttachment:
       let attachmentState = state.seletedAttachmentRowState.attachment
       
-      return self.applicationClient.share(attachmentState.url, .attachment)
-        .fireAndForget()
+      self.applicationClient.share(attachmentState.url, .attachment)
+      return .none
       
     case .onAppear:
       return .none
@@ -224,8 +223,8 @@ public struct EntryDetail: ReducerProtocol {
       return Effect(value: .onAppear)
       
     case .processShare:
-      return self.applicationClient.share(state.entry.text.message, .text)
-        .fireAndForget()
+      self.applicationClient.share(state.entry.text.message, .text)
+      return .none
     }
   }
 }
@@ -278,7 +277,7 @@ public struct EntryDetailView: View {
         
         ZStack {
           if viewStore.showAttachmentOverlayed {
-            Color.adaptiveWhite
+            Color.customBlack
               .edgesIgnoringSafeArea(.all)
             
             ZStack {

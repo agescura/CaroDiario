@@ -84,9 +84,11 @@ struct AttachmentAddVideoView: View {
       .onTapGesture {
         viewStore.send(.presentVideoPlayer(true))
       }
-      .fullScreenCover(isPresented: viewStore.binding(
-        get: \.presentVideoPlayer,
-        send: AttachmentAddVideo.Action.presentVideoPlayer)
+      .fullScreenCover(
+        isPresented: viewStore.binding(
+          get: \.presentVideoPlayer,
+          send: AttachmentAddVideo.Action.presentVideoPlayer
+        )
       ) {
         ZStack {
           Color.black

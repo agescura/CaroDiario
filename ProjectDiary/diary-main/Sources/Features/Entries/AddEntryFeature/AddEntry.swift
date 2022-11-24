@@ -244,10 +244,10 @@ public struct AddEntry: ReducerProtocol {
       return .none
       
     case let .loadVideo(url):
-      return self.avAssetClient.generateThumbnail(url)
-        .replaceError(with: UIImage())
-        .eraseToEffect()
-        .map({ AddEntry.Action.generatedThumbnail(url, $0) })
+      return .run { [url = url] send in
+        let thumbnail = try await self.avAssetClient.generateThumbnail(url)
+        await send(.generatedThumbnail(url, thumbnail))
+      }
       
     case let .generatedThumbnail(url, image):
       let id = self.uuid()

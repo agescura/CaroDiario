@@ -10,12 +10,12 @@ extension DependencyValues {
 }
 
 public struct AVAssetClient {
-    public var commonMetadata: (URL) -> Effect<CommonMetadata, Never>
-    public var generateThumbnail: (URL) -> Effect<UIImage, Error>
+    public var commonMetadata: @Sendable (URL) async -> CommonMetadata
+    public var generateThumbnail: @Sendable (URL) async throws -> UIImage
     
     public init(
-        commonMetadata: @escaping (URL) -> Effect<AVAssetClient.CommonMetadata, Never>,
-        generateThumbnail: @escaping (URL) -> Effect<UIImage, Error>
+        commonMetadata: @escaping @Sendable (URL) async -> CommonMetadata,
+        generateThumbnail: @escaping @Sendable (URL) async throws -> UIImage
     ) {
         self.commonMetadata = commonMetadata
         self.generateThumbnail = generateThumbnail

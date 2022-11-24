@@ -9,7 +9,6 @@ import XCTest
 import ComposableArchitecture
 @testable import AudioRecordFeature
 import AVAudioSessionClient
-import Combine
 
 @MainActor
 class AudioRecordFeatureTests: XCTestCase {
