@@ -1,14 +1,15 @@
-//
-//  Interface.swift
-//  FileClient
-//
-//  Created by Albert Gil Escura on 3/7/21.
-//
-
 import Foundation
 import ComposableArchitecture
 import UIKit
 import Models
+import Dependencies
+
+extension DependencyValues {
+  public var fileClient: FileClient {
+    get { self[FileClient.self] }
+    set { self[FileClient.self] = newValue }
+  }
+}
 
 public struct FileClient {
     public var path: (UUID) -> URL

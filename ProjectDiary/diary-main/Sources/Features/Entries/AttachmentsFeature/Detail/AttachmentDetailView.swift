@@ -1,125 +1,73 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 4/10/21.
-//
-
 import ComposableArchitecture
 import SwiftUI
-import FileClient
-import UIApplicationClient
-import AVAudioPlayerClient
 
-public enum AttachmentDetailState: Equatable {
-    case image(AttachmentImageDetailState)
-    case video(AttachmentVideoDetailState)
-    case audio(AttachmentAudioDetailState)
+public struct AttachmentDetail: ReducerProtocol {
+  public init() {}
+  
+  public enum State: Equatable {
+    case image(AttachmentImageDetail.State)
+    case video(AttachmentVideoDetail.State)
+    case audio(AttachmentAudioDetail.State)
     
-    public init(row: AttachmentRowState) {
-        switch row.attachment {
-        case let .image(attachmentImageState):
-            self = .image(AttachmentImageDetailState(attachment: attachmentImageState))
-        case let .video(attachmentVideoState):
-            self = .video(AttachmentVideoDetailState(attachment: attachmentVideoState))
-        case let .audio(attachmentAudioState):
-            self = .audio(AttachmentAudioDetailState(attachment: attachmentAudioState))
-        }
+    public init(row: AttachmentRow.State) {
+      switch row.attachment {
+      case let .image(attachmentImageState):
+        self = .image(AttachmentImageDetail.State(attachment: attachmentImageState))
+      case let .video(attachmentVideoState):
+        self = .video(AttachmentVideoDetail.State(attachment: attachmentVideoState))
+      case let .audio(attachmentAudioState):
+        self = .audio(AttachmentAudioDetail.State(attachment: attachmentAudioState))
+      }
     }
-}
+  }
 
-public enum AttachmentDetailAction: Equatable {
-    case image(AttachmentImageDetailAction)
-    case video(AttachmentVideoDetailAction)
-    case audio(AttachmentAudioDetailAction)
-}
-
-public struct AttachmentDetailEnvironment {
-    public let fileClient: FileClient
-    public let applicationClient: UIApplicationClient
-    public var avAudioPlayerClient: AVAudioPlayerClient
-    public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    
-    public init(
-        fileClient: FileClient,
-        applicationClient: UIApplicationClient,
-        avAudioPlayerClient: AVAudioPlayerClient,
-        mainQueue: AnySchedulerOf<DispatchQueue>,
-        backgroundQueue: AnySchedulerOf<DispatchQueue>
-    ) {
-        self.fileClient = fileClient
-        self.applicationClient = applicationClient
-        self.avAudioPlayerClient = avAudioPlayerClient
-        self.mainQueue = mainQueue
-        self.backgroundQueue = backgroundQueue
+  public enum Action: Equatable {
+    case image(AttachmentImageDetail.Action)
+    case video(AttachmentVideoDetail.Action)
+    case audio(AttachmentAudioDetail.Action)
+  }
+  
+  public var body: some ReducerProtocolOf<Self> {
+    Scope(state: /AttachmentDetail.State.image, action: /AttachmentDetail.Action.image) {
+      AttachmentImageDetail()
     }
-}
-
-public let attachmentDetailReducer: Reducer<
-    AttachmentDetailState,
-    AttachmentDetailAction,
-    AttachmentDetailEnvironment
-> = .combine(
-    attachmentImageDetailReducer
-        .pullback(
-            state: /AttachmentDetailState.image,
-            action: /AttachmentDetailAction.image,
-            environment: { _ in ()
-            }
-        ),
-    attachmentVideoDetailReducer
-        .pullback(
-            state: /AttachmentDetailState.video,
-            action: /AttachmentDetailAction.video,
-            environment: { _ in ()
-            }
-        ),
-    attachmentAudioDetailReducer
-        .pullback(
-            state: /AttachmentDetailState.audio,
-            action: /AttachmentDetailAction.audio,
-            environment: { AttachmentAudioDetailEnvironment(
-                fileClient: $0.fileClient,
-                applicationClient: $0.applicationClient,
-                avAudioPlayerClient: $0.avAudioPlayerClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue)
-            }
-        ),
-    .init { state, action, _ in
-        return .none
+    Scope(state: /AttachmentDetail.State.video, action: /AttachmentDetail.Action.video) {
+      AttachmentVideoDetail()
     }
-)
+    Scope(state: /AttachmentDetail.State.audio, action: /AttachmentDetail.Action.audio) {
+      AttachmentAudioDetail()
+    }
+  }
+}
 
 public struct AttachmentDetailView: View {
-    let store: Store<AttachmentDetailState, AttachmentDetailAction>
-    
-    public init(
-        store: Store<AttachmentDetailState, AttachmentDetailAction>
-    ) {
-        self.store = store
+  let store: StoreOf<AttachmentDetail>
+  
+  public init(
+    store: StoreOf<AttachmentDetail>
+  ) {
+    self.store = store
+  }
+  
+  public var body: some View {
+    SwitchStore(self.store) {
+      CaseLet(
+        state: /AttachmentDetail.State.image,
+        action: AttachmentDetail.Action.image,
+        then: AttachmentImageDetailView.init(store:)
+      )
+      
+      CaseLet(
+        state: /AttachmentDetail.State.video,
+        action: AttachmentDetail.Action.video,
+        then: AttachmentVideoDetailView.init(store:)
+      )
+      
+      CaseLet(
+        state: /AttachmentDetail.State.audio,
+        action: AttachmentDetail.Action.audio,
+        then: AttachmentAudioDetailView.init(store:)
+      )
     }
-    
-    public var body: some View {
-        SwitchStore(store) {
-            CaseLet(
-                state: /AttachmentDetailState.image,
-                action: AttachmentDetailAction.image,
-                then: AttachmentImageDetailView.init(store:)
-            )
-            
-            CaseLet(
-                state: /AttachmentDetailState.video,
-                action: AttachmentDetailAction.video,
-                then: AttachmentVideoDetailView.init(store:)
-            )
-            
-            CaseLet(
-                state: /AttachmentDetailState.audio,
-                action: AttachmentDetailAction.audio,
-                then: AttachmentAudioDetailView.init(store:)
-            )
-        }
-    }
+  }
 }

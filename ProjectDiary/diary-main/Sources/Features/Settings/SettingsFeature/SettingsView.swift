@@ -1,10 +1,3 @@
-//
-//  SettingsView.swift
-//  AddEntryFeature
-//
-//  Created by Albert Gil Escura on 29/6/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import Styles
@@ -21,212 +14,212 @@ import LanguageFeature
 import SwiftUIHelper
 
 public struct SettingsView: View {
-    let store: Store<SettingsState, SettingsAction>
-    
-    public init(
-        store: Store<SettingsState, SettingsAction>
-    ) {
-        self.store = store
-    }
-    
-    public var body: some View {
-        WithViewStore(self.store) { viewStore in
-            NavigationView {
-                VStack {
-                    Form {
-                        Section {
-                            Toggle(
-                                isOn: viewStore.binding(
-                                    get: \.showSplash,
-                                    send: SettingsAction.toggleShowSplash
-                                ),
-                                label: SplashRowView.init
-                            )
-                            .toggleStyle(SwitchToggleStyle(tint: .chambray))
-                            
-                            NavigationLink(
-                                route: viewStore.route,
-                                case: /SettingsState.Route.appearance,
-                                onNavigate: { viewStore.send(.navigateAppearance($0)) },
-                                destination: { appearanceState in
-                                    AppearanceView(
-                                        store: self.store.scope(
-                                            state: { _ in appearanceState },
-                                            action: SettingsAction.appearanceAction
-                                        )
-                                    )
-                                },
-                                label: AppearanceRowView.init
-                            )
-                        }
-                        
-                        Section {
-                            NavigationLink(
-                                route: viewStore.route,
-                                case: /SettingsState.Route.language,
-                                onNavigate: { viewStore.send(.navigateLanguage($0)) },
-                                destination: { languageState in
-                                    LanguageView(
-                                        store: self.store.scope(
-                                            state: { _ in languageState },
-                                            action: SettingsAction.languageAction
-                                        )
-                                    )
-                                },
-                                label: {
-                                    LanguageRowView(
-                                        title: "Settings.Language".localized(with: [viewStore.authenticationType.rawValue]),
-                                        status: viewStore.language.localizable.localized
-                                    )
-                                }
-                            )
-                        }
-                        
-                        Section {
-                            PasscodeRowView(
-                                title: "Settings.Code".localized(with: [viewStore.authenticationType.rawValue]),
-                                status: viewStore.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
-                            )
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                if viewStore.hasPasscode {
-                                    viewStore.send(.navigateMenuPasscode(true))
-                                } else {
-                                    viewStore.send(.navigateActivatePasscode(true))
-                                }
-                            }
-                        }
-                        
-                        Section {
-                            NavigationLink(
-                                route: viewStore.route,
-                                case: /SettingsState.Route.camera,
-                                onNavigate: { viewStore.send(.navigateCamera($0)) },
-                                destination: { cameraState in
-                                    CameraView(
-                                        store: self.store.scope(
-                                            state: { _ in cameraState },
-                                            action: SettingsAction.cameraAction
-                                        )
-                                    )
-                                },
-                                label: {
-                                    CameraRowView(title: viewStore.cameraStatus.rawValue.localized)
-                                }
-                            )
-                            NavigationLink(
-                                route: viewStore.route,
-                                case: /SettingsState.Route.microphone,
-                                onNavigate: { viewStore.send(.navigateMicrophone($0)) },
-                                destination: { microphoneState in
-                                    MicrophoneView(
-                                        store: self.store.scope(
-                                            state: { _ in microphoneState },
-                                            action: SettingsAction.microphoneAction
-                                        )
-                                    )
-                                },
-                                label: {
-                                    MicrophoneRowView(title: viewStore.microphoneStatus.title.localized)
-                                }
-                            )
-                        }
-                        
-                        Section {
-                            NavigationLink(
-                                route: viewStore.route,
-                                case: /SettingsState.Route.export,
-                                onNavigate: { viewStore.send(.navigateExport($0)) },
-                                destination: { exportState in
-                                    ExportView(
-                                        store: self.store.scope(
-                                            state: { _ in exportState },
-                                            action: SettingsAction.exportAction
-                                        )
-                                    )
-                                },
-                                label: ExportRowView.init
-                            )
-                        }
-                        
-                        Section {
-                            ReviewRowView()
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    viewStore.send(.reviewStoreKit)
-                                }
-                        }
-                        
-                        Section {
-                            NavigationLink(
-                                route: viewStore.route,
-                                case: /SettingsState.Route.agreements,
-                                onNavigate: { viewStore.send(.navigateAgreements($0)) },
-                                destination: { agreementsState in
-                                    AgreementsView(
-                                        store: self.store.scope(
-                                            state: { _ in agreementsState },
-                                            action: SettingsAction.agreementsAction
-                                        )
-                                    )
-                                },
-                                label: AgreementsRowView.init
-                            )
-                            NavigationLink(
-                                route: viewStore.route,
-                                case: /SettingsState.Route.about,
-                                onNavigate: { viewStore.send(.navigateAbout($0)) },
-                                destination: { aboutState in
-                                    AboutView(
-                                        store: self.store.scope(
-                                            state: { _ in aboutState },
-                                            action: SettingsAction.aboutAction
-                                        )
-                                    )
-                                },
-                                label: AboutRowView.init
-                            )
-                        }
-                    }
-                    
-                    VStack {
-                        NavigationLink(
-                            route: viewStore.route,
-                            case: /SettingsState.Route.activate,
-                            onNavigate: { viewStore.send(.navigateActivatePasscode($0)) },
-                            destination: { activateState in
-                                ActivatePasscodeView(
-                                    store: self.store.scope(
-                                        state: { _ in activateState },
-                                        action: SettingsAction.activatePasscodeAction
-                                    )
-                                )
-                            },
-                            label: EmptyView.init
-                        )
-                        NavigationLink(
-                            route: viewStore.route,
-                            case: /SettingsState.Route.menu,
-                            onNavigate: { viewStore.send(.navigateMenuPasscode($0)) },
-                            destination: { menuState in
-                                MenuPasscodeView(
-                                    store: self.store.scope(
-                                        state: { _ in menuState },
-                                        action: SettingsAction.menuPasscodeAction
-                                    )
-                                )
-                            },
-                            label: EmptyView.init
-                        )
-                    }
-                    .frame(height: 0)
+  let store: StoreOf<Settings>
+  
+  public init(
+    store: StoreOf<Settings>
+  ) {
+    self.store = store
+  }
+  
+  public var body: some View {
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+      NavigationView {
+        VStack {
+          Form {
+            Section {
+              Toggle(
+                isOn: viewStore.binding(
+                  get: \.showSplash,
+                  send: Settings.Action.toggleShowSplash
+                ),
+                label: SplashRowView.init
+              )
+              .toggleStyle(SwitchToggleStyle(tint: .chambray))
+              
+              NavigationLink(
+                route: viewStore.route,
+                case: /Settings.State.Route.appearance,
+                onNavigate: { viewStore.send(.navigateAppearance($0)) },
+                destination: { appearanceState in
+                  AppearanceView(
+                    store: self.store.scope(
+                      state: { _ in appearanceState },
+                      action: Settings.Action.appearance
+                    )
+                  )
+                },
+                label: AppearanceRowView.init
+              )
+            }
+            
+            Section {
+              NavigationLink(
+                route: viewStore.route,
+                case: /Settings.State.Route.language,
+                onNavigate: { viewStore.send(.navigateLanguage($0)) },
+                destination: { languageState in
+                  LanguageView(
+                    store: self.store.scope(
+                      state: { _ in languageState },
+                      action: Settings.Action.language
+                    )
+                  )
+                },
+                label: {
+                  LanguageRowView(
+                    title: "Settings.Language".localized(with: [viewStore.authenticationType.rawValue]),
+                    status: viewStore.language.localizable.localized
+                  )
                 }
-                .navigationTitle("Settings.Title".localized)
+              )
             }
-            .navigationViewStyle(StackNavigationViewStyle())
-            .onAppear {
-                viewStore.send(.onAppear)
+            
+            Section {
+              PasscodeRowView(
+                title: "Settings.Code".localized(with: [viewStore.authenticationType.rawValue]),
+                status: viewStore.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
+              )
+              .contentShape(Rectangle())
+              .onTapGesture {
+                if viewStore.hasPasscode {
+                  viewStore.send(.navigateMenu(true))
+                } else {
+                  viewStore.send(.navigateActivate(true))
+                }
+              }
             }
+            
+            Section {
+              NavigationLink(
+                route: viewStore.route,
+                case: /Settings.State.Route.camera,
+                onNavigate: { viewStore.send(.navigateCamera($0)) },
+                destination: { cameraState in
+                  CameraView(
+                    store: self.store.scope(
+                      state: { _ in cameraState },
+                      action: Settings.Action.camera
+                    )
+                  )
+                },
+                label: {
+                  CameraRowView(title: viewStore.cameraStatus.rawValue.localized)
+                }
+              )
+              NavigationLink(
+                route: viewStore.route,
+                case: /Settings.State.Route.microphone,
+                onNavigate: { viewStore.send(.navigateMicrophone($0)) },
+                destination: { microphoneState in
+                  MicrophoneView(
+                    store: self.store.scope(
+                      state: { _ in microphoneState },
+                      action: Settings.Action.microphone
+                    )
+                  )
+                },
+                label: {
+                  MicrophoneRowView(title: viewStore.microphoneStatus.title.localized)
+                }
+              )
+            }
+            
+            Section {
+              NavigationLink(
+                route: viewStore.route,
+                case: /Settings.State.Route.export,
+                onNavigate: { viewStore.send(.navigateExport($0)) },
+                destination: { exportState in
+                  ExportView(
+                    store: self.store.scope(
+                      state: { _ in exportState },
+                      action: Settings.Action.export
+                    )
+                  )
+                },
+                label: ExportRowView.init
+              )
+            }
+            
+            Section {
+              ReviewRowView()
+                .contentShape(Rectangle())
+                .onTapGesture {
+                  viewStore.send(.reviewStoreKit)
+                }
+            }
+            
+            Section {
+              NavigationLink(
+                route: viewStore.route,
+                case: /Settings.State.Route.agreements,
+                onNavigate: { viewStore.send(.navigateAgreements($0)) },
+                destination: { agreementsState in
+                  AgreementsView(
+                    store: self.store.scope(
+                      state: { _ in agreementsState },
+                      action: Settings.Action.agreements
+                    )
+                  )
+                },
+                label: AgreementsRowView.init
+              )
+              NavigationLink(
+                route: viewStore.route,
+                case: /Settings.State.Route.about,
+                onNavigate: { viewStore.send(.navigateAbout($0)) },
+                destination: { aboutState in
+                  AboutView(
+                    store: self.store.scope(
+                      state: { _ in aboutState },
+                      action: Settings.Action.about
+                    )
+                  )
+                },
+                label: AboutRowView.init
+              )
+            }
+          }
+          
+          VStack {
+            NavigationLink(
+              route: viewStore.route,
+              case: /Settings.State.Route.activate,
+              onNavigate: { viewStore.send(.navigateActivate($0)) },
+              destination: { activateState in
+                ActivateView(
+                  store: self.store.scope(
+                    state: { _ in activateState },
+                    action: Settings.Action.activate
+                  )
+                )
+              },
+              label: EmptyView.init
+            )
+            NavigationLink(
+              route: viewStore.route,
+              case: /Settings.State.Route.menu,
+              onNavigate: { viewStore.send(.navigateMenu($0)) },
+              destination: { menuState in
+                MenuPasscodeView(
+                  store: self.store.scope(
+                    state: { _ in menuState },
+                    action: Settings.Action.menu
+                  )
+                )
+              },
+              label: EmptyView.init
+            )
+          }
+          .frame(height: 0)
         }
+        .navigationTitle("Settings.Title".localized)
+      }
+      .navigationViewStyle(StackNavigationViewStyle())
+      .onAppear {
+        viewStore.send(.onAppear)
+      }
     }
+  }
 }

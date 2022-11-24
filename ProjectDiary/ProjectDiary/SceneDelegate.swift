@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  ProjectDiary
-//
-//  Created by Albert Gil Escura on 1/8/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import RootFeature
@@ -31,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 extension ScenePhase {
-    var value: RootState.State {
+  var value: Root.State.State {
         switch self {
         case .active:
             return .active

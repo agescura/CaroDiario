@@ -1,60 +1,46 @@
-//
-//  AttachmentAudioView.swift
-//  
-//
-//  Created by Albert Gil Escura on 24/8/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
-import CoreDataClient
-import FileClient
 import Views
 import Models
-import UIApplicationClient
-import AVAudioPlayerClient
 
-public struct AttachmentAudioState: Equatable {
+public struct AttachmentAudio: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Equatable {
     public var entryAudio: EntryAudio
     
     public init(
-        entryAudio: EntryAudio
+      entryAudio: EntryAudio
     ) {
-        self.entryAudio = entryAudio
+      self.entryAudio = entryAudio
     }
-}
-
-public enum AttachmentAudioAction: Equatable {
+  }
+  
+  public enum Action: Equatable {
     case presentAudioFullScreen(Bool)
-}
-
-public let attachmentAudioReducer = Reducer<
-    AttachmentAudioState,
-    AttachmentAudioAction,
-    Void
-> { state, action, _ in
-    switch action {
-    case let .presentAudioFullScreen(value):
-        return .none
-    }
+  }
+  
+  public var body: some ReducerProtocolOf<Self> {
+    EmptyReducer()
+  }
 }
 
 struct AttachmentAudioView: View {
-    let store: Store<AttachmentAudioState, AttachmentAudioAction>
-    
-    var body: some View {
-        WithViewStore(self.store) { viewStore in
-            Rectangle()
-                .fill(Color.adaptiveGray)
-                .frame(width: 52, height: 52)
-                .overlay(
-                    Image(systemName: "waveform")
-                        .foregroundColor(.adaptiveWhite)
-                        .frame(width: 8, height: 8)
-                )
-                .onTapGesture {
-                    viewStore.send(.presentAudioFullScreen(true))
-                }
+  let store: StoreOf<AttachmentAudio>
+  
+  var body: some View {
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+      Rectangle()
+        .fill(Color.adaptiveGray)
+        .frame(width: 52, height: 52)
+        .overlay(
+          Image(systemName: "waveform")
+            .foregroundColor(.adaptiveWhite)
+            .frame(width: 8, height: 8)
+        )
+        .onTapGesture {
+          viewStore.send(.presentAudioFullScreen(true))
         }
     }
+  }
 }

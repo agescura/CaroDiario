@@ -1,10 +1,3 @@
-//
-//  AppView.swift
-//  AddEntryFeature
-//
-//  Created by Albert Gil Escura on 26/6/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import UserDefaultsClient
@@ -24,300 +17,403 @@ import StoreKitClient
 import PDFKitClient
 import AVAssetClient
 import Models
+import PasscodeFeature
 
-public struct RootState: Equatable {
+public struct Root: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Equatable {
     public var appDelegate: AppDelegateState
-    public var featureState: AppState
+    public var featureState: AppReducer.State
     
     public var isFirstStarted = true
     public var isBiometricAlertPresent = false
     
     public enum State {
-        case active
-        case inactive
-        case background
-        case unknown
+      case active
+      case inactive
+      case background
+      case unknown
     }
     
     public init(
-        appDelegate: AppDelegateState,
-        featureState: AppState
+      appDelegate: AppDelegateState,
+      featureState: AppReducer.State
     ) {
-        self.appDelegate = appDelegate
-        self.featureState = featureState
+      self.appDelegate = appDelegate
+      self.featureState = featureState
     }
-}
-
-public enum RootAction: Equatable {
+  }
+  
+  public enum Action: Equatable {
     case appDelegate(AppDelegateAction)
-    case featureAction(AppAction)
+    case featureAction(AppReducer.Action)
     
     case setUserInterfaceStyle
     case startFirstScreen
-
+    
     case requestCameraStatus
     case startHome(cameraStatus: AuthorizedVideoStatus)
     
     case process(URL)
-    case state(RootState.State)
+    case state(Root.State.State)
     case shortcuts
     
     case biometricAlertPresent(Bool)
-}
-
-public struct RootEnvironment {
-    public let coreDataClient: CoreDataClient
-    public let fileClient: FileClient
-    public let userDefaultsClient: UserDefaultsClient
-    public let localAuthenticationClient: LocalAuthenticationClient
-    public let applicationClient: UIApplicationClient
-    public let avCaptureDeviceClient: AVCaptureDeviceClient
-    public let feedbackGeneratorClient: FeedbackGeneratorClient
-    public let avAudioSessionClient: AVAudioSessionClient
-    public let avAudioPlayerClient: AVAudioPlayerClient
-    public let avAudioRecorderClient: AVAudioRecorderClient
-    public let storeKitClient: StoreKitClient
-    public let pdfKitClient: PDFKitClient
-    public let avAssetClient: AVAssetClient
-    public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let date: () -> Date
-    public let uuid: () -> UUID
-    public let setUserInterfaceStyle: (UIUserInterfaceStyle) async -> Void
-    
-    public init(
-        coreDataClient: CoreDataClient,
-        fileClient: FileClient,
-        userDefaultsClient: UserDefaultsClient,
-        localAuthenticationClient: LocalAuthenticationClient,
-        applicationClient: UIApplicationClient,
-        avCaptureDeviceClient: AVCaptureDeviceClient,
-        feedbackGeneratorClient: FeedbackGeneratorClient,
-        avAudioSessionClient: AVAudioSessionClient,
-        avAudioPlayerClient: AVAudioPlayerClient,
-        avAudioRecorderClient: AVAudioRecorderClient,
-        storeKitClient: StoreKitClient,
-        pdfKitClient: PDFKitClient,
-        avAssetClient: AVAssetClient,
-        mainQueue: AnySchedulerOf<DispatchQueue>,
-        backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        date: @escaping () -> Date,
-        uuid: @escaping () -> UUID,
-        setUserInterfaceStyle: @escaping (UIUserInterfaceStyle) async -> Void
-    ) {
-        self.coreDataClient = coreDataClient
-        self.fileClient = fileClient
-        self.userDefaultsClient = userDefaultsClient
-        self.localAuthenticationClient = localAuthenticationClient
-        self.applicationClient = applicationClient
-        self.avCaptureDeviceClient = avCaptureDeviceClient
-        self.feedbackGeneratorClient = feedbackGeneratorClient
-        self.avAudioSessionClient = avAudioSessionClient
-        self.avAudioPlayerClient = avAudioPlayerClient
-        self.avAudioRecorderClient = avAudioRecorderClient
-        self.storeKitClient = storeKitClient
-        self.pdfKitClient = pdfKitClient
-        self.avAssetClient = avAssetClient
-        self.mainQueue = mainQueue
-        self.backgroundQueue = backgroundQueue
-        self.date = date
-        self.uuid = uuid
-        self.setUserInterfaceStyle = setUserInterfaceStyle
+  }
+  
+  @Dependency(\.userDefaultsClient) private var userDefaultsClient
+  @Dependency(\.applicationClient) private var applicationClient
+  @Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
+  @Dependency(\.mainQueue) private var mainQueue
+  @Dependency(\.mainRunLoop.now.date) private var now
+  @Dependency(\.avAudioSessionClient) private var avAudioSessionClient
+  @Dependency(\.coreDataClient) private var coreDataClient
+  @Dependency(\.uuid) private var uuid
+  private struct CoreDataId: Hashable {}
+  
+  public var body: some ReducerProtocolOf<Self> {
+    Scope(state: \.appDelegate, action: /Action.appDelegate) {
+      EmptyReducer()
     }
-}
-
-public let rootReducer: Reducer<
-    RootState,
-    RootAction,
-    RootEnvironment
-> = .combine(
-    appDelegateReducer
-        .pullback(
-            state: \.appDelegate,
-            action: /RootAction.appDelegate,
-            environment: { _ in () }
-        ),
-    appReducer
-        .pullback(
-            state: \RootState.featureState,
-            action: /RootAction.featureAction,
-            environment: {
-                AppEnvironment(
-                    fileClient: $0.fileClient,
-                    userDefaultsClient: $0.userDefaultsClient,
-                    localAuthenticationClient: $0.localAuthenticationClient,
-                    applicationClient: $0.applicationClient,
-                    avCaptureDeviceClient: $0.avCaptureDeviceClient,
-                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                    avAudioSessionClient: $0.avAudioSessionClient,
-                    avAudioPlayerClient: $0.avAudioPlayerClient,
-                    avAudioRecorderClient: $0.avAudioRecorderClient,
-                    storeKitClient: $0.storeKitClient,
-                    pdfKitClient: $0.pdfKitClient,
-                    avAssetClient: $0.avAssetClient,
-                    mainQueue: $0.mainQueue,
-                    backgroundQueue: $0.backgroundQueue,
-                    date: $0.date,
-                    uuid: $0.uuid,
-                    setUserInterfaceStyle: $0.setUserInterfaceStyle
-                )
-            }
-        ),
-    
-    .init() { state, action, environment in
-        switch action {
-
-        case .appDelegate(.didFinishLaunching):
-            return Effect(value: .setUserInterfaceStyle)
-            
-        case .setUserInterfaceStyle:
-            return .task { @MainActor in
-                await environment.setUserInterfaceStyle(environment.userDefaultsClient.themeType.userInterfaceStyle)
-                return .startFirstScreen
-            }
-            
-        case .featureAction(.splash(.finishAnimation)):
-            if environment.userDefaultsClient.hasShownFirstLaunchOnboarding {
-                if let code = environment.userDefaultsClient.passcodeCode {
-                    state.featureState = .lockScreen(.init(code: code))
-                    return .none
-                } else {
-                    return environment.avCaptureDeviceClient.authorizationStatus()
-                        .map(RootAction.startHome)
-                }
-            }
-            
-            state.featureState = .onBoarding(.init())
-            return .none
-            
-        case .featureAction(.onBoarding(.skipAlertAction)),
-             .featureAction(.onBoarding(.privacyOnBoardingAction(.skipAlertAction))):
-            return Effect(value: RootAction.requestCameraStatus)
-            
-        case .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.startButtonTapped)))))):
-            return Effect(value: RootAction.requestCameraStatus)
-                .delay(for: 0.001, scheduler: environment.mainQueue)
-                .eraseToEffect()
-            
-        case .featureAction(.lockScreen(.matchedCode)):
-            return Effect(value: RootAction.requestCameraStatus)
-
-        case .featureAction(.home(.settings(.menuPasscodeAction(.toggleFaceId(true))))),
-                .featureAction(.home(.settings(.activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.toggleFaceId(isOn: true))))))),
-                .featureAction(.lockScreen(.checkFaceId)):
-            return Effect(value: .biometricAlertPresent(true))
-            
-        case .featureAction(.home(.settings(.menuPasscodeAction(.faceId(response:))))),
-                .featureAction(.home(.settings(.activatePasscodeAction(.insertPasscodeAction(.menuPasscodeAction(.faceId(response:))))))),
-                .featureAction(.lockScreen(.faceIdResponse)):
-            return Effect(value: .biometricAlertPresent(false))
-                .delay(for: 10, scheduler: environment.mainQueue)
-                .eraseToEffect()
-            
-        case .featureAction:
-            return .none
-            
-        case .startFirstScreen:
-            if environment.userDefaultsClient.hideSplashScreen {
-                if let code = environment.userDefaultsClient.passcodeCode {
-                    state.featureState = .lockScreen(.init(code: code))
-                    return .none
-                } else {
-                    return environment.avCaptureDeviceClient.authorizationStatus()
-                        .map(RootAction.startHome)
-                }
-            }
-            
-            return Effect(value: RootAction.featureAction(.splash(.startAnimation)))
-            
-        case .requestCameraStatus:
-            return environment.avCaptureDeviceClient.authorizationStatus()
-                .map(RootAction.startHome)
-            
-        case let .startHome(cameraStatus: status):
-            state.isFirstStarted = false
-            state.featureState = .home(
-                .init(
-                    tabBars: [.entries, .search, .settings],
-                    sharedState: .init(
-                        showSplash: !environment.userDefaultsClient.hideSplashScreen,
-                        styleType: environment.userDefaultsClient.styleType,
-                        layoutType: environment.userDefaultsClient.layoutType,
-                        themeType: environment.userDefaultsClient.themeType,
-                        iconAppType: environment.applicationClient.alternateIconName != nil ? .dark : .light,
-                        language: Localizable(rawValue: environment.userDefaultsClient.language) ?? .spanish,
-                        hasPasscode: (environment.userDefaultsClient.passcodeCode ?? "").count > 0,
-                        cameraStatus: status,
-                        microphoneStatus: environment.avAudioSessionClient.recordPermission(),
-                        optionTimeForAskPasscode: environment.userDefaultsClient.optionTimeForAskPasscode,
-                        faceIdEnabled: environment.userDefaultsClient.isFaceIDActivate
-                    )
-                )
-            )
-            return Effect(value: RootAction.featureAction(.home(.starting)))
-            
-        case let .process(url):
-            return .none
-            
-        case .state(.active):
-            if state.isFirstStarted {
-                return .none
-            }
-            if state.isBiometricAlertPresent {
-                return .none
-            }
-            if let timeForAskPasscode = environment.userDefaultsClient.timeForAskPasscode,
-               timeForAskPasscode > environment.date() {
-                return .none
-            }
-            if let code = environment.userDefaultsClient.passcodeCode {
-                state.featureState = .lockScreen(.init(code: code))
-                return .none
-            }
-            return .none
-            
-        case .state(.background):
-            if let timeForAskPasscode = Calendar.current.date(
-                byAdding: .minute,
-                value: environment.userDefaultsClient.optionTimeForAskPasscode,
-                to: environment.date()
-            ) {
-                return environment.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode)
-                    .fireAndForget()
-            }
-            return environment.userDefaultsClient.removeOptionTimeForAskPasscode()
-                .fireAndForget()
-            
-        case .state:
-            return .none
-            
-        case .shortcuts:
-            return .none
-            
-        case let .biometricAlertPresent(value):
-            state.isBiometricAlertPresent = value
-            return .none
+    Scope(state: \.featureState, action: /Action.featureAction) {
+      AppReducer()
+    }
+    Reduce(self.core)
+    Reduce(self.coreData)
+    Reduce(self.userDefaults)
+  }
+  
+  private func core(
+    state: inout State,
+    action: Action
+  ) -> Effect<Action, Never> {
+    switch action {
+      
+    case .appDelegate(.didFinishLaunching):
+      return Effect(value: .setUserInterfaceStyle)
+      
+    case .setUserInterfaceStyle:
+      return .task { @MainActor in
+        await self.applicationClient.setUserInterfaceStyle(self.userDefaultsClient.themeType.userInterfaceStyle)
+        return .startFirstScreen
+      }
+      
+    case .featureAction(.splash(.finishAnimation)):
+      if self.userDefaultsClient.hasShownFirstLaunchOnboarding {
+        if let code = self.userDefaultsClient.passcodeCode {
+          state.featureState = .lockScreen(.init(code: code))
+          return .none
+        } else {
+          return self.avCaptureDeviceClient.authorizationStatus()
+            .map(Root.Action.startHome)
         }
+      }
+      
+      state.featureState = .onBoarding(.init())
+      return .none
+      
+    case .featureAction(.onBoarding(.skipAlertAction)),
+        .featureAction(.onBoarding(.privacy(.skipAlertAction))),
+        .featureAction(.onBoarding(.privacy(.style(.skipAlertAction)))),
+        .featureAction(.onBoarding(.privacy(.style(.layout(.skipAlertAction))))):
+      return Effect(value: Root.Action.requestCameraStatus)
+      
+    case .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.startButtonTapped)))))):
+      return Effect(value: .requestCameraStatus)
+        .delay(for: 0.001, scheduler: self.mainQueue)
+        .eraseToEffect()
+      
+    case .featureAction(.lockScreen(.matchedCode)):
+      return Effect(value: .requestCameraStatus)
+      
+    case .featureAction(.home(.settings(.menu(.toggleFaceId(true))))),
+        .featureAction(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
+        .featureAction(.lockScreen(.checkFaceId)):
+      return Effect(value: .biometricAlertPresent(true))
+      
+    case .featureAction(.home(.settings(.menu(.faceId(response:))))),
+        .featureAction(.home(.settings(.activate(.insert(.menu(.faceId(response:))))))),
+        .featureAction(.lockScreen(.faceIdResponse)):
+      return Effect(value: .biometricAlertPresent(false))
+        .delay(for: 10, scheduler: self.mainQueue)
+        .eraseToEffect()
+      
+    case .featureAction:
+      return .none
+      
+    case .startFirstScreen:
+      if self.userDefaultsClient.hideSplashScreen {
+        if let code = self.userDefaultsClient.passcodeCode {
+          state.featureState = .lockScreen(.init(code: code))
+          return .none
+        } else {
+          return self.avCaptureDeviceClient.authorizationStatus()
+            .map(Root.Action.startHome)
+        }
+      }
+      
+      return Effect(value: .featureAction(.splash(.startAnimation)))
+      
+    case .requestCameraStatus:
+      return self.avCaptureDeviceClient.authorizationStatus()
+        .map(Root.Action.startHome)
+      
+    case let .startHome(cameraStatus: status):
+      state.isFirstStarted = false
+      state.featureState = .home(
+        .init(
+          tabBars: [.entries, .search, .settings],
+          sharedState: .init(
+            showSplash: !self.userDefaultsClient.hideSplashScreen,
+            styleType: self.userDefaultsClient.styleType,
+            layoutType: self.userDefaultsClient.layoutType,
+            themeType: self.userDefaultsClient.themeType,
+            iconAppType: self.applicationClient.alternateIconName != nil ? .dark : .light,
+            language: Localizable(rawValue: self.userDefaultsClient.language) ?? .spanish,
+            hasPasscode: (self.userDefaultsClient.passcodeCode ?? "").count > 0,
+            cameraStatus: status,
+            microphoneStatus: self.avAudioSessionClient.recordPermission(),
+            optionTimeForAskPasscode: self.userDefaultsClient.optionTimeForAskPasscode,
+            faceIdEnabled: self.userDefaultsClient.isFaceIDActivate
+          )
+        )
+      )
+      return Effect(value: .featureAction(.home(.starting)))
+      
+    case .process:
+      return .none
+      
+    case .state(.active):
+      if state.isFirstStarted {
+        return .none
+      }
+      if state.isBiometricAlertPresent {
+        return .none
+      }
+      if let timeForAskPasscode = self.userDefaultsClient.timeForAskPasscode,
+         timeForAskPasscode > self.now {
+        return .none
+      }
+      if let code = self.userDefaultsClient.passcodeCode {
+        state.featureState = .lockScreen(.init(code: code))
+        return .none
+      }
+      return .none
+      
+    case .state(.background):
+      if let timeForAskPasscode = Calendar.current.date(
+        byAdding: .minute,
+        value: self.userDefaultsClient.optionTimeForAskPasscode,
+        to: self.now
+      ) {
+        return self.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode)
+          .fireAndForget()
+      }
+      return self.userDefaultsClient.removeOptionTimeForAskPasscode()
+        .fireAndForget()
+      
+    case .state:
+      return .none
+      
+    case .shortcuts:
+      return .none
+      
+    case let .biometricAlertPresent(value):
+      state.isBiometricAlertPresent = value
+      return .none
     }
-)
-.coreData()
-.userDefaults()
+  }
+  
+  private func coreData(
+    state: inout State,
+    action: Action
+  ) -> Effect<Action, Never> {
+    if case .home = state.featureState {
+      switch action {
+      case .featureAction(.home(.entries(.onAppear))):
+        return self.coreDataClient.create(CoreDataId())
+          .receive(on: self.mainQueue)
+          .eraseToEffect()
+          .map({ Action.featureAction(.home(.entries(.coreDataClientAction($0)))) })
+      case let .featureAction(.home(.entries(.remove(entry)))):
+        return self.coreDataClient.removeEntry(entry.id)
+          .fireAndForget()
+        
+      case .featureAction(.home(.settings(.export(.processPDF)))):
+        return self.coreDataClient.fetchAll()
+          .map({ Action.featureAction(.home(.settings(.export(.generatePDF($0))))) })
+        
+      case .featureAction(.home(.settings(.export(.previewPDF)))):
+        return self.coreDataClient.fetchAll()
+          .map({ Action.featureAction(.home(.settings(.export(.generatePreview($0))))) })
+        
+      case let .featureAction(.home(.search(.searching(newText: newText)))):
+        return self.coreDataClient.searchEntries(newText)
+          .map({ Action.featureAction(.home(.search(.searchResponse($0)))) })
+        
+      case .featureAction(.home(.search(.navigateImageSearch))):
+        return self.coreDataClient.searchImageEntries()
+          .map({ Action.featureAction(.home(.search(.navigateSearch(.images, $0)))) })
+        
+      case .featureAction(.home(.search(.navigateVideoSearch))):
+        return self.coreDataClient.searchVideoEntries()
+          .map({ Action.featureAction(.home(.search(.navigateSearch(.videos, $0)))) })
+        
+      case .featureAction(.home(.search(.navigateAudioSearch))):
+        return self.coreDataClient.searchAudioEntries()
+          .map({ Action.featureAction(.home(.search(.navigateSearch(.audios, $0)))) })
+        
+      case let .featureAction(.home(.search(.remove(entry)))):
+        return self.coreDataClient.removeEntry(entry.id)
+          .fireAndForget()
+        
+      case let .featureAction(.home(.search(.entryDetailAction(.remove(entry))))):
+        return self.coreDataClient.removeEntry(entry.id)
+          .fireAndForget()
+        
+      default:
+        break
+      }
+    }
+    
+    if case let .home(homeState) = state.featureState,
+       let entryDetailState = homeState.entries.entryDetailState {
+      switch action {
+      case .featureAction(.home(.entries(.entryDetailAction(.onAppear)))):
+        return self.coreDataClient.fetchEntry(entryDetailState.entry)
+          .map({ Action.featureAction(.home(.entries(.entryDetailAction(.entryResponse($0))))) })
+        
+      case let .featureAction(.home(.entries(.entryDetailAction(.removeAttachmentResponse(id))))):
+        return self.coreDataClient.removeAttachmentEntry(id).fireAndForget()
+        
+      default:
+        break
+      }
+    }
+    
+    if case let .home(homeState) = state.featureState,
+       let addEntryState = homeState.entries.addEntryState ?? homeState.entries.entryDetailState?.addEntryState {
+      switch action {
+      case .featureAction(.home(.entries(.addEntryAction(.createDraftEntry)))),
+          .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.createDraftEntry))))):
+        return self.coreDataClient.createDraft(addEntryState.entry)
+          .fireAndForget()
+        
+      case .featureAction(.home(.entries(.addEntryAction(.addButtonTapped)))),
+          .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.addButtonTapped))))):
+        let entryText = EntryText(
+          id: self.uuid(),
+          message: addEntryState.text,
+          lastUpdated: self.now
+        )
+        return .merge(
+          self.coreDataClient.updateMessage(entryText, addEntryState.entry)
+            .fireAndForget(),
+          self.coreDataClient.publishEntry(addEntryState.entry)
+            .fireAndForget()
+        )
+      case let .featureAction(.home(.entries(.addEntryAction(.loadImageResponse(entryImage))))),
+        let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadImageResponse(entryImage)))))):
+        return self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id)
+          .fireAndForget()
+        
+      case let .featureAction(.home(.entries(.addEntryAction(.loadVideoResponse(entryVideo))))),
+        let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadVideoResponse(entryVideo)))))):
+        return self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id)
+          .fireAndForget()
+        
+      case let .featureAction(.home(.entries(.addEntryAction(.loadAudioResponse(entryAudio))))),
+        let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadAudioResponse(entryAudio)))))):
+        return self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id)
+          .fireAndForget()
+        
+      case let .featureAction(.home(.entries(.addEntryAction(.removeAttachmentResponse(id))))),
+        let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeAttachmentResponse(id)))))):
+        return self.coreDataClient.removeAttachmentEntry(id)
+          .fireAndForget()
+        
+      case .featureAction(.home(.entries(.addEntryAction(.removeDraftEntryDismissAlert)))),
+          .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeDraftEntryDismissAlert))))):
+        return self.coreDataClient.removeEntry(addEntryState.entry.id)
+          .fireAndForget()
+        
+      default:
+        break
+      }
+    }
+    return .none
+  }
+  
+  private func userDefaults(
+    state: inout State,
+    action: Action
+  ) -> Effect<Action, Never> {
+    switch action {
+    case let .featureAction(.home(.settings(.appearance(.layout(.layoutChanged(layout)))))):
+      return self.userDefaultsClient.set(layoutType: layout)
+        .fireAndForget()
+    case let .featureAction(.home(.settings(.appearance(.style(.styleChanged(style)))))):
+      return self.userDefaultsClient.set(styleType: style)
+        .fireAndForget()
+    case let .featureAction(.home(.settings(.appearance(.theme(.themeChanged(theme)))))):
+      return self.userDefaultsClient.set(themeType: theme)
+        .fireAndForget()
+    case let .featureAction(.home(.settings(.toggleShowSplash(isOn: isOn)))):
+      return self.userDefaultsClient.setHideSplashScreen(!isOn)
+        .fireAndForget()
+    case .featureAction(.home(.settings(.activate(.insert(.menu(.actionSheetTurnoffTapped)))))),
+        .featureAction(.home(.settings(.menu(.actionSheetTurnoffTapped)))):
+      return self.userDefaultsClient.removePasscode()
+        .fireAndForget()
+    case let .featureAction(.home(.settings(.activate(.insert(.update(code: code)))))):
+      return self.userDefaultsClient.setPasscode(code)
+        .fireAndForget()
+    case let .featureAction(.home(.settings(.menu(.faceId(response: faceId))))),
+      let .featureAction(.home(.settings(.activate(.insert(.menu(.faceId(response: faceId))))))):
+      return self.userDefaultsClient.setFaceIDActivate(faceId)
+        .fireAndForget()
+    case let .featureAction(.home(.settings(.menu(.optionTimeForAskPasscode(changed: newOption))))),
+      let .featureAction(.home(.settings(.activate(.insert(.menu(.optionTimeForAskPasscode(changed: newOption))))))):
+      return self.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value)
+        .fireAndForget()
+    case .featureAction(.home(.settings(.activate(.insert(.navigateMenu(true)))))):
+      return self.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value)
+        .fireAndForget()
+    case let .featureAction(.home(.settings(.language(.updateLanguageTapped(language))))):
+      return self.userDefaultsClient.setLanguage(language.rawValue)
+        .fireAndForget()
+    case let .featureAction(.onBoarding(.privacy(.style(.styleChanged(styleChanged))))):
+      return self.userDefaultsClient.set(styleType: styleChanged)
+        .fireAndForget()
+    case let .featureAction(.onBoarding(.privacy(.style(.layout(.layoutChanged(layoutChanged)))))):
+      return self.userDefaultsClient.set(layoutType: layoutChanged)
+        .fireAndForget()
+    case let .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.themeChanged(themeChanged))))))):
+      return self.userDefaultsClient.set(themeType: themeChanged)
+        .fireAndForget()
+    default:
+      break
+    }
+    return .none
+  }
+}
 
 public struct RootView: View {
-    let store: Store<RootState, RootAction>
-    
-    public init(
-        store: Store<RootState, RootAction>
-    ) {
-        self.store = store
-    }
-    
-    public var body: some View {
-        AppView(
-            store: store.scope(
-                state: \.featureState,
-                action: RootAction.featureAction
-            )
-        )
-    }
+  let store: StoreOf<Root>
+  
+  public init(
+    store: StoreOf<Root>
+  ) {
+    self.store = store
+  }
+  
+  public var body: some View {
+    AppView(
+      store: self.store.scope(
+        state: \.featureState,
+        action: Root.Action.featureAction
+      )
+    )
+  }
 }

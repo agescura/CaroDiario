@@ -9,40 +9,37 @@ import XCTest
 @testable import AppearanceFeature
 import ComposableArchitecture
 
+@MainActor
 class IconAppViewTests: XCTestCase {
+  
+  func testIconAppHappyPath() async {
+    var selectionChangedCalled = false
     
-    func testIconAppHappyPath() {
-        var environment = IconAppEnvironment(
-            feedbackGeneratorClient: .noop
-        )
-        var selectionChangedCalled = false
-        environment.feedbackGeneratorClient.selectionChanged = {
-            selectionChangedCalled = true
-            return .fireAndForget {}
-        }
-        let store = TestStore(
-            initialState: IconAppState(iconAppType: .light),
-            reducer: iconAppReducer,
-            environment: environment
-        )
-        
-        store.send(.iconAppChanged(.dark)) {
-            $0.iconAppType = .dark
-            XCTAssertTrue(selectionChangedCalled)
-            selectionChangedCalled = false
-        }
-        
-        store.send(.iconAppChanged(.light)) {
-            $0.iconAppType = .light
-            XCTAssertTrue(selectionChangedCalled)
-        }
+    let store = TestStore(
+      initialState: .init(iconAppType: .light),
+      reducer: IconApp()
+    )
+    store.dependencies.feedbackGeneratorClient.selectionChanged = {
+      selectionChangedCalled = true
     }
+    store.dependencies.applicationClient.setAlternateIconName = { _ in }
+    
+    await store.send(.iconAppChanged(.dark)) {
+      $0.iconAppType = .dark
+      XCTAssertTrue(selectionChangedCalled)
+      selectionChangedCalled = false
+    }
+    
+    await store.send(.iconAppChanged(.light)) {
+      $0.iconAppType = .light
+      XCTAssertTrue(selectionChangedCalled)
+    }
+  }
     
     func testSnapshot() {
         let store = Store(
             initialState: .init(iconAppType: .light),
-            reducer: iconAppReducer,
-            environment: .init(feedbackGeneratorClient: .noop)
+            reducer: IconApp()
         )
         let view = IconAppView(store: store)
         

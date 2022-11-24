@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 19/3/22.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import Models
@@ -14,66 +7,69 @@ import Localizables
 import SwiftUIHelper
 import Styles
 
-public struct LanguageState: Equatable {
+public struct Language: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Equatable {
     public var language: Localizable
     
     public init(
-        language: Localizable
+      language: Localizable
     ) {
-        self.language = language
+      self.language = language
     }
-}
-
-public enum LanguageAction: Equatable {
+  }
+  
+  public enum Action: Equatable {
     case updateLanguageTapped(Localizable)
-}
-
-public struct LanguageEnvironment {
-    public init() {}
-}
-
-public let languageReducer = Reducer<
-    LanguageState,
-    LanguageAction,
-    LanguageEnvironment
-> { state, action, environment in
+  }
+  
+  public var body: some ReducerProtocolOf<Self> {
+    Reduce(self.core)
+  }
+  
+  private func core(
+    state: inout State,
+    action: Action
+  ) -> Effect<Action, Never> {
     switch action {
     case let .updateLanguageTapped(language):
-        state.language = language
-        return .none
+      state.language = language
+      return .none
     }
+  }
 }
 
 public struct LanguageView: View {
-    let store: Store<LanguageState, LanguageAction>
-    
-    public init(
-        store: Store<LanguageState, LanguageAction>
-    ) {
-        self.store = store
-    }
-    
-    public var body: some View {
-        WithViewStore(self.store) { viewStore in
-            List {
-                ForEach(Localizable.allCases) { language in
-                    HStack {
-                        Text(language.localizable.localized)
-                            .foregroundColor(.chambray)
-                            .adaptiveFont(.latoRegular, size: 12)
-                        Spacer()
-                        if viewStore.language == language {
-                            Image(.checkmark)
-                                .foregroundColor(.adaptiveGray)
-                        }
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        viewStore.send(.updateLanguageTapped(language))
-                    }
-                }
+  let store: StoreOf<Language>
+  
+  public init(
+    store: StoreOf<Language>
+  ) {
+    self.store = store
+  }
+  
+  public var body: some View {
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+      List {
+        ForEach(Localizable.allCases) { language in
+          HStack {
+            Text(language.localizable.localized)
+              .foregroundColor(.chambray)
+              .adaptiveFont(.latoRegular, size: 12)
+            Spacer()
+            if viewStore.language == language {
+              Image(.checkmark)
+                .foregroundColor(.adaptiveGray)
             }
-            .navigationBarTitle("Settings.Language".localized)
+          }
+          .contentShape(Rectangle())
+          .onTapGesture {
+            viewStore.send(.updateLanguageTapped(language))
+          }
         }
+      }
+      .navigationBarTitle("Settings.Language".localized)
     }
+  }
 }

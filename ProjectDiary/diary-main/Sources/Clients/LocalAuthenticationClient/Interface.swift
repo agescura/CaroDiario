@@ -1,12 +1,14 @@
-//
-//  Interface.swift  
-//
-//  Created by Albert Gil Escura on 15/7/21.
-//
-
 import Foundation
 import ComposableArchitecture
 import Models
+import Dependencies
+
+extension DependencyValues {
+  public var localAuthenticationClient: LocalAuthenticationClient {
+    get { self[LocalAuthenticationClient.self] }
+    set { self[LocalAuthenticationClient.self] = newValue }
+  }
+}
 
 public struct LocalAuthenticationClient {
     public var determineType: () -> Effect<LocalAuthenticationType, Never>

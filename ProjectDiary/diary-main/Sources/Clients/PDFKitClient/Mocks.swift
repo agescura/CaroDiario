@@ -1,10 +1,14 @@
-//
-//  Mocks.swift  
-//
-//  Created by Albert Gil Escura on 18/9/21.
-//
-
 import Foundation
+import Dependencies
+import XCTestDynamicOverlay
+
+extension PDFKitClient: TestDependencyKey {
+  public static let previewValue = Self.noop
+
+  public static let testValue = Self(
+    generatePDF: XCTUnimplemented("\(Self.self).generatePDF")
+  )
+}
 
 extension PDFKitClient {
     public static let noop = Self(

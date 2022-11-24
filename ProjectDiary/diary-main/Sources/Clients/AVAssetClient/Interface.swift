@@ -1,12 +1,13 @@
-//
-//  Interface.swift
-//  
-//
-//  Created by Albert Gil Escura on 5/9/21.
-//
-
 import ComposableArchitecture
 import UIKit
+import Dependencies
+
+extension DependencyValues {
+  public var avAssetClient: AVAssetClient {
+    get { self[AVAssetClient.self] }
+    set { self[AVAssetClient.self] = newValue }
+  }
+}
 
 public struct AVAssetClient {
     public var commonMetadata: (URL) -> Effect<CommonMetadata, Never>

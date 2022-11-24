@@ -49,8 +49,7 @@ class SettingsFeatureTests: XCTestCase {
                 storeKitClient: .noop,
                 pdfKitClient: .noop,
                 mainQueue: .immediate,
-                date: Date.init,
-                setUserInterfaceStyle: { _ in () }
+                date: Date.init
             )
         )
         

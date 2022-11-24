@@ -8,9 +8,9 @@
 import SwiftUI
 import ComposableArchitecture
 import ClipFeature
-import UserDefaultsClientLive
-import FeedbackGeneratorClientLive
-import UIApplicationClientLive
+import UserDefaultsClient
+import FeedbackGeneratorClient
+import UIApplicationClient
 
 @main
 struct ClipApp: App {
@@ -27,15 +27,7 @@ struct ClipApp: App {
                         mainQueue: .main,
                         backgroundQueue: .main,
                         date: Date.init,
-                        uuid: UUID.init,
-                        setUserInterfaceStyle: { userInterfaceStyle in
-                            .fireAndForget {
-                                UIApplication.shared.connectedScenes
-                                    .filter { $0.activationState == .foregroundActive }
-                                    .compactMap { $0 as? UIWindowScene }
-                                    .first?.windows.first?.overrideUserInterfaceStyle = userInterfaceStyle
-                            }
-                        }
+                        uuid: UUID.init
                     )
                 )
             )

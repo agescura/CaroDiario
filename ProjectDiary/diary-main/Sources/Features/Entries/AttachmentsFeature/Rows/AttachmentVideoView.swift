@@ -1,50 +1,37 @@
-//
-//  SwiftUIView.swift
-//  
-//
-//  Created by Albert Gil Escura on 3/8/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
-import CoreDataClient
-import FileClient
 import Views
 import Models
 import Localizables
-import UIApplicationClient
-import AVKit
 
-public struct AttachmentVideoState: Equatable {
-    public var entryVideo: EntryVideo
-    
-    public init(
-        entryVideo: EntryVideo
-    ) {
-        self.entryVideo = entryVideo
-    }
-}
 
-public enum AttachmentVideoAction: Equatable {
-    case presentVideoPlayer(Bool)
-}
+public struct AttachmentVideo: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Equatable {
+      public var entryVideo: EntryVideo
+      
+      public init(
+          entryVideo: EntryVideo
+      ) {
+          self.entryVideo = entryVideo
+      }
+  }
 
-public let attachmentVideoReducer = Reducer<
-    AttachmentVideoState,
-    AttachmentVideoAction,
-    Void
-> { state, action, _ in
-    switch action {
-    case let .presentVideoPlayer(value):
-        return .none
-    }
+  public enum Action: Equatable {
+      case presentVideoPlayer(Bool)
+  }
+
+  public var body: some ReducerProtocolOf<Self> {
+    EmptyReducer()
+  }
 }
 
 struct AttachmentVideoView: View {
-    let store: Store<AttachmentVideoState, AttachmentVideoAction>
+    let store: StoreOf<AttachmentVideo>
 
     var body: some View {
-        WithViewStore(self.store) { viewStore in
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
             ZStack {
                 ImageView(url: viewStore.entryVideo.thumbnail)
                     .frame(width: 52, height: 52)

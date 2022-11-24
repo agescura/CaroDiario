@@ -31,8 +31,8 @@ class ProjectDiaryTests: XCTestCase {
                 mainQueue: .immediate,
                 backgroundQueue: .immediate,
                 mainRunLoop: .immediate,
-                uuid: UUID.init,
-                setUserInterfaceStyle: { _ in .fireAndForget {} })
+                uuid: UUID.init
+                )
         )
         let view = RootView(store: store)
         let vc = UIHostingController(rootView: view)

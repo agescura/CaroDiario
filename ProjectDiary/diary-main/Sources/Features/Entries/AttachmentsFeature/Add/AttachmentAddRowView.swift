@@ -8,38 +8,48 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 
-public struct AttachmentAddRowState: Identifiable, Equatable, Hashable {
+public struct AttachmentAddRow: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Identifiable, Equatable, Hashable {
     public let id: UUID
-    public var attachment: AttachmentAddState
+    public var attachment: AttachmentAdd.State
     
     public init(
-        id: UUID,
-        attachment: AttachmentAddState
+      id: UUID,
+      attachment: AttachmentAdd.State
     ) {
-        self.id = id
-        self.attachment = attachment
+      self.id = id
+      self.attachment = attachment
     }
-}
-
-public enum AttachmentAddRowAction: Equatable {
-    case attachment(AttachmentAddAction)
+  }
+  
+  public enum Action: Equatable {
+    case attachment(AttachmentAdd.Action)
+  }
+  
+  public var body: some ReducerProtocolOf<Self> {
+    Scope(state: \.attachment, action: /Action.attachment) {
+      AttachmentAdd()
+    }
+  }
 }
 
 public struct AttachmentAddRowView: View {
-    let store: Store<AttachmentAddRowState, AttachmentAddRowAction>
-    
-    public init(
-        store: Store<AttachmentAddRowState, AttachmentAddRowAction>
-    ) {
-        self.store = store
-    }
-    
-    public var body: some View {
-        AttachmentAddView(
-            store: store.scope(
-                state: \.attachment,
-                action: AttachmentAddRowAction.attachment
-            )
-        )
-    }
+  let store: StoreOf<AttachmentAddRow>
+  
+  public init(
+    store: StoreOf<AttachmentAddRow>
+  ) {
+    self.store = store
+  }
+  
+  public var body: some View {
+    AttachmentAddView(
+      store: store.scope(
+        state: \.attachment,
+        action: AttachmentAddRow.Action.attachment
+      )
+    )
+  }
 }

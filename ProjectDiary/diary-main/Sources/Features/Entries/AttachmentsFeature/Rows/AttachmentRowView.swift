@@ -1,36 +1,40 @@
-//
-//  AddEntryImageRowView.swift
-//  ProjectDiary
-//
-//  Created by Albert Gil Escura on 4/7/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import Models
 
-public struct AttachmentRowState: Identifiable, Equatable, Hashable {
+public struct AttachmentRow: ReducerProtocol {
+  public init() {}
+  
+  public struct State: Identifiable, Equatable, Hashable {
     public let id: UUID
-    public var attachment: AttachmentState
+    public var attachment: Attachment.State
     
     public init(
-        id: UUID,
-        attachment: AttachmentState
+      id: UUID,
+      attachment: Attachment.State
     ) {
-        self.id = id
-        self.attachment = attachment
+      self.id = id
+      self.attachment = attachment
     }
+  }
+  
+  public enum Action: Equatable {
+    case attachment(Attachment.Action)
+  }
+  
+  public var body: some ReducerProtocolOf<Self> {
+    Scope(state: \.attachment, action: /Action.attachment) {
+      Attachment()
+    }
+  }
 }
 
-public enum AttachmentRowAction: Equatable {
-    case attachment(AttachmentAction)
-}
 
 public struct AttachmentRowView: View {
-    let store: Store<AttachmentRowState, AttachmentRowAction>
+    let store: StoreOf<AttachmentRow>
     
     public init(
-        store: Store<AttachmentRowState, AttachmentRowAction>
+        store: StoreOf<AttachmentRow>
     ) {
         self.store = store
     }
@@ -39,7 +43,7 @@ public struct AttachmentRowView: View {
         AttachmentView(
             store: store.scope(
                 state: \.attachment,
-                action: AttachmentRowAction.attachment
+                action: AttachmentRow.Action.attachment
             )
         )
     }

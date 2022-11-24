@@ -1,13 +1,14 @@
-//
-//  Interface.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/8/21.
-//
-
 import ComposableArchitecture
 import AVFoundation
 import Models
+import Dependencies
+
+extension DependencyValues {
+  public var avAudioSessionClient: AVAudioSessionClient {
+    get { self[AVAudioSessionClient.self] }
+    set { self[AVAudioSessionClient.self] = newValue }
+  }
+}
 
 public struct AVAudioSessionClient {
     public var recordPermission: () -> AudioRecordPermission

@@ -1,0 +1,86 @@
+import SwiftUI
+import ComposableArchitecture
+import Views
+
+public struct WelcomeView: View {
+  let store: StoreOf<Welcome>
+  
+  public init(
+    store: StoreOf<Welcome>
+  ) {
+    self.store = store
+  }
+  
+  public var body: some View {
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+      NavigationView {
+        VStack(alignment: .leading, spacing: 16) {
+          Text("OnBoarding.Diary".localized)
+            .adaptiveFont(.latoBold, size: 24)
+            .foregroundColor(.adaptiveBlack)
+          Text("OnBoarding.Welcome".localized)
+            .adaptiveFont(.latoItalic, size: 12)
+            .foregroundColor(.adaptiveGray)
+          
+          
+          OnBoardingTabView(
+            items: [
+              .init(id: 0, title: "OnBoarding.Description.1".localized),
+              .init(id: 1, title: "OnBoarding.Description.2".localized),
+              .init(id: 2, title: "OnBoarding.Description.3".localized)
+            ],
+            selection: viewStore.binding(get: \.selectedPage, send: Welcome.Action.selectedPage),
+            animated: viewStore.tabViewAnimated
+          )
+          .frame(minHeight: 150)
+          
+          NavigationLink(
+            "",
+            destination:
+              IfLetStore(
+                store.scope(
+                  state: \.privacy,
+                  action: Welcome.Action.privacy
+                ),
+                then: PrivacyView.init(store:)
+              ),
+            isActive: viewStore.binding(
+              get: \.navigatePrivacy,
+              send: Welcome.Action.navigationPrivacy)
+          )
+          
+          TerciaryButtonView(
+            label: {
+              Text("OnBoarding.Skip".localized)
+                .adaptiveFont(.latoRegular, size: 16)
+              
+            }) {
+              viewStore.send(.skipAlertButtonTapped)
+            }
+            .opacity(viewStore.isAppClip ? 0.0 : 1.0)
+            .padding(.horizontal, 16)
+            .alert(
+              store.scope(state: \.skipAlert),
+              dismiss: .cancelSkipAlert
+            )
+          
+          PrimaryButtonView(
+            label: {
+              Text("OnBoarding.Continue".localized)
+                .adaptiveFont(.latoRegular, size: 16)
+              
+            }) {
+              viewStore.send(.navigationPrivacy(true))
+            }
+            .padding(.horizontal, 16)
+        }
+        .padding()
+        .navigationBarTitleDisplayMode(.inline)
+      }
+      .navigationViewStyle(StackNavigationViewStyle())
+      .onAppear {
+        viewStore.send(.startTimer)
+      }
+    }
+  }
+}
