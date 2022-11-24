@@ -10,10 +10,10 @@ extension DependencyValues {
 }
 
 public struct StoreKitClient {
-    public var requestReview: () -> Effect<Never, Never>
+    public var requestReview: @Sendable () async -> Void
     
     public init(
-        requestReview: @escaping () -> Effect<Never, Never>
+        requestReview: @escaping @Sendable () async -> Void
     ) {
         self.requestReview = requestReview
     }

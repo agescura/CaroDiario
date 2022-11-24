@@ -13,6 +13,6 @@ extension StoreKitClient: TestDependencyKey {
 
 extension StoreKitClient {
   public static let noop = Self(
-    requestReview: { .none }
+    requestReview: { }
   )
 }

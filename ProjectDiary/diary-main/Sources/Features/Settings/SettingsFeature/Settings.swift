@@ -371,8 +371,7 @@ public struct Settings: ReducerProtocol {
       return .none
       
     case .reviewStoreKit:
-      return self.storeKitClient.requestReview()
-        .fireAndForget()
+      return .fireAndForget { await self.storeKitClient.requestReview() }
       
     case let .navigateExport(value):
       state.route = value ? .export(.init()) : nil
