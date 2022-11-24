@@ -163,6 +163,8 @@ class AboutFeatureTests: XCTestCase {
   }
   
   func testSnapshot() {
+    SnapshotTesting.diffTool = "ksdiff"
+    
     let view = AboutView(
       store: .init(
         initialState: .init(),

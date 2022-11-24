@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 20/8/22.
-//
-
 import XCTest
 @testable import AgreementsFeature
 import ComposableArchitecture
@@ -49,6 +42,8 @@ class AgreementsFeatureTests: XCTestCase {
   }
   
   func testSnapshot() {
+    SnapshotTesting.diffTool = "ksdiff"
+    
     let view = AgreementsView(
       store: .init(
         initialState: .init(),

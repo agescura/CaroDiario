@@ -8,8 +8,8 @@
 import SwiftUI
 import ComposableArchitecture
 import ClipFeature
-import UserDefaultsClientLive
-import FeedbackGeneratorClientLive
+import UserDefaultsClient
+import FeedbackGeneratorClient
 import UIApplicationClient
 
 @main

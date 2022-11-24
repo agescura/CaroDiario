@@ -10,7 +10,11 @@ import CoreData
 import ComposableArchitecture
 import Combine
 import Models
-import CoreDataClient
+import Dependencies
+
+extension CoreDataClient: DependencyKey {
+  public static var liveValue: CoreDataClient { .live }
+}
 
 extension CoreDataClient {
     public static var live: Self = {

@@ -32,7 +32,6 @@ public struct Style: ReducerProtocol {
     action: Action
   ) -> Effect<Action, Never> {
     switch action {
-      
     case let .styleChanged(styleChanged):
       state.styleType = styleChanged
       state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)

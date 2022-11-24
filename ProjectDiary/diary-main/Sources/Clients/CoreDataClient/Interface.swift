@@ -1,13 +1,14 @@
-//
-//  Interface.swift
-//  AddEntryFeature
-//
-//  Created by Albert Gil Escura on 28/6/21.
-//
-
 import Foundation
 import ComposableArchitecture
 import Models
+import Dependencies
+
+extension DependencyValues {
+  public var coreDataClient: CoreDataClient {
+    get { self[CoreDataClient.self] }
+    set { self[CoreDataClient.self] = newValue }
+  }
+}
 
 public struct CoreDataClient {
     public enum Action: Equatable {

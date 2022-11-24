@@ -23,7 +23,7 @@ public struct AboutView: View {
                 .foregroundColor(.chambray)
                 .adaptiveFont(.latoRegular, size: 12)
               Spacer()
-              Text("1.0")
+              Text("1.7")
                 .foregroundColor(.adaptiveGray)
                 .adaptiveFont(.latoRegular, size: 12)
             }

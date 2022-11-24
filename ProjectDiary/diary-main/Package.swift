@@ -25,10 +25,6 @@ let package = Package(
             name: "CoreDataClient",
             targets: ["CoreDataClient"]
         ),
-        .library(
-            name: "CoreDataClientLive",
-            targets: ["CoreDataClientLive"]
-        ),
         
         .library(
             name: "FileClient",
@@ -308,17 +304,9 @@ let package = Package(
             name: "CoreDataClient",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .target(name: "Models")
+                "Models"
             ],
             path: "Sources/Clients/CoreDataClient"
-        ),
-        .target(
-            name: "CoreDataClientLive",
-            dependencies: [
-                "Models",
-                "CoreDataClient"
-            ],
-            path: "Sources/Clients/CoreDataClientLive"
         ),
         
         .target(
