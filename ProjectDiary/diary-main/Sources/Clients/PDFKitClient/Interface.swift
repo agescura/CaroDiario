@@ -11,10 +11,10 @@ extension DependencyValues {
 }
 
 public struct PDFKitClient {
-    public var generatePDF: ([[Entry]], Date) -> Effect<Data, Never>
+    public var generatePDF: @Sendable ([[Entry]], Date) async -> Data
     
     public init(
-        generatePDF: @escaping ([[Entry]], Date) -> Effect<Data, Never>
+        generatePDF: @escaping @Sendable ([[Entry]], Date) async -> Data
     ) {
         self.generatePDF = generatePDF
     }

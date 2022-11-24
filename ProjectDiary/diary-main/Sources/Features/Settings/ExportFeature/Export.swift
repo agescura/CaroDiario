@@ -47,8 +47,9 @@ public struct Export: ReducerProtocol {
       return .none
       
     case let .generatePDF(entries):
-      return self.pdfKitClient.generatePDF(entries, self.now)
-        .map(Export.Action.presentActivityView)
+      return .run { send in
+        await send(.presentActivityView(self.pdfKitClient.generatePDF(entries, self.now)))
+      }
       
     case let .presentActivityView(file):
       self.applicationClient.share(file, .pdf)
@@ -58,8 +59,9 @@ public struct Export: ReducerProtocol {
       return .none
       
     case let .generatePreview(entries):
-      return self.pdfKitClient.generatePDF(entries, self.now)
-        .map(Export.Action.presentPreviewView)
+      return .run { send in
+        await send(.presentPreviewView(self.pdfKitClient.generatePDF(entries, self.now)))
+      }
       
     case let .presentPreviewView(file):
       state.pdf = file

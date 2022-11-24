@@ -12,6 +12,6 @@ extension PDFKitClient: TestDependencyKey {
 
 extension PDFKitClient {
     public static let noop = Self(
-        generatePDF: { _, _ in .fireAndForget {} }
+        generatePDF: { _, _ in Data() }
     )
 }
