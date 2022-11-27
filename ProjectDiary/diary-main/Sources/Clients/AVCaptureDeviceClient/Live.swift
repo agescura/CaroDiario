@@ -8,32 +8,34 @@ extension AVCaptureDeviceClient: DependencyKey {
 }
 
 extension AVCaptureDeviceClient {
-    public static let live = Self(
-        authorizationStatus: {
-            if !deviceHasCamera {
-                return Effect(value: .restricted)
-            }
-            switch AVCaptureDevice.authorizationStatus(for: AVMediaType.video) {
-            case .notDetermined:
-                return Effect(value: .notDetermined)
-            case .authorized:
-                return Effect(value: .authorized)
-            case .restricted, .denied:
-                fallthrough
-            @unknown default:
-                return Effect(value: .denied)
-            }
-        },
-        requestAccess: {
-            await AVCaptureDevice.requestAccess(for: AVMediaType.video)
+  public static let live = Self(
+    authorizationStatus: {
+      await withCheckedContinuation { continuation in
+        if !deviceHasCamera {
+          return continuation.resume(with: .success(.restricted))
         }
-    )
-    
-    private static var deviceHasCamera: Bool {
-        AVCaptureDevice.DiscoverySession(
-            deviceTypes: [.builtInWideAngleCamera],
-            mediaType: .video,
-            position: .unspecified
-        ).devices.count > 0
+        switch AVCaptureDevice.authorizationStatus(for: AVMediaType.video) {
+        case .notDetermined:
+          return continuation.resume(with: .success(.notDetermined))
+        case .authorized:
+          return continuation.resume(with: .success(.authorized))
+        case .restricted, .denied:
+          fallthrough
+        @unknown default:
+          return continuation.resume(with: .success(.denied))
+        }
+      }
+    },
+    requestAccess: {
+      await AVCaptureDevice.requestAccess(for: AVMediaType.video)
     }
+  )
+  
+  private static var deviceHasCamera: Bool {
+    AVCaptureDevice.DiscoverySession(
+      deviceTypes: [.builtInWideAngleCamera],
+      mediaType: .video,
+      position: .unspecified
+    ).devices.count > 0
+  }
 }

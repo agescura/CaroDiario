@@ -13,14 +13,6 @@ extension DependencyValues {
 public struct AVAudioSessionClient {
     public var recordPermission: () -> AudioRecordPermission
     public var requestRecordPermission: () async throws -> Bool
-    
-    public init(
-        recordPermission: @escaping () -> AudioRecordPermission,
-        requestRecordPermission: @escaping () async throws -> Bool
-    ) {
-        self.recordPermission = recordPermission
-        self.requestRecordPermission = requestRecordPermission
-    }
 }
 
 extension AVAudioSession.RecordPermission {

@@ -49,8 +49,7 @@ public struct Theme: ReducerProtocol {
       return .none
       
     case .startButtonTapped:
-      return self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true) }
     }
   }
 }

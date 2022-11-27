@@ -168,10 +168,9 @@ public struct AddEntry: ReducerProtocol {
       return .none
       
     case .requestAuthorizationCamera:
-      return self.avCaptureDeviceClient.authorizationStatus()
-        .receive(on: self.mainQueue)
-        .eraseToEffect()
-        .map(AddEntry.Action.requestAuthorizationCameraResponse)
+      return .run { send in
+        await send(.requestAuthorizationCameraResponse(self.avCaptureDeviceClient.authorizationStatus()))
+      }
       
     case let .requestAuthorizationCameraResponse(response):
       switch response {

@@ -13,8 +13,8 @@ public struct FeedbackGeneratorClient {
     public var selectionChanged: () async -> Void
     
     public init(
-        prepare: @escaping () async -> Void,
-        selectionChanged: @escaping () async -> Void
+        prepare: @escaping @Sendable () async -> Void,
+        selectionChanged: @escaping @Sendable () async -> Void
     ) {
         self.prepare = prepare
         self.selectionChanged = selectionChanged

@@ -2,43 +2,22 @@ import Foundation
 import Dependencies
 
 extension UserDefaultsClient: DependencyKey {
-  public static var liveValue: UserDefaultsClient { .live() }
+  public static var liveValue: UserDefaultsClient { .live }
 }
 
 extension UserDefaultsClient {
-    public static func live(userDefaults: UserDefaults = UserDefaults(suiteName: "group.albertgil.carodiario")!) -> Self {
-        Self(
-            boolForKey: userDefaults.bool(forKey:),
-            setBool: { value, key in
-                .fireAndForget {
-                    userDefaults.set(value, forKey: key)
-                }
-            },
-            stringForKey: userDefaults.string(forKey:),
-            setString: { value, key in
-                .fireAndForget {
-                    userDefaults.set(value, forKey: key)
-                }
-            },
-            intForKey: userDefaults.integer(forKey:),
-            setInt: { value, key in
-                .fireAndForget {
-                    userDefaults.set(value, forKey: key)
-                }
-            },
-            dateForKey: { key in
-                Date(timeIntervalSince1970: userDefaults.double(forKey: key))
-            },
-            setDate: { value, key in
-                .fireAndForget {
-                    userDefaults.set(value.timeIntervalSince1970, forKey: key)
-                }
-            },
-            remove: { key in
-                .fireAndForget {
-                    userDefaults.removeObject(forKey: key)
-                }
-            }
-        )
-    }
+  public static var live: Self {
+    let defaults = { UserDefaults(suiteName: "group.albertgil.carodiario")! }
+    return Self(
+      boolForKey: defaults().bool(forKey:),
+      setBool: { defaults().set($0, forKey: $1) },
+      stringForKey: defaults().string(forKey:),
+      setString: { defaults().set($0, forKey: $1) },
+      intForKey: defaults().integer(forKey:),
+      setInt: { defaults().set($0, forKey: $1) },
+      dateForKey: { Date(timeIntervalSince1970: defaults().double(forKey: $0)) },
+      setDate: { defaults().set($0.timeIntervalSince1970, forKey: $1) },
+      remove: { defaults().removeObject(forKey: $0) }
+    )
+  }
 }

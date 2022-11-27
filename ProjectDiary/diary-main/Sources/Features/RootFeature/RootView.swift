@@ -105,8 +105,9 @@ public struct Root: ReducerProtocol {
           state.featureState = .lockScreen(.init(code: code))
           return .none
         } else {
-          return self.avCaptureDeviceClient.authorizationStatus()
-            .map(Root.Action.startHome)
+          return .run { send in
+            await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+          }
         }
       }
       
@@ -148,16 +149,18 @@ public struct Root: ReducerProtocol {
           state.featureState = .lockScreen(.init(code: code))
           return .none
         } else {
-          return self.avCaptureDeviceClient.authorizationStatus()
-            .map(Root.Action.startHome)
+          return .run { send in
+            await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+          }
         }
       }
       
       return Effect(value: .featureAction(.splash(.startAnimation)))
       
     case .requestCameraStatus:
-      return self.avCaptureDeviceClient.authorizationStatus()
-        .map(Root.Action.startHome)
+      return .run { send in
+        await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+      }
       
     case let .startHome(cameraStatus: status):
       state.isFirstStarted = false
@@ -207,11 +210,9 @@ public struct Root: ReducerProtocol {
         value: self.userDefaultsClient.optionTimeForAskPasscode,
         to: self.now
       ) {
-        return self.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode)
-          .fireAndForget()
+        return .fireAndForget { await self.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode) }
       }
-      return self.userDefaultsClient.removeOptionTimeForAskPasscode()
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.removeOptionTimeForAskPasscode() }
       
     case .state:
       return .none
@@ -351,47 +352,34 @@ public struct Root: ReducerProtocol {
   ) -> Effect<Action, Never> {
     switch action {
     case let .featureAction(.home(.settings(.appearance(.layout(.layoutChanged(layout)))))):
-      return self.userDefaultsClient.set(layoutType: layout)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.set(layoutType: layout) }
     case let .featureAction(.home(.settings(.appearance(.style(.styleChanged(style)))))):
-      return self.userDefaultsClient.set(styleType: style)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.set(styleType: style) }
     case let .featureAction(.home(.settings(.appearance(.theme(.themeChanged(theme)))))):
-      return self.userDefaultsClient.set(themeType: theme)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.set(themeType: theme) }
     case let .featureAction(.home(.settings(.toggleShowSplash(isOn: isOn)))):
-      return self.userDefaultsClient.setHideSplashScreen(!isOn)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.setHideSplashScreen(!isOn) }
     case .featureAction(.home(.settings(.activate(.insert(.menu(.actionSheetTurnoffTapped)))))),
         .featureAction(.home(.settings(.menu(.actionSheetTurnoffTapped)))):
-      return self.userDefaultsClient.removePasscode()
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.removePasscode() }
     case let .featureAction(.home(.settings(.activate(.insert(.update(code: code)))))):
-      return self.userDefaultsClient.setPasscode(code)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.setPasscode(code) }
     case let .featureAction(.home(.settings(.menu(.faceId(response: faceId))))),
       let .featureAction(.home(.settings(.activate(.insert(.menu(.faceId(response: faceId))))))):
-      return self.userDefaultsClient.setFaceIDActivate(faceId)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.setFaceIDActivate(faceId) }
     case let .featureAction(.home(.settings(.menu(.optionTimeForAskPasscode(changed: newOption))))),
       let .featureAction(.home(.settings(.activate(.insert(.menu(.optionTimeForAskPasscode(changed: newOption))))))):
-      return self.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value) }
     case .featureAction(.home(.settings(.activate(.insert(.navigateMenu(true)))))):
-      return self.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value) }
     case let .featureAction(.home(.settings(.language(.updateLanguageTapped(language))))):
-      return self.userDefaultsClient.setLanguage(language.rawValue)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.setLanguage(language.rawValue) }
     case let .featureAction(.onBoarding(.privacy(.style(.styleChanged(styleChanged))))):
-      return self.userDefaultsClient.set(styleType: styleChanged)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.set(styleType: styleChanged) }
     case let .featureAction(.onBoarding(.privacy(.style(.layout(.layoutChanged(layoutChanged)))))):
-      return self.userDefaultsClient.set(layoutType: layoutChanged)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.set(layoutType: layoutChanged) }
     case let .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.themeChanged(themeChanged))))))):
-      return self.userDefaultsClient.set(themeType: themeChanged)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.set(themeType: themeChanged) }
     default:
       break
     }

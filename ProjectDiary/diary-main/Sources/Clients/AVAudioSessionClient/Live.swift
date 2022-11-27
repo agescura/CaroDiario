@@ -6,7 +6,7 @@ extension AVAudioSessionClient: DependencyKey {
 }
 
 extension AVAudioSessionClient {
-    public static var live: Self = {
+    static var live: Self = {
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(.playAndRecord, options: .defaultToSpeaker)

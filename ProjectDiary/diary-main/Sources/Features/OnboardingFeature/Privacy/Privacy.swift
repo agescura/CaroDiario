@@ -76,8 +76,7 @@ public struct Privacy: ReducerProtocol {
       
     case .skipAlertAction:
       state.skipAlert = nil
-      return self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
-        .fireAndForget()
+      return .fireAndForget { await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true) }
     }
   }
 }

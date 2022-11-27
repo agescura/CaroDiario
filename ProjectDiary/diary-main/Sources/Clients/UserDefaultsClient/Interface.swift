@@ -13,28 +13,28 @@ extension DependencyValues {
 
 public struct UserDefaultsClient {
   public var boolForKey: (String) -> Bool
-  public var setBool: (Bool, String) -> Effect<Never, Never>
+  public var setBool: @Sendable (Bool, String) async -> Void
   
   public var stringForKey: (String) -> String?
-  public var setString: (String, String) -> Effect<Never, Never>
+  public var setString: @Sendable (String, String) async -> Void
   
   public var intForKey: (String) -> Int?
-  public var setInt: (Int, String) -> Effect<Never, Never>
+  public var setInt: @Sendable (Int, String) async -> Void
   
   public var dateForKey: (String) -> Date?
-  public var setDate: (Date, String) -> Effect<Never, Never>
-  public var remove: (String) -> Effect<Never, Never>
+  public var setDate: @Sendable (Date, String) async -> Void
+  public var remove: @Sendable (String) async -> Void
   
   public init(
     boolForKey: @escaping (String) -> Bool,
-    setBool: @escaping (Bool, String) -> Effect<Never, Never>,
+    setBool: @escaping @Sendable (Bool, String) async -> Void,
     stringForKey: @escaping (String) -> String?,
-    setString: @escaping (String, String) -> Effect<Never, Never>,
+    setString: @escaping @Sendable (String, String) async -> Void,
     intForKey: @escaping (String) -> Int?,
-    setInt: @escaping (Int, String) -> Effect<Never, Never>,
+    setInt: @escaping @Sendable (Int, String) async -> Void,
     dateForKey: @escaping (String) -> Date?,
-    setDate: @escaping (Date, String) -> Effect<Never, Never>,
-    remove: @escaping (String) -> Effect<Never, Never>
+    setDate: @escaping @Sendable (Date, String) async -> Void,
+    remove: @escaping @Sendable (String) async -> Void
   ) {
     self.boolForKey = boolForKey
     self.setBool = setBool
@@ -51,16 +51,16 @@ public struct UserDefaultsClient {
     boolForKey(hasShownOnboardingKey)
   }
   
-  public func setHasShownFirstLaunchOnboarding(_ bool: Bool) -> Effect<Never, Never> {
-    setBool(bool, hasShownOnboardingKey)
+  public func setHasShownFirstLaunchOnboarding(_ bool: Bool) async -> Void {
+    await setBool(bool, hasShownOnboardingKey)
   }
   
   public var hideSplashScreen: Bool {
     boolForKey(hideSplashScreenKey)
   }
   
-  public func setHideSplashScreen(_ bool: Bool) -> Effect<Never, Never> {
-    setBool(bool, hideSplashScreenKey)
+  public func setHideSplashScreen(_ bool: Bool) async -> Void {
+    await setBool(bool, hideSplashScreenKey)
   }
   
   public var styleType: StyleType {
@@ -68,8 +68,8 @@ public struct UserDefaultsClient {
     return StyleType(rawValue: value) ?? .rectangle
   }
   
-  public func set(styleType: StyleType) -> Effect<Never, Never> {
-    setString(styleType.rawValue, stringForStylingKey)
+  public func set(styleType: StyleType) async -> Void {
+    await setString(styleType.rawValue, stringForStylingKey)
   }
   
   public var layoutType: LayoutType {
@@ -77,8 +77,8 @@ public struct UserDefaultsClient {
     return LayoutType(rawValue: value) ?? .horizontal
   }
   
-  public func set(layoutType: LayoutType) -> Effect<Never, Never> {
-    setString(layoutType.rawValue, stringForLayoutKey)
+  public func set(layoutType: LayoutType) async -> Void {
+    await setString(layoutType.rawValue, stringForLayoutKey)
   }
   
   public var themeType: ThemeType {
@@ -86,60 +86,60 @@ public struct UserDefaultsClient {
     return ThemeType(rawValue: value) ?? .system
   }
   
-  public func set(themeType: ThemeType) -> Effect<Never, Never> {
-    setString(themeType.rawValue, stringForThemeKey)
+  public func set(themeType: ThemeType) async -> Void {
+    await setString(themeType.rawValue, stringForThemeKey)
   }
   
   public var passcodeCode: String? {
     stringForKey(passcodeKey)
   }
   
-  public func setPasscode(_ string: String) -> Effect<Never, Never> {
-    setString(string, passcodeKey)
+  public func setPasscode(_ string: String) async -> Void {
+    await setString(string, passcodeKey)
   }
   
-  public func removePasscode() -> Effect<Never, Never> {
-    remove(passcodeKey)
+  public func removePasscode() async -> Void {
+    await remove(passcodeKey)
   }
   
   public var isFaceIDActivate: Bool {
     boolForKey(faceIDActivateKey)
   }
   
-  public func setFaceIDActivate(_ bool: Bool) -> Effect<Never, Never> {
-    setBool(bool, faceIDActivateKey)
+  public func setFaceIDActivate(_ bool: Bool) async -> Void {
+    await setBool(bool, faceIDActivateKey)
   }
   
   public var timeForAskPasscode: Date? {
     dateForKey(timeForAskPasscodeKey)
   }
   
-  public func setTimeForAskPasscode(_ value: Date) -> Effect<Never, Never> {
-    setDate(value, timeForAskPasscodeKey)
+  public func setTimeForAskPasscode(_ value: Date) async -> Void {
+    await setDate(value, timeForAskPasscodeKey)
   }
   
-  public func removeTimeForAskPasscode() -> Effect<Never, Never> {
-    remove(timeForAskPasscodeKey)
+  public func removeTimeForAskPasscode() async -> Void {
+    await remove(timeForAskPasscodeKey)
   }
   
   public var optionTimeForAskPasscode: Int {
     intForKey(optionTimeForAskPasscodeKey) ?? 0
   }
   
-  public func setOptionTimeForAskPasscode(_ value: Int) -> Effect<Never, Never> {
-    setInt(value, optionTimeForAskPasscodeKey)
+  public func setOptionTimeForAskPasscode(_ value: Int) async -> Void {
+    await setInt(value, optionTimeForAskPasscodeKey)
   }
   
-  public func removeOptionTimeForAskPasscode() -> Effect<Never, Never> {
-    remove(optionTimeForAskPasscodeKey)
+  public func removeOptionTimeForAskPasscode() async -> Void {
+    await remove(optionTimeForAskPasscodeKey)
   }
   
   public var language: String {
     stringForKey(languageCodeKey) ?? "en"
   }
   
-  public func setLanguage(_ value: String) -> Effect<Never, Never> {
-    setString(value, languageCodeKey)
+  public func setLanguage(_ value: String) async -> Void {
+    await setString(value, languageCodeKey)
   }
   
   let hasShownOnboardingKey = "hasShownOnboardingKey"

@@ -78,8 +78,7 @@ public struct Welcome: ReducerProtocol {
     case .skipAlertAction:
       state.skipAlert = nil
       return .merge(
-        self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
-          .fireAndForget(),
+        .fireAndForget { await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true) },
         .cancel(id: TimerID.self)
       )
       

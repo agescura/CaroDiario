@@ -21,13 +21,13 @@ extension UserDefaultsClient: TestDependencyKey {
 extension UserDefaultsClient {
   public static let noop = Self(
     boolForKey: { _ in false },
-    setBool: { _, _ in .none },
+    setBool: { _, _ in },
     stringForKey: { _ in nil },
-    setString: { _, _ in .none },
+    setString: { _, _ in },
     intForKey: { _ in nil },
-    setInt: { _, _ in .none },
+    setInt: { _, _ in },
     dateForKey: { _ in nil },
-    setDate: { _, _ in .none },
-    remove: { _ in .none }
+    setDate: { _, _ in },
+    remove: { _ in }
   )
 }
