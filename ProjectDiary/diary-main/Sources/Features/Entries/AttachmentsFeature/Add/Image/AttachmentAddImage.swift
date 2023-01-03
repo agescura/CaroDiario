@@ -147,7 +147,7 @@ struct AttachmentAddImageView: View {
               Button(action: {
                 viewStore.send(.removeFullScreenAlertButtonTapped)
               }) {
-                Image(systemName: "trash")
+                Image(.trash)
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .frame(width: 16, height: 16)
@@ -157,7 +157,7 @@ struct AttachmentAddImageView: View {
               Button(action: {
                 viewStore.send(.presentImageFullScreen(false))
               }) {
-                Image(systemName: "xmark")
+                Image(.xmark)
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .frame(width: 16, height: 16)

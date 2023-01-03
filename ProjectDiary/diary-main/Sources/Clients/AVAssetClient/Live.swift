@@ -10,13 +10,13 @@ extension AVAssetClient: DependencyKey {
       let asset = AVAsset(url: url)
       
       var commonMetadata = CommonMetadata()
-      for i in asset.commonMetadata {
+      for i in try await asset.load(.commonMetadata) {
         if i.commonKey?.rawValue == "artwork" {
-          commonMetadata.artwork = i.value as? Data
+          commonMetadata.artwork = try await i.load(.value) as? Data
         }
         
         if i.commonKey?.rawValue == "title" {
-          commonMetadata.title = i.value as? String
+          commonMetadata.title = try await i.load(.value) as? String
         }
       }
       

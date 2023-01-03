@@ -38,7 +38,7 @@ public struct Welcome: ReducerProtocol {
   
   @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
   @Dependency(\.userDefaultsClient) private var userDefaultsClient
-  @Dependency(\.mainQueue) private var mainQueue
+  @Dependency(\.continuousClock) private var clock
   private enum TimerID: Hashable {}
   
   public var body: some ReducerProtocolOf<Self> {
@@ -83,13 +83,26 @@ public struct Welcome: ReducerProtocol {
       )
       
     case .startTimer:
-      return Effect.timer(id: TimerID.self, every: 5.0, on: self.mainQueue)
-        .map { _ in .nextPage }
+      return .run { send in
+        while true {
+          try await self.clock.sleep(for: .seconds(5))
+          await send(.nextPage)
+        }
+      }
+      .cancellable(id: TimerID.self)
       
     case let .selectedPage(value):
       state.selectedPage = value
-      return Effect.timer(id: TimerID.self, every: 5.0, on: self.mainQueue)
-        .map { _ in .nextPage }
+      return .merge(
+        .cancel(id: TimerID.self),
+        .run { send in
+          while true {
+            try await self.clock.sleep(for: .seconds(5))
+            await send(.nextPage)
+          }
+        }
+          .cancellable(id: TimerID.self)
+      )
       
     case .nextPage:
       state.tabViewAnimated = true

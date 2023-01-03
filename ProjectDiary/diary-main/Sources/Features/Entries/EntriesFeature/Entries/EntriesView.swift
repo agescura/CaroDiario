@@ -16,15 +16,14 @@ public struct EntriesView: View {
   
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
-      
-      NavigationView {
+      NavigationStack {
         ScrollView(.vertical) {
           if viewStore.isLoading {
             ProgressView()
           } else if viewStore.entries.isEmpty {
             VStack(spacing: 16) {
               Spacer()
-              Image(systemName: "pencil")
+              Image(.pencil)
                 .resizable()
                 .foregroundColor(.adaptiveBlack)
                 .frame(width: 24, height: 24)
@@ -45,21 +44,6 @@ public struct EntriesView: View {
                   content: DayEntriesRowView.init(store:)
                 )
               }
-              
-              NavigationLink(
-                "",
-                destination:
-                  IfLetStore(
-                    store.scope(
-                      state: \.entryDetailState,
-                      action: Entries.Action.entryDetailAction
-                    ),
-                    then: EntryDetailView.init(store:)
-                  ),
-                isActive: viewStore.binding(
-                  get: \.navigateEntryDetail,
-                  send: Entries.Action.navigateEntryDetail)
-              )
             }
           }
         }
@@ -69,7 +53,7 @@ public struct EntriesView: View {
             Button(action: {
               viewStore.send(.presentAddEntry(true))
             }) {
-              Image(systemName: "plus")
+              Image(.plus)
                 .foregroundColor(.chambray)
             }
         )
@@ -86,6 +70,21 @@ public struct EntriesView: View {
             then: AddEntryView.init(store:)
           )
         }
+        .navigationDestination(
+          isPresented: viewStore.binding(
+            get: \.navigateEntryDetail,
+            send: Entries.Action.navigateEntryDetail
+          ),
+          destination: {
+            IfLetStore(
+              store.scope(
+                state: \.entryDetailState,
+                action: Entries.Action.entryDetailAction
+              ),
+              then: EntryDetailView.init(store:)
+            )
+          }
+        )
       }
       .navigationViewStyle(StackNavigationViewStyle())
       .onAppear {

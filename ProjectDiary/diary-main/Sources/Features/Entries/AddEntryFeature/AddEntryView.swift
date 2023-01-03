@@ -7,6 +7,7 @@ import Localizables
 import AttachmentsFeature
 import AudioPickerFeature
 import AudioRecordFeature
+import SwiftUIHelper
 
 public struct AddEntryView: View {
   public let store: StoreOf<AddEntry>
@@ -31,7 +32,7 @@ public struct AddEntryView: View {
             Button(action: {
               viewStore.send(.dismissAlertButtonTapped)
             }, label: {
-              Image(systemName: "xmark")
+              Image(.xmark)
                 .foregroundColor(.adaptiveBlack)
             })
           }
@@ -71,7 +72,7 @@ public struct AddEntryView: View {
           
           SecondaryButtonView(
             label: {
-              Image(systemName: "plus")
+              Image(.plus)
                 .resizable()
                 .foregroundColor(.chambray)
                 .frame(width: 16, height: 16)

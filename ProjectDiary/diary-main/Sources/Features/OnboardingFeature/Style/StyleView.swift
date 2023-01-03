@@ -48,22 +48,6 @@ public struct StyleView: View {
             .animation(.default, value: UUID())
             .disabled(true)
             .frame(minHeight: 200)
-            
-            NavigationLink(
-              "",
-              destination:
-                IfLetStore(
-                  store.scope(
-                    state: \.layout,
-                    action: Style.Action.layout
-                  ),
-                  then: LayoutView.init(store:)
-                ),
-              isActive: viewStore.binding(
-                get: \.navigateLayout,
-                send: Style.Action.navigationLayout
-              )
-            )
           }
         }
         
@@ -93,6 +77,38 @@ public struct StyleView: View {
       }
       .padding()
       .navigationBarBackButtonHidden(true)
+      .navigationDestination(
+        isPresented: viewStore.binding(
+          get: \.navigateLayout,
+          send: Style.Action.navigationLayout
+        ),
+        destination: {
+          IfLetStore(
+            store.scope(
+              state: \.layout,
+              action: Style.Action.layout
+            ),
+            then: LayoutView.init(store:)
+          )
+        }
+      )
     }
+  }
+}
+
+struct StyleView_Previews: PreviewProvider {
+  static var previews: some View {
+    StyleView(
+      store: .init(
+        initialState: .init(
+          styleType: .rectangle,
+          layoutType: .horizontal,
+          entries: fakeEntries(
+            with: .rectangle,
+            layout: .horizontal
+          )
+        ),
+        reducer: Style())
+    )
   }
 }

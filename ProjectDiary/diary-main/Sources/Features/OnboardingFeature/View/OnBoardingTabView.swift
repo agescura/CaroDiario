@@ -1,10 +1,3 @@
-//
-//  OnBoardingTabView.swift
-//  
-//
-//  Created by Albert Gil Escura on 28/7/21.
-//
-
 import SwiftUI
 import Styles
 

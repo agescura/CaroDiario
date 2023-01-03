@@ -19,7 +19,6 @@ public struct LayoutView: View {
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
       VStack {
-        
         ScrollView(showsIndicators: false) {
           VStack(alignment: .leading, spacing: 16) {
             
@@ -54,23 +53,6 @@ public struct LayoutView: View {
             .animation(.default, value: UUID())
             .disabled(true)
             .frame(minHeight: 200)
-            
-            NavigationLink(
-              "",
-              destination:
-                IfLetStore(
-                  store.scope(
-                    state: \.theme,
-                    action: Layout.Action.theme
-                  ),
-                  then: ThemeView.init(store:)
-                ),
-              isActive: viewStore.binding(
-                get: \.navigateTheme,
-                send: Layout.Action.navigateTheme)
-            )
-            .frame(height: 0)
-            
           }
         }
         
@@ -100,6 +82,21 @@ public struct LayoutView: View {
       }
       .padding()
       .navigationBarBackButtonHidden(true)
+      .navigationDestination(
+        isPresented: viewStore.binding(
+          get: \.navigateTheme,
+          send: Layout.Action.navigateTheme
+        ),
+        destination: {
+          IfLetStore(
+            store.scope(
+              state: \.theme,
+              action: Layout.Action.theme
+            ),
+            then: ThemeView.init(store:)
+          )
+        }
+      )
     }
   }
 }

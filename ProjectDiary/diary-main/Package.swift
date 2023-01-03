@@ -6,7 +6,7 @@ let package = Package(
     name: "diary-main",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v16),
     ],
     products: [
       

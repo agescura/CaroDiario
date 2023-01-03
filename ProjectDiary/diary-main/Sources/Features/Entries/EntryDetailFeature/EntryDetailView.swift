@@ -299,7 +299,7 @@ public struct EntryDetailView: View {
                 Button(action: {
                   viewStore.send(.removeAttachment)
                 }) {
-                  Image(systemName: "trash")
+                  Image(.trash)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 16, height: 16)
@@ -309,7 +309,7 @@ public struct EntryDetailView: View {
                 Button(action: {
                   viewStore.send(.processShareAttachment)
                 }) {
-                  Image(systemName: "square.and.arrow.up")
+                  Image(.squareAndArrowUp)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 16, height: 16)
@@ -319,7 +319,7 @@ public struct EntryDetailView: View {
                 Button(action: {
                   viewStore.send(.dismissAttachmentOverlayed)
                 }) {
-                  Image(systemName: "xmark")
+                  Image(.xmark)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 16, height: 16)
@@ -361,7 +361,7 @@ public struct EntryDetailView: View {
             action: {
               viewStore.send(.alertRemoveButtonTapped)
             }, label: {
-              Image(systemName: "trash")
+              Image(.trash)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 16, height: 16)
@@ -373,7 +373,7 @@ public struct EntryDetailView: View {
             action: {
               viewStore.send(.meatballActionSheetButtonTapped)
             }, label: {
-              Image(systemName: "ellipsis")
+              Image(.ellipsis)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 16, height: 16)

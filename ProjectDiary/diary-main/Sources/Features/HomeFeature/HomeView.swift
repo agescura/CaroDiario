@@ -51,7 +51,7 @@ public struct SharedState: Equatable {
   public var microphoneStatus: AudioRecordPermission
   public var optionTimeForAskPasscode: Int
   public var faceIdEnabled: Bool
-  public var route: Settings.State.Route? = nil
+  public var route: Settings.State.Destination? = nil
   
   public init(
     showSplash: Bool,
@@ -143,7 +143,7 @@ public struct Home: ReducerProtocol {
         self.sharedState.faceIdEnabled = newValue.faceIdEnabled
         self.sharedState.language = newValue.language
         self.sharedState.microphoneStatus = newValue.microphoneStatus
-        self.sharedState.route = newValue.route
+        self.sharedState.route = newValue.destination
       }
     }
     

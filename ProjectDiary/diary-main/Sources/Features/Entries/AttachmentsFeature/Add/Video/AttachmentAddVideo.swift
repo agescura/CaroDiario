@@ -77,7 +77,7 @@ struct AttachmentAddVideoView: View {
       ZStack {
         ImageView(url: viewStore.entryVideo.thumbnail)
           .frame(width: 52, height: 52)
-        Image(systemName: "play.fill")
+        Image(.playFill)
           .foregroundColor(.adaptiveWhite)
           .frame(width: 8, height: 8)
       }
@@ -100,7 +100,7 @@ struct AttachmentAddVideoView: View {
               Button(action: {
                 viewStore.send(.videoAlertButtonTapped)
               }) {
-                Image(systemName: "trash")
+                Image(.trash)
                   .frame(width: 48, height: 48)
                   .foregroundColor(.chambray)
               }
@@ -108,7 +108,7 @@ struct AttachmentAddVideoView: View {
               Button(action: {
                 viewStore.send(.presentVideoPlayer(false))
               }) {
-                Image(systemName: "xmark")
+                Image(.xmark)
                   .frame(width: 48, height: 48)
                   .foregroundColor(.chambray)
               }

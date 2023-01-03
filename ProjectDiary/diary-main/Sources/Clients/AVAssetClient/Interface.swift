@@ -10,27 +10,27 @@ extension DependencyValues {
 }
 
 public struct AVAssetClient {
-    public var commonMetadata: @Sendable (URL) async -> CommonMetadata
-    public var generateThumbnail: @Sendable (URL) async throws -> UIImage
+  public var commonMetadata: @Sendable (URL) async throws -> CommonMetadata
+  public var generateThumbnail: @Sendable (URL) async throws -> UIImage
+  
+  public init(
+    commonMetadata: @escaping @Sendable (URL) async throws -> CommonMetadata,
+    generateThumbnail: @escaping @Sendable (URL) async throws -> UIImage
+  ) {
+    self.commonMetadata = commonMetadata
+    self.generateThumbnail = generateThumbnail
+  }
+  
+  public struct CommonMetadata: Equatable {
+    public var artwork: Data?
+    public var title: String?
     
     public init(
-        commonMetadata: @escaping @Sendable (URL) async -> CommonMetadata,
-        generateThumbnail: @escaping @Sendable (URL) async throws -> UIImage
+      artwork: Data? = nil,
+      title: String? = nil
     ) {
-        self.commonMetadata = commonMetadata
-        self.generateThumbnail = generateThumbnail
+      self.artwork = artwork
+      self.title = title
     }
-    
-    public struct CommonMetadata: Equatable {
-        public var artwork: Data?
-        public var title: String?
-        
-        public init(
-            artwork: Data? = nil,
-            title: String? = nil
-        ) {
-            self.artwork = artwork
-            self.title = title
-        }
-    }
+  }
 }

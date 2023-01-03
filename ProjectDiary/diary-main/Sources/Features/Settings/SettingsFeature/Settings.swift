@@ -32,33 +32,33 @@ public struct Settings: ReducerProtocol {
     public var optionTimeForAskPasscode: Int
     public var faceIdEnabled: Bool
     
-    public var route: Route? = nil {
+    public var destination: Destination? = nil {
       didSet {
-        if case let .appearance(state) = self.route {
+        if case let .appearance(state) = self.destination {
           self.styleType = state.styleType
           self.layoutType = state.layoutType
           self.themeType = state.themeType
           self.iconAppType = state.iconAppType
         }
-        if case let .language(state) = self.route {
+        if case let .language(state) = self.destination {
           self.language = state.language
         }
-        if case let .menu(state) = self.route {
+        if case let .menu(state) = self.destination {
           self.faceIdEnabled = state.faceIdEnabled
         }
-        if case let .activate(state) = self.route {
+        if case let .activate(state) = self.destination {
           self.faceIdEnabled = state.faceIdEnabled
           self.hasPasscode = state.hasPasscode
         }
-        if case let .camera(state) = self.route {
+        if case let .camera(state) = self.destination {
           self.cameraStatus = state.cameraStatus
         }
-        if case let .microphone(state) = self.route {
+        if case let .microphone(state) = self.destination {
           self.microphoneStatus = state.microphoneStatus
         }
       }
     }
-    public enum Route: Equatable {
+    public enum Destination: Equatable {
       case appearance(Appearance.State)
       case language(Language.State)
       case activate(Activate.State)
@@ -72,92 +72,92 @@ public struct Settings: ReducerProtocol {
     
     var appearance: Appearance.State? {
       get {
-        guard case let .appearance(state) = self.route else { return nil }
+        guard case let .appearance(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .appearance(newValue)
+        self.destination = .appearance(newValue)
       }
     }
     var languageState: Language.State? {
       get {
-        guard case let .language(state) = self.route else { return nil }
+        guard case let .language(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .language(newValue)
+        self.destination = .language(newValue)
       }
     }
     var activate: Activate.State? {
       get {
-        guard case let .activate(state) = self.route else { return nil }
+        guard case let .activate(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .activate(newValue)
+        self.destination = .activate(newValue)
       }
     }
     var menu: Menu.State? {
       get {
-        guard case let .menu(state) = self.route else { return nil }
+        guard case let .menu(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .menu(newValue)
+        self.destination = .menu(newValue)
       }
     }
     var camera: Camera.State? {
       get {
-        guard case let .camera(state) = self.route else { return nil }
+        guard case let .camera(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .camera(newValue)
+        self.destination = .camera(newValue)
       }
     }
     var microphone: Microphone.State? {
       get {
-        guard case let .microphone(state) = self.route else { return nil }
+        guard case let .microphone(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .microphone(newValue)
+        self.destination = .microphone(newValue)
       }
     }
     var export: Export.State? {
       get {
-        guard case let .export(state) = self.route else { return nil }
+        guard case let .export(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .export(newValue)
+        self.destination = .export(newValue)
       }
     }
     var agreements: Agreements.State? {
       get {
-        guard case let .agreements(state) = self.route else { return nil }
+        guard case let .agreements(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .agreements(newValue)
+        self.destination = .agreements(newValue)
       }
     }
     var about: About.State? {
       get {
-        guard case let .about(state) = self.route else { return nil }
+        guard case let .about(state) = self.destination else { return nil }
         return state
       }
       set {
         guard let newValue = newValue else { return }
-        self.route = .about(newValue)
+        self.destination = .about(newValue)
       }
     }
     
@@ -173,7 +173,7 @@ public struct Settings: ReducerProtocol {
       faceIdEnabled: Bool,
       language: Localizable,
       microphoneStatus: AudioRecordPermission,
-      route: Route? = nil
+      route: Destination? = nil
     ) {
       self.showSplash = showSplash
       self.styleType = styleType
@@ -186,7 +186,7 @@ public struct Settings: ReducerProtocol {
       self.faceIdEnabled = faceIdEnabled
       self.language = language
       self.microphoneStatus = microphoneStatus
-      self.route = route
+      self.destination = route
     }
   }
   
@@ -273,7 +273,7 @@ public struct Settings: ReducerProtocol {
       }
       
     case let .navigateAppearance(value):
-      state.route = value ? .appearance(
+      state.destination = value ? .appearance(
         .init(
           styleType: state.styleType,
           layoutType: state.layoutType,
@@ -287,7 +287,7 @@ public struct Settings: ReducerProtocol {
       return .none
       
     case let .navigateLanguage(value):
-      state.route = value ? .language(
+      state.destination = value ? .language(
         .init(language: state.language)
       ) : nil
       return .none
@@ -324,7 +324,7 @@ public struct Settings: ReducerProtocol {
       return .none
       
     case let .navigateActivate(value):
-      state.route = value ? .activate(
+      state.destination = value ? .activate(
         .init(
           faceIdEnabled: state.faceIdEnabled,
           hasPasscode: state.hasPasscode
@@ -336,7 +336,7 @@ public struct Settings: ReducerProtocol {
       return .none
       
     case let .navigateMenu(value):
-      state.route = value ? .menu(
+      state.destination = value ? .menu(
         .init(
           authenticationType: state.authenticationType,
           optionTimeForAskPasscode: state.optionTimeForAskPasscode,
@@ -349,7 +349,7 @@ public struct Settings: ReducerProtocol {
       return .none
       
     case let .navigateMicrophone(value):
-      state.route = value ? .microphone(
+      state.destination = value ? .microphone(
         .init(microphoneStatus: state.microphoneStatus)
       ) : nil
       return .none
@@ -358,13 +358,13 @@ public struct Settings: ReducerProtocol {
       return .none
       
     case let .navigateCamera(value):
-      state.route = value ? .camera(
+      state.destination = value ? .camera(
         .init(cameraStatus: state.cameraStatus)
       ) : nil
       return .none
       
     case let .navigateAgreements(value):
-      state.route = value ? .agreements(.init()) : nil
+      state.destination = value ? .agreements(.init()) : nil
       return .none
       
     case .agreements:
@@ -374,14 +374,14 @@ public struct Settings: ReducerProtocol {
       return .fireAndForget { await self.storeKitClient.requestReview() }
       
     case let .navigateExport(value):
-      state.route = value ? .export(.init()) : nil
+      state.destination = value ? .export(.init()) : nil
       return .none
       
     case .export:
       return .none
       
     case let .navigateAbout(value):
-      state.route = value ? .about(.init()) : nil
+      state.destination = value ? .about(.init()) : nil
       return .none
       
     case .about:

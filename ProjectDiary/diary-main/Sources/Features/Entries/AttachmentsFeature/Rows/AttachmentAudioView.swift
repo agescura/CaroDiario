@@ -34,7 +34,7 @@ struct AttachmentAudioView: View {
         .fill(Color.adaptiveGray)
         .frame(width: 52, height: 52)
         .overlay(
-          Image(systemName: "waveform")
+          Image(.waveform)
             .foregroundColor(.adaptiveWhite)
             .frame(width: 8, height: 8)
         )

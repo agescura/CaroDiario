@@ -21,7 +21,7 @@ public struct PrivacyView: View {
           .foregroundColor(.adaptiveBlack)
         
         HStack(alignment: .center) {
-          Image(systemName: "hand.raised")
+          Image(.handRaised)
             .resizable()
             .foregroundColor(.adaptiveGray)
             .scaledToFill()
@@ -34,22 +34,6 @@ public struct PrivacyView: View {
         }
         
         Spacer()
-        
-        NavigationLink(
-          "",
-          destination:
-            IfLetStore(
-              store.scope(
-                state: \.style,
-                action: Privacy.Action.style
-              ),
-              then: StyleView.init(store:)
-            ),
-          isActive: viewStore.binding(
-            get: \.navigateStyle,
-            send: Privacy.Action.navigationStyle
-          )
-        )
         
         TerciaryButtonView(
           label: {
@@ -77,6 +61,21 @@ public struct PrivacyView: View {
       }
       .padding()
       .navigationBarBackButtonHidden(true)
+      .navigationDestination(
+        isPresented: viewStore.binding(
+          get: \.navigateStyle,
+          send: Privacy.Action.navigationStyle
+        ),
+        destination: {
+          IfLetStore(
+            store.scope(
+              state: \.style,
+              action: Privacy.Action.style
+            ),
+            then: StyleView.init(store:)
+          )
+        }
+      )
     }
   }
 }

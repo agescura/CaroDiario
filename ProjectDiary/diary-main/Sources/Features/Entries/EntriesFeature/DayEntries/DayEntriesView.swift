@@ -2,6 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import Styles
+import SwiftUIHelper
 
 public struct DayEntries: ReducerProtocol {
   public init() {}
@@ -62,9 +63,6 @@ public struct DayEntriesView: View {
         Group {
           AppearanceDayStack(layout: viewStore.layout, spacing: 4) {
             Group {
-              NavigationLink(destination: EmptyView()) {
-                EmptyView()
-              }
               Text(viewStore.entries.first?.numberDay ?? "")
                 .adaptiveFont(.latoRegular, size: 10)
                 .foregroundColor(.adaptiveGray)
@@ -92,9 +90,6 @@ public struct DayEntriesView: View {
                   .frame(width: 48, height: 48)
                   .modifier(StyleModifier(style: viewStore.style))
               }
-              NavigationLink(destination: EmptyView()) {
-                EmptyView()
-              }
             }
           }
           .onTapGesture {
@@ -116,7 +111,7 @@ public struct DayEntriesView: View {
                     Text("\(entry.images.count)")
                       .adaptiveFont(.latoRegular, size: 6)
                       .foregroundColor(.adaptiveGray)
-                    Image(systemName: "photo")
+                    Image(.photo)
                       .resizable()
                       .foregroundColor(.adaptiveGray)
                       .frame(width: 10, height: 10)
@@ -125,7 +120,7 @@ public struct DayEntriesView: View {
                     Text("\(entry.videos.count)")
                       .adaptiveFont(.latoRegular, size: 6)
                       .foregroundColor(.adaptiveGray)
-                    Image(systemName: "video")
+                    Image(.video)
                       .resizable()
                       .foregroundColor(.adaptiveGray)
                       .frame(width: 14, height: 10)
@@ -134,7 +129,7 @@ public struct DayEntriesView: View {
                     Text("\(entry.audios.count)")
                       .adaptiveFont(.latoRegular, size: 6)
                       .foregroundColor(.adaptiveGray)
-                    Image(systemName: "waveform")
+                    Image(.waveform)
                       .resizable()
                       .foregroundColor(.adaptiveGray)
                       .frame(width: 14, height: 10)

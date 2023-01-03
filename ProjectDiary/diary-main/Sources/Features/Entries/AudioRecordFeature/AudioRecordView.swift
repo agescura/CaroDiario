@@ -28,7 +28,7 @@ public struct AudioRecordView: View {
           Button(
             action: { viewStore.send(.dismiss) },
             label: {
-              Image(systemName: "xmark")
+              Image(.xmark)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 16, height: 16)
@@ -92,7 +92,7 @@ public struct AudioRecordView: View {
                 Button(
                   action: { viewStore.send(.playerGoBackward) },
                   label: {
-                    Image(systemName: "gobackward.15")
+                    Image(.gobackward15)
                       .resizable()
                       .aspectRatio(contentMode: .fill)
                       .frame(width: 24, height: 24)
@@ -103,7 +103,7 @@ public struct AudioRecordView: View {
                 Button(
                   action: { viewStore.send(.playButtonTapped) },
                   label: {
-                    Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")
+                    Image(viewStore.isPlaying ? .pauseFill : .playFill)
                       .resizable()
                       .aspectRatio(contentMode: .fill)
                       .frame(width: 32, height: 32)
@@ -114,7 +114,7 @@ public struct AudioRecordView: View {
                 Button(
                   action: { viewStore.send(.playerGoForward) },
                   label: {
-                    Image(systemName: "goforward.15")
+                    Image(.goforward15)
                       .resizable()
                       .aspectRatio(contentMode: .fill)
                       .frame(width: 24, height: 24)
@@ -128,7 +128,7 @@ public struct AudioRecordView: View {
               Button(
                 action: { viewStore.send(.removeAudioRecord) },
                 label: {
-                  Image(systemName: "trash")
+                  Image(.trash)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 20, height: 20)

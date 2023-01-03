@@ -13,7 +13,7 @@ public struct WelcomeView: View {
   
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
-      NavigationView {
+      NavigationStack {
         VStack(alignment: .leading, spacing: 16) {
           Text("OnBoarding.Diary".localized)
             .adaptiveFont(.latoBold, size: 24)
@@ -29,25 +29,13 @@ public struct WelcomeView: View {
               .init(id: 1, title: "OnBoarding.Description.2".localized),
               .init(id: 2, title: "OnBoarding.Description.3".localized)
             ],
-            selection: viewStore.binding(get: \.selectedPage, send: Welcome.Action.selectedPage),
+            selection: viewStore.binding(
+              get: \.selectedPage,
+              send: Welcome.Action.selectedPage
+            ),
             animated: viewStore.tabViewAnimated
           )
           .frame(minHeight: 150)
-          
-          NavigationLink(
-            "",
-            destination:
-              IfLetStore(
-                store.scope(
-                  state: \.privacy,
-                  action: Welcome.Action.privacy
-                ),
-                then: PrivacyView.init(store:)
-              ),
-            isActive: viewStore.binding(
-              get: \.navigatePrivacy,
-              send: Welcome.Action.navigationPrivacy)
-          )
           
           TerciaryButtonView(
             label: {
@@ -76,11 +64,36 @@ public struct WelcomeView: View {
         }
         .padding()
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(
+          isPresented: viewStore.binding(
+            get: \.navigatePrivacy,
+            send: Welcome.Action.navigationPrivacy),
+          destination: {
+            IfLetStore(
+              store.scope(
+                state: \.privacy,
+                action: Welcome.Action.privacy
+              ),
+              then: PrivacyView.init(store:)
+            )
+          }
+        )
       }
       .navigationViewStyle(StackNavigationViewStyle())
       .onAppear {
         viewStore.send(.startTimer)
       }
     }
+  }
+}
+
+struct WelcomeView_Previews: PreviewProvider {
+  static var previews: some View {
+    WelcomeView(
+      store: .init(
+        initialState: .init(),
+        reducer: Welcome()
+      )
+    )
   }
 }

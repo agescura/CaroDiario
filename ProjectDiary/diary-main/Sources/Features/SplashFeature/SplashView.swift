@@ -67,7 +67,7 @@ struct Splash_Previews: PreviewProvider {
     SplashView(
       store: .init(
         initialState: Splash.State(
-          animation: .verticalLine
+          animation: .start
         ),
         reducer: Splash()
       )

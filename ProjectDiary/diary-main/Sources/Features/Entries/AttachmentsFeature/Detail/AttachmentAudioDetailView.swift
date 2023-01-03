@@ -5,6 +5,7 @@ import FileClient
 import UIApplicationClient
 import AVAudioPlayerClient
 import SwiftHelper
+import SwiftUIHelper
 
 public struct AttachmentAudioDetail: ReducerProtocol {
   public init() {}
@@ -191,7 +192,7 @@ public struct AttachmentAudioDetailView: View {
               Button(action: {
                 viewStore.send(.playerGoBackward)
               }, label: {
-                Image(systemName: "gobackward.15")
+                Image(.gobackward15)
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .frame(width: 24, height: 24)
@@ -202,7 +203,7 @@ public struct AttachmentAudioDetailView: View {
               Button(action: {
                 viewStore.send(.playButtonTapped)
               }, label: {
-                Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")
+                Image(viewStore.isPlaying ? .pauseFill : .playFill)
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .frame(width: 32, height: 32)
@@ -212,7 +213,7 @@ public struct AttachmentAudioDetailView: View {
               Button(action: {
                 viewStore.send(.playerGoForward)
               }, label: {
-                Image(systemName: "goforward.15")
+                Image(.goforward15)
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .frame(width: 24, height: 24)

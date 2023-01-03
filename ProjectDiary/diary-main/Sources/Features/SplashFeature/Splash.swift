@@ -28,7 +28,7 @@ public struct Splash: ReducerProtocol {
     case finishAnimation
   }
   
-  @Dependency(\.mainQueue) private var mainQueue
+  @Dependency(\.continuousClock) private var clock
   
   public var body: some ReducerProtocolOf<Self> {
     Reduce(self.core)
@@ -41,21 +41,21 @@ public struct Splash: ReducerProtocol {
     switch action {
     case .startAnimation:
       return .run { send in
-        try await self.mainQueue.sleep(for: .seconds(1))
+        try await self.clock.sleep(for: .seconds(1))
         await send(.verticalLineAnimation)
       }
       
     case .verticalLineAnimation:
       state.animation = .verticalLine
       return .run { send in
-        try await self.mainQueue.sleep(for: .seconds(1))
+        try await self.clock.sleep(for: .seconds(1))
         await send(.areaAnimation)
       }
       
     case .areaAnimation:
       state.animation = .horizontalArea
       return .run { send in
-        try await self.mainQueue.sleep(for: .seconds(1))
+        try await self.clock.sleep(for: .seconds(1))
         await send(.finishAnimation)
       }
       

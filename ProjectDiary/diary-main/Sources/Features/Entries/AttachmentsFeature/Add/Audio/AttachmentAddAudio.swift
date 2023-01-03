@@ -191,7 +191,7 @@ struct AttachmentAddAudioView: View {
         .fill(Color.adaptiveGray)
         .frame(width: 52, height: 52)
         .overlay(
-          Image(systemName: "waveform")
+          Image(.waveform)
             .foregroundColor(.adaptiveWhite)
             .frame(width: 8, height: 8)
         )
@@ -213,7 +213,7 @@ struct AttachmentAddAudioView: View {
                   viewStore.send(.removeFullScreenAlertButtonTapped)
                 }
               ) {
-                Image(systemName: "trash")
+                Image(.trash)
                   .frame(width: 48, height: 48)
                   .foregroundColor(.chambray)
               }
@@ -223,7 +223,7 @@ struct AttachmentAddAudioView: View {
                   viewStore.send(.presentAudioFullScreen(false))
                 }
               ) {
-                Image(systemName: "xmark")
+                Image(.xmark)
                   .frame(width: 48, height: 48)
                   .foregroundColor(.chambray)
               }
@@ -275,7 +275,7 @@ struct AttachmentAddAudioView: View {
                       viewStore.send(.playerGoBackward)
                     },
                     label: {
-                      Image(systemName: "gobackward.15")
+                      Image(.gobackward15)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 24, height: 24)
@@ -286,7 +286,7 @@ struct AttachmentAddAudioView: View {
                   Button(action: {
                     viewStore.send(.playButtonTapped)
                   }, label: {
-                    Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")
+                    Image(viewStore.isPlaying ? .pauseFill : .playFill)
                       .resizable()
                       .aspectRatio(contentMode: .fill)
                       .frame(width: 32, height: 32)
@@ -297,7 +297,7 @@ struct AttachmentAddAudioView: View {
                     action: {
                       viewStore.send(.playerGoForward)
                     }, label: {
-                      Image(systemName: "goforward.15")
+                      Image(.goforward15)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 24, height: 24)

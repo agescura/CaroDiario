@@ -25,7 +25,9 @@ public struct DayEntriesRow: ReducerProtocol {
   }
   
   public var body: some ReducerProtocolOf<Self> {
-    EmptyReducer()
+    Scope(state: \.dayEntries, action: /Action.dayEntry) {
+      DayEntries()
+    }
   }
 }
 
