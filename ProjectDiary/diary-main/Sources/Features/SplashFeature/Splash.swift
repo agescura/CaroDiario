@@ -40,21 +40,24 @@ public struct Splash: ReducerProtocol {
   ) -> Effect<Action, Never> {
     switch action {
     case .startAnimation:
-      return Effect(value: .verticalLineAnimation)
-        .delay(for: 1, scheduler: self.mainQueue)
-        .eraseToEffect()
+      return .run { send in
+        try await self.mainQueue.sleep(for: .seconds(1))
+        await send(.verticalLineAnimation)
+      }
       
     case .verticalLineAnimation:
       state.animation = .verticalLine
-      return Effect(value: .areaAnimation)
-        .delay(for: 1, scheduler: self.mainQueue)
-        .eraseToEffect()
+      return .run { send in
+        try await self.mainQueue.sleep(for: .seconds(1))
+        await send(.areaAnimation)
+      }
       
     case .areaAnimation:
       state.animation = .horizontalArea
-      return Effect(value: .finishAnimation)
-        .delay(for: 1, scheduler: self.mainQueue)
-        .eraseToEffect()
+      return .run { send in
+        try await self.mainQueue.sleep(for: .seconds(1))
+        await send(.finishAnimation)
+      }
       
     case .finishAnimation:
       state.animation = .finish

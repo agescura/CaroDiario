@@ -35,7 +35,7 @@ public struct AVAudioPlayerClient {
     var setCurrentTime: (AnyHashable, Double) -> Effect<Never, Never> = { _, _ in .fireAndForget {} }
     
     public init(
-        create: @escaping (AnyHashable, URL) -> Effect<AVAudioPlayerClient.Action, Never> = { _, _ in .fireAndForget {} },
+        create: @escaping (AnyHashable, URL) -> Effect<Action, Never> = { _, _ in .fireAndForget {} },
         destroy: @escaping (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} },
         duration: @escaping (AnyHashable) -> Effect<Double, Never> = { _ in .fireAndForget {} },
         play: @escaping (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} },

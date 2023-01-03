@@ -1,25 +1,18 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 20/8/22.
-//
-
 import Foundation
 
 public enum LocalAuthenticationType {
-    case faceId
-    case touchId
-    case none
-    
-    public var rawValue: String {
-        switch self {
-        case .faceId:
-            return "Face ID"
-        case .touchId:
-            return "Touch ID"
-        case .none:
-            return ""
-        }
+  case faceId
+  case touchId
+  case none
+  
+  public var rawValue: String {
+    switch self {
+    case .faceId:
+      return "Face ID"
+    case .touchId:
+      return "Touch ID"
+    case .none:
+      return ""
     }
+  }
 }

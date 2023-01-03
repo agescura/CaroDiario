@@ -22,8 +22,8 @@ public struct EntryDetail: ReducerProtocol {
     public var entry: Entry
     public var attachments: IdentifiedArrayOf<AttachmentRow.State> = []
     
-    public var meatballActionSheet: ConfirmationDialogState<EntryDetail.Action>?
-    public var removeAlert: AlertState<EntryDetail.Action>?
+    public var meatballActionSheet: ConfirmationDialogState<Action>?
+    public var removeAlert: AlertState<Action>?
     
     public var addEntryState: AddEntry.State?
     public var presentAddEntry = false

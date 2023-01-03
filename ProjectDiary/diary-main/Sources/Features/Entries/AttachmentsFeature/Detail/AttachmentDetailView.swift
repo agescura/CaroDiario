@@ -28,13 +28,13 @@ public struct AttachmentDetail: ReducerProtocol {
   }
   
   public var body: some ReducerProtocolOf<Self> {
-    Scope(state: /AttachmentDetail.State.image, action: /AttachmentDetail.Action.image) {
+    Scope(state: /State.image, action: /Action.image) {
       AttachmentImageDetail()
     }
-    Scope(state: /AttachmentDetail.State.video, action: /AttachmentDetail.Action.video) {
+    Scope(state: /State.video, action: /Action.video) {
       AttachmentVideoDetail()
     }
-    Scope(state: /AttachmentDetail.State.audio, action: /AttachmentDetail.Action.audio) {
+    Scope(state: /State.audio, action: /Action.audio) {
       AttachmentAudioDetail()
     }
   }

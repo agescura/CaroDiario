@@ -13,8 +13,8 @@ public struct AttachmentAddImage: ReducerProtocol {
     public var entryImage: EntryImage
     public var presentImageFullScreen: Bool = false
     
-    public var removeFullScreenAlert: AlertState<AttachmentAddImage.Action>?
-    public var removeAlert: AlertState<AttachmentAddImage.Action>?
+    public var removeFullScreenAlert: AlertState<Action>?
+    public var removeAlert: AlertState<Action>?
     
     public var imageScale: CGFloat = 1
     public var lastValue: CGFloat = 1

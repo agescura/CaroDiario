@@ -61,3 +61,16 @@ extension Splash.State.AnimationState {
     }
   }
 }
+
+struct Splash_Previews: PreviewProvider {
+  static var previews: some View {
+    SplashView(
+      store: .init(
+        initialState: Splash.State(
+          animation: .verticalLine
+        ),
+        reducer: Splash()
+      )
+    )
+  }
+}

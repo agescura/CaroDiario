@@ -232,31 +232,31 @@ public struct Settings: ReducerProtocol {
   
   public var body: some ReducerProtocolOf<Self> {
     Reduce(self.core)
-      .ifLet(\.appearance, action: /Settings.Action.appearance) {
+      .ifLet(\.appearance, action: /Action.appearance) {
         Appearance()
       }
-      .ifLet(\.agreements, action: /Settings.Action.agreements) {
+      .ifLet(\.agreements, action: /Action.agreements) {
         Agreements()
       }
-      .ifLet(\.camera, action: /Settings.Action.camera) {
+      .ifLet(\.camera, action: /Action.camera) {
         Camera()
       }
-      .ifLet(\.about, action: /Settings.Action.about) {
+      .ifLet(\.about, action: /Action.about) {
         About()
       }
-      .ifLet(\.export, action: /Settings.Action.export) {
+      .ifLet(\.export, action: /Action.export) {
         Export()
       }
-      .ifLet(\.languageState, action: /Settings.Action.language) {
+      .ifLet(\.languageState, action: /Action.language) {
         Language()
       }
-      .ifLet(\.microphone, action: /Settings.Action.microphone) {
+      .ifLet(\.microphone, action: /Action.microphone) {
         Microphone()
       }
-      .ifLet(\.activate, action: /Settings.Action.activate) {
+      .ifLet(\.activate, action: /Action.activate) {
         Activate()
       }
-      .ifLet(\.menu, action: /Settings.Action.menu) {
+      .ifLet(\.menu, action: /Action.menu) {
         Menu()
       }
   }

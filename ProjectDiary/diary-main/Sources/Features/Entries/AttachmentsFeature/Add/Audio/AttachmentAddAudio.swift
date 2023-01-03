@@ -12,8 +12,8 @@ public struct AttachmentAddAudio: ReducerProtocol {
     public var entryAudio: EntryAudio
     public var presentAudioFullScreen: Bool = false
     
-    public var removeFullScreenAlert: AlertState<AttachmentAddAudio.Action>?
-    public var removeAlert: AlertState<AttachmentAddAudio.Action>?
+    public var removeFullScreenAlert: AlertState<Action>?
+    public var removeAlert: AlertState<Action>?
     
     var isPlaying: Bool = false
     var playerDuration: Double = 0
@@ -68,7 +68,7 @@ public struct AttachmentAddAudio: ReducerProtocol {
     switch action {
     case .onAppear:
       return self.avAudioPlayerClient.create(id: PlayerManagerId(), url: state.entryAudio.url)
-        .map(AttachmentAddAudio.Action.audioPlayer)
+        .map(Action.audioPlayer)
       
     case let .presentAudioFullScreen(value):
       state.presentAudioFullScreen = value
@@ -111,7 +111,7 @@ public struct AttachmentAddAudio: ReducerProtocol {
       
     case .playButtonTapped:
       return self.avAudioPlayerClient.isPlaying(id: PlayerManagerId())
-        .map(AttachmentAddAudio.Action.isPlayingResponse)
+        .map(Action.isPlayingResponse)
       
     case let .isPlayingResponse(isPlaying):
       if isPlaying {
@@ -135,7 +135,7 @@ public struct AttachmentAddAudio: ReducerProtocol {
       if state.isDragging { return .none }
       
       return self.avAudioPlayerClient.currentTime(id: PlayerManagerId())
-        .map(AttachmentAddAudio.Action.playerProgressResponse)
+        .map(Action.playerProgressResponse)
       
     case let .playerProgressResponse(progress):
       state.playerProgressTime = progress

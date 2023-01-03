@@ -56,7 +56,7 @@ public struct AttachmentAudioDetail: ReducerProtocol {
     switch action {
     case .onAppear:
       return self.avAudioPlayerClient.create(id: PlayerManagerId(), url: state.entryAudio.url)
-        .map(AttachmentAudioDetail.Action.audioPlayer)
+        .map(Action.audioPlayer)
       
     case .audioPlayer(.didFinishPlaying):
       state.playerProgress = 0
@@ -73,7 +73,7 @@ public struct AttachmentAudioDetail: ReducerProtocol {
       
     case .playButtonTapped:
       return self.avAudioPlayerClient.isPlaying(id: PlayerManagerId())
-        .map(AttachmentAudioDetail.Action.isPlayingResponse)
+        .map(Action.isPlayingResponse)
       
     case let .isPlayingResponse(isPlaying):
       if isPlaying {
@@ -97,7 +97,7 @@ public struct AttachmentAudioDetail: ReducerProtocol {
       if state.isDragging { return .none }
       
       return self.avAudioPlayerClient.currentTime(id: PlayerManagerId())
-        .map(AttachmentAudioDetail.Action.playerProgressResponse)
+        .map(Action.playerProgressResponse)
       
     case let .playerProgressResponse(progress):
       state.playerProgressTime = progress

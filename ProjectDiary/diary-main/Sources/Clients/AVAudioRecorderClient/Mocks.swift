@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import Dependencies
 import XCTestDynamicOverlay
+import Foundation
 
 extension AVAudioRecorderClient: TestDependencyKey {
   public static let previewValue = Self.noop
@@ -14,10 +15,10 @@ extension AVAudioRecorderClient: TestDependencyKey {
 }
 
 extension AVAudioRecorderClient {
-    public static var noop = Self(
-        create: { _ in .fireAndForget {} },
-        destroy: { _ in .fireAndForget {} },
-        record: { _, _ in .fireAndForget {} },
-        stop: { _ in .fireAndForget {} }
-    )
+  public static var noop = Self(
+    create: { _ in .fireAndForget {} },
+    destroy: { _ in .fireAndForget {} },
+    record: { _, _ in .fireAndForget {} },
+    stop: { _ in .fireAndForget {} }
+  )
 }

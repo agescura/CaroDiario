@@ -1,39 +1,26 @@
-//
-//  AudioRecordFeaturePreviewApp.swift
-//  AudioRecordFeaturePreview
-//
-//  Created by Albert Gil Escura on 27/8/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
-import AVAudioPlayerClientLive
-import AVAudioSessionClientLive
-import AVAudioRecorderClientLive
+import AVAudioPlayerClient
+import AVAudioSessionClient
+import AVAudioRecorderClient
 import AudioRecordFeature
-import UIApplicationClientLive
-import FileClientLive
+import UIApplicationClient
+import FileClient
 
 @main
 struct AudioRecordFeaturePreviewApp: App {
-    var body: some Scene {
-        WindowGroup {
-            AudioRecordView(
-                store: .init(
-                    initialState: .init(),
-                    reducer: audioRecordReducer,
-                    environment: .init(
-                        fileClient: .live,
-                        applicationClient: .live,
-                        avAudioSessionClient: .live,
-                        avAudioPlayerClient: .live,
-                        avAudioRecorderClient: .live,
-                        mainQueue: .main,
-                        date: Date.init,
-                        uuid: UUID.init
-                    )
-                )
+  var body: some Scene {
+    WindowGroup {
+      NavigationView {
+        NavigationLink("Audio Recorder") {
+          AudioRecordView(
+            store: .init(
+              initialState: .init(),
+              reducer: AudioRecord().debug()
             )
+          )
         }
+      }
     }
+  }
 }

@@ -74,13 +74,13 @@ public struct AttachmentAdd: ReducerProtocol {
   }
   
   public var body: some ReducerProtocolOf<Self> {
-    Scope(state: /AttachmentAdd.State.image, action: /AttachmentAdd.Action.image) {
+    Scope(state: /State.image, action: /Action.image) {
       AttachmentAddImage()
     }
-    Scope(state: /AttachmentAdd.State.video, action: /AttachmentAdd.Action.video) {
+    Scope(state: /State.video, action: /Action.video) {
       AttachmentAddVideo()
     }
-    Scope(state: /AttachmentAdd.State.audio, action: /AttachmentAdd.Action.audio) {
+    Scope(state: /State.audio, action: /Action.audio) {
       AttachmentAddAudio()
     }
   }

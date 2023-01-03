@@ -9,8 +9,8 @@ public struct AttachmentImageDetail: ReducerProtocol {
   public struct State: Equatable {
     public var entryImage: EntryImage
     
-    public var removeFullScreenAlert: AlertState<AttachmentImageDetail.Action>?
-    public var removeAlert: AlertState<AttachmentImageDetail.Action>?
+    public var removeFullScreenAlert: AlertState<Action>?
+    public var removeAlert: AlertState<Action>?
     
     public var imageScale: CGFloat = 1
     public var lastValue: CGFloat = 1

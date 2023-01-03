@@ -172,7 +172,7 @@ public struct Entries: ReducerProtocol {
         self.fileClient.removeAttachments(entry.attachments.urls, self.backgroundQueue)
           .receive(on: self.mainQueue)
           .eraseToEffect()
-          .map({ Entries.Action.remove(entry) }),
+          .map({ Action.remove(entry) }),
         Effect(value: .navigateEntryDetail(false))
       )
       

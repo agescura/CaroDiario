@@ -14,7 +14,7 @@ public struct AttachmentAddVideo: ReducerProtocol {
     public var entryVideo: EntryVideo
     public var presentVideoPlayer: Bool = false
     
-    public var videoAlert: AlertState<AttachmentAddVideo.Action>?
+    public var videoAlert: AlertState<Action>?
     
     public init(
       entryVideo: EntryVideo

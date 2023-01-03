@@ -22,13 +22,13 @@ public struct AddEntry: ReducerProtocol {
     public var type: AccessType
     public var entry: Entry
     public var text: String = ""
-    public var plusAttachamentActionSheet: ConfirmationDialogState<AddEntry.Action>?
+    public var plusAttachamentActionSheet: ConfirmationDialogState<Action>?
     public var presentImagePicker: Bool = false
     public var presentImagePickerSource: PickerSourceType = .photoAlbum
     public var presentAudioPicker: Bool = false
-    public var deniedCameraAlert: AlertState<AddEntry.Action>?
+    public var deniedCameraAlert: AlertState<Action>?
     public var attachments: IdentifiedArrayOf<AttachmentAddRow.State> = []
-    public var dismissAlert: AlertState<AddEntry.Action>?
+    public var dismissAlert: AlertState<Action>?
     public var addAttachmentInFlight: Bool = false
     public var audioRecordState: AudioRecord.State?
     public var presentAudioRecord: Bool = false
@@ -181,7 +181,7 @@ public struct AddEntry: ReducerProtocol {
       case .denied:
         return Effect(value: .deniedCameraAlertButtonTapped)
       case .authorized:
-        return Effect(value: AddEntry.Action.presentCameraPicker(true))
+        return Effect(value: .presentCameraPicker(true))
       case .restricted:
         return Effect(value: .deniedCameraAlertButtonTapped)
       }
@@ -212,9 +212,9 @@ public struct AddEntry: ReducerProtocol {
     case let .loadAttachment(response):
       switch response {
       case let .image(image):
-        return Effect(value: AddEntry.Action.loadImage(image))
+        return Effect(value: Action.loadImage(image))
       case let .video(url):
-        return Effect(value: AddEntry.Action.loadVideo(url))
+        return Effect(value: Action.loadVideo(url))
       }
       
     case let .loadImage(image):
@@ -233,7 +233,7 @@ public struct AddEntry: ReducerProtocol {
       return self.fileClient.addImage(image, entryImage, self.backgroundQueue)
         .receive(on: self.mainQueue)
         .eraseToEffect()
-        .map(AddEntry.Action.loadImageResponse)
+        .map(Action.loadImageResponse)
       
     case let .loadImageResponse(entryImage):
       state.addAttachmentInFlight = false
@@ -264,7 +264,7 @@ public struct AddEntry: ReducerProtocol {
       return self.fileClient.addVideo(url, image, entryVideo, self.backgroundQueue)
         .receive(on: self.mainQueue)
         .eraseToEffect()
-        .map(AddEntry.Action.loadVideoResponse)
+        .map(Action.loadVideoResponse)
       
     case let .loadVideoResponse(entryVideo):
       state.addAttachmentInFlight = false
@@ -285,12 +285,12 @@ public struct AddEntry: ReducerProtocol {
       return self.fileClient.addAudio(url, entryAudio, self.backgroundQueue)
         .receive(on: self.mainQueue)
         .eraseToEffect()
-        .map(AddEntry.Action.loadAudioResponse)
+        .map(Action.loadAudioResponse)
       
     case let .loadAudioResponse(entryAudio):
       state.addAttachmentInFlight = false
       state.attachments.append(.init(id: entryAudio.id, attachment: .audio(.init(entryAudio: entryAudio))))
-      return Effect(value: AddEntry.Action.presentAudioRecord(false))
+      return Effect(value: Action.presentAudioRecord(false))
       
     case let .attachments(id: id, action: .attachment(.video(.remove))),
       let .attachments(id: id, action: .attachment(.image(.remove))),
@@ -306,7 +306,7 @@ public struct AddEntry: ReducerProtocol {
       .receive(on: self.mainQueue)
       .eraseToEffect()
       .map { _ in attachmentState.attachment.id }
-      .map(AddEntry.Action.removeAttachmentResponse)
+      .map(Action.removeAttachmentResponse)
       
     case let .removeAttachmentResponse(id):
       state.attachments.remove(id: id)
@@ -334,7 +334,7 @@ public struct AddEntry: ReducerProtocol {
       
     case .removeDraftEntryDismissAlert:
       state.dismissAlert = nil
-      return Effect(value: AddEntry.Action.finishAddEntry)
+      return Effect(value: Action.finishAddEntry)
       
     case .finishAddEntry:
       return .none
@@ -352,7 +352,7 @@ public struct AddEntry: ReducerProtocol {
       return self.fileClient.addAudio(audioPath, entryAudio, self.backgroundQueue)
         .receive(on: self.mainQueue)
         .eraseToEffect()
-        .map(AddEntry.Action.loadAudioResponse)
+        .map(Action.loadAudioResponse)
       
     case .audioRecordAction(.dismiss):
       state.presentAudioRecord = false

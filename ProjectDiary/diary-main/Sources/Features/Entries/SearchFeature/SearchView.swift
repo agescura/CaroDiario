@@ -151,7 +151,7 @@ public struct Search: ReducerProtocol {
         self.fileClient.removeAttachments(entry.attachments.urls, self.backgroundQueue)
           .receive(on: self.mainQueue)
           .eraseToEffect()
-          .map({ Search.Action.remove(entry) }),
+          .map({ Action.remove(entry) }),
         Effect(value: .navigateEntryDetail(false))
       )
       

@@ -11,9 +11,9 @@ import ComposableArchitecture
 
 class ShareViewController: SLComposeServiceViewController {
     
-    let coreDataClientLive: CoreDataClient = .live
-    let fileClientLive: FileClient = .live
-    let avAssetClient: AVAssetClient = .live
+    let coreDataClientLive: CoreDataClient = .liveValue
+    let fileClientLive: FileClient = .liveValue
+    let avAssetClient: AVAssetClient = .liveValue
     
     var entry: Entry?
     
