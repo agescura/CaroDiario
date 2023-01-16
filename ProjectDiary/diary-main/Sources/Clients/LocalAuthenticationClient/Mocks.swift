@@ -1,5 +1,4 @@
 import Foundation
-import ComposableArchitecture
 import Dependencies
 import XCTestDynamicOverlay
 

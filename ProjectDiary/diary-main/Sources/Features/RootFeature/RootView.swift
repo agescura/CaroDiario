@@ -293,56 +293,49 @@ public struct Root: ReducerProtocol {
 //      }
 //    }
 //
-//    if case let .home(homeState) = state.featureState,
-//       let addEntryState = homeState.entries.addEntryState ?? homeState.entries.entryDetailState?.addEntryState {
-//      switch action {
-//      case .featureAction(.home(.entries(.addEntryAction(.createDraftEntry)))),
-//          .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.createDraftEntry))))):
-//        return self.coreDataClient.createDraft(addEntryState.entry)
-//          .fireAndForget()
-//
-//      case .featureAction(.home(.entries(.addEntryAction(.addButtonTapped)))),
-//          .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.addButtonTapped))))):
-//        let entryText = EntryText(
-//          id: self.uuid(),
-//          message: addEntryState.text,
-//          lastUpdated: self.now
-//        )
-//        return .merge(
-//          self.coreDataClient.updateMessage(entryText, addEntryState.entry)
-//            .fireAndForget(),
-//          self.coreDataClient.publishEntry(addEntryState.entry)
-//            .fireAndForget()
-//        )
-//      case let .featureAction(.home(.entries(.addEntryAction(.loadImageResponse(entryImage))))),
-//        let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadImageResponse(entryImage)))))):
-//        return self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id)
-//          .fireAndForget()
-//
-//      case let .featureAction(.home(.entries(.addEntryAction(.loadVideoResponse(entryVideo))))),
-//        let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadVideoResponse(entryVideo)))))):
-//        return self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id)
-//          .fireAndForget()
-//
-//      case let .featureAction(.home(.entries(.addEntryAction(.loadAudioResponse(entryAudio))))),
-//        let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadAudioResponse(entryAudio)))))):
-//        return self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id)
-//          .fireAndForget()
-//
-//      case let .featureAction(.home(.entries(.addEntryAction(.removeAttachmentResponse(id))))),
-//        let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeAttachmentResponse(id)))))):
-//        return self.coreDataClient.removeAttachmentEntry(id)
-//          .fireAndForget()
-//
-//      case .featureAction(.home(.entries(.addEntryAction(.removeDraftEntryDismissAlert)))),
-//          .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeDraftEntryDismissAlert))))):
-//        return self.coreDataClient.removeEntry(addEntryState.entry.id)
-//          .fireAndForget()
-//        
-//      default:
-//        break
-//      }
-//    }
+    if case let .home(homeState) = state.featureState,
+       let addEntryState = homeState.entries.addEntryState {
+      switch action {
+      case .featureAction(.home(.entries(.addEntryAction(.createDraftEntry)))):
+        return self.coreDataClient.createDraft(addEntryState.entry)
+          .fireAndForget()
+
+      case .featureAction(.home(.entries(.addEntryAction(.addButtonTapped)))):
+        let entryText = EntryText(
+          id: self.uuid(),
+          message: addEntryState.text,
+          lastUpdated: self.now
+        )
+        return .merge(
+          self.coreDataClient.updateMessage(entryText, addEntryState.entry)
+            .fireAndForget(),
+          self.coreDataClient.publishEntry(addEntryState.entry)
+            .fireAndForget()
+        )
+      case let .featureAction(.home(.entries(.addEntryAction(.loadImageResponse(entryImage))))):
+        return self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id)
+          .fireAndForget()
+
+      case let .featureAction(.home(.entries(.addEntryAction(.loadVideoResponse(entryVideo))))):
+        return self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id)
+          .fireAndForget()
+
+      case let .featureAction(.home(.entries(.addEntryAction(.loadAudioResponse(entryAudio))))):
+        return self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id)
+          .fireAndForget()
+
+      case let .featureAction(.home(.entries(.addEntryAction(.removeAttachmentResponse(id))))):
+        return self.coreDataClient.removeAttachmentEntry(id)
+          .fireAndForget()
+
+      case .featureAction(.home(.entries(.addEntryAction(.removeDraftEntryDismissAlert)))):
+        return self.coreDataClient.removeEntry(addEntryState.entry.id)
+          .fireAndForget()
+        
+      default:
+        break
+      }
+    }
     return .none
   }
   

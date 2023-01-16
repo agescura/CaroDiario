@@ -1,5 +1,4 @@
 import Foundation
-import ComposableArchitecture
 import Dependencies
 
 extension DependencyValues {

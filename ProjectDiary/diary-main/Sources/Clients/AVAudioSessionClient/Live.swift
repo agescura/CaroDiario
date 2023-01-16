@@ -1,4 +1,4 @@
-import ComposableArchitecture
+import Dependencies
 import AVFoundation
 
 extension AVAudioSessionClient: DependencyKey {

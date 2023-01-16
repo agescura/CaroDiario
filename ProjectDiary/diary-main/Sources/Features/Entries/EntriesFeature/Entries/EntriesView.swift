@@ -3,7 +3,6 @@ import ComposableArchitecture
 import Models
 import AddEntryFeature
 import EntryDetailFeature
-import BackgroundQueue
 
 public struct EntriesView: View {
   let store: StoreOf<Entries>
@@ -70,21 +69,21 @@ public struct EntriesView: View {
             then: AddEntryView.init(store:)
           )
         }
-//        .navigationDestination(
-//          isPresented: viewStore.binding(
-//            get: \.navigateEntryDetail,
-//            send: Entries.Action.navigateEntryDetail
-//          ),
-//          destination: {
-//            IfLetStore(
-//              store.scope(
-//                state: \.entryDetailState,
-//                action: Entries.Action.entryDetailAction
-//              ),
-//              then: EntryDetailView.init(store:)
-//            )
-//          }
-//        )
+        .navigationDestination(
+          isPresented: viewStore.binding(
+            get: \.navigateEntryDetail,
+            send: Entries.Action.navigateEntryDetail
+          ),
+          destination: {
+            IfLetStore(
+              store.scope(
+                state: \.entryDetailState,
+                action: Entries.Action.entryDetailAction
+              ),
+              then: EntryDetailView.init(store:)
+            )
+          }
+        )
       }
       .navigationViewStyle(StackNavigationViewStyle())
       .onAppear {

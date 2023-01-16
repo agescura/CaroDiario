@@ -2,380 +2,107 @@
 
 import PackageDescription
 
+let composableArchitecture: Target.Dependency = .product(
+    name: "ComposableArchitecture",
+    package: "swift-composable-architecture"
+)
+let dependencies: Target.Dependency = .product(
+    name: "Dependencies",
+    package: "swift-dependencies"
+)
+let snapshotTesting: Target.Dependency = .product(
+    name: "SnapshotTesting",
+    package: "swift-snapshot-testing"
+)
+
 let package = Package(
     name: "diary-main",
     defaultLocalization: "en",
-    platforms: [
-        .iOS(.v16),
-    ],
+    platforms: [.iOS(.v16)],
     products: [
-      
-      // Schedulers
-      
-      .library(name: "BackgroundQueue", targets: ["BackgroundQueue"]),
-      
         // Clients
-        
-        .library(
-            name: "UserDefaultsClient",
-            targets: ["UserDefaultsClient"]
-        ),
-        
-        .library(
-            name: "CoreDataClient",
-            targets: ["CoreDataClient"]
-        ),
-        
-        .library(
-            name: "FileClient",
-            targets: ["FileClient"]
-        ),
-        
-        .library(
-            name: "LocalAuthenticationClient",
-            targets: ["LocalAuthenticationClient"]
-        ),
-        
-        .library(
-            name: "UIApplicationClient",
-            targets: ["UIApplicationClient"]
-        ),
-        
-        .library(
-            name: "AVCaptureDeviceClient",
-            targets: ["AVCaptureDeviceClient"]
-        ),
-        
-        .library(
-            name: "AVAudioPlayerClient",
-            targets: ["AVAudioPlayerClient"]
-        ),
-        
-        .library(
-            name: "AVAudioRecorderClient",
-            targets: ["AVAudioRecorderClient"]
-        ),
-        
-        .library(
-            name: "AVAudioSessionClient",
-            targets: ["AVAudioSessionClient"]
-        ),
-        
-        .library(
-            name: "AVAssetClient",
-            targets: ["AVAssetClient"]
-        ),
-        
-        .library(
-            name: "FeedbackGeneratorClient",
-            targets: ["FeedbackGeneratorClient"]
-        ),
-        
-        .library(
-            name: "StoreKitClient",
-            targets: ["StoreKitClient"]
-        ),
-        
-        .library(
-            name: "PDFKitClient",
-            targets: ["PDFKitClient"]
-        ),
-        
+        .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
+        .library(name: "CoreDataClient", targets: ["CoreDataClient"]),
+        .library(name: "FileClient", targets: ["FileClient"]),
+        .library(name: "LocalAuthenticationClient", targets: ["LocalAuthenticationClient"]),
+        .library(name: "UIApplicationClient", targets: ["UIApplicationClient"]),
+        .library(name: "AVCaptureDeviceClient", targets: ["AVCaptureDeviceClient"]),
+        .library(name: "AVAudioPlayerClient", targets: ["AVAudioPlayerClient"]),
+        .library(name: "AVAudioRecorderClient", targets: ["AVAudioRecorderClient"]),
+        .library(name: "AVAudioSessionClient", targets: ["AVAudioSessionClient"]),
+        .library(name: "AVAssetClient", targets: ["AVAssetClient"]),
+        .library(name: "FeedbackGeneratorClient", targets: ["FeedbackGeneratorClient"]),
+        .library(name: "StoreKitClient", targets: ["StoreKitClient"]),
+        .library(name: "PDFKitClient", targets: ["PDFKitClient"]),
         // Features
-        
         // App
-        
-        .library(
-            name: "AppFeature",
-            targets: ["AppFeature"]
-        ),
-        
-        
+        .library(name: "AppFeature", targets: ["AppFeature"]),
         // Clip
-        
-        .library(
-            name: "ClipFeature",
-            targets: ["ClipFeature"]
-        ),
-        
+        .library(name: "ClipFeature", targets: ["ClipFeature"]),
         // Entries
-        
-        .library(
-            name: "AddEntryFeature",
-            targets: ["AddEntryFeature"]
-        ),
-        .library(
-            name: "AttachmentsFeature",
-            targets: ["AttachmentsFeature"]
-        ),
-        .library(
-            name: "AudioPickerFeature",
-            targets: ["AudioPickerFeature"]
-        ),
-        .library(
-            name: "AudioRecordFeature",
-            targets: ["AudioRecordFeature"]
-        ),
-        .library(
-            name: "EntriesFeature",
-            targets: ["EntriesFeature"]
-        ),
-        .library(
-            name: "EntryDetailFeature",
-            targets: ["EntryDetailFeature"]
-        ),
-        .library(
-            name: "ImagePickerFeature",
-            targets: ["ImagePickerFeature"]
-        ),
-        .library(
-            name: "SearchFeature",
-            targets: ["SearchFeature"]
-        ),
-        
+        .library(name: "AddEntryFeature", targets: ["AddEntryFeature"]),
+        .library(name: "AttachmentsFeature", targets: ["AttachmentsFeature"]),
+        .library(name: "AudioPickerFeature", targets: ["AudioPickerFeature"]),
+        .library(name: "AudioRecordFeature", targets: ["AudioRecordFeature"]),
+        .library(name: "EntriesFeature", targets: ["EntriesFeature"]),
+        .library(name: "EntryDetailFeature", targets: ["EntryDetailFeature"]),
+        .library(name: "ImagePickerFeature", targets: ["ImagePickerFeature"]),
+        .library(name: "SearchFeature", targets: ["SearchFeature"]),
         // Home
-        
-        .library(
-            name: "HomeFeature",
-            targets: ["HomeFeature"]
-        ),
-        
+        .library(name: "HomeFeature", targets: ["HomeFeature"]),
         // LockScreen
-        
-        .library(
-            name: "LockScreenFeature",
-            targets: ["LockScreenFeature"]
-        ),
-        
+        .library(name: "LockScreenFeature", targets: ["LockScreenFeature"]),
         // Onboarding
-        
-        .library(
-            name: "OnboardingFeature",
-            targets: ["OnboardingFeature"]
-        ),
-        
+        .library(name: "OnboardingFeature", targets: ["OnboardingFeature"]),
         // Root
-        
-        .library(
-            name: "RootFeature",
-            targets: ["RootFeature"]
-        ),
-        
+        .library(name: "RootFeature", targets: ["RootFeature"]),
         // Settings
-        
-        .library(
-            name: "AboutFeature",
-            targets: ["AboutFeature"]
-        ),
-        .library(
-            name: "AgreementsFeature",
-            targets: ["AgreementsFeature"]
-        ),
-        .library(
-            name: "AppearanceFeature",
-            targets: ["AppearanceFeature"]
-        ),
-        .library(
-            name: "CameraFeature",
-            targets: ["CameraFeature"]
-        ),
-        .library(
-            name: "ExportFeature",
-            targets: ["ExportFeature"]
-        ),
-        .library(
-            name: "LanguageFeature",
-            targets: ["LanguageFeature"]
-        ),
-        .library(
-            name: "MicrophoneFeature",
-            targets: ["MicrophoneFeature"]
-        ),
-        .library(
-            name: "PasscodeFeature",
-            targets: ["PasscodeFeature"]
-        ),
-        .library(
-            name: "PDFPreviewFeature",
-            targets: ["PDFPreviewFeature"]
-        ),
-        .library(
-            name: "SettingsFeature",
-            targets: ["SettingsFeature"]
-        ),
-        
+        .library(name: "AboutFeature", targets: ["AboutFeature"]),
+        .library(name: "AgreementsFeature", targets: ["AgreementsFeature"]),
+        .library(name: "AppearanceFeature", targets: ["AppearanceFeature"]),
+        .library(name: "CameraFeature", targets: ["CameraFeature"]),
+        .library(name: "ExportFeature", targets: ["ExportFeature"]),
+        .library(name: "LanguageFeature", targets: ["LanguageFeature"]),
+        .library(name: "MicrophoneFeature", targets: ["MicrophoneFeature"]),
+        .library(name: "PasscodeFeature", targets: ["PasscodeFeature"]),
+        .library(name: "PDFPreviewFeature", targets: ["PDFPreviewFeature"]),
+        .library(name: "SettingsFeature", targets: ["SettingsFeature"]),
         // Splash
-        
-        .library(
-            name: "SplashFeature",
-            targets: ["SplashFeature"]
-        ),
-        
+        .library(name: "SplashFeature", targets: ["SplashFeature"]),
         // Helpers
-        
-        .library(
-            name: "Styles",
-            targets: ["Styles"]
-        ),
-        .library(
-            name: "SwiftHelper",
-            targets: ["SwiftHelper"]
-        ),
-        .library(
-            name: "SwiftUIHelper",
-            targets: ["SwiftUIHelper"]
-        ),
-        .library(
-            name: "Views",
-            targets: ["Views"]
-        ),
-        .library(
-            name: "Localizables",
-            targets: ["Localizables"]
-        ),
-        
+        .library(name: "Styles", targets: ["Styles"]),
+        .library(name: "SwiftHelper", targets: ["SwiftHelper"]),
+        .library(name: "SwiftUIHelper", targets: ["SwiftUIHelper"]),
+        .library(name: "Views", targets: ["Views"]),
+        .library(name: "Localizables", targets: ["Localizables"]),
         // Models
-        
-        .library(
-            name: "Models",
-            targets: ["Models"]
-        ),
+        .library(name: "Models", targets: ["Models"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.47.2"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.49.2"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.10.0"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.1.3"),
     ],
     targets: [
-      
-      // Schedulers
-      
-      .target(
-        name: "BackgroundQueue",
-        dependencies: [
-        .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-    ],
-        path: "Sources/Clients/BackgroundQueue"
-      ),
         // Clients
-        
-        .target(
-            name: "AVAssetClient",
-            dependencies: [
-              .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-              "Models"
-            ],
-            path: "Sources/Clients/AVAssetClient"
-        ),
-        
-        .target(
-            name: "AVAudioPlayerClient",
-            dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ],
-            path: "Sources/Clients/AVAudioPlayerClient"
-        ),
-        
-        .target(
-            name: "AVAudioRecorderClient",
-            dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ],
-            path: "Sources/Clients/AVAudioRecorderClient"
-        ),
-        
-        .target(
-            name: "AVAudioSessionClient",
-            dependencies: [
-              .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-              "Models"
-        ],
-            path: "Sources/Clients/AVAudioSessionClient"
-        ),
-        
-        .target(
-            name: "AVCaptureDeviceClient",
-            dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            "Models"
-        ],
-            path: "Sources/Clients/AVCaptureDeviceClient"
-        ),
-
-        .target(
-            name: "CoreDataClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "Models"
-            ],
-            path: "Sources/Clients/CoreDataClient"
-        ),
-        
-        .target(
-            name: "FeedbackGeneratorClient",
-            dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ],
-            path: "Sources/Clients/FeedbackGeneratorClient"
-        ),
-        
-        .target(
-            name: "FileClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .target(name: "Models")
-            ],
-            path: "Sources/Clients/FileClient"
-        ),
-        
-        .target(
-            name: "LocalAuthenticationClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "Models"
-            ],
-            path: "Sources/Clients/LocalAuthenticationClient"
-        ),
-        
-        .target(
-            name: "PDFKitClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "Models"
-            ],
-            path: "Sources/Clients/PDFKitClient"
-        ),
-        
-        .target(
-            name: "StoreKitClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            path: "Sources/Clients/StoreKitClient"
-        ),
-        
-        .target(
-            name: "UIApplicationClient",
-            dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ],
-            path: "Sources/Clients/UIApplicationClient"
-        ),
-        
-        .target(
-            name: "UserDefaultsClient",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                "Models"
-            ],
-            path: "Sources/Clients/UserDefaultsClient"
-        ),
-        
+        .target(name: "AVAssetClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/AVAssetClient"),
+        .target(name: "AVAudioPlayerClient", dependencies: [composableArchitecture], path: "Sources/Clients/AVAudioPlayerClient"),
+        .target(name: "AVAudioRecorderClient", dependencies: [composableArchitecture], path: "Sources/Clients/AVAudioRecorderClient"),
+        .target(name: "AVAudioSessionClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/AVAudioSessionClient"),
+        .target(name: "AVCaptureDeviceClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/AVCaptureDeviceClient"),
+        .target(name: "CoreDataClient", dependencies: [composableArchitecture, "Models"], path: "Sources/Clients/CoreDataClient"),
+        .target(name: "FeedbackGeneratorClient", dependencies: [dependencies], path: "Sources/Clients/FeedbackGeneratorClient"),
+        .target(name: "FileClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/FileClient"),
+        .target(name: "LocalAuthenticationClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/LocalAuthenticationClient"),
+        .target(name: "PDFKitClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/PDFKitClient"),
+        .target(name: "StoreKitClient", dependencies: [dependencies], path: "Sources/Clients/StoreKitClient"),
+        .target(name: "UIApplicationClient", dependencies: [dependencies], path: "Sources/Clients/UIApplicationClient"),
+        .target(name: "UserDefaultsClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/UserDefaultsClient"),
         // App
-        
         .target(
             name: "AppFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "SplashFeature",
                 "OnboardingFeature",
                 "HomeFeature",
@@ -394,25 +121,21 @@ let package = Package(
             ],
             path: "Sources/Features/AppFeature"
         ),
-        
         // Clip
-        
         .target(
             name: "ClipFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "SplashFeature",
                 "OnboardingFeature",
             ],
             path: "Sources/Features/ClipFeature"
         ),
-        
         // Entries
-        
         .target(
             name: "AddEntryFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "CoreDataClient",
                 "FileClient",
                 "ImagePickerFeature",
@@ -426,16 +149,14 @@ let package = Package(
                 "AVAudioSessionClient",
                 "AVAudioPlayerClient",
                 "AudioRecordFeature",
-                "AVAssetClient",
-                "BackgroundQueue"
+                "AVAssetClient"
             ],
             path: "Sources/Features/Entries/AddEntryFeature"
         ),
-        
         .target(
             name: "AttachmentsFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "CoreDataClient",
                 "FileClient",
                 "Views",
@@ -443,24 +164,21 @@ let package = Package(
                 "Localizables",
                 "AVAudioPlayerClient",
                 "UIApplicationClient",
-                "SwiftHelper",
-                "BackgroundQueue"
+                "SwiftHelper"
             ],
             path: "Sources/Features/Entries/AttachmentsFeature"
         ),
-        
         .target(
             name: "AudioPickerFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture
             ],
             path: "Sources/Features/Entries/AudioPickerFeature"
         ),
-
         .target(
             name: "AudioRecordFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "FileClient",
                 "AVAudioRecorderClient",
                 "AVAudioSessionClient",
@@ -472,11 +190,10 @@ let package = Package(
             ],
             path: "Sources/Features/Entries/AudioRecordFeature"
         ),
-        
         .target(
             name: "EntriesFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "UserDefaultsClient",
                 "CoreDataClient",
                 "EntryDetailFeature",
@@ -486,11 +203,10 @@ let package = Package(
             ],
             path: "Sources/Features/Entries/EntriesFeature"
         ),
-        
         .target(
             name: "EntryDetailFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "CoreDataClient",
                 "FileClient",
                 "Styles",
@@ -503,35 +219,30 @@ let package = Package(
             ],
             path: "Sources/Features/Entries/EntryDetailFeature"
         ),
-        
         .target(
             name: "ImagePickerFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture
             ],
             path: "Sources/Features/Entries/ImagePickerFeature"
         ),
-        
         .target(
             name: "SearchFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "EntriesFeature",
                 "CoreDataClient",
                 "UIApplicationClient",
                 "AVCaptureDeviceClient",
-                "FileClient",
-                "BackgroundQueue"
+                "FileClient"
             ],
             path: "Sources/Features/Entries/SearchFeature"
         ),
-        
         // Home
-        
         .target(
             name: "HomeFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "Styles",
                 "UserDefaultsClient",
                 "CoreDataClient",
@@ -548,13 +259,11 @@ let package = Package(
             ],
             path: "Sources/Features/HomeFeature"
         ),
-        
         // LockScreen
-        
         .target(
             name: "LockScreenFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "Styles",
                 "Views",
                 "UserDefaultsClient",
@@ -563,13 +272,11 @@ let package = Package(
             ],
             path: "Sources/Features/LockScreenFeature"
         ),
-        
         // Onboarding
-        
         .target(
             name: "OnboardingFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "UserDefaultsClient",
                 "Styles",
                 "Views",
@@ -578,13 +285,11 @@ let package = Package(
             ],
             path: "Sources/Features/OnboardingFeature"
         ),
-        
         // Root
-        
         .target(
             name: "RootFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "AppFeature",
                 "AVCaptureDeviceClient",
                 "AVAudioSessionClient",
@@ -601,13 +306,11 @@ let package = Package(
             ],
             path: "Sources/Features/RootFeature"
         ),
-        
         // Settings
-        
         .target(
             name: "AboutFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "UIApplicationClient",
                 "Localizables",
                 "Styles",
@@ -618,7 +321,7 @@ let package = Package(
         .target(
             name: "AgreementsFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "UIApplicationClient",
                 "Localizables",
                 "Views"
@@ -628,7 +331,7 @@ let package = Package(
         .target(
             name: "AppearanceFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "UIApplicationClient",
                 "Localizables",
                 "Views",
@@ -644,7 +347,7 @@ let package = Package(
         .target(
             name: "CameraFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "AVCaptureDeviceClient",
                 "UIApplicationClient",
                 "FeedbackGeneratorClient",
@@ -656,7 +359,7 @@ let package = Package(
         .target(
             name: "ExportFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "Views",
                 "Localizables",
                 "UIApplicationClient",
@@ -671,7 +374,7 @@ let package = Package(
         .target(
             name: "LanguageFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "Views",
                 "Localizables",
                 "Styles",
@@ -683,7 +386,7 @@ let package = Package(
         .target(
             name: "MicrophoneFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "UIApplicationClient",
                 "FeedbackGeneratorClient",
                 "AVAudioSessionClient",
@@ -696,7 +399,7 @@ let package = Package(
         .target(
             name: "PasscodeFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "LocalAuthenticationClient",
                 "UserDefaultsClient",
                 "Styles",
@@ -709,7 +412,7 @@ let package = Package(
         .target(
             name: "PDFPreviewFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "PDFKitClient",
                 "Views"
             ],
@@ -718,7 +421,7 @@ let package = Package(
         .target(
             name: "SettingsFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "PasscodeFeature",
                 "UserDefaultsClient",
                 "UIApplicationClient",
@@ -741,28 +444,23 @@ let package = Package(
             ],
             path: "Sources/Features/Settings/SettingsFeature"
         ),
-        
         // Splash
-        
         .target(
             name: "SplashFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture,
                 "UserDefaultsClient",
                 "Styles"
             ],
             path: "Sources/Features/SplashFeature"
         ),
-        
         // Helpers
-        
         .target(
             name: "Styles",
             dependencies: [],
             path: "Sources/Helpers/Styles",
             resources: [.process("Fonts")]
         ),
-        
         .target(
             name: "Views",
             dependencies: [
@@ -771,50 +469,39 @@ let package = Package(
             ],
             path: "Sources/Helpers/Views"
         ),
-        
         .target(
             name: "SwiftHelper",
             dependencies: [],
             path: "Sources/Helpers/SwiftHelper"
         ),
-        
         .target(
             name: "SwiftUIHelper",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                composableArchitecture
             ],
             path: "Sources/Helpers/SwiftUIHelper"
         ),
-        
         .target(
             name: "Localizables",
             dependencies: [],
             path: "Sources/Helpers/Localizables",
             resources: [.process("Resources")]
         ),
-        
         // Models
-        
         .target(
             name: "Models",
             dependencies: [],
             path: "Sources/Models"
         ),
-        
         // Tests
-        
         // Features
-        
         // AppFeature
-        
         .testTarget(
             name: "AppFeatureTests",
             dependencies: ["AppFeature"],
             path: "Tests/Features/AppFeatureTests"
         ),
-        
         // Entries
-        
         .testTarget(
             name: "AddEntryFeatureTests",
             dependencies: ["AddEntryFeature"],
@@ -840,67 +527,55 @@ let package = Package(
             dependencies: ["SearchFeature"],
             path: "Tests/Features/Entries/SearchFeatureTests"
         ),
-        
         // Home
-        
         .testTarget(
             name: "HomeFeatureTests",
             dependencies: ["HomeFeature"],
             path: "Tests/Features/HomeFeatureTests"
         ),
-        
         // LockScreen
-        
         .testTarget(
             name: "LockScreenFeatureTests",
             dependencies: ["LockScreenFeature"],
             path: "Tests/Features/LockScreenFeatureTests"
         ),
-        
         // Onboarding
-        
         .testTarget(
             name: "OnboardingFeatureTests",
             dependencies: ["OnboardingFeature"],
             path: "Tests/Features/OnboardingFeatureTests"
         ),
-        
         // Root
-        
         .testTarget(
             name: "RootFeatureTests",
             dependencies: ["RootFeature"],
             path: "Tests/Features/RootFeatureTests"
         ),
-        
         // Settings
-        
         .testTarget(
             name: "AboutFeatureTests",
             dependencies: [
                 "AboutFeature",
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+                snapshotTesting
             ],
             path: "Tests/Features/Settings/AboutFeatureTests",
             exclude: ["__Snapshots__"]
         ),
-        
         .testTarget(
             name: "AgreementsFeatureTests",
             dependencies: [
                 "AgreementsFeature",
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+                snapshotTesting
             ],
             path: "Tests/Features/Settings/AgreementsFeatureTests",
             exclude: ["__Snapshots__"]
         ),
-        
         .testTarget(
             name: "AppearanceFeatureTests",
             dependencies: [
                 "AppearanceFeature",
                 "EntriesFeature",
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+                snapshotTesting
             ],
             path: "Tests/Features/Settings/AppearanceFeatureTests",
             exclude: ["__Snapshots__"]
@@ -909,7 +584,7 @@ let package = Package(
             name: "CameraFeatureTests",
             dependencies: [
                 "CameraFeature",
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+                snapshotTesting
             ],
             path: "Tests/Features/Settings/CameraFeatureTests",
             exclude: ["__Snapshots__"]
@@ -924,9 +599,7 @@ let package = Package(
             dependencies: ["SettingsFeature"],
             path: "Tests/Features/Settings/SettingsFeatureTests"
         ),
-        
         // Splash
-        
         .testTarget(
             name: "SplashFeatureTests",
             dependencies: ["SplashFeature"],

@@ -1,6 +1,6 @@
 import AVFoundation
-import ComposableArchitecture
 import Dependencies
+import ComposableArchitecture
 
 extension DependencyValues {
   public var avAudioPlayerClient: AVAudioPlayerClient {

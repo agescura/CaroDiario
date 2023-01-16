@@ -1,90 +1,50 @@
-//
-//  ClipView.swift
-//  
-//
-//  Created by Albert Gil Escura on 8/10/21.
-//
-
 import ComposableArchitecture
 import SwiftUI
 import UserDefaultsClient
 import FeedbackGeneratorClient
 import UIApplicationClient
 
-public struct ClipState: Equatable {
-    public var featureState: SwitchClipState
+public struct Clip: ReducerProtocol {
+    public init() {}
     
-    public init(
-        featureState: SwitchClipState
-    ) {
-        self.featureState = featureState
+    public struct State: Equatable {
+        public var featureState: SwitchClip.State
+        
+        public init(
+            featureState: SwitchClip.State
+        ) {
+            self.featureState = featureState
+        }
     }
-}
-
-public enum ClipAction: Equatable {
-    case featureAction(SwitchClipAction)
-    case onAppear
-}
-
-public struct ClipEnvironment {
-    public let userDefaultsClient: UserDefaultsClient
-    public let applicationClient: UIApplicationClient
-    public let feedbackGeneratorClient: FeedbackGeneratorClient
-    public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let date: () -> Date
-    public let uuid: () -> UUID
     
-    public init(
-        userDefaultsClient: UserDefaultsClient,
-        applicationClient: UIApplicationClient,
-        feedbackGeneratorClient: FeedbackGeneratorClient,
-        mainQueue: AnySchedulerOf<DispatchQueue>,
-        backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        date: @escaping () -> Date,
-        uuid: @escaping () -> UUID
-    ) {
-        self.userDefaultsClient = userDefaultsClient
-        self.applicationClient = applicationClient
-        self.feedbackGeneratorClient = feedbackGeneratorClient
-        self.mainQueue = mainQueue
-        self.backgroundQueue = backgroundQueue
-        self.date = date
-        self.uuid = uuid
+    public enum Action: Equatable {
+        case featureAction(SwitchClip.Action)
+        case onAppear
     }
-}
-
-public let clipReducer: Reducer<
-    ClipState,
-    ClipAction,
-    ClipEnvironment
-> = .combine(
-    switchClipReducer
-        .pullback(
-            state: \ClipState.featureState,
-            action: /ClipAction.featureAction,
-            environment: {
-                SwitchClipEnvironment(
-                    userDefaultsClient: $0.userDefaultsClient,
-                    feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                    mainQueue: $0.mainQueue,
-                    backgroundQueue: $0.backgroundQueue,
-                    date: $0.date,
-                    uuid: $0.uuid)
-            }
-        ),
-    .init { state, action, environment in
+    
+    @Dependency(\.userDefaultsClient) private var userDefaultsClient
+    @Dependency(\.applicationClient) private var applicationClient
+    
+    public var body: some ReducerProtocolOf<Self> {
+        Reduce(self.core)
+        Scope(state: \State.featureState, action: /Action.featureAction) {
+            SwitchClip()
+        }
+    }
+    
+    private func core(
+      state: inout State,
+      action: Action
+    ) -> Effect<Action, Never> {
         switch action {
         case .onAppear:
-            return Effect(value: ClipAction.featureAction(.splash(.startAnimation)))
+            return Effect(value: Action.featureAction(.splash(.startAnimation)))
             
-        case .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.startButtonTapped)))))):
-            return .merge(
-                environment.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
-                    .fireAndForget(),
-                environment.applicationClient.open(URL(string: "itms-apps://itunes.apple.com/app/apple-store/id375380948?mt=8")!, [:])
-                    .fireAndForget()
-            )
+        case .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.startButtonTapped)))))):
+            return .fireAndForget {
+                await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
+                await self.applicationClient.open(URL(string: "itms-apps://itunes.apple.com/app/apple-store/id375380948?mt=8")!, [:])
+            }
             
         case .featureAction(.splash(.finishAnimation)):
             state.featureState = .onBoarding(.init(isAppClip: true))
@@ -94,23 +54,23 @@ public let clipReducer: Reducer<
             return .none
         }
     }
-)
+}
 
 public struct ClipView: View {
-    let store: Store<ClipState, ClipAction>
+    let store: StoreOf<Clip>
     
     public init(
-        store: Store<ClipState, ClipAction>
+        store: StoreOf<Clip>
     ) {
         self.store = store
     }
     
     public var body: some View {
-        WithViewStore(store.stateless) { viewStore in
+        WithViewStore(self.store.stateless) { viewStore in
             SwitchClipView(
                 store: store.scope(
                     state: \.featureState,
-                    action: ClipAction.featureAction
+                    action: Clip.Action.featureAction
                 )
             )
             .onAppear {

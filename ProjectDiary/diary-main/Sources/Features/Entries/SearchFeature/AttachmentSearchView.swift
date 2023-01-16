@@ -12,7 +12,6 @@ import AVAudioRecorderClient
 import EntryDetailFeature
 import Models
 import AVAssetClient
-import BackgroundQueue
 
 public struct AttachmentSearch: ReducerProtocol {
   public init() {}

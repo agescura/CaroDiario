@@ -1,12 +1,4 @@
-//
-//  Live.swift
-//  
-//
-//  Created by Albert Gil Escura on 15/7/21.
-//
-
 import Foundation
-import ComposableArchitecture
 import LocalAuthentication
 import Models
 import Dependencies
