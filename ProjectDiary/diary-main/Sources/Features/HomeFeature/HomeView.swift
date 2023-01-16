@@ -94,10 +94,7 @@ public struct Home: ReducerProtocol {
           isLoading: self.sharedState.isLoading,
           entries: self.sharedState.entries,
           addEntryState: self.sharedState.addEntryState,
-          presentAddEntry: self.sharedState.presentAddEntry,
-          entryDetailState: self.sharedState.entryDetailState,
-          navigateEntryDetail: self.sharedState.navigateEntryDetail,
-          entryDetailSelected: self.sharedState.entryDetailSelected
+          presentAddEntry: self.sharedState.presentAddEntry
         )
       }
       set {
@@ -105,9 +102,7 @@ public struct Home: ReducerProtocol {
         self.sharedState.entries = newValue.entries
         self.sharedState.addEntryState = newValue.addEntryState
         self.sharedState.presentAddEntry = newValue.presentAddEntry
-        self.sharedState.entryDetailState = newValue.entryDetailState
-        self.sharedState.navigateEntryDetail = newValue.navigateEntryDetail
-        self.sharedState.entryDetailSelected = newValue.entryDetailSelected
+  
       }
     }
     public var search: Search.State {

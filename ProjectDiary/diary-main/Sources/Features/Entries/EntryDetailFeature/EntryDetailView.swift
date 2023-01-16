@@ -77,7 +77,6 @@ public struct EntryDetail: ReducerProtocol {
   
   @Dependency(\.applicationClient) private var applicationClient
   @Dependency(\.fileClient) private var fileClient
-  @Dependency(\.backgroundQueue) private var backgroundQueue
   @Dependency(\.mainQueue) private var mainQueue
   
   public var body: some ReducerProtocolOf<Self> {
@@ -149,14 +148,10 @@ public struct EntryDetail: ReducerProtocol {
     case .removeAttachment:
       let attachmentState = state.seletedAttachmentRowState.attachment
       
-      return self.fileClient.removeAttachments(
-        [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-        self.backgroundQueue
-      )
-      .receive(on: self.mainQueue)
-      .eraseToEffect()
-      .map { _ in attachmentState.attachment.id }
-      .map(Action.removeAttachmentResponse)
+      return .run { send in
+        _ = await self.fileClient.removeAttachments([attachmentState.thumbnail, attachmentState.url].compactMap { $0 })
+        await send(.removeAttachmentResponse(attachmentState.attachment.id))
+      }
       
     case let .removeAttachmentResponse(id):
       state.attachments.remove(id: id)

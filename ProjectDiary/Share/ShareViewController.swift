@@ -49,19 +49,17 @@ class ShareViewController: SLComposeServiceViewController {
                     
                   Task {
                     let thumbnail = try? await self.avAssetClient.generateThumbnail(url)
-                    self.fileClientLive.addVideo(url, thumbnail ?? UIImage(), entryVideo, .main)
-                      .flatMap(maxPublishers: .max(1)) { [unowned self] entryVideo -> Effect<Void, Never> in
-                          let entry = Entry(
-                              id: UUID(),
-                              date: date,
-                              startDay: date,
-                              text: EntryText(id: UUID(), message: self.textView.text!, lastUpdated: date),
-                              attachments: [entryVideo]
-                          )
-                          self.entry = entry
-                          return self.coreDataClientLive.createDraft(entry)
-                              .eraseToEffect()
-                      }
+                    let entryVideo = await self.fileClientLive.addVideo(url, thumbnail ?? UIImage(), entryVideo)
+                    let entry = Entry(
+                      id: UUID(),
+                      date: date,
+                      startDay: date,
+                      text: EntryText(id: UUID(), message: self.textView.text!, lastUpdated: date),
+                      attachments: [entryVideo]
+                    )
+                    self.entry = entry
+                    
+                    self.coreDataClientLive.createDraft(entry)
                       .flatMap(maxPublishers: .max(1)) { [unowned self] in
                           return self.coreDataClientLive.publishEntry(self.entry!)
                               .eraseToEffect()
@@ -79,38 +77,37 @@ class ShareViewController: SLComposeServiceViewController {
             itemProvider.loadItem(forTypeIdentifier: UTType.jpeg.identifier as String) { [unowned self] imageData, _ in
                 
                 if let url = imageData as? URL {
-                    let image = UIImage(data: try! Data(contentsOf: url))!
-                    let date = Date()
+                  let image = UIImage(data: try! Data(contentsOf: url))!
+                  let date = Date()
+                  
+                  let thumbnailId = UUID()
+                  let id = UUID()
+                  let thumbnailPath = self.fileClientLive.path(thumbnailId)
+                  let path = self.fileClientLive.path(id)
+                  
+                  let entryImage = EntryImage(id: id, lastUpdated: date, thumbnail: thumbnailPath, url: path)
+                  
+                  Task {
+                    let entryImage = await self.fileClientLive.addImage(image, entryImage)
+                    let entry = Entry(
+                      id: UUID(),
+                      date: date,
+                      startDay: date,
+                      text: .init(id: UUID(), message: self.textView.text!, lastUpdated: date),
+                      attachments: [entryImage]
+                    )
+                    self.entry = entry
                     
-                    let thumbnailId = UUID()
-                    let id = UUID()
-                    let thumbnailPath = self.fileClientLive.path(thumbnailId)
-                    let path = self.fileClientLive.path(id)
-                    
-                    let entryImage = EntryImage(id: id, lastUpdated: date, thumbnail: thumbnailPath, url: path)
-                    
-                    self.fileClientLive.addImage(image, entryImage, .main)
-                        .eraseToEffect()
-                        .flatMap(maxPublishers: .max(1)) { [unowned self] entryImage -> Effect<Void, Never> in
-                            let entry = Entry(
-                                id: UUID(),
-                                date: date,
-                                startDay: date,
-                                text: .init(id: UUID(), message: self.textView.text!, lastUpdated: date),
-                                attachments: [entryImage]
-                            )
-                            self.entry = entry
-                            return self.coreDataClientLive.createDraft(entry)
-                                .eraseToEffect()
-                        }
-                        .flatMap(maxPublishers: .max(1)) { [unowned self] in
-                            return self.coreDataClientLive.publishEntry(self.entry!)
-                                .eraseToEffect()
-                        }
-                        .sink(receiveValue: { [unowned self] _ in
-                            self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-                        })
-                        .store(in: &self.bag)
+                    self.coreDataClientLive.createDraft(entry)
+                      .flatMap(maxPublishers: .max(1)) { [unowned self] in
+                        return self.coreDataClientLive.publishEntry(self.entry!)
+                          .eraseToEffect()
+                      }
+                      .sink(receiveValue: { [unowned self] _ in
+                        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+                      })
+                      .store(in: &self.bag)
+                  }
                 }
             }
         }
@@ -125,28 +122,27 @@ class ShareViewController: SLComposeServiceViewController {
                     
                     let entryAudio = EntryAudio(id: id, lastUpdated: date, url: path)
                     
-                    self.fileClientLive.addAudio(url, entryAudio, .main)
-                        .eraseToEffect()
-                        .flatMap(maxPublishers: .max(1)) { [unowned self] entryAudio -> Effect<Void, Never> in
-                            let entry = Entry(
-                                id: UUID(),
-                                date: date,
-                                startDay: date,
-                                text: EntryText(id: UUID(), message: self.textView.text!, lastUpdated: date),
-                                attachments: [entryAudio]
-                            )
-                            self.entry = entry
-                            return self.coreDataClientLive.createDraft(entry)
-                                .eraseToEffect()
-                        }
-                        .flatMap(maxPublishers: .max(1)) { [unowned self] in
-                            return self.coreDataClientLive.publishEntry(self.entry!)
-                                .eraseToEffect()
-                        }
-                        .sink(receiveValue: { [unowned self] _ in
-                            self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-                        })
-                        .store(in: &self.bag)
+                  Task {
+                    let entryAudio = await self.fileClientLive.addAudio(url, entryAudio)
+                    let entry = Entry(
+                      id: UUID(),
+                      date: date,
+                      startDay: date,
+                      text: EntryText(id: UUID(), message: self.textView.text!, lastUpdated: date),
+                      attachments: [entryAudio]
+                    )
+                    self.entry = entry
+                    
+                    self.coreDataClientLive.createDraft(entry)
+                      .flatMap(maxPublishers: .max(1)) { [unowned self] in
+                          return self.coreDataClientLive.publishEntry(self.entry!)
+                              .eraseToEffect()
+                      }
+                      .sink(receiveValue: { [unowned self] _ in
+                          self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+                      })
+                      .store(in: &self.bag)
+                  }
                 }
             }
         }

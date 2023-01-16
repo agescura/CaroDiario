@@ -85,7 +85,6 @@ public struct AddEntry: ReducerProtocol {
   @Dependency(\.fileClient) private var fileClient
   @Dependency(\.mainQueue) private var mainQueue
   @Dependency(\.mainRunLoop.now.date) private var now
-  @Dependency(\.backgroundQueue) private var backgroundQueue
   @Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
   @Dependency(\.avAssetClient) private var avAssetClient
   @Dependency(\.applicationClient) private var applicationClient
@@ -230,10 +229,9 @@ public struct AddEntry: ReducerProtocol {
         url: path
       )
       
-      return self.fileClient.addImage(image, entryImage, self.backgroundQueue)
-        .receive(on: self.mainQueue)
-        .eraseToEffect()
-        .map(Action.loadImageResponse)
+      return .run { send in
+        await send(.loadImageResponse(self.fileClient.addImage(image, entryImage)))
+      }
       
     case let .loadImageResponse(entryImage):
       state.addAttachmentInFlight = false
@@ -261,10 +259,9 @@ public struct AddEntry: ReducerProtocol {
         url: path
       )
       
-      return self.fileClient.addVideo(url, image, entryVideo, self.backgroundQueue)
-        .receive(on: self.mainQueue)
-        .eraseToEffect()
-        .map(Action.loadVideoResponse)
+      return .run { send in
+        await send(.loadVideoResponse(self.fileClient.addVideo(url, image, entryVideo)))
+      }
       
     case let .loadVideoResponse(entryVideo):
       state.addAttachmentInFlight = false
@@ -282,10 +279,9 @@ public struct AddEntry: ReducerProtocol {
         lastUpdated: self.now,
         url: path)
       
-      return self.fileClient.addAudio(url, entryAudio, self.backgroundQueue)
-        .receive(on: self.mainQueue)
-        .eraseToEffect()
-        .map(Action.loadAudioResponse)
+      return .run { send in
+        await send(.loadAudioResponse(self.fileClient.addAudio(url, entryAudio)))
+      }
       
     case let .loadAudioResponse(entryAudio):
       state.addAttachmentInFlight = false
@@ -299,14 +295,10 @@ public struct AddEntry: ReducerProtocol {
         return .none
       }
       
-      return self.fileClient.removeAttachments(
-        [attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-        self.backgroundQueue
-      )
-      .receive(on: self.mainQueue)
-      .eraseToEffect()
-      .map { _ in attachmentState.attachment.id }
-      .map(Action.removeAttachmentResponse)
+      return .run { send in
+        _ = await self.fileClient.removeAttachments([attachmentState.thumbnail, attachmentState.url].compactMap { $0 })
+        await send(.removeAttachmentResponse(attachmentState.attachment.id))
+      }
       
     case let .removeAttachmentResponse(id):
       state.attachments.remove(id: id)
@@ -349,11 +341,11 @@ public struct AddEntry: ReducerProtocol {
         lastUpdated: self.now,
         url: audioPath
       )
-      return self.fileClient.addAudio(audioPath, entryAudio, self.backgroundQueue)
-        .receive(on: self.mainQueue)
-        .eraseToEffect()
-        .map(Action.loadAudioResponse)
       
+      return .run { send in
+        await send(.loadAudioResponse(self.fileClient.addAudio(audioPath, entryAudio)))
+      }
+
     case .audioRecordAction(.dismiss):
       state.presentAudioRecord = false
       state.audioRecordState = nil

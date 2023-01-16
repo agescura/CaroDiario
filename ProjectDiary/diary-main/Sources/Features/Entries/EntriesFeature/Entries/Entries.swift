@@ -24,26 +24,17 @@ public struct Entries: ReducerProtocol {
     public var entries: IdentifiedArrayOf<DayEntriesRow.State>
     public var addEntryState: AddEntry.State?
     public var presentAddEntry = false
-    public var entryDetailState: EntryDetail.State?
-    public var navigateEntryDetail = false
-    public var entryDetailSelected: Entry?
     
     public init(
       isLoading: Bool = true,
       entries: IdentifiedArrayOf<DayEntriesRow.State> = [],
       addEntryState: AddEntry.State? = nil,
-      presentAddEntry: Bool = false,
-      entryDetailState: EntryDetail.State? = nil,
-      navigateEntryDetail: Bool = false,
-      entryDetailSelected: Entry? = nil
+      presentAddEntry: Bool = false
     ) {
       self.isLoading = isLoading
       self.entries = entries
       self.addEntryState = addEntryState
       self.presentAddEntry = presentAddEntry
-      self.entryDetailState = entryDetailState
-      self.navigateEntryDetail = navigateEntryDetail
-      self.entryDetailSelected = entryDetailSelected
     }
   }
 
@@ -56,15 +47,12 @@ public struct Entries: ReducerProtocol {
     case presentAddEntryCompleted
     case entries(id: UUID, action: DayEntriesRow.Action)
     case remove(Entry)
-    case entryDetailAction(EntryDetail.Action)
-    case navigateEntryDetail(Bool)
   }
   
   @Dependency(\.mainQueue) private var mainQueue
   @Dependency(\.uuid) private var uuid
   @Dependency(\.mainRunLoop.now.date) private var now
   @Dependency(\.applicationClient) private var applicationClient
-  @Dependency(\.backgroundQueue) private var backgroundQueue
   @Dependency(\.userDefaultsClient) private var userDefaultsClient
   @Dependency(\.fileClient) private var fileClient
   private struct CoreDataId: Hashable {}
@@ -76,9 +64,6 @@ public struct Entries: ReducerProtocol {
       }
       .ifLet(\.addEntryState, action: /Action.addEntryAction) {
         AddEntry()
-      }
-      .ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
-        EntryDetail()
       }
   }
   
@@ -148,36 +133,32 @@ public struct Entries: ReducerProtocol {
       state.addEntryState = nil
       return .none
       
-    case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
-      state.entryDetailSelected = entry
-      return Effect(value: .navigateEntryDetail(true))
-      
     case .entries:
       return .none
       
     case .remove:
       return .none
       
-    case let .navigateEntryDetail(value):
-      guard let entry = state.entryDetailSelected else { return .none }
-      state.navigateEntryDetail = value
-      state.entryDetailState = value ? .init(entry: entry) : nil
-      if value == false {
-        state.entryDetailSelected = nil
-      }
-      return .none
-      
-    case let .entryDetailAction(.remove(entry)):
-      return .merge(
-        self.fileClient.removeAttachments(entry.attachments.urls, self.backgroundQueue)
-          .receive(on: self.mainQueue)
-          .eraseToEffect()
-          .map({ Action.remove(entry) }),
-        Effect(value: .navigateEntryDetail(false))
-      )
-      
-    case .entryDetailAction:
-      return .none
+//    case let .navigateEntryDetail(value):
+//      guard let entry = state.entryDetailSelected else { return .none }
+//      state.navigateEntryDetail = value
+//      state.entryDetailState = value ? .init(entry: entry) : nil
+//      if value == false {
+//        state.entryDetailSelected = nil
+//      }
+//      return .none
+//
+//    case let .entryDetailAction(.remove(entry)):
+//      return .merge(
+//        .run { send in
+//          _ = await self.fileClient.removeAttachments(entry.attachments.urls)
+//          await send(.remove(entry))
+//        },
+//        Effect(value: .navigateEntryDetail(false))
+//      )
+//
+//    case .entryDetailAction:
+//      return .none
     }
   }
 }

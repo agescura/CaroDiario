@@ -37,7 +37,6 @@ public struct AttachmentSearch: ReducerProtocol {
   }
   
   @Dependency(\.fileClient) private var fileClient
-  @Dependency(\.backgroundQueue) private var backgroundQueue
   @Dependency(\.mainQueue) private var mainQueue
   
   public var body: some ReducerProtocolOf<Self> {
@@ -75,13 +74,11 @@ public struct AttachmentSearch: ReducerProtocol {
       return .none
       
     case let .entryDetailAction(.remove(entry)):
-      return .merge(
-        self.fileClient.removeAttachments(entry.attachments.urls, self.backgroundQueue)
-          .receive(on: self.mainQueue)
-          .eraseToEffect()
-          .map({ Action.remove(entry) }),
-        Effect(value: .navigateEntryDetail(false))
-      )
+      return .run { send in
+        _ = await self.fileClient.removeAttachments(entry.attachments.urls)
+        await send(.remove(entry))
+        await send(.navigateEntryDetail(false))
+      }
       
     case .entryDetailAction:
       return .none
@@ -137,24 +134,26 @@ public struct AttachmentSearchView: View {
                 content: DayEntriesRowView.init(store:)
               )
             }
-            
-            NavigationLink(
-              "", destination: IfLetStore(
-                store.scope(
-                  state: \.entryDetailState,
-                  action: AttachmentSearch.Action.entryDetailAction
-                ),
-                then: EntryDetailView.init(store:)
-              ),
-              isActive: viewStore.binding(
-                get: \.navigateEntryDetail,
-                send: AttachmentSearch.Action.navigateEntryDetail)
-            )
           }
         }
         .padding(.top, 16)
       }
       .navigationBarTitle(viewStore.type.title, displayMode: .inline)
+      .navigationDestination(
+        isPresented: viewStore.binding(
+          get: \.navigateEntryDetail,
+          send: AttachmentSearch.Action.navigateEntryDetail
+        ),
+        destination: {
+          IfLetStore(
+            store.scope(
+              state: \.entryDetailState,
+              action: AttachmentSearch.Action.entryDetailAction
+            ),
+            then: EntryDetailView.init(store:)
+          )
+        }
+      )
     }
   }
 }

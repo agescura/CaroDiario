@@ -55,7 +55,6 @@ public struct Search: ReducerProtocol {
   @Dependency(\.userDefaultsClient) private var userDefaultsClient
   @Dependency(\.uuid) private var uuid
   @Dependency(\.mainQueue) private var mainQueue
-  @Dependency(\.backgroundQueue) private var backgroundQueue
   @Dependency(\.fileClient) private var fileClient
   
   public var body: some ReducerProtocolOf<Self> {
@@ -143,10 +142,10 @@ public struct Search: ReducerProtocol {
       
     case let .entryDetailAction(.remove(entry)):
       return .merge(
-        self.fileClient.removeAttachments(entry.attachments.urls, self.backgroundQueue)
-          .receive(on: self.mainQueue)
-          .eraseToEffect()
-          .map({ Action.remove(entry) }),
+        .run { send in
+          _ = await self.fileClient.removeAttachments(entry.attachments.urls)
+          await send(.remove(entry))
+        },
         Effect(value: .navigateEntryDetail(false))
       )
       
