@@ -114,13 +114,13 @@ public struct Root: ReducerProtocol {
       state.featureState = .onBoarding(.init())
       return .none
       
-    case .featureAction(.onBoarding(.skipAlertAction)),
-        .featureAction(.onBoarding(.privacy(.skipAlertAction))),
-        .featureAction(.onBoarding(.privacy(.style(.skipAlertAction)))),
-        .featureAction(.onBoarding(.privacy(.style(.layout(.skipAlertAction))))):
+    case .featureAction(.onBoarding(.alert(.presented(.skipButtonTapped)))),
+        .featureAction(.onBoarding(.privacy(.presented(.skipAlertAction)))),
+        .featureAction(.onBoarding(.privacy(.presented(.style(.skipAlertAction))))),
+        .featureAction(.onBoarding(.privacy(.presented(.style(.layout(.skipAlertAction)))))):
       return EffectTask(value: Root.Action.requestCameraStatus)
       
-    case .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.startButtonTapped)))))):
+    case .featureAction(.onBoarding(.privacy(.presented(.style(.layout(.theme(.startButtonTapped))))))):
       return EffectTask(value: .requestCameraStatus)
         .delay(for: 0.001, scheduler: self.mainQueue)
         .eraseToEffect()
@@ -367,11 +367,11 @@ public struct Root: ReducerProtocol {
       return .fireAndForget { await self.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value) }
     case let .featureAction(.home(.settings(.language(.updateLanguageTapped(language))))):
       return .fireAndForget { await self.userDefaultsClient.setLanguage(language.rawValue) }
-    case let .featureAction(.onBoarding(.privacy(.style(.styleChanged(styleChanged))))):
+    case let .featureAction(.onBoarding(.privacy(.presented(.style(.styleChanged(styleChanged)))))):
       return .fireAndForget { await self.userDefaultsClient.set(styleType: styleChanged) }
-    case let .featureAction(.onBoarding(.privacy(.style(.layout(.layoutChanged(layoutChanged)))))):
+    case let .featureAction(.onBoarding(.privacy(.presented(.style(.layout(.layoutChanged(layoutChanged))))))):
       return .fireAndForget { await self.userDefaultsClient.set(layoutType: layoutChanged) }
-    case let .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.themeChanged(themeChanged))))))):
+    case let .featureAction(.onBoarding(.privacy(.presented(.style(.layout(.theme(.themeChanged(themeChanged)))))))):
       return .fireAndForget { await self.userDefaultsClient.set(themeType: themeChanged) }
     default:
       break

@@ -3,10 +3,10 @@ import ComposableArchitecture
 import Views
 
 public struct WelcomeView: View {
-  let store: StoreOf<Welcome>
+  let store: StoreOf<WelcomeFeature>
   
   public init(
-    store: StoreOf<Welcome>
+    store: StoreOf<WelcomeFeature>
   ) {
     self.store = store
   }
@@ -31,7 +31,7 @@ public struct WelcomeView: View {
             ],
             selection: viewStore.binding(
               get: \.selectedPage,
-              send: Welcome.Action.selectedPage
+              send: WelcomeFeature.Action.selectedPage
             ),
             animated: viewStore.tabViewAnimated
           )
@@ -43,14 +43,10 @@ public struct WelcomeView: View {
                 .adaptiveFont(.latoRegular, size: 16)
               
             }) {
-              viewStore.send(.skipAlertButtonTapped)
+              viewStore.send(.alertButtonTapped)
             }
             .opacity(viewStore.isAppClip ? 0.0 : 1.0)
             .padding(.horizontal, 16)
-            .alert(
-              store.scope(state: \.skipAlert),
-              dismiss: .cancelSkipAlert
-            )
           
           PrimaryButtonView(
             label: {
@@ -58,26 +54,26 @@ public struct WelcomeView: View {
                 .adaptiveFont(.latoRegular, size: 16)
               
             }) {
-              viewStore.send(.navigationPrivacy(true))
+              viewStore.send(.privacyButtonTapped)
             }
             .padding(.horizontal, 16)
         }
         .padding()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(
-          isPresented: viewStore.binding(
-            get: \.navigatePrivacy,
-            send: Welcome.Action.navigationPrivacy),
-          destination: {
-            IfLetStore(
-              store.scope(
-                state: \.privacy,
-                action: Welcome.Action.privacy
-              ),
-              then: PrivacyView.init(store:)
-            )
-          }
+        .alert(
+          store: self.store.scope(
+            state: \.$alert,
+            action: WelcomeFeature.Action.alert
+          )
         )
+        .navigationDestination(
+          store: self.store.scope(
+            state: \.$privacy,
+            action: WelcomeFeature.Action.privacy
+          )
+        ) { store in
+          PrivacyView(store: store)
+        }
       }
       .navigationViewStyle(StackNavigationViewStyle())
       .onAppear {
@@ -92,7 +88,7 @@ struct WelcomeView_Previews: PreviewProvider {
     WelcomeView(
       store: .init(
         initialState: .init(),
-        reducer: Welcome()
+        reducer: WelcomeFeature()
       )
     )
   }

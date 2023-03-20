@@ -23,14 +23,14 @@ public struct AppReducer: ReducerProtocol {
   
   public enum State: Equatable {
     case splash(SplashFeature.State)
-    case onBoarding(Welcome.State)
+    case onBoarding(WelcomeFeature.State)
     case lockScreen(LockScreen.State)
     case home(Home.State)
   }
 
   public enum Action: Equatable {
     case splash(SplashFeature.Action)
-    case onBoarding(Welcome.Action)
+    case onBoarding(WelcomeFeature.Action)
     case lockScreen(LockScreen.Action)
     case home(Home.Action)
   }
@@ -40,7 +40,7 @@ public struct AppReducer: ReducerProtocol {
       SplashFeature()
     }
     Scope(state: /State.onBoarding, action: /Action.onBoarding) {
-      Welcome()
+      WelcomeFeature()
     }
     Scope(state: /State.lockScreen, action: /Action.lockScreen) {
       LockScreen()
