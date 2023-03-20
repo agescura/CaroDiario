@@ -81,7 +81,7 @@ public struct Insert: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case let .update(code: code):
       state.code = code
@@ -95,7 +95,7 @@ public struct Insert: ReducerProtocol {
       if state.step == .secondCode,
          state.code.count == state.maxNumbersCode {
         if state.code == state.firstCode {
-          return Effect(value: .navigateMenu(true))
+          return EffectTask(value: .navigateMenu(true))
         } else {
           state.step = .firstCode
           state.code = ""

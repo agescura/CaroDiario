@@ -71,20 +71,19 @@ public struct Entries: ReducerProtocol {
             .ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
                 EntryDetail()
             }
-            .debug()
     }
     
     private func core(
         state: inout State,
         action: Action
-    ) -> Effect<Action, Never> {
+    ) -> EffectTask<Action> {
         switch action {
             
         case .onAppear:
             return .none
             
         case let .coreDataClientAction(.entries(response)):
-            return Effect(value: .fetchEntriesResponse(response))
+            return EffectTask(value: .fetchEntriesResponse(response))
                 .receive(on: self.mainQueue)
                 .eraseToEffect()
             
@@ -128,11 +127,11 @@ public struct Entries: ReducerProtocol {
                 )
             )
             state.addEntryState = .init(type: .add, entry: newEntry)
-            return Effect(value: .addEntryAction(.createDraftEntry))
+            return EffectTask(value: .addEntryAction(.createDraftEntry))
             
         case .presentAddEntry(false):
             state.presentAddEntry = false
-            return Effect(value: .presentAddEntryCompleted)
+            return EffectTask(value: .presentAddEntryCompleted)
                 .delay(for: 0.3, scheduler: self.mainQueue)
                 .eraseToEffect()
             
@@ -142,7 +141,7 @@ public struct Entries: ReducerProtocol {
             
         case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
           state.entryDetailSelected = entry
-          return Effect(value: .navigateEntryDetail(true))
+          return EffectTask(value: .navigateEntryDetail(true))
             
         case .entries:
             return .none
@@ -165,7 +164,7 @@ public struct Entries: ReducerProtocol {
                     _ = await self.fileClient.removeAttachments(entry.attachments.urls)
                     await send(.remove(entry))
                 },
-                Effect(value: .navigateEntryDetail(false))
+                EffectTask(value: .navigateEntryDetail(false))
             )
             
         case .entryDetailAction:

@@ -105,7 +105,7 @@ public struct Menu: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case .popToRoot:
       return .none
@@ -132,7 +132,7 @@ public struct Menu: ReducerProtocol {
       
     case let .toggleFaceId(isOn: value):
       if !value {
-        return Effect(value: .faceId(response: value))
+        return EffectTask(value: .faceId(response: value))
       }
       return .run { [state] send in
         await send(.faceId(response: self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.authenticationType.rawValue]))))

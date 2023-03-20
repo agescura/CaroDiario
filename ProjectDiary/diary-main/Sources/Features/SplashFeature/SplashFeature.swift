@@ -1,7 +1,7 @@
 import Foundation
 import ComposableArchitecture
 
-public struct Splash: ReducerProtocol {
+public struct SplashFeature: ReducerProtocol {
   public init() {}
   
   public struct State: Equatable {
@@ -22,10 +22,15 @@ public struct Splash: ReducerProtocol {
   }
   
   public enum Action: Equatable {
-    case startAnimation
-    case verticalLineAnimation
-    case areaAnimation
-    case finishAnimation
+    case area
+    case delegate(Delegate)
+    case finish
+    case start
+    case verticalLine
+    
+    public enum Delegate {
+      case completeAnimation
+    }
   }
   
   @Dependency(\.continuousClock) private var clock
@@ -37,32 +42,34 @@ public struct Splash: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
-    case .startAnimation:
-      return .run { send in
-        try await self.clock.sleep(for: .seconds(1))
-        await send(.verticalLineAnimation)
-      }
-      
-    case .verticalLineAnimation:
-      state.animation = .verticalLine
-      return .run { send in
-        try await self.clock.sleep(for: .seconds(1))
-        await send(.areaAnimation)
-      }
-      
-    case .areaAnimation:
+    case .area:
       state.animation = .horizontalArea
       return .run { send in
         try await self.clock.sleep(for: .seconds(1))
-        await send(.finishAnimation)
+        await send(.finish)
       }
       
-    case .finishAnimation:
+    case .delegate(.completeAnimation):
+      return .none
+      
+    case .finish:
       state.animation = .finish
       return .none
+      
+    case .start:
+      return .run { send in
+        try await self.clock.sleep(for: .seconds(1))
+        await send(.verticalLine)
+      }
+      
+    case .verticalLine:
+      state.animation = .verticalLine
+      return .run { send in
+        try await self.clock.sleep(for: .seconds(1))
+        await send(.area)
+      }
     }
   }
 }
-

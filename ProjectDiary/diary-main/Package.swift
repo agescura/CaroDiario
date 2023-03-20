@@ -79,9 +79,9 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.49.2"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.10.0"),
-        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.1.3"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", branch: "navigation-beta"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.11.0"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.2.0"),
     ],
     targets: [
         // Clients
@@ -352,7 +352,8 @@ let package = Package(
                 "UIApplicationClient",
                 "FeedbackGeneratorClient",
                 "Styles",
-                "Localizables"
+                "Localizables",
+                "SwiftUIHelper"
             ],
             path: "Sources/Features/Settings/CameraFeature"
         ),

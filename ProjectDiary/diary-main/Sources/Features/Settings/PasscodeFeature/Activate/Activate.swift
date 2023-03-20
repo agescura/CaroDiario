@@ -56,7 +56,7 @@ public struct Activate: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
       
     case .insert:

@@ -86,7 +86,7 @@ public struct EntryDetail: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case let .attachments(id: id, action: .attachment(.image(.presentImageFullScreen(true)))),
       let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),
@@ -146,7 +146,7 @@ public struct EntryDetail: ReducerProtocol {
       
     case let .removeAttachmentResponse(id):
       state.attachments.remove(id: id)
-      return Effect(value: .dismissAttachmentOverlayed)
+      return EffectTask(value: .dismissAttachmentOverlayed)
       
     case .attachments:
       return .none
@@ -184,7 +184,7 @@ public struct EntryDetail: ReducerProtocol {
     case .addEntryAction(.addButtonTapped):
       state.presentAddEntry = false
       state.addEntryState = nil
-      return Effect(value: .onAppear)
+      return EffectTask(value: .onAppear)
       
     case .addEntryAction(.finishAddEntry):
       state.presentAddEntry = false
@@ -200,13 +200,13 @@ public struct EntryDetail: ReducerProtocol {
       
     case .presentAddEntry(false):
       state.presentAddEntry = false
-      return Effect(value: .presentAddEntryCompleted)
+      return EffectTask(value: .presentAddEntryCompleted)
         .delay(for: 0.3, scheduler: self.mainQueue)
         .eraseToEffect()
       
     case .presentAddEntryCompleted:
       state.addEntryState = nil
-      return Effect(value: .onAppear)
+      return EffectTask(value: .onAppear)
       
     case .processShare:
       self.applicationClient.share(state.entry.text.message, .text)

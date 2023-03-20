@@ -11,7 +11,7 @@ extension AVAudioPlayerClient {
     public static var live: Self = {
         Self(
             create: { id, url in
-                Effect.run { subscriber in
+                .run { subscriber in
                     let delegate = AudioPlayerManagerDelegate(subscriber)
 
                     let player = try! AVAudioPlayer(contentsOf: url)
@@ -43,7 +43,7 @@ extension AVAudioPlayerClient {
             duration: { id in
                 guard let player = dependencies[id]?.player else { return .none }
                 
-                return Effect(value: player.duration)
+                return EffectTask(value: player.duration)
             },
             
             play: { id in
@@ -61,13 +61,13 @@ extension AVAudioPlayerClient {
             },
             
             isPlaying: { id in
-                guard let player = dependencies[id]?.player else { return Effect(value: false) }
-                return Effect(value: player.isPlaying)
+                guard let player = dependencies[id]?.player else { return EffectTask(value: false) }
+                return EffectTask(value: player.isPlaying)
             },
             
             currentTime: { id in
                 guard let player = dependencies[id]?.player else { return .none }
-                return Effect(value: player.currentTime)
+                return EffectTask(value: player.currentTime)
             },
             
             setCurrentTime: { id, currentTime in
@@ -80,16 +80,16 @@ extension AVAudioPlayerClient {
 private struct Dependencies {
     var delegate: AVAudioPlayerDelegate
     var player: AVAudioPlayer
-    let subscriber: Effect<AVAudioPlayerClient.Action, Never>.Subscriber
+    let subscriber: EffectTask<AVAudioPlayerClient.Action>.Subscriber
     let queue: OperationQueue
 }
 
 private var dependencies: [AnyHashable: Dependencies] = [:]
 
 private class AudioPlayerManagerDelegate: NSObject, AVAudioPlayerDelegate {
-    let subscriber: Effect<AVAudioPlayerClient.Action, Never>.Subscriber
+    let subscriber: EffectTask<AVAudioPlayerClient.Action>.Subscriber
 
-    init(_ subscriber: Effect<AVAudioPlayerClient.Action, Never>.Subscriber) {
+    init(_ subscriber: EffectTask<AVAudioPlayerClient.Action>.Subscriber) {
         self.subscriber = subscriber
     }
 

@@ -23,37 +23,37 @@ public struct CoreDataClient {
         }
     }
     
-    public var create: (AnyHashable) -> Effect<Action, Never>
-    public var destroy: (AnyHashable) -> Effect<Never, Never>
+    public var create: (AnyHashable) -> EffectTask<Action>
+    public var destroy: (AnyHashable) -> EffectTask<Never>
     
-    public var createDraft: (Entry) -> Effect<Void, Never>
-    public var publishEntry: (Entry) -> Effect<Void, Never>
-    public var removeEntry: (UUID) -> Effect<Void, Never>
-    public var fetchEntry: (Entry) -> Effect<Entry, Never>
-    public var fetchAll: () -> Effect<[[Entry]], Never>
-    public var updateMessage: (EntryText, Entry) -> Effect<Void, Never>
-    public var addAttachmentEntry: (EntryAttachment, UUID) -> Effect<Void, Never>
-    public var removeAttachmentEntry: (UUID) -> Effect<Void, Never>
-    public var searchEntries: (String) -> Effect<[[Entry]], Never>
-    public var searchImageEntries: () -> Effect<[[Entry]], Never>
-    public var searchVideoEntries: () -> Effect<[[Entry]], Never>
-    public var searchAudioEntries: () -> Effect<[[Entry]], Never>
+    public var createDraft: (Entry) -> EffectTask<Void>
+    public var publishEntry: (Entry) -> EffectTask<Void>
+    public var removeEntry: (UUID) -> EffectTask<Void>
+    public var fetchEntry: (Entry) -> EffectTask<Entry>
+    public var fetchAll: () -> EffectTask<[[Entry]]>
+    public var updateMessage: (EntryText, Entry) -> EffectTask<Void>
+    public var addAttachmentEntry: (EntryAttachment, UUID) -> EffectTask<Void>
+    public var removeAttachmentEntry: (UUID) -> EffectTask<Void>
+    public var searchEntries: (String) -> EffectTask<[[Entry]]>
+    public var searchImageEntries: () -> EffectTask<[[Entry]]>
+    public var searchVideoEntries: () -> EffectTask<[[Entry]]>
+    public var searchAudioEntries: () -> EffectTask<[[Entry]]>
     
     public init(
-        create: @escaping  (AnyHashable) -> Effect<Action, Never>,
-        destroy: @escaping (AnyHashable) -> Effect<Never, Never>,
-        createDraft: @escaping (Entry) -> Effect<Void, Never>,
-        publishEntry: @escaping (Entry) -> Effect<Void, Never>,
-        removeEntry: @escaping (UUID) -> Effect<Void, Never>,
-        fetchEntry: @escaping (Entry) -> Effect<Entry, Never>,
-        fetchAll: @escaping () -> Effect<[[Entry]], Never>,
-        updateMessage: @escaping (EntryText, Entry) -> Effect<Void, Never>,
-        addAttachmentEntry: @escaping (EntryAttachment, UUID) -> Effect<Void, Never>,
-        removeAttachmentEntry: @escaping (UUID) -> Effect<Void, Never>,
-        searchEntries: @escaping (String) -> Effect<[[Entry]], Never>,
-        searchImageEntries: @escaping () -> Effect<[[Entry]], Never>,
-        searchVideoEntries: @escaping () -> Effect<[[Entry]], Never>,
-        searchAudioEntries: @escaping () -> Effect<[[Entry]], Never>
+        create: @escaping  (AnyHashable) -> EffectTask<Action>,
+        destroy: @escaping (AnyHashable) -> EffectTask<Never>,
+        createDraft: @escaping (Entry) -> EffectTask<Void>,
+        publishEntry: @escaping (Entry) -> EffectTask<Void>,
+        removeEntry: @escaping (UUID) -> EffectTask<Void>,
+        fetchEntry: @escaping (Entry) -> EffectTask<Entry>,
+        fetchAll: @escaping () -> EffectTask<[[Entry]]>,
+        updateMessage: @escaping (EntryText, Entry) -> EffectTask<Void>,
+        addAttachmentEntry: @escaping (EntryAttachment, UUID) -> EffectTask<Void>,
+        removeAttachmentEntry: @escaping (UUID) -> EffectTask<Void>,
+        searchEntries: @escaping (String) -> EffectTask<[[Entry]]>,
+        searchImageEntries: @escaping () -> EffectTask<[[Entry]]>,
+        searchVideoEntries: @escaping () -> EffectTask<[[Entry]]>,
+        searchAudioEntries: @escaping () -> EffectTask<[[Entry]]>
     ) {
         self.create = create
         self.destroy = destroy
@@ -71,11 +71,11 @@ public struct CoreDataClient {
         self.searchAudioEntries = searchAudioEntries
     }
     
-    func create(id: AnyHashable) -> Effect<Action, Never> {
+    func create(id: AnyHashable) -> EffectTask<Action> {
         create(id)
     }
     
-    func destroy(id: AnyHashable) -> Effect<Never, Never> {
+    func destroy(id: AnyHashable) -> EffectTask<Never> {
         destroy(id)
     }
 }

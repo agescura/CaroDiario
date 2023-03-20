@@ -101,7 +101,7 @@ public struct AddEntry: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case .onAppear:
       state.text = state.entry.text.message
@@ -177,18 +177,18 @@ public struct AddEntry: ReducerProtocol {
           .requestAccessCameraResponse(await self.avCaptureDeviceClient.requestAccess())
         }
       case .denied:
-        return Effect(value: .deniedCameraAlertButtonTapped)
+        return EffectTask(value: .deniedCameraAlertButtonTapped)
       case .authorized:
-        return Effect(value: .presentCameraPicker(true))
+        return EffectTask(value: .presentCameraPicker(true))
       case .restricted:
-        return Effect(value: .deniedCameraAlertButtonTapped)
+        return EffectTask(value: .deniedCameraAlertButtonTapped)
       }
       
     case let .requestAccessCameraResponse(granted):
       if granted {
-        return Effect(value: .presentCameraPicker(true))
+        return EffectTask(value: .presentCameraPicker(true))
       } else {
-        return Effect(value: .deniedCameraAlertButtonTapped)
+        return EffectTask(value: .deniedCameraAlertButtonTapped)
       }
       
     case .deniedCameraAlertButtonTapped:
@@ -210,9 +210,9 @@ public struct AddEntry: ReducerProtocol {
     case let .loadAttachment(response):
       switch response {
       case let .image(image):
-        return Effect(value: Action.loadImage(image))
+        return EffectTask(value: Action.loadImage(image))
       case let .video(url):
-        return Effect(value: Action.loadVideo(url))
+        return EffectTask(value: Action.loadVideo(url))
       }
       
     case let .loadImage(image):
@@ -285,7 +285,7 @@ public struct AddEntry: ReducerProtocol {
     case let .loadAudioResponse(entryAudio):
       state.addAttachmentInFlight = false
       state.attachments.append(.init(id: entryAudio.id, attachment: .audio(.init(entryAudio: entryAudio))))
-      return Effect(value: Action.presentAudioRecord(false))
+      return EffectTask(value: Action.presentAudioRecord(false))
       
     case let .attachments(id: id, action: .attachment(.video(.remove))),
       let .attachments(id: id, action: .attachment(.image(.remove))),
@@ -308,7 +308,7 @@ public struct AddEntry: ReducerProtocol {
       
     case .dismissAlertButtonTapped:
       if state.text.isEmpty && state.attachments.isEmpty {
-        return Effect(value: .removeDraftEntryDismissAlert)
+        return EffectTask(value: .removeDraftEntryDismissAlert)
       }
       
       state.dismissAlert = .init(
@@ -325,7 +325,7 @@ public struct AddEntry: ReducerProtocol {
       
     case .removeDraftEntryDismissAlert:
       state.dismissAlert = nil
-      return Effect(value: Action.finishAddEntry)
+      return EffectTask(value: Action.finishAddEntry)
       
     case .finishAddEntry:
       return .none

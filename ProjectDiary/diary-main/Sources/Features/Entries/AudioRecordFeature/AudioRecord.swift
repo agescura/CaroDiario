@@ -86,7 +86,7 @@ public struct AudioRecord: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case .onAppear:
       return self.avAudioRecorderClient.create(id: RecorderManagerId())
@@ -112,7 +112,7 @@ public struct AudioRecord: ReducerProtocol {
       case .denied:
         return .fireAndForget { await self.applicationClient.openSettings() }
       case .notDetermined:
-        return Effect(value: .requestMicrophonePermissionButtonTapped)
+        return EffectTask(value: .requestMicrophonePermissionButtonTapped)
       }
     case .recorderPlayer(.didFinishRecording):
       state.isRecording = false
@@ -136,12 +136,12 @@ public struct AudioRecord: ReducerProtocol {
       
     case .recordButtonTapped:
       if state.isRecording {
-        return Effect(value: .stopRecording)
+        return EffectTask(value: .stopRecording)
       } else {
         if state.hasAudioRecorded {
-          return Effect(value: .recordAlertButtonTapped)
+          return EffectTask(value: .recordAlertButtonTapped)
         } else {
-          return Effect(value: .record)
+          return EffectTask(value: .record)
         }
       }
       
@@ -155,7 +155,7 @@ public struct AudioRecord: ReducerProtocol {
       return .merge(
         self.avAudioRecorderClient.record(id: RecorderManagerId(), url: audioPath)
           .fireAndForget(),
-        Effect(value: .startRecorderTimer)
+        EffectTask(value: .startRecorderTimer)
       )
       
     case .stopRecording:
@@ -177,12 +177,12 @@ public struct AudioRecord: ReducerProtocol {
       return .merge(
         self.avAudioRecorderClient.destroy(id: RecorderManagerId())
           .fireAndForget(),
-        Effect(value: .resetRecorderTimer)
+        EffectTask(value: .resetRecorderTimer)
       )
       
     case .startRecorderTimer:
       state.audioRecordDuration = 0
-      return Effect.timer(id: RecorderTimerId(), every: 1, on: self.mainQueue.animation())
+      return EffectTask.timer(id: RecorderTimerId(), every: 1, on: self.mainQueue.animation())
         .map { _ in .addSecondRecorderTimer }
       
     case .resetRecorderTimer:
@@ -223,7 +223,7 @@ public struct AudioRecord: ReducerProtocol {
         return .merge(
           self.avAudioPlayerClient.play(id: PlayerManagerId())
             .fireAndForget(),
-          Effect.timer(id: PlayerTimerId(), every: 0.1, on: self.mainQueue)
+          EffectTask.timer(id: PlayerTimerId(), every: 0.1, on: self.mainQueue)
             .map { _ in .playerProgressAddTimer }
         )
       }
@@ -276,7 +276,7 @@ public struct AudioRecord: ReducerProtocol {
       return .none
       
     case .dismissAlertButtonTapped:
-      guard state.showDismissAlert else { return Effect(value: .dismiss) }
+      guard state.showDismissAlert else { return EffectTask(value: .dismiss) }
       
       state.dismissAlert = .init(
         title: .init("Title"),

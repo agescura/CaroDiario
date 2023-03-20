@@ -50,7 +50,7 @@ public struct Agreements: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case let .open(type):
       guard let url = URL(string: type.urlString) else { return .none }

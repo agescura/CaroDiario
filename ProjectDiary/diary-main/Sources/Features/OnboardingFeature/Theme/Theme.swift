@@ -36,7 +36,7 @@ public struct Theme: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case let .themeChanged(themeChanged):
       state.themeType = themeChanged

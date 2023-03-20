@@ -87,11 +87,11 @@ public struct Root: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
       
     case .appDelegate(.didFinishLaunching):
-      return Effect(value: .setUserInterfaceStyle)
+      return EffectTask(value: .setUserInterfaceStyle)
       
     case .setUserInterfaceStyle:
       return .task { @MainActor in
@@ -99,7 +99,7 @@ public struct Root: ReducerProtocol {
         return .startFirstScreen
       }
       
-    case .featureAction(.splash(.finishAnimation)):
+    case .featureAction(.splash(.finish)):
       if self.userDefaultsClient.hasShownFirstLaunchOnboarding {
         if let code = self.userDefaultsClient.passcodeCode {
           state.featureState = .lockScreen(.init(code: code))
@@ -118,25 +118,25 @@ public struct Root: ReducerProtocol {
         .featureAction(.onBoarding(.privacy(.skipAlertAction))),
         .featureAction(.onBoarding(.privacy(.style(.skipAlertAction)))),
         .featureAction(.onBoarding(.privacy(.style(.layout(.skipAlertAction))))):
-      return Effect(value: Root.Action.requestCameraStatus)
+      return EffectTask(value: Root.Action.requestCameraStatus)
       
     case .featureAction(.onBoarding(.privacy(.style(.layout(.theme(.startButtonTapped)))))):
-      return Effect(value: .requestCameraStatus)
+      return EffectTask(value: .requestCameraStatus)
         .delay(for: 0.001, scheduler: self.mainQueue)
         .eraseToEffect()
       
     case .featureAction(.lockScreen(.matchedCode)):
-      return Effect(value: .requestCameraStatus)
+      return EffectTask(value: .requestCameraStatus)
       
     case .featureAction(.home(.settings(.menu(.toggleFaceId(true))))),
         .featureAction(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
         .featureAction(.lockScreen(.checkFaceId)):
-      return Effect(value: .biometricAlertPresent(true))
+      return EffectTask(value: .biometricAlertPresent(true))
       
     case .featureAction(.home(.settings(.menu(.faceId(response:))))),
         .featureAction(.home(.settings(.activate(.insert(.menu(.faceId(response:))))))),
         .featureAction(.lockScreen(.faceIdResponse)):
-      return Effect(value: .biometricAlertPresent(false))
+      return EffectTask(value: .biometricAlertPresent(false))
         .delay(for: 10, scheduler: self.mainQueue)
         .eraseToEffect()
       
@@ -155,7 +155,7 @@ public struct Root: ReducerProtocol {
         }
       }
       
-      return Effect(value: .featureAction(.splash(.startAnimation)))
+      return EffectTask(value: .featureAction(.splash(.start)))
       
     case .requestCameraStatus:
       return .run { send in
@@ -182,7 +182,7 @@ public struct Root: ReducerProtocol {
           )
         )
       )
-      return Effect(value: .featureAction(.home(.starting)))
+      return EffectTask(value: .featureAction(.home(.starting)))
       
     case .process:
       return .none
@@ -229,7 +229,7 @@ public struct Root: ReducerProtocol {
   private func coreData(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     if case .home = state.featureState {
       switch action {
       case .featureAction(.home(.entries(.onAppear))):
@@ -342,7 +342,7 @@ public struct Root: ReducerProtocol {
   private func userDefaults(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case let .featureAction(.home(.settings(.appearance(.layout(.layoutChanged(layout)))))):
       return .fireAndForget { await self.userDefaultsClient.set(layoutType: layout) }

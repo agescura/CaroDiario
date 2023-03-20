@@ -19,7 +19,7 @@ extension CoreDataClient: DependencyKey {
     return Self(
       
       create: { id in
-        Effect.run { subscriber in
+        .run { subscriber in
           let delegate = CoreDataNotifier(
             coreDataStack: coreDataStack,
             subscriber: subscriber
@@ -83,7 +83,7 @@ extension CoreDataClient: DependencyKey {
         }
         
         coreDataStack.saveContext()
-        return Effect(value: ())
+        return EffectTask(value: ())
       },
       
       publishEntry: { entry in
@@ -97,7 +97,7 @@ extension CoreDataClient: DependencyKey {
           print("ERROR: \(error.localizedDescription)")
         }
         coreDataStack.saveContext()
-        return Effect(value: ())
+        return EffectTask(value: ())
       },
       
       removeEntry: { entry in
@@ -111,7 +111,7 @@ extension CoreDataClient: DependencyKey {
           print("ERROR: \(error.localizedDescription)")
         }
         coreDataStack.saveContext()
-        return Effect(value: ())
+        return EffectTask(value: ())
       },
       
       fetchEntry: { entry in
@@ -120,7 +120,7 @@ extension CoreDataClient: DependencyKey {
         do {
           if let entryMO = try coreDataStack.managedContext.fetch(request).first,
              let entry = entryMO.toEntry() {
-            return Effect(value: entry)
+            return EffectTask(value: entry)
           }
         } catch let error as NSError {
           print("ERROR: \(error.localizedDescription)")
@@ -143,7 +143,7 @@ extension CoreDataClient: DependencyKey {
         } catch let error as NSError {
           print("ERROR: \(error.localizedDescription)")
         }
-        return Effect(value: entriesByDay)
+        return EffectTask(value: entriesByDay)
       },
       
       updateMessage: { message, entry in
@@ -158,7 +158,7 @@ extension CoreDataClient: DependencyKey {
           print("ERROR: \(error.localizedDescription)")
         }
         coreDataStack.saveContext()
-        return Effect(value: ())
+        return EffectTask(value: ())
       },
       
       addAttachmentEntry: { attachment, entry in
@@ -193,7 +193,7 @@ extension CoreDataClient: DependencyKey {
           print("ERROR: \(error.localizedDescription)")
         }
         coreDataStack.saveContext()
-        return Effect(value: ())
+        return EffectTask(value: ())
       },
       
       removeAttachmentEntry: { attachment in
@@ -207,7 +207,7 @@ extension CoreDataClient: DependencyKey {
           print("ERROR: \(error.localizedDescription)")
         }
         coreDataStack.saveContext()
-        return Effect(value: ())
+        return EffectTask(value: ())
       },
       
       searchEntries: { query in
@@ -223,7 +223,7 @@ extension CoreDataClient: DependencyKey {
         } catch let error as NSError {
           print("ERROR: \(error.localizedDescription)")
         }
-        return Effect(value: entries)
+        return EffectTask(value: entries)
       },
       
       searchImageEntries: {
@@ -241,7 +241,7 @@ extension CoreDataClient: DependencyKey {
         } catch let error as NSError {
           print("ERROR: \(error.localizedDescription)")
         }
-        return Effect(value: entries)
+        return EffectTask(value: entries)
       },
       
       searchVideoEntries: {
@@ -259,7 +259,7 @@ extension CoreDataClient: DependencyKey {
         } catch let error as NSError {
           print("ERROR: \(error.localizedDescription)")
         }
-        return Effect(value: entries)
+        return EffectTask(value: entries)
       },
       
       searchAudioEntries: {
@@ -277,7 +277,7 @@ extension CoreDataClient: DependencyKey {
         } catch let error as NSError {
           print("ERROR: \(error.localizedDescription)")
         }
-        return Effect(value: entries)
+        return EffectTask(value: entries)
       }
     )
   }
@@ -285,16 +285,16 @@ extension CoreDataClient: DependencyKey {
 
 struct Dependencies {
   let delegate: CoreDataNotifier
-  let subscriber: Effect<CoreDataClient.Action, Never>.Subscriber
+  let subscriber: EffectTask<CoreDataClient.Action>.Subscriber
 }
 
 var dependencies: [AnyHashable: Dependencies] = [:]
 
 class CoreDataNotifier: NSObject {
   let coreDataStack: CoreDataStack
-  let subscriber: Effect<CoreDataClient.Action, Never>.Subscriber
+  let subscriber: EffectTask<CoreDataClient.Action>.Subscriber
   
-  init(coreDataStack: CoreDataStack, subscriber: Effect<CoreDataClient.Action, Never>.Subscriber) {
+  init(coreDataStack: CoreDataStack, subscriber: EffectTask<CoreDataClient.Action>.Subscriber) {
     self.coreDataStack = coreDataStack
     self.subscriber = subscriber
     

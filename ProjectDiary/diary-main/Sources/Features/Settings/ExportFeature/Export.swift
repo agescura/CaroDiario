@@ -41,7 +41,7 @@ public struct Export: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case .processPDF:
       return .none
@@ -65,7 +65,7 @@ public struct Export: ReducerProtocol {
       
     case let .presentPreviewView(file):
       state.pdf = file
-      return Effect(value: .presentPDFPreview(true))
+      return EffectTask(value: .presentPDFPreview(true))
       
     case let .presentPDFPreview(value):
       state.presentPreview = value
@@ -73,7 +73,7 @@ public struct Export: ReducerProtocol {
       return .none
       
     case .pdfPreview(.dismiss):
-      return Effect(value: .presentPDFPreview(false))
+      return EffectTask(value: .presentPDFPreview(false))
       
     case .pdfPreview:
       return .none

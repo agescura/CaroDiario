@@ -264,7 +264,7 @@ public struct Settings: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
       
     case .onAppear:
@@ -310,7 +310,7 @@ public struct Settings: ReducerProtocol {
     case .menu(.actionSheetTurnoffTapped),
         .activate(.insert(.menu(.actionSheetTurnoffTapped))):
       state.hasPasscode = false
-      return Effect(value: .navigateActivate(false))
+      return EffectTask(value: .navigateActivate(false))
         .delay(for: 0.1, scheduler: self.mainQueue)
         .eraseToEffect()
       
@@ -318,7 +318,7 @@ public struct Settings: ReducerProtocol {
         .activate(.insert(.popToRoot)),
         .menu(.popToRoot),
         .activate(.insert(.success)):
-      return Effect(value: .navigateActivate(false))
+      return EffectTask(value: .navigateActivate(false))
       
     case .activate:
       return .none

@@ -10,18 +10,18 @@ public struct SwitchClip: ReducerProtocol {
     public init() {}
     
     public enum State: Equatable {
-        case splash(Splash.State)
+        case splash(SplashFeature.State)
         case onBoarding(Welcome.State)
     }
     
     public enum Action: Equatable {
-        case splash(Splash.Action)
+        case splash(SplashFeature.Action)
         case onBoarding(Welcome.Action)
     }
     
     public var body: some ReducerProtocolOf<Self> {
         Scope(state: /State.splash, action: /Action.splash) {
-            Splash()
+            SplashFeature()
         }
         Scope(state: /State.onBoarding, action: /Action.onBoarding) {
             Welcome()

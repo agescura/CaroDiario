@@ -53,7 +53,7 @@ public struct AttachmentAudioDetail: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case .onAppear:
       return self.avAudioPlayerClient.create(id: PlayerManagerId(), url: state.entryAudio.url)
@@ -89,7 +89,7 @@ public struct AttachmentAudioDetail: ReducerProtocol {
         return .merge(
           self.avAudioPlayerClient.play(id: PlayerManagerId())
             .fireAndForget(),
-          Effect.timer(id: PlayerTimerId(), every: 0.1, on: DispatchQueue.main)
+          EffectTask.timer(id: PlayerTimerId(), every: 0.1, on: DispatchQueue.main)
             .map { _ in .playerProgressAddTimer }
         )
       }

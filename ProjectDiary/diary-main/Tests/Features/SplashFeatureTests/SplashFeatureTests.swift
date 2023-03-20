@@ -7,8 +7,8 @@ import SwiftUI
 class SplashFeatureTests: XCTestCase {
   func testSplashScreenHappyPath() async {
     let store = TestStore(
-      initialState: Splash.State(),
-      reducer: Splash()
+      initialState: SplashFeature.State(),
+      reducer: SplashFeature()
     )
     
     let clock = TestClock()

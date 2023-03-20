@@ -44,7 +44,7 @@ public struct Layout: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> EffectTask<Action> {
     switch action {
     case let .layoutChanged(layoutChanged):
       state.layoutType = layoutChanged
