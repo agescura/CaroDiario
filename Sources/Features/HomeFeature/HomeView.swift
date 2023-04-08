@@ -1,10 +1,3 @@
-//
-//  HomeView.swift
-//  HomeFeature
-//
-//  Created by Albert Gil Escura on 26/6/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import UserDefaultsClient

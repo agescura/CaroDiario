@@ -3,18 +3,19 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9514FB7526CC02B50038B7B9 /* UserDefaultsClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9514FB7426CC02B50038B7B9 /* UserDefaultsClientLive */; };
-		955D58B328B1495F00C0A2E1 /* OnboardingFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 955D58B228B1495F00C0A2E1 /* OnboardingFeature */; };
+		953937BC29E1FDDB00D622E2 /* CaroDiario in Resources */ = {isa = PBXBuildFile; fileRef = 953937BB29E1FDDB00D622E2 /* CaroDiario */; };
+		9580352929E20039007B6C97 /* OnboardingFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9580352829E20039007B6C97 /* OnboardingFeature */; };
 		95BEF22826B8911C00700352 /* OnBoardingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95BEF22726B8911C00700352 /* OnBoardingPreviewApp.swift */; };
 		95BEF22C26B8911D00700352 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95BEF22B26B8911D00700352 /* Assets.xcassets */; };
 		95BEF22F26B8911D00700352 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95BEF22E26B8911D00700352 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		953937BB29E1FDDB00D622E2 /* CaroDiario */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = CaroDiario; path = ../..; sourceTree = "<group>"; };
 		95BEF22426B8911C00700352 /* OnBoardingPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnBoardingPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95BEF22726B8911C00700352 /* OnBoardingPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingPreviewApp.swift; sourceTree = "<group>"; };
 		95BEF22B26B8911D00700352 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -27,8 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				955D58B328B1495F00C0A2E1 /* OnboardingFeature in Frameworks */,
-				9514FB7526CC02B50038B7B9 /* UserDefaultsClientLive in Frameworks */,
+				9580352929E20039007B6C97 /* OnboardingFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +38,7 @@
 		95BEF21B26B8911C00700352 = {
 			isa = PBXGroup;
 			children = (
+				953937BB29E1FDDB00D622E2 /* CaroDiario */,
 				95BEF22626B8911C00700352 /* OnBoardingPreview */,
 				95BEF22526B8911C00700352 /* Products */,
 				95BEF23626B891D200700352 /* Frameworks */,
@@ -95,8 +96,7 @@
 			);
 			name = OnBoardingPreview;
 			packageProductDependencies = (
-				9514FB7426CC02B50038B7B9 /* UserDefaultsClientLive */,
-				955D58B228B1495F00C0A2E1 /* OnboardingFeature */,
+				9580352829E20039007B6C97 /* OnboardingFeature */,
 			);
 			productName = OnBoardingPreview;
 			productReference = 95BEF22426B8911C00700352 /* OnBoardingPreview.app */;
@@ -108,8 +108,9 @@
 		95BEF21C26B8911C00700352 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					95BEF22326B8911C00700352 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -140,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				95BEF22F26B8911D00700352 /* Preview Assets.xcassets in Resources */,
+				953937BC29E1FDDB00D622E2 /* CaroDiario in Resources */,
 				95BEF22C26B8911D00700352 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,7 +286,7 @@
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = OnBoardingPreview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -306,7 +308,7 @@
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = OnBoardingPreview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -342,11 +344,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9514FB7426CC02B50038B7B9 /* UserDefaultsClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UserDefaultsClientLive;
-		};
-		955D58B228B1495F00C0A2E1 /* OnboardingFeature */ = {
+		9580352829E20039007B6C97 /* OnboardingFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OnboardingFeature;
 		};

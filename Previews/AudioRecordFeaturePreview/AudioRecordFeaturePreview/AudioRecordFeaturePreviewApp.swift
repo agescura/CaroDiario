@@ -1,11 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
-import AVAudioPlayerClient
-import AVAudioSessionClient
-import AVAudioRecorderClient
 import AudioRecordFeature
-import UIApplicationClient
-import FileClient
 
 @main
 struct AudioRecordFeaturePreviewApp: App {
@@ -16,7 +11,7 @@ struct AudioRecordFeaturePreviewApp: App {
           AudioRecordView(
             store: .init(
               initialState: .init(),
-              reducer: AudioRecord().debug()
+              reducer: AudioRecord()._printChanges()
             )
           )
         }

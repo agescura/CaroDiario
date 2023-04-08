@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:..">
+   </FileRef>
+   <FileRef
+      location = "group:ProjectDiary.xcodeproj">
+   </FileRef>
+   <Group
+      location = "container:"
+      name = "Previews">
+      <FileRef
+         location = "group:../Previews/SettingsFeaturePreview/SettingsFeaturePreview.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Previews/PDFFeaturePreview/PDFFeaturePreview.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Previews/EntryDetailFeaturePreview/EntryDetailFeaturePreview.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Previews/EntriesFeaturePreview/EntriesFeaturePreview.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Previews/AudioRecordFeaturePreview/AudioRecordFeaturePreview.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Previews/AddEntryFeaturePreview/AddEntryFeaturePreview.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Previews/OnBoardingPreview/OnBoardingPreview.xcodeproj">
+      </FileRef>
+   </Group>
+</Workspace>

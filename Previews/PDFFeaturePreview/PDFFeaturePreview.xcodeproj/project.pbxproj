@@ -11,14 +11,11 @@
 		95EAAA1D26F90E000074CE83 /* PDFFeaturePreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EAAA1C26F90E000074CE83 /* PDFFeaturePreviewApp.swift */; };
 		95EAAA2126F90E010074CE83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95EAAA2026F90E010074CE83 /* Assets.xcassets */; };
 		95EAAA2426F90E010074CE83 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95EAAA2326F90E010074CE83 /* Preview Assets.xcassets */; };
-		95EAAA2E26F90F300074CE83 /* UIApplicationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95EAAA2D26F90F300074CE83 /* UIApplicationClientLive */; };
-		95EAAA3026F90F370074CE83 /* PDFKitClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95EAAA2F26F90F370074CE83 /* PDFKitClientLive */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		95EAAA1926F90E000074CE83 /* PDFFeaturePreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDFFeaturePreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95EAAA1C26F90E000074CE83 /* PDFFeaturePreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFFeaturePreviewApp.swift; sourceTree = "<group>"; };
-		95EAAA1E26F90E000074CE83 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		95EAAA2026F90E010074CE83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		95EAAA2326F90E010074CE83 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -28,8 +25,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95EAAA2E26F90F300074CE83 /* UIApplicationClientLive in Frameworks */,
-				95EAAA3026F90F370074CE83 /* PDFKitClientLive in Frameworks */,
 				955D58B528B1499700C0A2E1 /* ExportFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,7 +53,6 @@
 			isa = PBXGroup;
 			children = (
 				95EAAA1C26F90E000074CE83 /* PDFFeaturePreviewApp.swift */,
-				95EAAA1E26F90E000074CE83 /* ContentView.swift */,
 				95EAAA2026F90E010074CE83 /* Assets.xcassets */,
 				95EAAA2226F90E010074CE83 /* Preview Content */,
 			);
@@ -97,8 +91,6 @@
 			);
 			name = PDFFeaturePreview;
 			packageProductDependencies = (
-				95EAAA2D26F90F300074CE83 /* UIApplicationClientLive */,
-				95EAAA2F26F90F370074CE83 /* PDFKitClientLive */,
 				955D58B428B1499700C0A2E1 /* ExportFeature */,
 			);
 			productName = PDFFeaturePreview;
@@ -294,7 +286,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -324,7 +316,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -365,14 +357,6 @@
 		955D58B428B1499700C0A2E1 /* ExportFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ExportFeature;
-		};
-		95EAAA2D26F90F300074CE83 /* UIApplicationClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UIApplicationClientLive;
-		};
-		95EAAA2F26F90F370074CE83 /* PDFKitClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PDFKitClientLive;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

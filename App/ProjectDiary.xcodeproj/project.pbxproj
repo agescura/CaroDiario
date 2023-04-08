@@ -3,14 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		06DCEF3AC372F0887410EC77 /* ProjectDiaryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB841C347FD8D298EFFE0DFA /* ProjectDiaryApp.swift */; };
 		3A2FC9491B8464A369CEF6FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 383C79C9989491DECCF849A8 /* Assets.xcassets */; };
-		95171CEE2928E1A700098B06 /* UIApplicationClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95171CED2928E1A700098B06 /* UIApplicationClient */; };
-		95171CF629294EAE00098B06 /* FileClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95171CF529294EAE00098B06 /* FileClient */; };
 		9537BBB726D5419A00650CF5 /* ProjectDiaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537BBB626D5419A00650CF5 /* ProjectDiaryTests.swift */; };
 		954422EC26F66535002C1E1C /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954422EB26F66535002C1E1C /* ShareViewController.swift */; };
 		954422EF26F66535002C1E1C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 954422ED26F66535002C1E1C /* MainInterface.storyboard */; };
@@ -21,12 +19,13 @@
 		956717E526B1E1DA00E2C1E9 /* Icon-1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 956717E226B1E1DA00E2C1E9 /* Icon-1@3x.png */; };
 		956717E626B1E1DA00E2C1E9 /* Icon-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 956717E326B1E1DA00E2C1E9 /* Icon-1@2x.png */; };
 		956717E726B1E1DA00E2C1E9 /* Icon-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 956717E426B1E1DA00E2C1E9 /* Icon-1.png */; };
-		959A7C7A29C8E08900314FF5 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = 959A7C7929C8E08900314FF5 /* Styles */; };
-		95ABFF3E26B48BD0001DAAE7 /* RootFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 95ABFF3D26B48BD0001DAAE7 /* RootFeature */; };
+		9580352E29E202DD007B6C97 /* RootFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9580352D29E202DD007B6C97 /* RootFeature */; };
+		9580353029E202F3007B6C97 /* FileClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9580352F29E202F3007B6C97 /* FileClient */; };
+		9580353229E20302007B6C97 /* CoreDataClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9580353129E20302007B6C97 /* CoreDataClient */; };
+		9580353429E20307007B6C97 /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = 9580353329E20307007B6C97 /* Models */; };
+		9580353629E20315007B6C97 /* AVAssetClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9580353529E20315007B6C97 /* AVAssetClient */; };
 		95B9098126B7226E00CE023E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B9098026B7226E00CE023E /* AppDelegate.swift */; };
 		95B9098326B722BC00CE023E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B9098226B722BC00CE023E /* SceneDelegate.swift */; };
-		95D524CF292BC67C0078B982 /* AVAssetClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95D524CE292BC67C0078B982 /* AVAssetClient */; };
-		95DE30D6292BEBCD00DCA78A /* CoreDataClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95DE30D5292BEBCD00DCA78A /* CoreDataClient */; };
 		95EFDB4826D7F02500C2B12F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 95EFDB4A26D7F02500C2B12F /* InfoPlist.strings */; };
 		B86555E7B0250F1C8F3C7CDD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D710050662204AD38B1B6B3 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -86,6 +85,7 @@
 		0EA3BD15BCD66FE0C6FD71C0 /* ProjectDiary.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProjectDiary.entitlements; sourceTree = "<group>"; };
 		383C79C9989491DECCF849A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8D710050662204AD38B1B6B3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		95139A0F29E1FF26005A19CB /* CaroDiario */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = CaroDiario; path = ..; sourceTree = "<group>"; };
 		951B9D2226BE649300431765 /* ProjectDiary.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ProjectDiary.entitlements; sourceTree = "<group>"; };
 		9537BBB426D5419A00650CF5 /* ProjectDiaryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectDiaryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9537BBB626D5419A00650CF5 /* ProjectDiaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDiaryTests.swift; sourceTree = "<group>"; };
@@ -134,10 +134,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95DE30D6292BEBCD00DCA78A /* CoreDataClient in Frameworks */,
-				95171CEE2928E1A700098B06 /* UIApplicationClient in Frameworks */,
-				95171CF629294EAE00098B06 /* FileClient in Frameworks */,
-				95D524CF292BC67C0078B982 /* AVAssetClient in Frameworks */,
+				9580353429E20307007B6C97 /* Models in Frameworks */,
+				9580353229E20302007B6C97 /* CoreDataClient in Frameworks */,
+				9580353029E202F3007B6C97 /* FileClient in Frameworks */,
+				9580353629E20315007B6C97 /* AVAssetClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,8 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				959A7C7A29C8E08900314FF5 /* Styles in Frameworks */,
-				95ABFF3E26B48BD0001DAAE7 /* RootFeature in Frameworks */,
+				9580352E29E202DD007B6C97 /* RootFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,6 +155,7 @@
 		1291435AFB7E83FBC428F4F6 = {
 			isa = PBXGroup;
 			children = (
+				95139A0F29E1FF26005A19CB /* CaroDiario */,
 				CCC2A4A488B16F4A3F613A15 /* ProjectDiary */,
 				9537BBB526D5419A00650CF5 /* ProjectDiaryTests */,
 				954422EA26F66535002C1E1C /* Share */,
@@ -308,8 +308,7 @@
 			);
 			name = ProjectDiary;
 			packageProductDependencies = (
-				95ABFF3D26B48BD0001DAAE7 /* RootFeature */,
-				959A7C7929C8E08900314FF5 /* Styles */,
+				9580352D29E202DD007B6C97 /* RootFeature */,
 			);
 			productName = ProjectDiary;
 			productReference = BD2A3298447210A07EE095A2 /* ProjectDiary.app */;
@@ -350,10 +349,10 @@
 			);
 			name = Share;
 			packageProductDependencies = (
-				95171CED2928E1A700098B06 /* UIApplicationClient */,
-				95171CF529294EAE00098B06 /* FileClient */,
-				95D524CE292BC67C0078B982 /* AVAssetClient */,
-				95DE30D5292BEBCD00DCA78A /* CoreDataClient */,
+				9580352F29E202F3007B6C97 /* FileClient */,
+				9580353129E20302007B6C97 /* CoreDataClient */,
+				9580353329E20307007B6C97 /* Models */,
+				9580353529E20315007B6C97 /* AVAssetClient */,
 			);
 			productName = Share;
 			productReference = 954422E926F66535002C1E1C /* Share.appex */;
@@ -365,8 +364,9 @@
 		B05D5D5443CE6230D470EC0E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1410;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					9537BBB326D5419A00650CF5 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -824,29 +824,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		95171CED2928E1A700098B06 /* UIApplicationClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UIApplicationClient;
-		};
-		95171CF529294EAE00098B06 /* FileClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FileClient;
-		};
-		959A7C7929C8E08900314FF5 /* Styles */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Styles;
-		};
-		95ABFF3D26B48BD0001DAAE7 /* RootFeature */ = {
+		9580352D29E202DD007B6C97 /* RootFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RootFeature;
 		};
-		95D524CE292BC67C0078B982 /* AVAssetClient */ = {
+		9580352F29E202F3007B6C97 /* FileClient */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AVAssetClient;
+			productName = FileClient;
 		};
-		95DE30D5292BEBCD00DCA78A /* CoreDataClient */ = {
+		9580353129E20302007B6C97 /* CoreDataClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CoreDataClient;
+		};
+		9580353329E20307007B6C97 /* Models */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Models;
+		};
+		9580353529E20315007B6C97 /* AVAssetClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AVAssetClient;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

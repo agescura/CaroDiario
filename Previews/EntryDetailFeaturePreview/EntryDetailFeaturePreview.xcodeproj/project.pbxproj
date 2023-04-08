@@ -3,22 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		955764E426D7AC3600C8BD84 /* AVCaptureDeviceClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955764E326D7AC3600C8BD84 /* AVCaptureDeviceClientLive */; };
-		9565C2DF26D98C4A004DB3D9 /* AVAudioPlayerClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2DE26D98C4A004DB3D9 /* AVAudioPlayerClientLive */; };
-		9565C2E126D98C4A004DB3D9 /* AVAudioRecorderClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2E026D98C4A004DB3D9 /* AVAudioRecorderClientLive */; };
-		9565C2E326D98C4A004DB3D9 /* AVAudioSessionClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2E226D98C4A004DB3D9 /* AVAudioSessionClientLive */; };
-		9590B6FE26C41ED700905BFD /* UIApplicationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9590B6FD26C41ED700905BFD /* UIApplicationClientLive */; };
+		9580352C29E201A7007B6C97 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = 9580352B29E201A7007B6C97 /* Styles */; };
 		95D9A10726C2C5270035FCC1 /* EntryDetailFeaturePreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D9A10626C2C5270035FCC1 /* EntryDetailFeaturePreviewApp.swift */; };
 		95D9A10B26C2C5280035FCC1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95D9A10A26C2C5280035FCC1 /* Assets.xcassets */; };
 		95D9A10E26C2C5280035FCC1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95D9A10D26C2C5280035FCC1 /* Preview Assets.xcassets */; };
 		95D9A11726C2C5940035FCC1 /* EntryDetailFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 95D9A11626C2C5940035FCC1 /* EntryDetailFeature */; };
-		95D9A11926C2C6830035FCC1 /* CoreDataClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95D9A11826C2C6830035FCC1 /* CoreDataClientLive */; };
-		95D9A11B26C2C6830035FCC1 /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95D9A11A26C2C6830035FCC1 /* FileClientLive */; };
-		95E00804270B6D3F00867DCD /* AVAssetClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95E00803270B6D3F00867DCD /* AVAssetClientLive */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,15 +27,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				955764E426D7AC3600C8BD84 /* AVCaptureDeviceClientLive in Frameworks */,
-				9565C2E126D98C4A004DB3D9 /* AVAudioRecorderClientLive in Frameworks */,
-				95D9A11B26C2C6830035FCC1 /* FileClientLive in Frameworks */,
-				9565C2DF26D98C4A004DB3D9 /* AVAudioPlayerClientLive in Frameworks */,
-				9565C2E326D98C4A004DB3D9 /* AVAudioSessionClientLive in Frameworks */,
-				95D9A11926C2C6830035FCC1 /* CoreDataClientLive in Frameworks */,
-				95E00804270B6D3F00867DCD /* AVAssetClientLive in Frameworks */,
+				9580352C29E201A7007B6C97 /* Styles in Frameworks */,
 				95D9A11726C2C5940035FCC1 /* EntryDetailFeature in Frameworks */,
-				9590B6FE26C41ED700905BFD /* UIApplicationClientLive in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,14 +96,7 @@
 			name = EntryDetailFeaturePreview;
 			packageProductDependencies = (
 				95D9A11626C2C5940035FCC1 /* EntryDetailFeature */,
-				95D9A11826C2C6830035FCC1 /* CoreDataClientLive */,
-				95D9A11A26C2C6830035FCC1 /* FileClientLive */,
-				9590B6FD26C41ED700905BFD /* UIApplicationClientLive */,
-				955764E326D7AC3600C8BD84 /* AVCaptureDeviceClientLive */,
-				9565C2DE26D98C4A004DB3D9 /* AVAudioPlayerClientLive */,
-				9565C2E026D98C4A004DB3D9 /* AVAudioRecorderClientLive */,
-				9565C2E226D98C4A004DB3D9 /* AVAudioSessionClientLive */,
-				95E00803270B6D3F00867DCD /* AVAssetClientLive */,
+				9580352B29E201A7007B6C97 /* Styles */,
 			);
 			productName = EntryDetailFeaturePreview;
 			productReference = 95D9A10326C2C5270035FCC1 /* EntryDetailFeaturePreview.app */;
@@ -129,8 +108,9 @@
 		95D9A0FB26C2C5270035FCC1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					95D9A10226C2C5270035FCC1 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -305,7 +285,7 @@
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = EntryDetailFeaturePreview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -327,7 +307,7 @@
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = EntryDetailFeaturePreview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -363,41 +343,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		955764E326D7AC3600C8BD84 /* AVCaptureDeviceClientLive */ = {
+		9580352B29E201A7007B6C97 /* Styles */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AVCaptureDeviceClientLive;
-		};
-		9565C2DE26D98C4A004DB3D9 /* AVAudioPlayerClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioPlayerClientLive;
-		};
-		9565C2E026D98C4A004DB3D9 /* AVAudioRecorderClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioRecorderClientLive;
-		};
-		9565C2E226D98C4A004DB3D9 /* AVAudioSessionClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioSessionClientLive;
-		};
-		9590B6FD26C41ED700905BFD /* UIApplicationClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UIApplicationClientLive;
+			productName = Styles;
 		};
 		95D9A11626C2C5940035FCC1 /* EntryDetailFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = EntryDetailFeature;
-		};
-		95D9A11826C2C6830035FCC1 /* CoreDataClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CoreDataClientLive;
-		};
-		95D9A11A26C2C6830035FCC1 /* FileClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FileClientLive;
-		};
-		95E00803270B6D3F00867DCD /* AVAssetClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAssetClientLive;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
