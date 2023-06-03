@@ -16,7 +16,7 @@ class LayoutViewTests: XCTestCase {
         styleType: .rectangle,
         entries: []
       ),
-      reducer: Layout()
+      reducer: LayoutFeature()
     )
     
     store.dependencies.feedbackGeneratorClient.selectionChanged = {

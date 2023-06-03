@@ -10,7 +10,7 @@ class ThemeViewTests: XCTestCase {
     var selectionChangedCalled = false
     let store = TestStore(
       initialState: .init(entries: []),
-      reducer: Theme()
+      reducer: ThemeFeature()
     )
 
     store.dependencies.feedbackGeneratorClient.selectionChanged = {
@@ -36,7 +36,7 @@ class ThemeViewTests: XCTestCase {
       initialState: .init(
         entries: fakeEntries(with: .rectangle, layout: .vertical)
       ),
-      reducer: Theme()
+      reducer: ThemeFeature()
     )
     let view = ThemeView(store: store)
     

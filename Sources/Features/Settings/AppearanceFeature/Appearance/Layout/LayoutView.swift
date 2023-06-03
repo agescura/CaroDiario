@@ -5,7 +5,7 @@ import EntriesFeature
 import Models
 
 public struct LayoutView: View {
-  let store: StoreOf<Layout>
+  let store: StoreOf<LayoutFeature>
   
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -14,7 +14,7 @@ public struct LayoutView: View {
         
         Picker("",  selection: viewStore.binding(
           get: \.layoutType,
-          send: Layout.Action.layoutChanged
+          send: LayoutFeature.Action.layoutChanged
         )) {
           ForEach(LayoutType.allCases, id: \.self) { type in
             Text(type.rawValue.localized)
@@ -30,7 +30,7 @@ public struct LayoutView: View {
             ForEachStore(
               store.scope(
                 state: \.entries,
-                action: Layout.Action.entries(id:action:)),
+                action: LayoutFeature.Action.entries(id:action:)),
               content: DayEntriesRowView.init(store:)
             )
           }

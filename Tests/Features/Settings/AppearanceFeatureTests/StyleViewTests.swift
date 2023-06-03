@@ -15,7 +15,7 @@ class StyleViewTests: XCTestCase {
         layoutType: .horizontal,
         entries: []
       ),
-      reducer: Style()
+      reducer: StyleFeature()
     )
     
     store.dependencies.feedbackGeneratorClient.selectionChanged = {
@@ -45,7 +45,7 @@ class StyleViewTests: XCTestCase {
         layoutType: .horizontal,
         entries: fakeEntries(with: .rectangle, layout: .vertical)
       ),
-      reducer: Style()
+      reducer: StyleFeature()
     )
     let view = StyleView(store: store)
     

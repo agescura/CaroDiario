@@ -11,7 +11,7 @@ extension Image {
 
 struct Image_Preview: PreviewProvider {
   static var previews: some View {
-    NavigationStack {
+    NavigationView {
       List {
         ForEach(SystemImage.allCases, id: \.self) { image in
           HStack {

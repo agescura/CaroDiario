@@ -5,7 +5,7 @@ import EntriesFeature
 import Models
 
 public struct StyleView: View {
-  let store: StoreOf<Style>
+  let store: StoreOf<StyleFeature>
   
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -13,7 +13,7 @@ public struct StyleView: View {
         
         Picker("",  selection: viewStore.binding(
           get: \.styleType,
-          send: Style.Action.styleChanged
+          send: StyleFeature.Action.styleChanged
         )) {
           ForEach(StyleType.allCases, id: \.self) { type in
             Text(type.rawValue.localized)
@@ -29,7 +29,7 @@ public struct StyleView: View {
             ForEachStore(
               store.scope(
                 state: \.entries,
-                action: Style.Action.entries(id:action:)),
+                action: StyleFeature.Action.entries(id:action:)),
               content: DayEntriesRowView.init(store:)
             )
           }

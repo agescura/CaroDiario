@@ -18,7 +18,7 @@ let snapshotTesting: Target.Dependency = .product(
 let package = Package(
     name: "diary-main",
     defaultLocalization: "en",
-    platforms: [.iOS(.v16)],
+    platforms: [.iOS(.v15)],
     products: [
         // Clients
         .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
@@ -79,9 +79,9 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", branch: "navigation-beta"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.54.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.11.0"),
-        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.2.0"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.5.1")
     ],
     targets: [
         // Clients

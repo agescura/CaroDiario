@@ -6,10 +6,10 @@ import UIApplicationClient
 import Models
 
 public struct IconAppView: View {
-  let store: StoreOf<IconApp>
+  let store: StoreOf<IconAppFeature>
   
   public init(
-    store: StoreOf<IconApp>
+    store: StoreOf<IconAppFeature>
   ) {
     self.store = store
   }

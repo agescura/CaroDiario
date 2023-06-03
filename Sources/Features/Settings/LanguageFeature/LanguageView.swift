@@ -2,49 +2,15 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import UserDefaultsClient
-import Models
 import Localizables
 import SwiftUIHelper
 import Styles
 
-public struct Language: ReducerProtocol {
-  public init() {}
-  
-  public struct State: Equatable {
-    public var language: Localizable
-    
-    public init(
-      language: Localizable
-    ) {
-      self.language = language
-    }
-  }
-  
-  public enum Action: Equatable {
-    case updateLanguageTapped(Localizable)
-  }
-  
-  public var body: some ReducerProtocolOf<Self> {
-    Reduce(self.core)
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> EffectTask<Action> {
-    switch action {
-    case let .updateLanguageTapped(language):
-      state.language = language
-      return .none
-    }
-  }
-}
-
 public struct LanguageView: View {
-  let store: StoreOf<Language>
+  let store: StoreOf<LanguageFeature>
   
   public init(
-    store: StoreOf<Language>
+    store: StoreOf<LanguageFeature>
   ) {
     self.store = store
   }

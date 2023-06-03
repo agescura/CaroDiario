@@ -15,7 +15,7 @@ public struct EntriesView: View {
   
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
-      NavigationStack {
+      NavigationView {
         ScrollView(.vertical) {
           if viewStore.isLoading {
             ProgressView()
@@ -69,21 +69,21 @@ public struct EntriesView: View {
             then: AddEntryView.init(store:)
           )
         }
-        .navigationDestination(
-          isPresented: viewStore.binding(
-            get: \.navigateEntryDetail,
-            send: Entries.Action.navigateEntryDetail
-          ),
-          destination: {
-            IfLetStore(
-              store.scope(
-                state: \.entryDetailState,
-                action: Entries.Action.entryDetailAction
-              ),
-              then: EntryDetailView.init(store:)
-            )
-          }
-        )
+//        .navigationDestination(
+//          isPresented: viewStore.binding(
+//            get: \.navigateEntryDetail,
+//            send: Entries.Action.navigateEntryDetail
+//          ),
+//          destination: {
+//            IfLetStore(
+//              store.scope(
+//                state: \.entryDetailState,
+//                action: Entries.Action.entryDetailAction
+//              ),
+//              then: EntryDetailView.init(store:)
+//            )
+//          }
+//        )
       }
       .navigationViewStyle(StackNavigationViewStyle())
       .onAppear {

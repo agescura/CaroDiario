@@ -17,7 +17,7 @@ class IconAppViewTests: XCTestCase {
     
     let store = TestStore(
       initialState: .init(iconAppType: .light),
-      reducer: IconApp()
+      reducer: IconAppFeature()
     )
     store.dependencies.feedbackGeneratorClient.selectionChanged = {
       selectionChangedCalled = true
@@ -39,7 +39,7 @@ class IconAppViewTests: XCTestCase {
     func testSnapshot() {
         let store = Store(
             initialState: .init(iconAppType: .light),
-            reducer: IconApp()
+            reducer: IconAppFeature()
         )
         let view = IconAppView(store: store)
         

@@ -5,16 +5,18 @@ import SwiftUIHelper
 import Localizables
 
 public struct ActivateView: View {
-  let store: StoreOf<Activate>
+  let store: StoreOf<ActivateFeature>
   
   public init(
-    store: StoreOf<Activate>
+    store: StoreOf<ActivateFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(
+		self.store.stateless
+	 ) { viewStore in
       VStack(spacing: 16) {
         Text("Passcode.Title".localized)
           .font(.title)
@@ -25,23 +27,17 @@ public struct ActivateView: View {
         PrimaryButtonView(
           label: { Text("Passcode.Activate.Title".localized) }
         ) {
-          viewStore.send(.navigateInsert(true))
+          viewStore.send(.navigateToInsert)
         }
         
-        NavigationLink(
-          route: viewStore.route,
-          case: /Activate.State.Route.insert,
-          onNavigate: { viewStore.send(.navigateInsert($0)) },
-          destination: { insertState in
-            InsertView(
-              store: self.store.scope(
-                state: { _ in insertState },
-                action: Activate.Action.insert
-              )
-            )
-          },
-          label: EmptyView.init
-        )
+			NavigationLinkStore(
+				self.store.scope(
+					state: \.$insert,
+					action: ActivateFeature.Action.insert
+				),
+				destination: InsertView.init(store:),
+				label: EmptyView.init
+			)
       }
       .padding(.horizontal, 16)
     }
