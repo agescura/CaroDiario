@@ -23,7 +23,7 @@ extension UIApplicationClient {
     alternateIconName: nil,
     setAlternateIconName: { _ in () },
     supportsAlternateIcons: { true },
-    openSettings: { .fireAndForget {} },
+	 openSettings: { },
     open: { _, _ in },
     canOpen: { _ in true },
     share: { _, _ in .fireAndForget {} },

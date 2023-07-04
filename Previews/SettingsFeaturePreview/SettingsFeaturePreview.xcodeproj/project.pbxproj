@@ -10,15 +10,7 @@
 		9502467A26C030930030E500 /* SettingsFeaturePreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9502467926C030930030E500 /* SettingsFeaturePreviewApp.swift */; };
 		9502467E26C030940030E500 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9502467D26C030940030E500 /* Assets.xcassets */; };
 		9502468126C030940030E500 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9502468026C030940030E500 /* Preview Assets.xcassets */; };
-		9526B5A826F7753D0076E811 /* PDFKitClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9526B5A726F7753D0076E811 /* PDFKitClientLive */; };
-		9526B5AA26F775810076E811 /* StoreKitClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9526B5A926F775810076E811 /* StoreKitClientLive */; };
 		9539D0CD26C035E500965E72 /* SettingsFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9539D0CC26C035E500965E72 /* SettingsFeature */; };
-		9539D0D126C035EE00965E72 /* LocalAuthenticationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9539D0D026C035EE00965E72 /* LocalAuthenticationClientLive */; };
-		9539D0D326C035EE00965E72 /* UIApplicationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9539D0D226C035EE00965E72 /* UIApplicationClientLive */; };
-		9539D0D526C035EE00965E72 /* UserDefaultsClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9539D0D426C035EE00965E72 /* UserDefaultsClientLive */; };
-		955764E026D7AC0C00C8BD84 /* AVCaptureDeviceClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955764DF26D7AC0C00C8BD84 /* AVCaptureDeviceClientLive */; };
-		956952BC26C075CA00D73FAD /* FeedbackGeneratorClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 956952BB26C075CA00D73FAD /* FeedbackGeneratorClientLive */; };
-		95EFDB4E26D7F89F00C2B12F /* AVAudioSessionClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95EFDB4D26D7F89F00C2B12F /* AVAudioSessionClientLive */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,15 +26,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9539D0D326C035EE00965E72 /* UIApplicationClientLive in Frameworks */,
-				9526B5A826F7753D0076E811 /* PDFKitClientLive in Frameworks */,
 				9539D0CD26C035E500965E72 /* SettingsFeature in Frameworks */,
-				956952BC26C075CA00D73FAD /* FeedbackGeneratorClientLive in Frameworks */,
-				9539D0D526C035EE00965E72 /* UserDefaultsClientLive in Frameworks */,
-				9539D0D126C035EE00965E72 /* LocalAuthenticationClientLive in Frameworks */,
-				95EFDB4E26D7F89F00C2B12F /* AVAudioSessionClientLive in Frameworks */,
-				9526B5AA26F775810076E811 /* StoreKitClientLive in Frameworks */,
-				955764E026D7AC0C00C8BD84 /* AVCaptureDeviceClientLive in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,14 +94,6 @@
 			name = SettingsFeaturePreview;
 			packageProductDependencies = (
 				9539D0CC26C035E500965E72 /* SettingsFeature */,
-				9539D0D026C035EE00965E72 /* LocalAuthenticationClientLive */,
-				9539D0D226C035EE00965E72 /* UIApplicationClientLive */,
-				9539D0D426C035EE00965E72 /* UserDefaultsClientLive */,
-				956952BB26C075CA00D73FAD /* FeedbackGeneratorClientLive */,
-				955764DF26D7AC0C00C8BD84 /* AVCaptureDeviceClientLive */,
-				95EFDB4D26D7F89F00C2B12F /* AVAudioSessionClientLive */,
-				9526B5A726F7753D0076E811 /* PDFKitClientLive */,
-				9526B5A926F775810076E811 /* StoreKitClientLive */,
 			);
 			productName = SettingsFeaturePreview;
 			productReference = 9502467626C030930030E500 /* SettingsFeaturePreview.app */;
@@ -363,41 +339,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9526B5A726F7753D0076E811 /* PDFKitClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PDFKitClientLive;
-		};
-		9526B5A926F775810076E811 /* StoreKitClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = StoreKitClientLive;
-		};
 		9539D0CC26C035E500965E72 /* SettingsFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SettingsFeature;
-		};
-		9539D0D026C035EE00965E72 /* LocalAuthenticationClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LocalAuthenticationClientLive;
-		};
-		9539D0D226C035EE00965E72 /* UIApplicationClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UIApplicationClientLive;
-		};
-		9539D0D426C035EE00965E72 /* UserDefaultsClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UserDefaultsClientLive;
-		};
-		955764DF26D7AC0C00C8BD84 /* AVCaptureDeviceClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVCaptureDeviceClientLive;
-		};
-		956952BB26C075CA00D73FAD /* FeedbackGeneratorClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FeedbackGeneratorClientLive;
-		};
-		95EFDB4D26D7F89F00C2B12F /* AVAudioSessionClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioSessionClientLive;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

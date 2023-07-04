@@ -67,7 +67,7 @@ public struct Settings: ReducerProtocol {
       case microphone(Microphone.State)
       case export(Export.State)
       case agreements(Agreements.State)
-      case about(About.State)
+      case about(AboutFeature.State)
     }
     
     var appearance: Appearance.State? {
@@ -150,7 +150,7 @@ public struct Settings: ReducerProtocol {
         self.route = .agreements(newValue)
       }
     }
-    var about: About.State? {
+    var about: AboutFeature.State? {
       get {
         guard case let .about(state) = self.route else { return nil }
         return state
@@ -222,7 +222,7 @@ public struct Settings: ReducerProtocol {
     case export(Export.Action)
     case navigateExport(Bool)
     
-    case about(About.Action)
+    case about(AboutFeature.Action)
     case navigateAbout(Bool)
   }
   
@@ -242,7 +242,7 @@ public struct Settings: ReducerProtocol {
         Camera()
       }
       .ifLet(\.about, action: /Settings.Action.about) {
-        About()
+        AboutFeature()
       }
       .ifLet(\.export, action: /Settings.Action.export) {
         Export()

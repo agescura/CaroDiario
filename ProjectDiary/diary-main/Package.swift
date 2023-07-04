@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.8
 
 import PackageDescription
 
@@ -242,8 +242,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.46.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.10.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.55.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.11.1"),
     ],
     targets: [
       

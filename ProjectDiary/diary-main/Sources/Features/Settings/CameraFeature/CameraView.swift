@@ -66,8 +66,7 @@ public struct Camera: ReducerProtocol {
       
     case .goToSettings:
       guard state.cameraStatus != .notDetermined else { return .none }
-      return self.applicationClient.openSettings()
-        .fireAndForget()
+      return .fireAndForget { await self.applicationClient.openSettings() }
     }
   }
 }

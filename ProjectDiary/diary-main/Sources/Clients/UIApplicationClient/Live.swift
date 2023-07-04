@@ -13,11 +13,7 @@ extension UIApplicationClient {
       try await UIApplication.shared.setAlternateIconName(iconName)
     },
     supportsAlternateIcons: { UIApplication.shared.supportsAlternateIcons },
-    openSettings: {
-      .fireAndForget {
-        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:])
-      }
-    },
+	 openSettings: { await UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:]) },
     open: { @MainActor in await UIApplication.shared.open($0, options: $1) },
     canOpen: { UIApplication.shared.canOpenURL($0) },
     share: { data, position in

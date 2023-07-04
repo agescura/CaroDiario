@@ -208,8 +208,7 @@ public struct AddEntry: ReducerProtocol {
       return .none
       
     case .settingActionTappedDeniedCameraAlert:
-      return self.applicationClient.openSettings()
-        .fireAndForget()
+      return .fireAndForget { await self.applicationClient.openSettings() }
       
     case let .loadAttachment(response):
       switch response {
