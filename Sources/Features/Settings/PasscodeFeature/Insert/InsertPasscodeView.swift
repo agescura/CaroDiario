@@ -89,3 +89,18 @@ public struct InsertView: View {
 		}
 	}
 }
+
+struct InsertView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			InsertView(
+				store: Store(
+					initialState: InsertFeature.State(
+						faceIdEnabled: false
+					),
+					reducer: InsertFeature()
+				)
+			)
+		}
+	}
+}

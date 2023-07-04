@@ -19,8 +19,8 @@ extension FileClient {
     public static let noop: FileClient = Self(
         path: { _ in URL(string: "www.apple.com")! },
         removeAttachments: { _ in () },
-        addImage: { _, _ in EntryImage(id: .init(), lastUpdated: .init(), thumbnail: URL(string: "wwww.google.es")!, url: URL(string: "wwww.google.es")!) },
-        addVideo: { _, _, _ in EntryVideo(id: .init(), lastUpdated: .init(), thumbnail: URL(string: "wwww.google.es")!, url: URL(string: "wwww.google.es")!) },
-        addAudio: { _, _ in EntryAudio(id: .init(), lastUpdated: .init(), url: URL(string: "wwww.google.es")!) }
+        addImage: { _, _ in EntryImage(id: UUID(), lastUpdated: Date(), thumbnail: URL(string: "wwww.google.es")!, url: URL(string: "wwww.google.es")!) },
+        addVideo: { _, _, _ in EntryVideo(id: UUID(), lastUpdated: Date(), thumbnail: URL(string: "wwww.google.es")!, url: URL(string: "wwww.google.es")!) },
+        addAudio: { _, _ in EntryAudio(id: UUID(), lastUpdated: Date(), url: URL(string: "wwww.google.es")!) }
     )
 }

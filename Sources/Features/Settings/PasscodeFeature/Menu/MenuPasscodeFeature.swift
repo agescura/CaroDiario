@@ -54,7 +54,7 @@ extension TimeForAskPasscode {
 public struct MenuPasscodeFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable {
+	public struct State: Equatable, Identifiable {
 		public var authenticationType: LocalAuthenticationType
 		@PresentationState var confirmationDialog: ConfirmationDialogState<Action.Dialog>?
 		public var faceIdEnabled: Bool
@@ -68,6 +68,8 @@ public struct MenuPasscodeFeature: ReducerProtocol {
 		]
 		public var optionTimeForAskPasscode: TimeForAskPasscode
 		
+      public var id: Int { 1 }
+      
 		public init(
 			authenticationType: LocalAuthenticationType,
 			optionTimeForAskPasscode: Int,
@@ -105,18 +107,7 @@ public struct MenuPasscodeFeature: ReducerProtocol {
 		Reduce { state, action in
 			switch action {
 				case .confirmationDialogButtonTapped:
-					state.confirmationDialog = ConfirmationDialogState {
-						TextState("Passcode.Turnoff.Message".localized(with: [state.authenticationType.rawValue]))
-					} actions: {
-						ButtonState(role: .cancel) {
-							TextState("Cancel".localized)
-						}
-						ButtonState(action: .turnOffButtonTapped) {
-							TextState("Passcode.Turnoff".localized)
-						}
-					} message: {
-						TextState("Are you sure you want to delete this item?")
-					}
+					state.confirmationDialog = .confirmationDialog(type: state.authenticationType)
 					return .none
 					
 				case .confirmationDialog(.presented(.turnOffButtonTapped)):
@@ -149,5 +140,22 @@ public struct MenuPasscodeFeature: ReducerProtocol {
 			}
 		}
 		.ifLet(\.$confirmationDialog, action: /Action.confirmationDialog)
+	}
+}
+
+extension ConfirmationDialogState where Action == MenuPasscodeFeature.Action.Dialog {
+	static func confirmationDialog(type: LocalAuthenticationType) -> Self {
+		ConfirmationDialogState {
+			TextState("Passcode.Turnoff.Message".localized(with: [type.rawValue]))
+		} actions: {
+			ButtonState(role: .cancel) {
+				TextState("Cancel".localized)
+			}
+			ButtonState(action: .turnOffButtonTapped) {
+				TextState("Passcode.Turnoff".localized)
+			}
+		} message: {
+			TextState("Are you sure you want to delete this item?")
+		}
 	}
 }

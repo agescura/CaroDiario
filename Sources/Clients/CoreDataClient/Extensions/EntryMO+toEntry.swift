@@ -35,7 +35,7 @@ extension EntryMO {
             id: id,
             date: lastUpdated,
             startDay: startDay,
-            text: .init(
+            text: EntryText(
                 id: textId,
                 message: textMessage,
                 lastUpdated: textLastUpdated

@@ -1,31 +1,31 @@
-import SwiftUI
 import ComposableArchitecture
 import SettingsFeature
+import SwiftUI
+import SwiftUIHelper
 
 @main
 struct SettingsFeaturePreviewApp: App {
 	var body: some Scene {
 		WindowGroup {
-			NavigationView {
+			NavigationSwitched {
 				SettingsView(
-					store: .init(
+					store: Store(
 						initialState: SettingsFeature.State(
-							styleType: .rectangle,
-							layoutType: .horizontal,
-							themeType: .dark,
-							iconType: .dark,
-							hasPasscode: false,
-							cameraStatus: .notDetermined,
-							optionTimeForAskPasscode: 0,
-							faceIdEnabled: false,
-							language: .spanish,
-							microphoneStatus: .notDetermined
+							userSettings: .defaultValue
 						),
 						reducer: SettingsFeature()
 							._printChanges()
 					)
 				)
+				.navigationTitle("Settings")
 			}
 		}
 	}
+}
+
+extension UINavigationController {
+	 open override func viewWillLayoutSubviews() {
+		  super.viewWillLayoutSubviews()
+		  self.navigationBar.topItem?.backButtonDisplayMode = .minimal
+	 }
 }

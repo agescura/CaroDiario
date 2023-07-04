@@ -56,3 +56,49 @@ public struct ThemeView: View {
     }
   }
 }
+
+struct ThemeView_Previews: PreviewProvider {
+	static var previews: some View {
+		ThemeView(
+			store: Store(
+				initialState: ThemeFeature.State(
+					themeType: .system,
+					entries: fakeEntries(
+						with: .rectangle,
+						layout: .horizontal
+					)
+				),
+				reducer: ThemeFeature()
+			)
+		)
+		.previewDisplayName("System")
+		
+		ThemeView(
+			store: Store(
+				initialState: ThemeFeature.State(
+					themeType: .light,
+					entries: fakeEntries(
+						with: .rectangle,
+						layout: .horizontal
+					)
+				),
+				reducer: ThemeFeature()
+			)
+		)
+		.previewDisplayName("Light")
+		
+		ThemeView(
+			store: Store(
+				initialState: ThemeFeature.State(
+					themeType: .dark,
+					entries: fakeEntries(
+						with: .rectangle,
+						layout: .horizontal
+					)
+				),
+				reducer: ThemeFeature()
+			)
+		)
+		.previewDisplayName("Dark")
+	}
+}

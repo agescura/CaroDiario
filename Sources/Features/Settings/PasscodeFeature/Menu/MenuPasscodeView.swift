@@ -98,3 +98,49 @@ public struct MenuPasscodeView: View {
 		.navigationBarBackButtonHidden(true)
 	}
 }
+
+struct MenuPasscodeView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			MenuPasscodeView(
+				store: Store(
+					initialState: MenuPasscodeFeature.State(
+						authenticationType: .none,
+						optionTimeForAskPasscode: 0,
+						faceIdEnabled: false
+					),
+					reducer: MenuPasscodeFeature()
+				)
+			)
+		}
+		.previewDisplayName("Default")
+		
+		NavigationView {
+			MenuPasscodeView(
+				store: Store(
+					initialState: MenuPasscodeFeature.State(
+						authenticationType: .touchId,
+						optionTimeForAskPasscode: 0,
+						faceIdEnabled: true
+					),
+					reducer: MenuPasscodeFeature()
+				)
+			)
+		}
+		.previewDisplayName("Unlock")
+		
+		NavigationView {
+			MenuPasscodeView(
+				store: Store(
+					initialState: MenuPasscodeFeature.State(
+						authenticationType: .faceId,
+						optionTimeForAskPasscode: 30,
+						faceIdEnabled: true
+					),
+					reducer: MenuPasscodeFeature()
+				)
+			)
+		}
+		.previewDisplayName("Autolock")
+	}
+}

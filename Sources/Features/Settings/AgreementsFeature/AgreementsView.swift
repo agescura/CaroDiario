@@ -79,3 +79,16 @@ public struct AgreementsView: View {
 		}
 	}
 }
+
+struct AgreementsView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			AgreementsView(
+				store: Store(
+					initialState: AgreementsFeature.State(),
+					reducer: AgreementsFeature()
+				)
+			)
+		}
+	}
+}

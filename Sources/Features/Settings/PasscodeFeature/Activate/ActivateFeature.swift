@@ -36,8 +36,8 @@ public struct ActivateFeature: ReducerProtocol {
 					return .none
 			}
 		}
-			.ifLet(\.$insert, action: /Action.insert) {
-				InsertFeature()
-			}
+		.ifLet(\.$insert, action: /Action.insert) {
+			InsertFeature()
+		}
 	}
 }

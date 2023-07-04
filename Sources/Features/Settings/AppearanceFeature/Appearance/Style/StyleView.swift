@@ -45,3 +45,39 @@ public struct StyleView: View {
     }
   }
 }
+
+struct StyleView_Previews: PreviewProvider {
+	static var previews: some View {
+		StyleView(
+			store: Store(
+				initialState: StyleFeature.State(
+					styleType: .rectangle,
+					layoutType: .horizontal,
+					entries: fakeEntries(
+						with: .rectangle,
+						layout: .horizontal
+					)
+					
+				),
+				reducer: StyleFeature()
+			)
+		)
+		.previewDisplayName("Rectangle")
+		
+		StyleView(
+			store: Store(
+				initialState: StyleFeature.State(
+					styleType: .rounded,
+					layoutType: .horizontal,
+					entries: fakeEntries(
+						with: .rounded,
+						layout: .horizontal
+					)
+					
+				),
+				reducer: StyleFeature()
+			)
+		)
+		.previewDisplayName("Rounded")
+	}
+}

@@ -16,28 +16,6 @@ import SwiftUIHelper
 public struct SettingsView: View {
 	let store: StoreOf<SettingsFeature>
 	
-	private struct ViewState: Equatable {
-		let showSplash: Bool
-		let authenticationType: LocalAuthenticationType
-		let language: Localizable
-		let destination2: SettingsFeature.State.Destination2?
-		let hasPasscode: Bool
-		let cameraStatus: AuthorizedVideoStatus
-		let microphoneStatus: AudioRecordPermission
-		
-		init(
-			state: SettingsFeature.State
-		) {
-			self.showSplash = state.showSplash
-			self.authenticationType = state.authenticationType
-			self.language = state.language
-			self.destination2 = state.destination2
-			self.hasPasscode = state.hasPasscode
-			self.cameraStatus = state.cameraStatus
-			self.microphoneStatus = state.microphoneStatus
-		}
-	}
-	
 	public init(
 		store: StoreOf<SettingsFeature>
 	) {
@@ -47,14 +25,14 @@ public struct SettingsView: View {
 	public var body: some View {
 		WithViewStore(
 			self.store,
-			observe: ViewState.init
+			observe: \.userSettings
 		) { viewStore in
 			VStack {
 				Form {
 					Section {
 						Toggle(
 							isOn: viewStore.binding(
-								get: { _ in viewStore.showSplash },
+								get: { _ in viewStore.state.showSplash },
 								send: SettingsFeature.Action.toggleShowSplash
 							),
 							label: SplashRowView.init
@@ -80,7 +58,7 @@ public struct SettingsView: View {
 							destination: LanguageView.init(store:),
 							label: {
 								LanguageRowView(
-									title: "Settings.Language".localized(with: [viewStore.authenticationType.rawValue]),
+									title: "Settings.Language"/*.localized(with: [viewStore.authenticationType.rawValue])*/,
 									status: viewStore.language.localizable.localized
 								)
 							}
@@ -89,13 +67,13 @@ public struct SettingsView: View {
 					
 					Section {
 						PasscodeRowView(
-							title: "Settings.Code".localized(with: [viewStore.authenticationType.rawValue]),
-							status: viewStore.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
+							title: "Settings.Code"/*.localized(with: [viewStore.authenticationType.rawValue])*/,
+							status: viewStore.state.passcode.count > 0 ? "Settings.On".localized : "Settings.Off".localized
 						)
 						.contentShape(Rectangle())
 						.onTapGesture {
-							if viewStore.hasPasscode {
-								viewStore.send(.navigateMenu(true))
+							if viewStore.state.passcode.count > 0 {
+								viewStore.send(.navigateToMenu)
 							} else {
 								viewStore.send(.navigateToActivate)
 							}
@@ -103,55 +81,38 @@ public struct SettingsView: View {
 					}
 					
 					Section {
-						NavigationLink(
-							route: viewStore.destination2,
-							case: /SettingsFeature.State.Destination2.camera,
-							onNavigate: { viewStore.send(.navigateCamera($0)) },
-							destination: { cameraState in
-								CameraView(
-									store: self.store.scope(
-										state: { _ in cameraState },
-										action: SettingsFeature.Action.camera
-									)
-								)
-							},
-							label: {
-								CameraRowView(title: viewStore.cameraStatus.rawValue.localized)
-							}
-						)
-						NavigationLink(
-							route: viewStore.destination2,
-							case: /SettingsFeature.State.Destination2.microphone,
-							onNavigate: { viewStore.send(.navigateMicrophone($0)) },
-							destination: { microphoneState in
-								MicrophoneView(
-									store: self.store.scope(
-										state: { _ in microphoneState },
-										action: SettingsFeature.Action.microphone
-									)
-								)
-							},
-							label: {
-								MicrophoneRowView(title: viewStore.microphoneStatus.title.localized)
-							}
-						)
+                  NavigationLinkStore(
+                     self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+                     state: /SettingsFeature.Destination.State.camera,
+                     action: SettingsFeature.Destination.Action.camera,
+                     onTap: { viewStore.send(.cameraButtonTapped) },
+                     destination: CameraView.init(store:),
+                     label: {
+                        CameraRowView(title: "viewStore.cameraStatus.rawValue.localized")
+                     }
+                  )
+                  
+                  NavigationLinkStore(
+                     self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+                     state: /SettingsFeature.Destination.State.microphone,
+                     action: SettingsFeature.Destination.Action.microphone,
+                     onTap: { viewStore.send(.microphoneButtonTapped) },
+                     destination: MicrophoneView.init(store:),
+                     label: {
+                        MicrophoneRowView(title: "viewStore.microphoneStatus.title.localized")
+                     }
+                  )
 					}
 					
 					Section {
-						NavigationLink(
-							route: viewStore.destination2,
-							case: /SettingsFeature.State.Destination2.export,
-							onNavigate: { viewStore.send(.navigateExport($0)) },
-							destination: { exportState in
-								ExportView(
-									store: self.store.scope(
-										state: { _ in exportState },
-										action: SettingsFeature.Action.export
-									)
-								)
-							},
-							label: ExportRowView.init
-						)
+                  NavigationLinkStore(
+                     self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+                     state: /SettingsFeature.Destination.State.export,
+                     action: SettingsFeature.Destination.Action.export,
+                     onTap: { viewStore.send(.exportButtonTapped) },
+                     destination: ExportView.init(store:),
+                     label: ExportRowView.init
+                  )
 					}
 					
 					Section {
@@ -172,18 +133,12 @@ public struct SettingsView: View {
 							label: AgreementsRowView.init
 						)
 						
-						NavigationLink(
-							route: viewStore.destination2,
-							case: /SettingsFeature.State.Destination2.about,
-							onNavigate: { viewStore.send(.navigateAbout($0)) },
-							destination: { aboutState in
-								AboutView(
-									store: self.store.scope(
-										state: { _ in aboutState },
-										action: SettingsFeature.Action.about
-									)
-								)
-							},
+						NavigationLinkStore(
+							self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+							state: /SettingsFeature.Destination.State.about,
+							action: SettingsFeature.Destination.Action.about,
+							onTap: { viewStore.send(.aboutButtonTapped) },
+							destination: AboutView.init(store:),
 							label: AboutRowView.init
 						)
 					}
@@ -197,24 +152,32 @@ public struct SettingsView: View {
 						destination: ActivateView.init(store:),
 						label: EmptyView.init
 					)
-					NavigationLink(
-						route: viewStore.destination2,
-						case: /SettingsFeature.State.Destination2.menu,
-						onNavigate: { viewStore.send(.navigateMenu($0)) },
-						destination: { menuState in
-							MenuPasscodeView(
-								store: self.store.scope(
-									state: { _ in menuState },
-									action: SettingsFeature.Action.menu
-								)
-							)
-						},
-						label: EmptyView.init
-					)
+               NavigationLinkStore(
+                  self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+                  state: /SettingsFeature.Destination.State.menu,
+                  action: SettingsFeature.Destination.Action.menu,
+                  destination: MenuPasscodeView.init(store:),
+                  label: EmptyView.init
+               )
 				}
 				.frame(height: 0)
 			}
 			.onAppear { viewStore.send(.onAppear) }
 		}
 	}
+}
+
+struct SettingsView_Preview: PreviewProvider {
+  static var previews: some View {
+	 NavigationView {
+		 SettingsView(
+			store: Store(
+				initialState: SettingsFeature.State(
+					userSettings: .defaultValue
+				),
+				reducer: SettingsFeature()
+			)
+		 )
+	 }
+  }
 }

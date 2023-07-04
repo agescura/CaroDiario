@@ -11,8 +11,11 @@ enum MailType: String {
 public struct AboutFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable {
+	public struct State: Equatable, Identifiable {
 		@PresentationState public var dialog: ConfirmationDialogState<Action.Dialog>?
+		
+		public var id: Int { 1 }
+		
 		public init() {}
 	}
 	
@@ -33,19 +36,7 @@ public struct AboutFeature: ReducerProtocol {
 		Reduce { state, action in
 			switch action {
 				case .confirmationDialogButtonTapped:
-					state.dialog = ConfirmationDialogState {
-						TextState("AddEntry.ChooseOption".localized)
-					} actions: {
-						ButtonState(action: .send(.mail)) {
-							TextState("Apple Mail")
-						}
-						ButtonState(action: .send(.gmail)) {
-							TextState("Google Gmail")
-						}
-						ButtonState(action: .send(.outlook)) {
-							TextState("Microsoft Outlook")
-						}
-					}
+					state.dialog = .dialog
 					return .none
 					
 				case .dialog(.presented(.mail)):
@@ -81,5 +72,23 @@ public struct AboutFeature: ReducerProtocol {
 			}
 		}
 		.ifLet(\.$dialog, action: /Action.dialog)
+	}
+}
+
+extension ConfirmationDialogState where Action == AboutFeature.Action.Dialog {
+	public static var dialog: Self {
+		ConfirmationDialogState {
+			TextState("AddEntry.ChooseOption".localized)
+		} actions: {
+			ButtonState(action: .send(.mail)) {
+				TextState("Apple Mail")
+			}
+			ButtonState(action: .send(.gmail)) {
+				TextState("Google Gmail")
+			}
+			ButtonState(action: .send(.outlook)) {
+				TextState("Microsoft Outlook")
+			}
+		}
 	}
 }

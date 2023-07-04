@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 extension ScenePhase {
-  var value: Root.State.State {
+  var value: RootFeature.State.Status {
         switch self {
         case .active:
             return .active

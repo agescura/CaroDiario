@@ -72,7 +72,7 @@ public struct LockScreen: ReducerProtocol {
     case let .determine(type):
       state.authenticationType = type
       
-      let leftButton: LockScreenNumber = type == .none || !self.userDefaultsClient.isFaceIDActivate ? .emptyLeft : .biometric(type)
+			 let leftButton: LockScreenNumber = type == .none || !self.userDefaultsClient.userSettings.faceIdEnabled ? .emptyLeft : .biometric(type)
       state.buttons = [
         .number(1),
         .number(2),
@@ -91,7 +91,7 @@ public struct LockScreen: ReducerProtocol {
       
     case .checkFaceId:
       
-      if self.userDefaultsClient.isFaceIDActivate {
+      if self.userDefaultsClient.userSettings.faceIdEnabled {
         return .run { send in
           await send(.faceIdResponse(self.localAuthenticationClient.evaluate("JIJIJAJAJ")))
         }

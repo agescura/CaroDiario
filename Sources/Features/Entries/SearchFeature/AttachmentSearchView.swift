@@ -138,21 +138,21 @@ public struct AttachmentSearchView: View {
         .padding(.top, 16)
       }
       .navigationBarTitle(viewStore.type.title, displayMode: .inline)
-      .navigationDestination(
-        isPresented: viewStore.binding(
-          get: \.navigateEntryDetail,
-          send: AttachmentSearch.Action.navigateEntryDetail
-        ),
-        destination: {
-          IfLetStore(
-            store.scope(
-              state: \.entryDetailState,
-              action: AttachmentSearch.Action.entryDetailAction
-            ),
-            then: EntryDetailView.init(store:)
-          )
-        }
-      )
+//      .navigationDestination(
+//        isPresented: viewStore.binding(
+//          get: \.navigateEntryDetail,
+//          send: AttachmentSearch.Action.navigateEntryDetail
+//        ),
+//        destination: {
+//          IfLetStore(
+//            store.scope(
+//              state: \.entryDetailState,
+//              action: AttachmentSearch.Action.entryDetailAction
+//            ),
+//            then: EntryDetailView.init(store:)
+//          )
+//        }
+//      )
     }
   }
 }

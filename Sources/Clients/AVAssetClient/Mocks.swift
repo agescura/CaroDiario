@@ -13,7 +13,7 @@ extension AVAssetClient: TestDependencyKey {
 
 extension AVAssetClient {
     public static let noop = Self(
-      commonMetadata: { _ in .init() },
+      commonMetadata: { _ in CommonMetadata() },
       generateThumbnail: { _ in UIImage() }
     )
 }

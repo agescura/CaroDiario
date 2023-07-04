@@ -8,21 +8,6 @@ import Views
 public struct AppearanceView: View {
 	let store: StoreOf<AppearanceFeature>
 	
-	private struct ViewState: Equatable {
-		let iconAppType: IconAppType
-		let layoutType: LayoutType
-		let styleType: StyleType
-		let themeType: ThemeType
-		
-		init(
-			state: AppearanceFeature.State
-		) {
-			self.iconAppType = state.iconAppType
-			self.layoutType = state.layoutType
-			self.styleType = state.styleType
-			self.themeType = state.themeType
-		}
-	}
 	public init(
 		store: StoreOf<AppearanceFeature>
 	) {
@@ -32,7 +17,7 @@ public struct AppearanceView: View {
 	public var body: some View {
 		WithViewStore(
 			self.store,
-			observe: ViewState.init
+			observe: \.appearanceSettings
 		) { viewStore in
 			Form {
 				Section {
@@ -42,7 +27,6 @@ public struct AppearanceView: View {
 						action: AppearanceFeature.Destination.Action.layout,
 						onTap: { viewStore.send(.layoutButtonTapped) },
 						destination: { store in
-							let _ = print(store)
 							LayoutView(store: store)
 						},
 						label: { LayoutRowView(title: viewStore.layoutType.rawValue.localized) }
@@ -80,5 +64,20 @@ public struct AppearanceView: View {
 			}
 		}
 		.navigationBarTitle("Settings.Appearance".localized)
+	}
+}
+
+struct AppearanceView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			AppearanceView(
+				store: Store(
+					initialState: AppearanceFeature.State(
+						appearanceSettings: .defaultValue
+					),
+					reducer: AppearanceFeature()
+				)
+			)
+		}
 	}
 }

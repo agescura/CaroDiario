@@ -9,9 +9,9 @@ struct PDFFeaturePreviewApp: App {
             ExportView(
                 store: .init(
                     initialState: .init(),
-                    reducer: Export()
-                )
-            )
+						  reducer: ExportFeature()._printChanges()
+					 )
+				)
         }
     }
 }

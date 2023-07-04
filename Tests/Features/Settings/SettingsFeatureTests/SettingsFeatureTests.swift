@@ -1,76 +1,35 @@
-//
-//  SettingsFeatureTests.swift
-//  
-//
-//  Created by Albert Gil Escura on 11/7/21.
-//
-
-import XCTest
-@testable import SettingsFeature
+import AppearanceFeature
 import ComposableArchitecture
+import Styles
+@testable import SettingsFeature
 import SwiftUI
 import UserDefaultsClient
-import Styles
+import XCTest
 
+@MainActor
 class SettingsFeatureTests: XCTestCase {
-    
-    func testSettingsHappyPath() {
-        let store = TestStore(
-            initialState: SettingsState(
-                showSplash: true,
-                styleType: .rectangle,
-                layoutType: .horizontal,
-                themeType: .system,
-                iconType: .light,
-                hasPasscode: false,
-                cameraStatus: .notDetermined,
-                optionTimeForAskPasscode: 0,
-                faceIdEnabled: false,
-                language: .spanish,
-                microphoneStatus: .notDetermined
-            ),
-            reducer: settingsReducer,
-            environment: SettingsEnvironment(
-                fileClient: .noop,
-                localAuthenticationClient: .noop,
-                applicationClient: .init(
-                    alternateIconName: nil,
-                    setAlternateIconName: { _ in () },
-                    supportsAlternateIcons: { true },
-                    openSettings: { .fireAndForget {} },
-                    open: { _, _  in .fireAndForget {} },
-                    canOpen: { _ in true },
-                    share: { _, _  in .fireAndForget {} },
-                    showTabView: { _ in .fireAndForget {} }
-                ),
-                avCaptureDeviceClient: .noop,
-                feedbackGeneratorClient: .noop,
-                avAudioSessionClient: .noop,
-                storeKitClient: .noop,
-                pdfKitClient: .noop,
-                mainQueue: .immediate,
-                date: Date.init
-            )
-        )
-        
-        store.send(.toggleShowSplash(isOn: false)) {
-            $0.showSplash = false
-        }
-        
-        store.send(.navigateAppearance(true)) {
-            $0.route = .appearance(
-                .init(
-                    styleType: .rectangle,
-                    layoutType: .horizontal,
-                    themeType: .system,
-                    iconAppType: .light
-                )
-            )
-        }
-        
-        store.send(.navigateAppearance(false)) {
-            $0.appearanceState = nil
-            $0.route = nil
-        }
-    }
+	
+	func testSettingsHappyPath() async {
+		let store = TestStore(
+			initialState: SettingsFeature.State(
+				userSettings: .defaultValue
+			),
+			reducer: SettingsFeature()
+		) {
+			$0.userDefaultsClient.objectForKey = { _ in nil }
+			$0.userDefaultsClient.setObject = { _,_ in }
+			$0.avCaptureDeviceClient.authorizationStatus = { .authorized }
+			$0.localAuthenticationClient.determineType = { .none }
+		}
+		
+		await store.send(.appearanceButtonTapped) {
+			$0.destination = .appearance(
+				AppearanceFeature.State(appearanceSettings: .defaultValue)
+			)
+		}
+		
+		await store.send(.destination(.dismiss)) {
+			$0.destination = nil
+		}
+	}
 }

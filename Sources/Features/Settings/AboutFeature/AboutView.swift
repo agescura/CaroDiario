@@ -15,8 +15,7 @@ public struct AboutView: View {
 	
 	public var body: some View {
 		WithViewStore(
-			self.store,
-			observe: { $0 }
+			self.store.stateless
 		) { viewStore in
 			VStack {
 				Form {
@@ -57,5 +56,18 @@ public struct AboutView: View {
 			)
 		}
 		.navigationBarTitle("Settings.About".localized)
+	}
+}
+
+struct AboutView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			AboutView(
+				store: Store(
+					initialState: AboutFeature.State(),
+					reducer: AboutFeature()
+				)
+			)
+		}
 	}
 }

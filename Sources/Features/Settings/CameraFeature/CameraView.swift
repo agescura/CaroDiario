@@ -8,68 +8,11 @@ import Styles
 import Models
 import SwiftUIHelper
 
-public struct Camera: ReducerProtocol {
-	public init() {}
-	
-	public struct State: Equatable {
-		public var cameraStatus: AuthorizedVideoStatus
-		
-		public init(
-			cameraStatus: AuthorizedVideoStatus
-		) {
-			self.cameraStatus = cameraStatus
-		}
-	}
-	
-	public enum Action: Equatable {
-		case cameraButtonTapped
-		case requestAccessResponse(Bool)
-		case goToSettings
-	}
-	
-	@Dependency(\.applicationClient) private var applicationClient
-	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
-	@Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
-	
-	public var body: some ReducerProtocolOf<Self> {
-		Reduce(self.core)
-	}
-	
-	private func core(
-		state: inout State,
-		action: Action
-	) -> EffectTask<Action> {
-		switch action {
-			case .cameraButtonTapped:
-				switch state.cameraStatus {
-					case .notDetermined:
-						return .task { @MainActor in
-							await self.feedbackGeneratorClient.selectionChanged()
-							return .requestAccessResponse(await self.avCaptureDeviceClient.requestAccess())
-						}
-						
-					default:
-						break
-				}
-				return .none
-				
-			case let .requestAccessResponse(authorized):
-				state.cameraStatus = authorized ? .authorized : .denied
-				return .none
-				
-			case .goToSettings:
-				guard state.cameraStatus != .notDetermined
-				else { return .none }
-				return .fireAndForget { await self.applicationClient.openSettings() }
-		}
-	}
-}
-
 public struct CameraView: View {
-	let store: StoreOf<Camera>
+	let store: StoreOf<CameraFeature>
 	
 	public init(
-		store: StoreOf<Camera>
+		store: StoreOf<CameraFeature>
 	) {
 		self.store = store
 	}
@@ -112,7 +55,10 @@ public struct CameraView: View {
 					.onTapGesture { viewStore.send(.cameraButtonTapped) }
 				}
 			}
-			.navigationBarTitle("Settings.Camera.Privacy".localized, displayMode: .inline)
+			.navigationBarTitle(
+				"Settings.Camera.Privacy".localized,
+				displayMode: .inline
+			)
 		}
 	}
 }
@@ -120,7 +66,6 @@ public struct CameraView: View {
 extension AuthorizedVideoStatus {
 	var description: String {
 		switch self {
-				
 			case .notDetermined:
 				return "notDetermined.description".localized
 			case .denied:
@@ -139,5 +84,45 @@ extension AuthorizedVideoStatus {
 			default:
 				return ""
 		}
+	}
+}
+
+struct CameraView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			CameraView(
+				store: Store(
+					initialState: CameraFeature.State(
+						cameraStatus: .notDetermined
+					),
+					reducer: CameraFeature()
+				)
+			)
+		}
+		.previewDisplayName("NotDetermined")
+		
+		NavigationView {
+			CameraView(
+				store: Store(
+					initialState: CameraFeature.State(
+						cameraStatus: .authorized
+					),
+					reducer: CameraFeature()
+				)
+			)
+		}
+		.previewDisplayName("Authorized")
+		
+		NavigationView {
+			CameraView(
+				store: Store(
+					initialState: CameraFeature.State(
+						cameraStatus: .denied
+					),
+					reducer: CameraFeature()
+				)
+			)
+		}
+		.previewDisplayName("Denied")
 	}
 }

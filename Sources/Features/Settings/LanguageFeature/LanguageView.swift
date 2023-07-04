@@ -39,3 +39,31 @@ public struct LanguageView: View {
     }
   }
 }
+
+struct LanguageView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			LanguageView(
+				store: Store(
+					initialState: LanguageFeature.State(
+						language: .english
+					),
+					reducer: LanguageFeature()
+				)
+			)
+		}
+		.previewDisplayName("English")
+		
+		NavigationView {
+			LanguageView(
+				store: Store(
+					initialState: LanguageFeature.State(
+						language: .spanish
+					),
+					reducer: LanguageFeature()
+				)
+			)
+		}
+		.previewDisplayName("Spanish")
+	}
+}

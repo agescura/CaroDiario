@@ -2,31 +2,23 @@ import ComposableArchitecture
 import EntriesFeature
 import Foundation
 import Models
+import TCAHelpers
 
 public struct AppearanceFeature: ReducerProtocol {
 	public init() {}
 	
 	public struct State: Equatable, Identifiable {
 		@PresentationState public var destination: Destination.State?
-		public var iconAppType: IconAppType
-		public var layoutType: LayoutType
-		public var styleType: StyleType
-		public var themeType: ThemeType
+		public var appearanceSettings: AppearanceSettings
 		
 		public var id: Int { 1 }
 		
 		public init(
 			destination: Destination.State? = nil,
-			styleType: StyleType,
-			layoutType: LayoutType,
-			themeType: ThemeType,
-			iconAppType: IconAppType
+			appearanceSettings: AppearanceSettings
 		) {
 			self.destination = destination
-			self.styleType = styleType
-			self.layoutType = layoutType
-			self.themeType = themeType
-			self.iconAppType = iconAppType
+			self.appearanceSettings = appearanceSettings
 		}
 	}
 	
@@ -87,13 +79,13 @@ public struct AppearanceFeature: ReducerProtocol {
 				case .destination(.dismiss):
 					switch state.destination {
 						case let .iconApp(iconAppState):
-							state.iconAppType = iconAppState.iconAppType
+							state.appearanceSettings.iconAppType = iconAppState.iconAppType
 						case let .layout(layoutState):
-							state.layoutType = layoutState.layoutType
+							state.appearanceSettings.layoutType = layoutState.layoutType
 						case let .style(styleState):
-							state.styleType = styleState.styleType
+							state.appearanceSettings.styleType = styleState.styleType
 						case let .theme(themeState):
-							state.themeType = themeState.themeType
+							state.appearanceSettings.themeType = themeState.themeType
 						case .none:
 							return .none
 					}
@@ -104,16 +96,16 @@ public struct AppearanceFeature: ReducerProtocol {
 					
 				case .iconAppButtonTapped:
 					state.destination = .iconApp(
-						IconAppFeature.State(iconAppType: state.iconAppType)
+						IconAppFeature.State(iconAppType: state.appearanceSettings.iconAppType)
 					)
 					return .none
 					
 				case .layoutButtonTapped:
 					state.destination = .layout(
 						LayoutFeature.State(
-							layoutType: state.layoutType,
-							styleType: state.styleType,
-							entries: fakeEntries(with: state.styleType, layout: state.layoutType)
+							layoutType: state.appearanceSettings.layoutType,
+							styleType: state.appearanceSettings.styleType,
+							entries: fakeEntries(with: state.appearanceSettings.styleType, layout: state.appearanceSettings.layoutType)
 						)
 					)
 					return .none
@@ -121,9 +113,9 @@ public struct AppearanceFeature: ReducerProtocol {
 				case .styleButtonTapped:
 					state.destination = .style(
 						StyleFeature.State(
-							styleType: state.styleType,
-							layoutType: state.layoutType,
-							entries: fakeEntries(with: state.styleType, layout: state.layoutType)
+							styleType: state.appearanceSettings.styleType,
+							layoutType: state.appearanceSettings.layoutType,
+							entries: fakeEntries(with: state.appearanceSettings.styleType, layout: state.appearanceSettings.layoutType)
 						)
 					)
 					return .none
@@ -131,8 +123,8 @@ public struct AppearanceFeature: ReducerProtocol {
 				case .themeButtonTapped:
 					state.destination = .theme(
 						ThemeFeature.State(
-							themeType: state.themeType,
-							entries: fakeEntries(with: state.styleType, layout: state.layoutType)
+							themeType: state.appearanceSettings.themeType,
+							entries: fakeEntries(with: state.appearanceSettings.styleType, layout: state.appearanceSettings.layoutType)
 						)
 					)
 					return .none

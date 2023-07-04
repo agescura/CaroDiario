@@ -1,27 +1,22 @@
-//
-//  MenuPasscodeViewTests.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/7/21.
-//
-
 import XCTest
 @testable import PasscodeFeature
 import ComposableArchitecture
 import SwiftUI
 
+@MainActor
 class MenuPasscodeViewTests: XCTestCase {
-    func test() {
-        let store = TestStore(
-            initialState: MenuPasscodeState(authenticationType: .none, optionTimeForAskPasscode: 0),
-            reducer: menuPasscodeReducer,
-            environment: MenuPasscodeEnvironment(
-                userDefaultsClient: .noop,
-                localAuthenticationClient: .noop,
-                mainQueue: .immediate
-            )
-        )
-        
-        store.send(.actionSheetTurnoffTapped)
-    }
+	func testHappyPath() async {
+		let store = TestStore(
+			initialState: MenuPasscodeFeature.State(
+				authenticationType: .none,
+				optionTimeForAskPasscode: 0,
+				faceIdEnabled: false
+			),
+			reducer: MenuPasscodeFeature()
+		)
+		
+		await store.send(.confirmationDialogButtonTapped) {
+			$0.confirmationDialog = .confirmationDialog(type: .none)
+		}
+	}
 }

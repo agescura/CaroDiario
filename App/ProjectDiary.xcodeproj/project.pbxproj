@@ -120,6 +120,7 @@
 		95EFDB4C26D7F02D00C2B12F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		BD2A3298447210A07EE095A2 /* ProjectDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB841C347FD8D298EFFE0DFA /* ProjectDiaryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDiaryApp.swift; sourceTree = "<group>"; };
+		CE0350FA2A4245BF009E31E8 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +187,7 @@
 		9537BBB526D5419A00650CF5 /* ProjectDiaryTests */ = {
 			isa = PBXGroup;
 			children = (
+				CE0350FA2A4245BF009E31E8 /* TestPlan.xctestplan */,
 				9537BBB626D5419A00650CF5 /* ProjectDiaryTests.swift */,
 				9537BBB826D5419A00650CF5 /* Info.plist */,
 			);

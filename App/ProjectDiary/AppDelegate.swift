@@ -2,23 +2,23 @@ import SwiftUI
 import ComposableArchitecture
 import RootFeature
 import Styles
+import SplashFeature
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-  let store: StoreOf<Root>
+  let store: StoreOf<RootFeature>
   
   lazy var viewStore = ViewStore(
-    store.scope(state: { _ in () }),
-    removeDuplicates: ==
+    store.stateless
   )
   
   override init() {
     self.store = Store(
-      initialState: .init(
-        appDelegate: .init(),
-        featureState: .splash(.init())
+		initialState: RootFeature.State(
+        appDelegate: AppDelegateState(),
+		  feature: .splash(SplashFeature.State())
       ),
-      reducer: Root()
-    )
+		reducer: RootFeature()
+	 )
   }
   
   func application(

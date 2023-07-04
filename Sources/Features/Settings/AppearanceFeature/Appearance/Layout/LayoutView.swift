@@ -46,3 +46,37 @@ public struct LayoutView: View {
     }
   }
 }
+
+struct LayoutView_Previews: PreviewProvider {
+	static var previews: some View {
+		LayoutView(
+			store: Store(
+				initialState: LayoutFeature.State(
+					layoutType: .vertical,
+					styleType: .rectangle,
+					entries: fakeEntries(
+						with: .rectangle,
+						layout: .vertical
+					)
+				),
+				reducer: LayoutFeature()
+			)
+		)
+		.previewDisplayName("Vertical")
+		
+		LayoutView(
+			store: Store(
+				initialState: LayoutFeature.State(
+					layoutType: .horizontal,
+					styleType: .rectangle,
+					entries: fakeEntries(
+						with: .rectangle,
+						layout: .horizontal
+					)
+				),
+				reducer: LayoutFeature()
+			)
+		)
+		.previewDisplayName("Horizontal")
+	}
+}

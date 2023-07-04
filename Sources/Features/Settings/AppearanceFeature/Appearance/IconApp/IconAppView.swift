@@ -52,3 +52,16 @@ public struct IconAppView: View {
     }
   }
 }
+
+struct IconAppView_Previews: PreviewProvider {
+	static var previews: some View {
+		IconAppView(
+			store: Store(
+				initialState: IconAppFeature.State(
+					iconAppType: .light
+				),
+				reducer: IconAppFeature()
+			)
+		)
+	}
+}

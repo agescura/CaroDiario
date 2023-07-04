@@ -1,27 +1,23 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 20/8/22.
-//
-
 import XCTest
 @testable import PasscodeFeature
 import ComposableArchitecture
 import SwiftUI
 
+@MainActor
 class ActivatePasscodeViewTests: XCTestCase {
-    func test() {
-        let store = TestStore(
-            initialState: ActivatePasscodeState(faceIdEnabled: false, hasPasscode: false),
-            reducer: activatePasscodeReducer,
-            environment: ActivatePasscodeEnvironment(
-                userDefaultsClient: .noop,
-                localAuthenticationClient: .noop,
-                mainQueue: .unimplemented
-            )
-        )
-        
-        store.send(.actionSheetTurnoffTapped)
-    }
+	func testHappyPath() async {
+		let store = TestStore(
+			initialState: ActivateFeature.State(
+				faceIdEnabled: false,
+				hasPasscode: false
+			),
+			reducer: ActivateFeature()
+		)
+		
+		await store.send(.navigateToInsert) {
+			$0.insert = InsertFeature.State(
+				faceIdEnabled: false
+			)
+		}
+	}
 }

@@ -12,7 +12,10 @@ public struct SplashView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    WithViewStore(
+		self.store,
+		observe: { $0 }
+	 ) { viewStore in
       ZStack {
         Color.chambray
         
@@ -29,6 +32,7 @@ public struct SplashView: View {
         }
       }
       .ignoresSafeArea()
+		.task { await viewStore.send(.start).finish() }
     }
   }
 }

@@ -29,47 +29,41 @@ public struct SplashFeature: ReducerProtocol {
     case verticalLine
     
     public enum Delegate {
-      case completeAnimation
+      case finished
     }
   }
   
-  @Dependency(\.continuousClock) private var clock
+  @Dependency(\.mainQueue) private var mainQueue
   
-  public var body: some ReducerProtocolOf<Self> {
-    Reduce(self.core)
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> EffectTask<Action> {
-    switch action {
-    case .area:
-      state.animation = .horizontalArea
-      return .run { send in
-        try await self.clock.sleep(for: .seconds(1))
-        await send(.finish)
-      }
-      
-    case .delegate(.completeAnimation):
-      return .none
-      
-    case .finish:
-      state.animation = .finish
-      return .none
-      
-    case .start:
-      return .run { send in
-        try await self.clock.sleep(for: .seconds(1))
-        await send(.verticalLine)
-      }
-      
-    case .verticalLine:
-      state.animation = .verticalLine
-      return .run { send in
-        try await self.clock.sleep(for: .seconds(1))
-        await send(.area)
-      }
-    }
-  }
+	public var body: some ReducerProtocolOf<Self> {
+		Reduce { state, action in
+			switch action {
+				case .area:
+					state.animation = .horizontalArea
+					return .none
+					
+				case .delegate:
+					return .none
+					
+				case .finish:
+					state.animation = .finish
+					return .none
+					
+				case .start:
+					return .run { send in
+						await send(.verticalLine)
+						try await self.mainQueue.sleep(for: .seconds(1))
+						await send(.area)
+						try await self.mainQueue.sleep(for: .seconds(1))
+						await send(.finish)
+						await send(.delegate(.finished))
+						
+					}
+					
+				case .verticalLine:
+					state.animation = .verticalLine
+					return .none
+			}
+		}
+	}
 }

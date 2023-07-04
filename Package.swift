@@ -79,7 +79,7 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.54.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.54.1"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.11.0"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.5.1")
     ],
@@ -255,7 +255,8 @@ let package = Package(
                 "AVAudioSessionClient",
                 "SearchFeature",
                 "StoreKitClient",
-                "PDFKitClient"
+                "PDFKitClient",
+					 "TCAHelpers"
             ],
             path: "Sources/Features/HomeFeature"
         ),
@@ -281,7 +282,8 @@ let package = Package(
                 "Styles",
                 "Views",
                 "EntriesFeature",
-                "FeedbackGeneratorClient"
+                "FeedbackGeneratorClient",
+					 "TCAHelpers"
             ],
             path: "Sources/Features/OnboardingFeature"
         ),
@@ -302,7 +304,8 @@ let package = Package(
                 "UIApplicationClient",
                 "FeedbackGeneratorClient",
                 "StoreKitClient",
-                "PDFKitClient"
+                "PDFKitClient",
+					 "TCAHelpers"
             ],
             path: "Sources/Features/RootFeature"
         ),
@@ -406,7 +409,8 @@ let package = Package(
                 "Styles",
                 "Views",
                 "Localizables",
-                "SwiftUIHelper"
+                "SwiftUIHelper",
+					 "TCAHelpers"
             ],
             path: "Sources/Features/Settings/PasscodeFeature"
         ),
@@ -472,16 +476,19 @@ let package = Package(
         ),
         .target(
             name: "SwiftHelper",
-            dependencies: [],
             path: "Sources/Helpers/SwiftHelper"
         ),
         .target(
             name: "SwiftUIHelper",
-            dependencies: [
-                composableArchitecture
-            ],
             path: "Sources/Helpers/SwiftUIHelper"
         ),
+		  .target(
+				name: "TCAHelpers",
+				dependencies: [
+					 composableArchitecture
+				],
+				path: "Sources/Helpers/TCAHelpers"
+		  ),
         .target(
             name: "Localizables",
             dependencies: [],
@@ -590,6 +597,15 @@ let package = Package(
             path: "Tests/Features/Settings/CameraFeatureTests",
             exclude: ["__Snapshots__"]
         ),
+		  .testTarget(
+				name: "LanguageFeatureTests",
+				dependencies: [
+					 "LanguageFeature",
+					 snapshotTesting
+				],
+				path: "Tests/Features/Settings/LanguageFeatureTests",
+				exclude: ["__Snapshots__"]
+		  ),
         .testTarget(
             name: "PasscodeFeatureTests",
             dependencies: ["PasscodeFeature"],

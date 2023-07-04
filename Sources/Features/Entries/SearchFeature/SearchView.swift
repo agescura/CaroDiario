@@ -15,7 +15,7 @@ public struct SearchView: View {
   
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
-      NavigationStack {
+      NavigationView {
         VStack {
           if viewStore.searchText.isEmpty {
             VStack(spacing: 16) {
@@ -99,36 +99,36 @@ public struct SearchView: View {
         .add(searchBar) {
           viewStore.send(.searching(newText: $0))
         }
-        .navigationDestination(
-          isPresented: viewStore.binding(
-            get: \.navigateEntryDetail,
-            send: Search.Action.navigateEntryDetail
-          ),
-          destination: {
-            IfLetStore(
-              store.scope(
-                state: \.entryDetailState,
-                action: Search.Action.entryDetailAction
-              ),
-              then: EntryDetailView.init(store:)
-            )
-          }
-        )
-        .navigationDestination(
-          isPresented: viewStore.binding(
-            get: \.navigateAttachmentSearch,
-            send: Search.Action.navigateAttachmentSearch
-          ),
-          destination: {
-            IfLetStore(
-              store.scope(
-                state: \.attachmentSearchState,
-                action: Search.Action.attachmentSearchAction
-              ),
-              then: AttachmentSearchView.init(store:)
-            )
-          }
-        )
+//        .navigationDestination(
+//          isPresented: viewStore.binding(
+//            get: \.navigateEntryDetail,
+//            send: Search.Action.navigateEntryDetail
+//          ),
+//          destination: {
+//            IfLetStore(
+//              store.scope(
+//                state: \.entryDetailState,
+//                action: Search.Action.entryDetailAction
+//              ),
+//              then: EntryDetailView.init(store:)
+//            )
+//          }
+//        )
+//        .navigationDestination(
+//          isPresented: viewStore.binding(
+//            get: \.navigateAttachmentSearch,
+//            send: Search.Action.navigateAttachmentSearch
+//          ),
+//          destination: {
+//            IfLetStore(
+//              store.scope(
+//                state: \.attachmentSearchState,
+//                action: Search.Action.attachmentSearchAction
+//              ),
+//              then: AttachmentSearchView.init(store:)
+//            )
+//          }
+//        )
       }
       .navigationViewStyle(StackNavigationViewStyle())
     }

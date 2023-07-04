@@ -1,37 +1,23 @@
 import ComposableArchitecture
 import SwiftUI
 import Views
-import Localizables
 
 public struct PDFPreviewView: View {
-  let store: StoreOf<PDFPreview>
+  let store: StoreOf<PDFPreviewFeature>
   
   public init(
-    store: StoreOf<PDFPreview>
+    store: StoreOf<PDFPreviewFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      VStack {
-        HStack(spacing: 16) {
-          Spacer()
-          
-          Button(action: {
-            viewStore.send(.dismiss)
-          }, label: {
-            Image(.xmark)
-              .resizable()
-              .frame(width: 18, height: 18)
-              .foregroundColor(.chambray)
-          })
-        }
-        .padding()
-        
-        PDFViewRepresentable(data: viewStore.pdfData)
-          .edgesIgnoringSafeArea(.all)
-      }
+    WithViewStore(
+		self.store.actionless,
+		observe: \.pdfData
+	 ) { viewStore in
+		 PDFViewRepresentable(data: viewStore.state)
+			.edgesIgnoringSafeArea(.all)
     }
   }
 }

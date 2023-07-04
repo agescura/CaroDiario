@@ -6,81 +6,121 @@ import Models
 import SwiftUIHelper
 
 public struct MicrophoneView: View {
-  let store: StoreOf<Microphone>
-  
-  public init(
-    store: StoreOf<Microphone>
-  ) {
-    self.store = store
-  }
-  
-  public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      Form {
-        Section(
-          footer:
-            Group {
-              if viewStore.microphoneStatus != .denied {
-                Text(viewStore.microphoneStatus.description)
-              } else {
-                Text(viewStore.microphoneStatus.description)
-                + Text(" ") +
-                Text("Settings.GoToSettings".localized)
-                  .underline()
-                  .foregroundColor(.blue)
-              }
-            }
-            .onTapGesture {
-              viewStore.send(.goToSettings)
-            }
-        ) {
-          HStack {
-            Text(viewStore.microphoneStatus.title.localized)
-              .foregroundColor(.chambray)
-              .adaptiveFont(.latoRegular, size: 10)
-            Spacer()
-            if viewStore.microphoneStatus == .notDetermined {
-              Text("Settings.GivePermission".localized)
-                .foregroundColor(.adaptiveGray)
-                .adaptiveFont(.latoRegular, size: 8)
-              Image(.chevronRight)
-                .foregroundColor(.adaptiveGray)
-            }
-          }
-          .contentShape(Rectangle())
-          .onTapGesture {
-            viewStore.send(.microphoneButtonTapped)
-          }
-        }
-      }
-      .navigationBarTitle("Settings.Camera.Privacy".localized, displayMode: .inline)
-    }
-  }
+	let store: StoreOf<MicrophoneFeature>
+	
+	public init(
+		store: StoreOf<MicrophoneFeature>
+	) {
+		self.store = store
+	}
+	
+	public var body: some View {
+		WithViewStore(self.store, observe: { $0 }) { viewStore in
+			Form {
+				Section(
+					footer:
+						Group {
+							if viewStore.microphoneStatus != .denied {
+								Text(viewStore.microphoneStatus.description)
+							} else {
+								Text(viewStore.microphoneStatus.description)
+								+ Text(" ") +
+								Text("Settings.GoToSettings".localized)
+									.underline()
+									.foregroundColor(.blue)
+							}
+						}
+						.onTapGesture {
+							viewStore.send(.goToSettings)
+						}
+				) {
+					HStack {
+						Text(viewStore.microphoneStatus.title.localized)
+							.foregroundColor(.chambray)
+							.adaptiveFont(.latoRegular, size: 10)
+						Spacer()
+						if viewStore.microphoneStatus == .notDetermined {
+							Text("Settings.GivePermission".localized)
+								.foregroundColor(.adaptiveGray)
+								.adaptiveFont(.latoRegular, size: 8)
+							Image(.chevronRight)
+								.foregroundColor(.adaptiveGray)
+						}
+					}
+					.contentShape(Rectangle())
+					.onTapGesture {
+						viewStore.send(.microphoneButtonTapped)
+					}
+				}
+			}
+			.navigationBarTitle("Settings.Camera.Privacy".localized, displayMode: .inline)
+		}
+	}
+}
+
+struct MicrophoneView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			MicrophoneView(
+				store: Store(
+					initialState: MicrophoneFeature.State(
+						microphoneStatus: .notDetermined
+					),
+					reducer: MicrophoneFeature()
+				)
+			)
+		}
+		.previewDisplayName("NotDetermined")
+		
+		NavigationView {
+			MicrophoneView(
+				store: Store(
+					initialState: MicrophoneFeature.State(
+						microphoneStatus: .authorized
+					),
+					reducer: MicrophoneFeature()
+				)
+			)
+		}
+		.previewDisplayName("Authorized")
+		
+		NavigationView {
+			MicrophoneView(
+				store: Store(
+					initialState: MicrophoneFeature.State(
+						microphoneStatus: .denied
+					),
+					reducer: MicrophoneFeature()
+				)
+			)
+		}
+		.previewDisplayName("Denied")
+	}
 }
 
 
 extension AudioRecordPermission {
-  public var description: String {
-    switch self {
-    case .authorized:
-      return "microphone.authorized.description".localized
-    case .denied:
-      return "microphone.denied.description".localized
-    case .notDetermined:
-      return "microphone.notDetermined.description".localized
-    }
-  }
+	public var description: String {
+		switch self {
+			case .authorized:
+				return "microphone.authorized.description".localized
+			case .denied:
+				return "microphone.denied.description".localized
+			case .notDetermined:
+				return "microphone.notDetermined.description".localized
+		}
+	}
 }
 
 extension AudioRecordPermission {
-  public var title: String {
-    switch self {
-    case .authorized:
-      return "microphone.authorized".localized
-    case .denied:
-      return "microphone.denied".localized
-    case .notDetermined:
-      return "microphone.notDetermined".localized
-    }
-  }
+	public var title: String {
+		switch self {
+			case .authorized:
+				return "microphone.authorized".localized
+			case .denied:
+				return "microphone.denied".localized
+			case .notDetermined:
+				return "microphone.notDetermined".localized
+		}
+	}
 }
