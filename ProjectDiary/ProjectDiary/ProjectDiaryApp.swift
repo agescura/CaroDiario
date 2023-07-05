@@ -10,10 +10,10 @@ struct ProjectDiaryApp: App {
   var body: some Scene {
     WindowGroup {
       RootView(store: self.appDelegate.store)
-        .onOpenURL(perform: self.appDelegate.process(url:))
+        .onOpenURL(perform: self.appDelegate.process)
         .onChange(
           of: self.scenePhase,
-          perform: self.appDelegate.update(state:)
+          perform: self.appDelegate.update
         )
     }
   }

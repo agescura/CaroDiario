@@ -30,8 +30,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         appDelegate: .init(),
         featureState: .splash(.init())
       ),
-      reducer: Root()
-    )
+		reducer: Root()._printChanges()
+	 )
   }
   
   func application(

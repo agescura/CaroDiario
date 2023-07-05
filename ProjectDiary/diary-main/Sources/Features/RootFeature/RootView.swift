@@ -18,6 +18,7 @@ import PDFKitClient
 import AVAssetClient
 import Models
 import PasscodeFeature
+import SettingsFeature
 
 public struct Root: ReducerProtocol {
   public init() {}
@@ -176,7 +177,20 @@ public struct Root: ReducerProtocol {
             microphoneStatus: self.avAudioSessionClient.recordPermission(),
             optionTimeForAskPasscode: self.userDefaultsClient.optionTimeForAskPasscode,
             faceIdEnabled: self.userDefaultsClient.isFaceIDActivate
-          )
+          ),
+			 settings: Settings.State(
+				showSplash: !self.userDefaultsClient.hideSplashScreen,
+				styleType: self.userDefaultsClient.styleType,
+				layoutType: self.userDefaultsClient.layoutType,
+				themeType: self.userDefaultsClient.themeType,
+				iconType: self.applicationClient.alternateIconName != nil ? .dark : .light,
+				hasPasscode: (self.userDefaultsClient.passcodeCode ?? "").count > 0,
+				cameraStatus: status,
+				optionTimeForAskPasscode: self.userDefaultsClient.optionTimeForAskPasscode,
+				faceIdEnabled: self.userDefaultsClient.isFaceIDActivate,
+				language: Localizable(rawValue: self.userDefaultsClient.language) ?? .spanish,
+				microphoneStatus: self.avAudioSessionClient.recordPermission()
+			 )
         )
       )
       return Effect(value: .featureAction(.home(.starting)))
@@ -350,13 +364,13 @@ public struct Root: ReducerProtocol {
     action: Action
   ) -> Effect<Action, Never> {
     switch action {
-    case let .featureAction(.home(.settings(.appearance(.layout(.layoutChanged(layout)))))):
+		 case let .featureAction(.home(.settings(.appearanceAction(.presented(.destination(.presented(.layout(.layoutChanged(layout))))))))):
       return self.userDefaultsClient.set(layoutType: layout)
         .fireAndForget()
-    case let .featureAction(.home(.settings(.appearance(.style(.styleChanged(style)))))):
+		 case let .featureAction(.home(.settings(.appearanceAction(.presented(.destination(.presented(.style(.styleChanged(style))))))))):
       return self.userDefaultsClient.set(styleType: style)
         .fireAndForget()
-    case let .featureAction(.home(.settings(.appearance(.theme(.themeChanged(theme)))))):
+		 case let .featureAction(.home(.settings(.appearanceAction(.presented(.destination(.presented(.theme(.themeChanged(theme))))))))):
       return self.userDefaultsClient.set(themeType: theme)
         .fireAndForget()
     case let .featureAction(.home(.settings(.toggleShowSplash(isOn: isOn)))):

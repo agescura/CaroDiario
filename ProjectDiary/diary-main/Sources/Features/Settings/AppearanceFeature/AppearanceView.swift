@@ -1,93 +1,83 @@
 import ComposableArchitecture
-import SwiftUI
-import Styles
-import Views
-import SwiftUIHelper
 import Models
+import Styles
+import SwiftUI
+import SwiftUIHelper
+import Views
 
 public struct AppearanceView: View {
-  let store: StoreOf<Appearance>
-  
-  public init(
-    store: StoreOf<Appearance>
-  ) {
-    self.store = store
-  }
-  
-  public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      Form {
-        Section {
-          NavigationLink(
-            route: viewStore.route,
-            case: /Appearance.State.Route.style,
-            onNavigate: { viewStore.send(.navigateStyle($0)) },
-            destination: { styleState in
-              StyleView(
-                store: self.store.scope(
-                  state: { _ in styleState },
-                  action: Appearance.Action.style
-                )
-              )
-            },
-            label: {
-              StyleRowView(title: viewStore.styleType.rawValue.localized)
-            }
-          )
-          NavigationLink(
-            route: viewStore.route,
-            case: /Appearance.State.Route.layout,
-            onNavigate: { viewStore.send(.navigateLayout($0)) },
-            destination: { layoutState in
-              LayoutView(
-                store: self.store.scope(
-                  state: { _ in layoutState },
-                  action: Appearance.Action.layout
-                )
-              )
-            },
-            label: {
-              LayoutRowView(title: viewStore.layoutType.rawValue.localized)
-            }
-          )
-          NavigationLink(
-            route: viewStore.route,
-            case: /Appearance.State.Route.theme,
-            onNavigate: { viewStore.send(.navigateTheme($0)) },
-            destination: { themeState in
-              ThemeView(
-                store: self.store.scope(
-                  state: { _ in themeState },
-                  action: Appearance.Action.theme
-                )
-              )
-            },
-            label: {
-              ThemeRowView(
-                iconName: viewStore.themeType.icon,
-                title: viewStore.themeType.rawValue.localized
-              )
-            }
-          )
-          NavigationLink(
-            route: viewStore.route,
-            case: /Appearance.State.Route.iconApp,
-            onNavigate: { viewStore.send(.navigateIconApp($0)) },
-            destination: { iconAppState in
-              IconAppView(
-                store: self.store.scope(
-                  state: { _ in iconAppState },
-                  action: Appearance.Action.iconApp
-                )
-              )
-            },
-            label: {
-              IconAppRowView(title: viewStore.iconAppType.rawValue.localized)
-            }
-          )
-        }
-      }
-    }
-    .navigationBarTitle("Settings.Appearance".localized)
-  }
+	let store: StoreOf<AppearanceFeature>
+	
+	public init(
+		store: StoreOf<AppearanceFeature>
+	) {
+		self.store = store
+	}
+	
+	public var body: some View {
+		WithViewStore(
+			self.store,
+			observe: \.appearanceSettings
+		) { viewStore in
+			Form {
+				Section {
+					NavigationLinkStore(
+						self.store.scope(state: \.$destination, action: AppearanceFeature.Action.destination),
+						state: /AppearanceFeature.Destination.State.layout,
+						action: AppearanceFeature.Destination.Action.layout,
+						onTap: { viewStore.send(.layoutButtonTapped) },
+						destination: { store in
+							LayoutView(store: store)
+						},
+						label: { LayoutRowView(title: viewStore.layoutType.rawValue.localized) }
+					)
+					NavigationLinkStore(
+						self.store.scope(state: \.$destination, action: AppearanceFeature.Action.destination),
+						state: /AppearanceFeature.Destination.State.style,
+						action: AppearanceFeature.Destination.Action.style,
+						onTap: { viewStore.send(.styleButtonTapped) },
+						destination: StyleView.init(store:),
+						label: { StyleRowView(title: viewStore.styleType.rawValue.localized) }
+					)
+					NavigationLinkStore(
+						self.store.scope(state: \.$destination, action: AppearanceFeature.Action.destination),
+						state: /AppearanceFeature.Destination.State.theme,
+						action: AppearanceFeature.Destination.Action.theme,
+						onTap: { viewStore.send(.themeButtonTapped) },
+						destination: ThemeView.init(store:),
+						label: {
+							ThemeRowView(
+								iconName: viewStore.themeType.icon,
+								title: viewStore.themeType.rawValue.localized
+							)
+						}
+					)
+					NavigationLinkStore(
+						self.store.scope(state: \.$destination, action: AppearanceFeature.Action.destination),
+						state: /AppearanceFeature.Destination.State.iconApp,
+						action: AppearanceFeature.Destination.Action.iconApp,
+						onTap: { viewStore.send(.iconAppButtonTapped) },
+						destination: IconAppView.init(store:),
+						label: { IconAppRowView(title: viewStore.iconAppType.rawValue.localized) }
+					)
+				}
+			}
+		}
+		.navigationBarTitle("Settings.Appearance".localized)
+	}
+}
+
+struct AppearanceView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationView {
+			AppearanceView(
+				store: Store(
+					initialState: AppearanceFeature.State(
+						appearanceSettings: .defaultValue
+					),
+					reducer: AppearanceFeature()
+				)
+			)
+		}
+	}
 }

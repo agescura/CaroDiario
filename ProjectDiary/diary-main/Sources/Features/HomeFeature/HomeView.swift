@@ -114,47 +114,50 @@ public struct Home: ReducerProtocol {
       get { self.sharedState.search }
       set { self.sharedState.search = newValue }
     }
-    public var settings: Settings.State {
-      get {
-        .init(
-          showSplash: self.sharedState.showSplash,
-          styleType: self.sharedState.styleType,
-          layoutType: self.sharedState.layoutType,
-          themeType: self.sharedState.themeType,
-          iconType: self.sharedState.iconAppType,
-          hasPasscode: self.sharedState.hasPasscode,
-          cameraStatus: self.sharedState.cameraStatus,
-          optionTimeForAskPasscode: self.sharedState.optionTimeForAskPasscode,
-          faceIdEnabled: self.sharedState.faceIdEnabled,
-          language: self.sharedState.language,
-          microphoneStatus: self.sharedState.microphoneStatus,
-          route: self.sharedState.route
-        )
-      }
-      set {
-        self.sharedState.showSplash = newValue.showSplash
-        self.sharedState.styleType = newValue.styleType
-        self.sharedState.layoutType = newValue.layoutType
-        self.sharedState.themeType = newValue.themeType
-        self.sharedState.iconAppType = newValue.iconAppType
-        self.sharedState.hasPasscode = newValue.hasPasscode
-        self.sharedState.cameraStatus = newValue.cameraStatus
-        self.sharedState.optionTimeForAskPasscode = newValue.optionTimeForAskPasscode
-        self.sharedState.faceIdEnabled = newValue.faceIdEnabled
-        self.sharedState.language = newValue.language
-        self.sharedState.microphoneStatus = newValue.microphoneStatus
-        self.sharedState.route = newValue.route
-      }
-    }
+    public var settings: Settings.State
+//	  {
+//      get {
+//        .init(
+//          showSplash: self.sharedState.showSplash,
+//          styleType: self.sharedState.styleType,
+//          layoutType: self.sharedState.layoutType,
+//          themeType: self.sharedState.themeType,
+//          iconType: self.sharedState.iconAppType,
+//          hasPasscode: self.sharedState.hasPasscode,
+//          cameraStatus: self.sharedState.cameraStatus,
+//          optionTimeForAskPasscode: self.sharedState.optionTimeForAskPasscode,
+//          faceIdEnabled: self.sharedState.faceIdEnabled,
+//          language: self.sharedState.language,
+//          microphoneStatus: self.sharedState.microphoneStatus,
+//          route: self.sharedState.route
+//        )
+//      }
+//      set {
+//        self.sharedState.showSplash = newValue.showSplash
+//        self.sharedState.styleType = newValue.styleType
+//        self.sharedState.layoutType = newValue.layoutType
+//        self.sharedState.themeType = newValue.themeType
+//        self.sharedState.iconAppType = newValue.iconAppType
+//        self.sharedState.hasPasscode = newValue.hasPasscode
+//        self.sharedState.cameraStatus = newValue.cameraStatus
+//        self.sharedState.optionTimeForAskPasscode = newValue.optionTimeForAskPasscode
+//        self.sharedState.faceIdEnabled = newValue.faceIdEnabled
+//        self.sharedState.language = newValue.language
+//        self.sharedState.microphoneStatus = newValue.microphoneStatus
+//        self.sharedState.route = newValue.route
+//      }
+//    }
     
     public init(
       tabBars: [TabViewType],
       selectedTabBar: TabViewType = .entries,
-      sharedState: SharedState
+      sharedState: SharedState,
+		settings: Settings.State
     ) {
       self.tabBars = tabBars
       self.selectedTabBar = selectedTabBar
       self.sharedState = sharedState
+		 self.settings = settings
     }
   }
 

@@ -61,8 +61,7 @@ public struct Microphone: ReducerProtocol {
       
     case .goToSettings:
       guard state.microphoneStatus != .notDetermined else { return .none }
-      return self.applicationClient.openSettings()
-        .fireAndForget()
+      return .fireAndForget { await self.applicationClient.openSettings() }
     }
   }
 }

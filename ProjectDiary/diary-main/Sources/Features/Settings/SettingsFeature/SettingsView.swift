@@ -37,20 +37,15 @@ public struct SettingsView: View {
               )
               .toggleStyle(SwitchToggleStyle(tint: .chambray))
               
-              NavigationLink(
-                route: viewStore.route,
-                case: /Settings.State.Route.appearance,
-                onNavigate: { viewStore.send(.navigateAppearance($0)) },
-                destination: { appearanceState in
-                  AppearanceView(
-                    store: self.store.scope(
-                      state: { _ in appearanceState },
-                      action: Settings.Action.appearance
-                    )
-                  )
-                },
-                label: AppearanceRowView.init
-              )
+					NavigationLinkStore(
+						self.store.scope(
+							state: \.$appearanceFeature,
+							action: Settings.Action.appearanceAction
+						),
+						onTap: { viewStore.send(.appearanceButtonTapped) },
+						destination: AppearanceView.init,
+						label: AppearanceRowView.init
+					)
             }
             
             Section {
