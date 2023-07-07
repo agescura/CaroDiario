@@ -36,3 +36,38 @@ extension NavigationLinkStore {
 		)
 	}
 }
+
+
+extension NavigationLinkStore {
+	public init(
+	  _ store: Store<PresentationState<State>, PresentationAction<Action>>,
+	  @ViewBuilder destination: @escaping (Store<State, Action>) -> Destination
+	) where State == DestinationState, Action == DestinationAction, Label == EmptyView {
+	  self.init(
+		 store,
+		 state: { $0 },
+		 action: { $0 },
+		 onTap: {},
+		 destination: destination,
+		 label: EmptyView.init
+	  )
+	}
+}
+
+extension NavigationLinkStore {
+	public init(
+	  _ store: Store<PresentationState<State>, PresentationAction<Action>>,
+	  state toDestinationState: @escaping (State) -> DestinationState?,
+	  action fromDestinationAction: @escaping (DestinationAction) -> Action,
+	  @ViewBuilder destination: @escaping (Store<DestinationState, DestinationAction>) -> Destination
+	) where Label == EmptyView {
+		self.init(
+			store,
+			state: toDestinationState,
+			action: fromDestinationAction,
+			onTap: {},
+			destination: destination,
+			label: EmptyView.init
+		)
+	}
+}

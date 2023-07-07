@@ -67,8 +67,9 @@ public struct LockScreen: ReducerProtocol {
     case .onAppear:
       return .merge(
         Effect(value: .checkFaceId),
-        self.localAuthenticationClient.determineType()
-          .map(LockScreen.Action.determine)
+		  .run { send in
+			 await send(.determine(self.localAuthenticationClient.determineType()))
+		  }
       )
       
     case let .determine(type):
@@ -94,10 +95,9 @@ public struct LockScreen: ReducerProtocol {
     case .checkFaceId:
       
       if self.userDefaultsClient.isFaceIDActivate {
-        return self.localAuthenticationClient.evaluate("JIJIJAJAJ")
-          .receive(on: self.mainQueue)
-          .eraseToEffect()
-          .map(Action.faceIdResponse)
+			return .run { send in
+			  await send(.faceIdResponse(self.localAuthenticationClient.evaluate("JIJIJAJAJ")))
+			}
       } else {
         return .none
       }

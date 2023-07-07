@@ -13,7 +13,10 @@ public struct IconAppView: View {
   }
   
   public var body: some View {
-	 WithViewStore(self.store, observe: { $0 }) { viewStore in
+	 WithViewStore(
+		self.store,
+		observe: \.iconAppType
+	 ) { viewStore in
 		ZStack {
 		  Color.adaptiveGray.opacity(0.1)
 			 .edgesIgnoringSafeArea(.all)
@@ -31,7 +34,7 @@ public struct IconAppView: View {
 						  viewStore.send(.iconAppChanged(iconApp))
 						}
 						.overlay(
-						  Text(viewStore.iconAppType == iconApp ? "Selected" : "")
+						  Text(viewStore.state == iconApp ? "Selected" : "")
 							 .foregroundColor(.chambray)
 							 .adaptiveFont(.latoRegular, size: 14)
 							 .offset(x: 0, y: 32)

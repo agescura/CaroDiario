@@ -128,13 +128,13 @@ public struct Root: ReducerProtocol {
     case .featureAction(.lockScreen(.matchedCode)):
       return Effect(value: .requestCameraStatus)
       
-    case .featureAction(.home(.settings(.menu(.toggleFaceId(true))))),
-        .featureAction(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
+		 case .featureAction(.home(.settings(.destination(.presented(.menu(.toggleFaceId(true))))))),
+				 .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.toggleFaceId(isOn: true))))))))))),
         .featureAction(.lockScreen(.checkFaceId)):
       return Effect(value: .biometricAlertPresent(true))
       
-    case .featureAction(.home(.settings(.menu(.faceId(response:))))),
-        .featureAction(.home(.settings(.activate(.insert(.menu(.faceId(response:))))))),
+		 case .featureAction(.home(.settings(.destination(.presented(.menu(.faceId(response:))))))),
+				 .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.faceId(response:))))))))))),
         .featureAction(.lockScreen(.faceIdResponse)):
       return Effect(value: .biometricAlertPresent(false))
         .delay(for: 10, scheduler: self.mainQueue)
@@ -178,7 +178,7 @@ public struct Root: ReducerProtocol {
             optionTimeForAskPasscode: self.userDefaultsClient.optionTimeForAskPasscode,
             faceIdEnabled: self.userDefaultsClient.isFaceIDActivate
           ),
-			 settings: Settings.State(
+			 settings: SettingsFeature.State(
 				showSplash: !self.userDefaultsClient.hideSplashScreen,
 				styleType: self.userDefaultsClient.styleType,
 				layoutType: self.userDefaultsClient.layoutType,
@@ -364,37 +364,37 @@ public struct Root: ReducerProtocol {
     action: Action
   ) -> Effect<Action, Never> {
     switch action {
-		 case let .featureAction(.home(.settings(.appearanceAction(.presented(.destination(.presented(.layout(.layoutChanged(layout))))))))):
+		 case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.layout(.layoutChanged(layout)))))))))):
       return self.userDefaultsClient.set(layoutType: layout)
         .fireAndForget()
-		 case let .featureAction(.home(.settings(.appearanceAction(.presented(.destination(.presented(.style(.styleChanged(style))))))))):
+		 case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.style(.styleChanged(style)))))))))):
       return self.userDefaultsClient.set(styleType: style)
         .fireAndForget()
-		 case let .featureAction(.home(.settings(.appearanceAction(.presented(.destination(.presented(.theme(.themeChanged(theme))))))))):
+		 case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.theme(.themeChanged(theme)))))))))):
       return self.userDefaultsClient.set(themeType: theme)
         .fireAndForget()
     case let .featureAction(.home(.settings(.toggleShowSplash(isOn: isOn)))):
       return self.userDefaultsClient.setHideSplashScreen(!isOn)
         .fireAndForget()
-    case .featureAction(.home(.settings(.activate(.insert(.menu(.actionSheetTurnoffTapped)))))),
-        .featureAction(.home(.settings(.menu(.actionSheetTurnoffTapped)))):
+		 case .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.turnOffPasscode))))))))))),
+				 .featureAction(.home(.settings(.destination(.presented(.menu(.delegate(.turnOffPasscode))))))):
       return self.userDefaultsClient.removePasscode()
         .fireAndForget()
-    case let .featureAction(.home(.settings(.activate(.insert(.update(code: code)))))):
+		 case let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.update(code: code))))))))):
       return self.userDefaultsClient.setPasscode(code)
         .fireAndForget()
-    case let .featureAction(.home(.settings(.menu(.faceId(response: faceId))))),
-      let .featureAction(.home(.settings(.activate(.insert(.menu(.faceId(response: faceId))))))):
+		 case let .featureAction(.home(.settings(.destination(.presented(.menu(.faceId(response: faceId))))))),
+			 let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.faceId(response: faceId))))))))))):
       return self.userDefaultsClient.setFaceIDActivate(faceId)
         .fireAndForget()
-    case let .featureAction(.home(.settings(.menu(.optionTimeForAskPasscode(changed: newOption))))),
-      let .featureAction(.home(.settings(.activate(.insert(.menu(.optionTimeForAskPasscode(changed: newOption))))))):
+		 case let .featureAction(.home(.settings(.destination(.presented(.menu(.optionTimeForAskPasscode(changed: newOption))))))),
+			 let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.optionTimeForAskPasscode(changed: newOption))))))))))):
       return self.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value)
         .fireAndForget()
-    case .featureAction(.home(.settings(.activate(.insert(.navigateMenu(true)))))):
+		 case .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menuButtonTapped)))))))):
       return self.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value)
         .fireAndForget()
-    case let .featureAction(.home(.settings(.language(.updateLanguageTapped(language))))):
+		 case let .featureAction(.home(.settings(.destination(.presented(.language(.updateLanguageTapped(language))))))):
       return self.userDefaultsClient.setLanguage(language.rawValue)
         .fireAndForget()
     case let .featureAction(.onBoarding(.privacy(.style(.styleChanged(styleChanged))))):

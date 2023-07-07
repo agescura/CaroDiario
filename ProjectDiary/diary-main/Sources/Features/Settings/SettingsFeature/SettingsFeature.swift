@@ -12,10 +12,12 @@ import Models
 import StoreKitClient
 import LocalAuthenticationClient
 
-public struct Settings: ReducerProtocol {
+public struct SettingsFeature: ReducerProtocol {
 	public init() {}
 	
 	public struct State: Equatable {
+		@PresentationState public var destination: Destination.State?
+		
 		public var showSplash: Bool
 		
 		public var styleType: StyleType
@@ -32,20 +34,15 @@ public struct Settings: ReducerProtocol {
 		public var optionTimeForAskPasscode: Int
 		public var faceIdEnabled: Bool
 		
-		@PresentationState public var appearanceFeature: AppearanceFeature.State?
-		
 		public var route: Route? = nil {
 			didSet {
-				if case let .language(state) = self.route {
-					self.language = state.language
-				}
-				if case let .menu(state) = self.route {
-					self.faceIdEnabled = state.faceIdEnabled
-				}
-				if case let .activate(state) = self.route {
-					self.faceIdEnabled = state.faceIdEnabled
-					self.hasPasscode = state.hasPasscode
-				}
+//				if case let .menu(state) = self.route {
+//					self.faceIdEnabled = state.faceIdEnabled
+//				}
+//				if case let .activate(state) = self.route {
+//					self.faceIdEnabled = state.faceIdEnabled
+//					self.hasPasscode = state.hasPasscode
+//				}
 				if case let .camera(state) = self.route {
 					self.cameraStatus = state.cameraStatus
 				}
@@ -55,46 +52,12 @@ public struct Settings: ReducerProtocol {
 			}
 		}
 		public enum Route: Equatable {
-			case language(Language.State)
-			case activate(Activate.State)
-			case menu(Menu.State)
 			case camera(Camera.State)
 			case microphone(Microphone.State)
 			case export(Export.State)
-			case agreements(Agreements.State)
 			case about(AboutFeature.State)
 		}
 		
-		var languageState: Language.State? {
-			get {
-				guard case let .language(state) = self.route else { return nil }
-				return state
-			}
-			set {
-				guard let newValue = newValue else { return }
-				self.route = .language(newValue)
-			}
-		}
-		var activate: Activate.State? {
-			get {
-				guard case let .activate(state) = self.route else { return nil }
-				return state
-			}
-			set {
-				guard let newValue = newValue else { return }
-				self.route = .activate(newValue)
-			}
-		}
-		var menu: Menu.State? {
-			get {
-				guard case let .menu(state) = self.route else { return nil }
-				return state
-			}
-			set {
-				guard let newValue = newValue else { return }
-				self.route = .menu(newValue)
-			}
-		}
 		var camera: Camera.State? {
 			get {
 				guard case let .camera(state) = self.route else { return nil }
@@ -123,16 +86,6 @@ public struct Settings: ReducerProtocol {
 			set {
 				guard let newValue = newValue else { return }
 				self.route = .export(newValue)
-			}
-		}
-		var agreements: Agreements.State? {
-			get {
-				guard case let .agreements(state) = self.route else { return nil }
-				return state
-			}
-			set {
-				guard let newValue = newValue else { return }
-				self.route = .agreements(newValue)
 			}
 		}
 		var about: AboutFeature.State? {
@@ -177,30 +130,22 @@ public struct Settings: ReducerProtocol {
 	
 	public enum Action: Equatable {
 		case onAppear
-		
-		case appearanceAction(PresentationAction<AppearanceFeature.Action>)
+		case destination(PresentationAction<Destination.Action>)
 		case appearanceButtonTapped
 		
 		case toggleShowSplash(isOn: Bool)
 		case biometricResult(LocalAuthenticationType)
 		
-		case language(Language.Action)
-		case navigateLanguage(Bool)
-		
-		case activate(Activate.Action)
-		case navigateActivate(Bool)
-		
-		case menu(Menu.Action)
-		case navigateMenu(Bool)
+		case languageButtonTapped
+		case agreementsButtonTapped
+		case menuButtonTapped
+		case activateButtonTapped
 		
 		case camera(Camera.Action)
 		case navigateCamera(Bool)
 		
 		case microphone(Microphone.Action)
 		case navigateMicrophone(Bool)
-		
-		case agreements(Agreements.Action)
-		case navigateAgreements(Bool)
 		
 		case reviewStoreKit
 		
@@ -215,34 +160,72 @@ public struct Settings: ReducerProtocol {
 	@Dependency(\.localAuthenticationClient) private var localAuthenticationClient
 	@Dependency(\.storeKitClient) private var storeKitClient
 	
+	public struct Destination: ReducerProtocol {
+		public init() {}
+		
+		public enum State: Equatable, Identifiable {
+			case activate(ActivatePasscodeFeature.State)
+			case agreements(AgreementsFeature.State)
+			case appearance(AppearanceFeature.State)
+			case language(LanguageFeature.State)
+			case menu(MenuPasscodeFeature.State)
+			public var id: AnyHashable {
+				switch self {
+					case let .activate(state):
+						return state.id
+					case let .agreements(state):
+						return state.id
+					case let .appearance(state):
+						return state.id
+					case let .language(state):
+						return state.id
+					case let .menu(state):
+						return state.id
+				}
+			}
+		}
+		public enum Action: Equatable {
+			case activate(ActivatePasscodeFeature.Action)
+			case agreements(AgreementsFeature.Action)
+			case appearance(AppearanceFeature.Action)
+			case language(LanguageFeature.Action)
+			case menu(MenuPasscodeFeature.Action)
+		}
+		public var body: some ReducerProtocolOf<Self> {
+			Scope(state: /State.activate, action: /Action.activate) {
+				ActivatePasscodeFeature()
+			}
+			Scope(state: /State.agreements, action: /Action.agreements) {
+				AgreementsFeature()
+			}
+			Scope(state: /State.appearance, action: /Action.appearance) {
+				AppearanceFeature()
+			}
+			Scope(state: /State.language, action: /Action.language) {
+				LanguageFeature()
+			}
+			Scope(state: /State.menu, action: /Action.menu) {
+				MenuPasscodeFeature()
+			}
+		}
+	}
+	
 	public var body: some ReducerProtocolOf<Self> {
 		Reduce(self.core)
-			.ifLet(\.agreements, action: /Settings.Action.agreements) {
-				Agreements()
-			}
-			.ifLet(\.camera, action: /Settings.Action.camera) {
+			.ifLet(\.camera, action: /Action.camera) {
 				Camera()
 			}
-			.ifLet(\.about, action: /Settings.Action.about) {
+			.ifLet(\.about, action: /Action.about) {
 				AboutFeature()
 			}
-			.ifLet(\.export, action: /Settings.Action.export) {
+			.ifLet(\.export, action: /Action.export) {
 				Export()
 			}
-			.ifLet(\.languageState, action: /Settings.Action.language) {
-				Language()
-			}
-			.ifLet(\.microphone, action: /Settings.Action.microphone) {
+			.ifLet(\.microphone, action: /Action.microphone) {
 				Microphone()
 			}
-			.ifLet(\.activate, action: /Settings.Action.activate) {
-				Activate()
-			}
-			.ifLet(\.menu, action: /Settings.Action.menu) {
-				Menu()
-			}
-			.ifLet(\.$appearanceFeature, action: /Action.appearanceAction) {
-				AppearanceFeature()
+			.ifLet(\.$destination, action: /Action.destination) {
+				Destination()
 			}
 	}
 	
@@ -253,30 +236,27 @@ public struct Settings: ReducerProtocol {
 		switch action {
 				
 			case .onAppear:
-				return self.localAuthenticationClient.determineType()
-					.map(Settings.Action.biometricResult)
+				return .run { send in
+					await send(.biometricResult(self.localAuthenticationClient.determineType()))
+				}
 				
 			case .appearanceButtonTapped:
-				state.appearanceFeature = AppearanceFeature.State(
-					appearanceSettings: AppearanceSettings(
-						styleType: state.styleType,
-						layoutType: state.layoutType,
-						themeType: state.themeType,
-						iconAppType: state.iconAppType
+				state.destination = .appearance(
+					AppearanceFeature.State(
+						appearanceSettings: AppearanceSettings(
+							styleType: state.styleType,
+							layoutType: state.layoutType,
+							themeType: state.themeType,
+							iconAppType: state.iconAppType
+						)
 					)
 				)
 				return .none
 				
-			case .appearanceAction:
-				return .none
-				
-			case let .navigateLanguage(value):
-				state.route = value ? .language(
-					.init(language: state.language)
-				) : nil
-				return .none
-				
-			case .language:
+			case .languageButtonTapped:
+				state.destination = .language(
+					LanguageFeature.State(language: state.language)
+				)
 				return .none
 				
 			case let .toggleShowSplash(isOn):
@@ -287,46 +267,43 @@ public struct Settings: ReducerProtocol {
 				state.authenticationType = result
 				return .none
 				
-			case .activate(.insert(.navigateMenu(true))):
+			case.destination(.presented(.activate(.insert(.presented(.menuButtonTapped))))):
 				state.hasPasscode = true
 				return .none
 				
-			case .menu(.actionSheetTurnoffTapped),
-					.activate(.insert(.menu(.actionSheetTurnoffTapped))):
+			case .destination(.presented(.menu(.delegate(.turnOffPasscode)))),
+					.destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.turnOffPasscode)))))))):
 				state.hasPasscode = false
-				return Effect(value: .navigateActivate(false))
-					.delay(for: 0.1, scheduler: self.mainQueue)
-					.eraseToEffect()
-				
-			case .activate(.insert(.menu(.popToRoot))),
-					.activate(.insert(.popToRoot)),
-					.menu(.popToRoot),
-					.activate(.insert(.success)):
-				return Effect(value: .navigateActivate(false))
-				
-			case .activate:
+				state.destination = nil
+				return .none
+			
+			case .destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.popToRoot)))))))),
+					.destination(.presented(.activate(.insert(.presented(.delegate(.popToRoot)))))),
+					.destination(.presented(.menu(.delegate(.popToRoot)))),
+					.destination(.presented(.activate(.insert(.presented(.delegate(.success)))))):
+				state.destination = nil
 				return .none
 				
-			case let .navigateActivate(value):
-				state.route = value ? .activate(
-					.init(
+			case .destination:
+				return .none
+				
+			case .activateButtonTapped:
+				state.destination = .activate(
+					ActivatePasscodeFeature.State(
 						faceIdEnabled: state.faceIdEnabled,
 						hasPasscode: state.hasPasscode
 					)
-				) : nil
+				)
 				return .none
 				
-			case .menu:
-				return .none
-				
-			case let .navigateMenu(value):
-				state.route = value ? .menu(
-					.init(
+			case .menuButtonTapped:
+				state.destination = .menu(
+					MenuPasscodeFeature.State(
 						authenticationType: state.authenticationType,
 						optionTimeForAskPasscode: state.optionTimeForAskPasscode,
 						faceIdEnabled: state.faceIdEnabled
 					)
-				) : nil
+				)
 				return .none
 				
 			case .microphone:
@@ -347,11 +324,10 @@ public struct Settings: ReducerProtocol {
 				) : nil
 				return .none
 				
-			case let .navigateAgreements(value):
-				state.route = value ? .agreements(.init()) : nil
-				return .none
-				
-			case .agreements:
+			case .agreementsButtonTapped:
+				state.destination = .agreements(
+					AgreementsFeature.State()
+				)
 				return .none
 				
 			case .reviewStoreKit:

@@ -51,7 +51,7 @@ public struct SharedState: Equatable {
   public var microphoneStatus: AudioRecordPermission
   public var optionTimeForAskPasscode: Int
   public var faceIdEnabled: Bool
-  public var route: Settings.State.Route? = nil
+  public var route: SettingsFeature.State.Route? = nil
   
   public init(
     showSplash: Bool,
@@ -114,7 +114,7 @@ public struct Home: ReducerProtocol {
       get { self.sharedState.search }
       set { self.sharedState.search = newValue }
     }
-    public var settings: Settings.State
+    public var settings: SettingsFeature.State
 //	  {
 //      get {
 //        .init(
@@ -152,7 +152,7 @@ public struct Home: ReducerProtocol {
       tabBars: [TabViewType],
       selectedTabBar: TabViewType = .entries,
       sharedState: SharedState,
-		settings: Settings.State
+		settings: SettingsFeature.State
     ) {
       self.tabBars = tabBars
       self.selectedTabBar = selectedTabBar
@@ -166,7 +166,7 @@ public struct Home: ReducerProtocol {
     case starting
     case entries(Entries.Action)
     case search(Search.Action)
-    case settings(Settings.Action)
+    case settings(SettingsFeature.Action)
   }
   
   public var body: some ReducerProtocolOf<Self> {
@@ -174,7 +174,7 @@ public struct Home: ReducerProtocol {
       Entries()
     }
     Scope(state: \.settings, action: /Action.settings) {
-      Settings()
+		 SettingsFeature()
     }
     Scope(state: \.search, action: /Action.search) {
       Search()

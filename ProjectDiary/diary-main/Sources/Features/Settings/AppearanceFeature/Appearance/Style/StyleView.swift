@@ -8,13 +8,15 @@ public struct StyleView: View {
 	let store: StoreOf<StyleFeature>
 	
 	public var body: some View {
-		WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithViewStore(
+			self.store,
+			observe: \.styleType
+		) { viewStore in
 			VStack(alignment: .leading, spacing: 16) {
-				
 				Picker(
 					"",
 					selection: viewStore.binding(
-						get: \.styleType,
+						get: { _ in viewStore.state },
 						send: StyleFeature.Action.styleChanged
 					)
 				) {
@@ -32,8 +34,9 @@ public struct StyleView: View {
 						ForEachStore(
 							store.scope(
 								state: \.entries,
-								action: StyleFeature.Action.entries(id:action:)),
-							content: DayEntriesRowView.init(store:)
+								action: StyleFeature.Action.entries
+							),
+							content: DayEntriesRowView.init
 						)
 					}
 					.accentColor(.chambray)
