@@ -6,7 +6,7 @@ import SwiftUIHelper
 import Views
 
 public struct AppearanceView: View {
-	let store: StoreOf<AppearanceFeature>
+	private let store: StoreOf<AppearanceFeature>
 	
 	public init(
 		store: StoreOf<AppearanceFeature>
@@ -22,29 +22,36 @@ public struct AppearanceView: View {
 			Form {
 				Section {
 					NavigationLinkStore(
-						self.store.scope(state: \.$destination, action: AppearanceFeature.Action.destination),
+						self.store.scope(
+							state: \.$destination,
+							action: AppearanceFeature.Action.destination
+						),
 						state: /AppearanceFeature.Destination.State.layout,
 						action: AppearanceFeature.Destination.Action.layout,
 						onTap: { viewStore.send(.layoutButtonTapped) },
-						destination: { store in
-							LayoutView(store: store)
-						},
+						destination: LayoutView.init,
 						label: { LayoutRowView(title: viewStore.layoutType.rawValue.localized) }
 					)
 					NavigationLinkStore(
-						self.store.scope(state: \.$destination, action: AppearanceFeature.Action.destination),
+						self.store.scope(
+							state: \.$destination,
+							action: AppearanceFeature.Action.destination
+						),
 						state: /AppearanceFeature.Destination.State.style,
 						action: AppearanceFeature.Destination.Action.style,
 						onTap: { viewStore.send(.styleButtonTapped) },
-						destination: StyleView.init(store:),
+						destination: StyleView.init,
 						label: { StyleRowView(title: viewStore.styleType.rawValue.localized) }
 					)
 					NavigationLinkStore(
-						self.store.scope(state: \.$destination, action: AppearanceFeature.Action.destination),
+						self.store.scope(
+							state: \.$destination,
+							action: AppearanceFeature.Action.destination
+						),
 						state: /AppearanceFeature.Destination.State.theme,
 						action: AppearanceFeature.Destination.Action.theme,
 						onTap: { viewStore.send(.themeButtonTapped) },
-						destination: ThemeView.init(store:),
+						destination: ThemeView.init,
 						label: {
 							ThemeRowView(
 								iconName: viewStore.themeType.icon,
@@ -53,11 +60,14 @@ public struct AppearanceView: View {
 						}
 					)
 					NavigationLinkStore(
-						self.store.scope(state: \.$destination, action: AppearanceFeature.Action.destination),
+						self.store.scope(
+							state: \.$destination,
+							action: AppearanceFeature.Action.destination
+						),
 						state: /AppearanceFeature.Destination.State.iconApp,
 						action: AppearanceFeature.Destination.Action.iconApp,
 						onTap: { viewStore.send(.iconAppButtonTapped) },
-						destination: IconAppView.init(store:),
+						destination: IconAppView.init,
 						label: { IconAppRowView(title: viewStore.iconAppType.rawValue.localized) }
 					)
 				}

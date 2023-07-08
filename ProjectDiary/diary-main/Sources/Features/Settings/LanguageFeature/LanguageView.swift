@@ -7,7 +7,7 @@ import SwiftUIHelper
 import UserDefaultsClient
 
 public struct LanguageView: View {
-	let store: StoreOf<LanguageFeature>
+	private let store: StoreOf<LanguageFeature>
 	
 	public init(
 		store: StoreOf<LanguageFeature>

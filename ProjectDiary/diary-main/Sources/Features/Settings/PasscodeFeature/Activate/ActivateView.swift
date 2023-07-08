@@ -6,7 +6,7 @@ import TCAHelpers
 import Views
 
 public struct ActivateView: View {
-	let store: StoreOf<ActivatePasscodeFeature>
+	private let store: StoreOf<ActivatePasscodeFeature>
 	
 	public init(
 		store: StoreOf<ActivatePasscodeFeature>

@@ -1,49 +1,43 @@
-import Foundation
+import AVCaptureDeviceClient
 import ComposableArchitecture
-import Models
-import AVAudioSessionClient
 import FeedbackGeneratorClient
+import Models
 import UIApplicationClient
 
-public struct Microphone: ReducerProtocol {
+public struct CameraFeature: ReducerProtocol {
 	public init() {}
 	
 	public struct State: Equatable, Identifiable {
-		public var microphoneStatus: AudioRecordPermission
+		public var cameraStatus: AuthorizedVideoStatus
 		
-		public var id: AudioRecordPermission { self.microphoneStatus }
+		public var id: AuthorizedVideoStatus { self.cameraStatus }
 		
 		public init(
-			microphoneStatus: AudioRecordPermission
+			cameraStatus: AuthorizedVideoStatus
 		) {
-			self.microphoneStatus = microphoneStatus
+			self.cameraStatus = cameraStatus
 		}
 	}
 	
 	public enum Action: Equatable {
-		case microphoneButtonTapped
-		
+		case cameraButtonTapped
 		case requestAccessResponse(Bool)
 		case goToSettings
 	}
 	
 	@Dependency(\.applicationClient) private var applicationClient
 	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
-	@Dependency(\.avAudioSessionClient) private var avAudioSessionClient
+	@Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
 	
 	public var body: some ReducerProtocolOf<Self> {
 		Reduce { state, action in
 			switch action {
-				case .microphoneButtonTapped:
-					switch state.microphoneStatus {
+				case .cameraButtonTapped:
+					switch state.cameraStatus {
 						case .notDetermined:
 							return .task { @MainActor in
 								await self.feedbackGeneratorClient.selectionChanged()
-								do {
-									return .requestAccessResponse(try await self.avAudioSessionClient.requestRecordPermission())
-								} catch {
-									return .requestAccessResponse(false)
-								}
+								return .requestAccessResponse(await self.avCaptureDeviceClient.requestAccess())
 							}
 							
 						default:
@@ -52,11 +46,11 @@ public struct Microphone: ReducerProtocol {
 					return .none
 					
 				case let .requestAccessResponse(authorized):
-					state.microphoneStatus = authorized ? .authorized : .denied
+					state.cameraStatus = authorized ? .authorized : .denied
 					return .none
 					
 				case .goToSettings:
-					guard state.microphoneStatus != .notDetermined else { return .none }
+					guard state.cameraStatus != .notDetermined else { return .none }
 					return .fireAndForget { await self.applicationClient.openSettings() }
 			}
 		}

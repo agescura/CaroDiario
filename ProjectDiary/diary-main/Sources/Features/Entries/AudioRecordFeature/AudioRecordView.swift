@@ -324,7 +324,7 @@ extension AudioRecordPermission {
 }
 
 public struct AudioRecordView: View {
-	let store: StoreOf<AudioRecord>
+	private let store: StoreOf<AudioRecord>
 	
 	public init(
 		store: StoreOf<AudioRecord>

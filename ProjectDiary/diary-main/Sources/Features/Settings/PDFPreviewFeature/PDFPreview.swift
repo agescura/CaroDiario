@@ -14,9 +14,7 @@ public struct PDFPreview: ReducerProtocol {
     }
   }
   
-  public enum Action: Equatable {
-    case dismiss
-  }
+  public enum Action: Equatable {}
   
   public var body: some ReducerProtocolOf<Self> {
     EmptyReducer()

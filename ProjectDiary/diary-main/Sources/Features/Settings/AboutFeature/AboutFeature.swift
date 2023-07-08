@@ -11,7 +11,7 @@ enum MailType: String {
 public struct AboutFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable {
+	public struct State: Equatable, Identifiable {
 		@PresentationState public var dialog: ConfirmationDialogState<Action.Dialog>?
 		
 		public var id: Int { 1 }

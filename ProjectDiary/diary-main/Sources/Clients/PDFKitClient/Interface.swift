@@ -1,21 +1,20 @@
-import ComposableArchitecture
-import Models
-import Foundation
 import Dependencies
+import Foundation
+import Models
 
 extension DependencyValues {
   public var pdfKitClient: PDFKitClient {
-    get { self[PDFKitClient.self] }
-    set { self[PDFKitClient.self] = newValue }
+	 get { self[PDFKitClient.self] }
+	 set { self[PDFKitClient.self] = newValue }
   }
 }
 
 public struct PDFKitClient {
-    public var generatePDF: ([[Entry]], Date) -> Effect<Data, Never>
-    
-    public init(
-        generatePDF: @escaping ([[Entry]], Date) -> Effect<Data, Never>
-    ) {
-        self.generatePDF = generatePDF
-    }
+	 public var generatePDF: @Sendable ([[Entry]], Date) async -> Data
+	 
+	 public init(
+		  generatePDF: @escaping @Sendable ([[Entry]], Date) async -> Data
+	 ) {
+		  self.generatePDF = generatePDF
+	 }
 }

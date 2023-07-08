@@ -6,7 +6,7 @@ import Models
 import SwiftUIHelper
 
 public struct MicrophoneView: View {
-  let store: StoreOf<Microphone>
+  private let store: StoreOf<Microphone>
   
   public init(
     store: StoreOf<Microphone>

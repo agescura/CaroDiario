@@ -573,11 +573,12 @@ let package = Package(
 				name: "OnboardingFeature",
 				dependencies: [
 					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-					"UserDefaultsClient",
-					"Styles",
-					"Views",
 					"EntriesFeature",
-					"FeedbackGeneratorClient"
+					"FeedbackGeneratorClient",
+					"Styles",
+					"TCAHelpers",
+					"UserDefaultsClient",
+					"Views"
 				],
 				path: "Sources/Features/OnboardingFeature"
 			),

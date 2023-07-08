@@ -8,17 +8,17 @@ public struct AppearanceFeature: ReducerProtocol {
 	public init() {}
 	
 	public struct State: Equatable, Identifiable {
-		@PresentationState public var destination: Destination.State?
 		public var appearanceSettings: AppearanceSettings
+		@PresentationState public var destination: Destination.State?
 		
 		public var id: Int { 1 }
 		
 		public init(
-			destination: Destination.State? = nil,
-			appearanceSettings: AppearanceSettings
+			appearanceSettings: AppearanceSettings,
+			destination: Destination.State? = nil
 		) {
-			self.destination = destination
 			self.appearanceSettings = appearanceSettings
+			self.destination = destination
 		}
 	}
 	

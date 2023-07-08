@@ -5,7 +5,7 @@ import SwiftUIHelper
 import Views
 
 public struct AboutView: View {
-	let store: StoreOf<AboutFeature>
+	private let store: StoreOf<AboutFeature>
 	
 	public init(
 		store: StoreOf<AboutFeature>

@@ -7,7 +7,7 @@ import SwiftUI
 import UserDefaultsClient
 
 public struct ThemeView: View {
-	let store: StoreOf<ThemeFeature>
+	private let store: StoreOf<ThemeFeature>
 	
 	init(
 		store: StoreOf<ThemeFeature>

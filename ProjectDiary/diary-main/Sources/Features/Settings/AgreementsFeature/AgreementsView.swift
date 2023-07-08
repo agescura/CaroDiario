@@ -1,11 +1,11 @@
 import ComposableArchitecture
-import SwiftUI
-import Views
 import Localizables
+import SwiftUI
 import SwiftUIHelper
+import Views
 
 public struct AgreementsView: View {
-  let store: StoreOf<AgreementsFeature>
+  private let store: StoreOf<AgreementsFeature>
   
   public init(
     store: StoreOf<AgreementsFeature>

@@ -5,7 +5,13 @@ import Styles
 import SwiftUI
 
 public struct StyleView: View {
-	let store: StoreOf<StyleFeature>
+	private let store: StoreOf<StyleFeature>
+	
+	public init(
+		store: StoreOf<StyleFeature>
+	) {
+		self.store = store
+	}
 	
 	public var body: some View {
 		WithViewStore(

@@ -29,6 +29,12 @@ public struct UserSettings: Equatable {
 }
 
 extension UserSettings {
+	public var hasPasscode: Bool {
+		self.passcode.count > 0
+	}
+}
+
+extension UserSettings {
 	public static var defaultValue: Self {
 		UserSettings(
 			showSplash: true,

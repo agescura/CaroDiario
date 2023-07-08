@@ -231,7 +231,7 @@ public struct EntryDetail: ReducerProtocol {
 }
 
 public struct EntryDetailView: View {
-  public let store: StoreOf<EntryDetail>
+  private let store: StoreOf<EntryDetail>
   
   public init(
     store: StoreOf<EntryDetail>

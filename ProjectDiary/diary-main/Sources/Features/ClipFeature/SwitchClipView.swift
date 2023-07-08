@@ -81,7 +81,7 @@ public let switchClipReducer: Reducer<
 )
 
 public struct SwitchClipView: View {
-    let store: Store<SwitchClipState, SwitchClipAction>
+    private let store: Store<SwitchClipState, SwitchClipAction>
     
     public init(
         store: Store<SwitchClipState, SwitchClipAction>
@@ -94,13 +94,13 @@ public struct SwitchClipView: View {
             CaseLet(
                 state: /SwitchClipState.splash,
                 action: SwitchClipAction.splash,
-                then: SplashView.init(store:)
+                then: SplashView.init
             )
             
             CaseLet(
                 state: /SwitchClipState.onBoarding,
                 action: SwitchClipAction.onBoarding,
-                then: WelcomeOnBoardingView.init(store:)
+                then: WelcomeOnBoardingView.init
             )
         }
     }

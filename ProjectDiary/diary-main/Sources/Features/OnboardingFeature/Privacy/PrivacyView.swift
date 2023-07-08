@@ -1,11 +1,11 @@
-import SwiftUI
 import ComposableArchitecture
-import Views
-import Styles
 import EntriesFeature
+import Styles
+import SwiftUI
+import Views
 
 public struct PrivacyView: View {
-  let store: StoreOf<Privacy>
+  private let store: StoreOf<Privacy>
   
   public init(
     store: StoreOf<Privacy>
@@ -43,7 +43,7 @@ public struct PrivacyView: View {
                 state: \.style,
                 action: Privacy.Action.style
               ),
-              then: StyleView.init(store:)
+              then: StyleView.init
             ),
           isActive: viewStore.binding(
             get: \.navigateStyle,

@@ -4,7 +4,7 @@ import Styles
 import SwiftUI
 
 public struct IconAppView: View {
-  let store: StoreOf<IconAppFeature>
+  private let store: StoreOf<IconAppFeature>
   
   public init(
 	 store: StoreOf<IconAppFeature>

@@ -10,7 +10,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-        appDelegate.viewStore.send(.appDelegate(.didFinishLaunching))
+        appDelegate.store.send(.appDelegate(.didFinishLaunching))
     }
     
     func windowScene(
@@ -18,13 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         performActionFor shortcutItem: UIApplicationShortcutItem,
         completionHandler: @escaping (Bool) -> Void
     ) {
-        appDelegate.viewStore.send(.shortcuts)
+        appDelegate.store.send(.shortcuts)
         completionHandler(true)
     }
 }
 
 extension ScenePhase {
-  var value: Root.State.State {
+  var value: RootFeature.State.State {
         switch self {
         case .active:
             return .active

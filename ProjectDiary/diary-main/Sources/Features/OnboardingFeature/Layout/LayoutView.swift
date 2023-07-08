@@ -1,14 +1,14 @@
 import ComposableArchitecture
-import SwiftUI
 import EntriesFeature
-import Views
-import Styles
-import UserDefaultsClient
 import FeedbackGeneratorClient
 import Models
+import Styles
+import SwiftUI
+import UserDefaultsClient
+import Views
 
 public struct LayoutView: View {
-  let store: StoreOf<Layout>
+  private let store: StoreOf<Layout>
   
   public init(
     store: StoreOf<Layout>

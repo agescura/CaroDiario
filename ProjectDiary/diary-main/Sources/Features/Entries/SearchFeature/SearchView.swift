@@ -162,8 +162,8 @@ public struct Search: ReducerProtocol {
 }
 
 public struct SearchView: View {
-  let store: StoreOf<Search>
-  @ObservedObject var searchBar = SearchBar()
+  private let store: StoreOf<Search>
+  @ObservedObject private var searchBar = SearchBar()
   
   public init(
     store: StoreOf<Search>

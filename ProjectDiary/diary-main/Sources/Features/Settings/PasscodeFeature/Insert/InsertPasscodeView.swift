@@ -1,10 +1,10 @@
-import SwiftUI
 import ComposableArchitecture
-import Views
+import SwiftUI
 import SwiftUIHelper
+import Views
 
 public struct InsertPasscodeView: View {
-	let store: StoreOf<InsertPasscodeFeature>
+	private let store: StoreOf<InsertPasscodeFeature>
 	
 	private struct ViewState: Equatable {
 		let code: String

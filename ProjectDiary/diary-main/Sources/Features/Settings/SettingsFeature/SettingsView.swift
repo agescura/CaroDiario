@@ -1,38 +1,38 @@
-import SwiftUI
-import ComposableArchitecture
-import Styles
-import PasscodeFeature
-import Views
-import Models
-import MicrophoneFeature
 import AboutFeature
 import AgreementsFeature
 import AppearanceFeature
 import CameraFeature
+import ComposableArchitecture
 import ExportFeature
 import LanguageFeature
+import MicrophoneFeature
+import Models
+import PasscodeFeature
+import SwiftUI
 import SwiftUIHelper
+import Styles
+import Views
 
 public struct SettingsView: View {
-	let store: StoreOf<SettingsFeature>
+	private let store: StoreOf<SettingsFeature>
 	
 	private struct ViewState: Equatable {
-		let showSplash: Bool
-		let language: Localizable
-		let cameraStatus: AuthorizedVideoStatus
-		let microphoneStatus: AudioRecordPermission
 		let authenticationType: LocalAuthenticationType
+		let cameraStatus: AuthorizedVideoStatus
 		let hasPasscode: Bool
+		let language: Localizable
+		let microphoneStatus: AudioRecordPermission
+		let showSplash: Bool
 		
 		init(
 			state: SettingsFeature.State
 		) {
-			self.showSplash = state.showSplash
-			self.language = state.language
-			self.cameraStatus = state.cameraStatus
-			self.microphoneStatus = state.microphoneStatus
 			self.authenticationType = state.authenticationType
+			self.cameraStatus = state.cameraStatus
 			self.hasPasscode = state.hasPasscode
+			self.language = state.language
+			self.microphoneStatus = state.microphoneStatus
+			self.showSplash = state.showSplash
 		}
 	}
 	
@@ -61,7 +61,10 @@ public struct SettingsView: View {
 							.toggleStyle(SwitchToggleStyle(tint: .chambray))
 
 							NavigationLinkStore(
-								self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+								self.store.scope(
+									state: \.$destination,
+									action: SettingsFeature.Action.destination
+								),
 								state: /SettingsFeature.Destination.State.appearance,
 								action: SettingsFeature.Destination.Action.appearance,
 								onTap: { viewStore.send(.appearanceButtonTapped) },
@@ -72,7 +75,10 @@ public struct SettingsView: View {
 
 						Section {
 							NavigationLinkStore(
-								self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+								self.store.scope(
+									state: \.$destination,
+									action: SettingsFeature.Action.destination
+								),
 								state: /SettingsFeature.Destination.State.language,
 								action: SettingsFeature.Destination.Action.language,
 								onTap: { viewStore.send(.languageButtonTapped) },
@@ -102,102 +108,96 @@ public struct SettingsView: View {
 						}
 
 						Section {
-//							NavigationLink(
-//								route: viewStore.route,
-//								case: /SettingsFeature.State.Route.camera,
-//								onNavigate: { viewStore.send(.navigateCamera($0)) },
-//								destination: { cameraState in
-//									CameraView(
-//										store: self.store.scope(
-//											state: { _ in cameraState },
-//											action: SettingsFeature.Action.camera
-//										)
-//									)
-//								},
-//								label: {
-//									CameraRowView(title: viewStore.cameraStatus.rawValue.localized)
-//								}
-//							)
-//							NavigationLink(
-//								route: viewStore.route,
-//								case: /SettingsFeature.State.Route.microphone,
-//								onNavigate: { viewStore.send(.navigateMicrophone($0)) },
-//								destination: { microphoneState in
-//									MicrophoneView(
-//										store: self.store.scope(
-//											state: { _ in microphoneState },
-//											action: SettingsFeature.Action.microphone
-//										)
-//									)
-//								},
-//								label: {
-//									MicrophoneRowView(title: viewStore.microphoneStatus.title.localized)
-//								}
-//							)
+							NavigationLinkStore(
+								self.store.scope(
+									state: \.$destination,
+									action: SettingsFeature.Action.destination
+								),
+								state: /SettingsFeature.Destination.State.camera,
+								action: SettingsFeature.Destination.Action.camera,
+								onTap: { viewStore.send(.cameraButtonTapped) },
+								destination: CameraView.init,
+								label: { CameraRowView(title: viewStore.cameraStatus.rawValue.localized) }
+							)
+							
+							NavigationLinkStore(
+								self.store.scope(
+									state: \.$destination,
+									action: SettingsFeature.Action.destination
+								),
+								state: /SettingsFeature.Destination.State.microphone,
+								action: SettingsFeature.Destination.Action.microphone,
+								onTap: { viewStore.send(.microphoneButtonTapped) },
+								destination: MicrophoneView.init,
+								label: { MicrophoneRowView(title: viewStore.microphoneStatus.title.localized) }
+							)
 						}
-//
-//						Section {
-//							NavigationLink(
-//								route: viewStore.route,
-//								case: /SettingsFeature.State.Route.export,
-//								onNavigate: { viewStore.send(.navigateExport($0)) },
-//								destination: { exportState in
-//									ExportView(
-//										store: self.store.scope(
-//											state: { _ in exportState },
-//											action: SettingsFeature.Action.export
-//										)
-//									)
-//								},
-//								label: ExportRowView.init
-//							)
-//						}
-//
-//						Section {
-//							ReviewRowView()
-//								.contentShape(Rectangle())
-//								.onTapGesture {
-//									viewStore.send(.reviewStoreKit)
-//								}
-//						}
-//
-//						Section {
-//							NavigationLinkStore(
-//								self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
-//								state: /SettingsFeature.Destination.State.agreements,
-//								action: SettingsFeature.Destination.Action.agreements,
-//								onTap: { viewStore.send(.agreementsButtonTapped) },
-//								destination: AgreementsView.init,
-//								label: AgreementsRowView.init
-//							)
-//
-//							NavigationLink(
-//								route: viewStore.route,
-//								case: /SettingsFeature.State.Route.about,
-//								onNavigate: { viewStore.send(.navigateAbout($0)) },
-//								destination: { aboutState in
-//									AboutView(
-//										store: self.store.scope(
-//											state: { _ in aboutState },
-//											action: SettingsFeature.Action.about
-//										)
-//									)
-//								},
-//								label: AboutRowView.init
-//							)
-//						}
+
+						Section {
+							NavigationLinkStore(
+								self.store.scope(
+									state: \.$destination,
+									action: SettingsFeature.Action.destination
+								),
+								state: /SettingsFeature.Destination.State.export,
+								action: SettingsFeature.Destination.Action.export,
+								onTap: { viewStore.send(.exportButtonTapped) },
+								destination: ExportView.init,
+								label: ExportRowView.init
+							)						
+						}
+
+						Section {
+							ReviewRowView()
+								.contentShape(Rectangle())
+								.onTapGesture {
+									viewStore.send(.reviewStoreKit)
+								}
+						}
+
+						Section {
+							NavigationLinkStore(
+								self.store.scope(
+									state: \.$destination,
+									action: SettingsFeature.Action.destination
+								),
+								state: /SettingsFeature.Destination.State.agreements,
+								action: SettingsFeature.Destination.Action.agreements,
+								onTap: { viewStore.send(.agreementsButtonTapped) },
+								destination: AgreementsView.init,
+								label: AgreementsRowView.init
+							)
+							
+							NavigationLinkStore(
+								self.store.scope(
+									state: \.$destination,
+									action: SettingsFeature.Action.destination
+								),
+								state: /SettingsFeature.Destination.State.about,
+								action: SettingsFeature.Destination.Action.about,
+								onTap: { viewStore.send(.aboutButtonTapped) },
+								destination: AboutView.init,
+								label: AboutRowView.init
+							)
+						}
 					}
 
 					VStack {
 						NavigationLinkStore(
-							self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+							self.store.scope(
+								state: \.$destination,
+								action: SettingsFeature.Action.destination
+							),
 							state: /SettingsFeature.Destination.State.activate,
 							action: SettingsFeature.Destination.Action.activate,
 							destination: ActivateView.init
 						)
 
 						NavigationLinkStore(
-							self.store.scope(state: \.$destination, action: SettingsFeature.Action.destination),
+							self.store.scope(
+								state: \.$destination,
+								action: SettingsFeature.Action.destination
+							),
 							state: /SettingsFeature.Destination.State.menu,
 							action: SettingsFeature.Destination.Action.menu,
 							destination: MenuPasscodeView.init
@@ -211,5 +211,37 @@ public struct SettingsView: View {
 				viewStore.send(.onAppear)
 			}
 		}
+	}
+}
+
+import EntriesFeature
+
+struct SettingsView_Previews: PreviewProvider {
+	static var previews: some View {
+		SettingsView(
+			store: Store(
+				initialState: SettingsFeature.State(
+					cameraStatus: .notDetermined,
+					destination: .appearance(
+						AppearanceFeature.State(
+							appearanceSettings: .defaultValue,
+							destination: .layout(
+								LayoutFeature.State(
+									layoutType: .horizontal,
+									styleType: .rectangle,
+									entries: fakeEntries(
+										with: .rectangle,
+										layout: .horizontal
+									)
+								)
+							)
+						)
+					),
+					microphoneStatus: .notDetermined,
+					userSettings: .defaultValue
+				),
+				reducer: SettingsFeature()
+			)
+		)
 	}
 }

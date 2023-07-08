@@ -48,7 +48,7 @@ public struct DayEntries: ReducerProtocol {
 }
 
 public struct DayEntriesView: View {
-  let store: StoreOf<DayEntries>
+  private let store: StoreOf<DayEntries>
   
   public init(
     store: StoreOf<DayEntries>
