@@ -7,12 +7,10 @@ import Models
 public struct LayoutFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		public var layoutType: LayoutType
 		public var styleType: StyleType
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		
-		public var id: LayoutType { self.layoutType }
 		
 		public init(
 			layoutType: LayoutType,

@@ -21,7 +21,7 @@ extension UserDefaultsClient: TestDependencyKey {
 extension UserDefaultsClient {
   public static let noop = Self(
     boolForKey: { _ in false },
-    setBool: { _, _ in .none },
+    setBool: { _, _ in },
     stringForKey: { _ in nil },
     setString: { _, _ in .none },
     intForKey: { _ in nil },

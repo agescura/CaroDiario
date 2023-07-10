@@ -67,11 +67,11 @@ struct ThemeView_Previews: PreviewProvider {
 		ThemeView(
 			store: Store(
 				initialState: ThemeFeature.State(
-					themeType: .system,
 					entries: fakeEntries(
 						with: .rectangle,
 						layout: .horizontal
-					)
+					),
+					themeType: .system
 				),
 				reducer: ThemeFeature()
 			)
@@ -81,11 +81,11 @@ struct ThemeView_Previews: PreviewProvider {
 		ThemeView(
 			store: Store(
 				initialState: ThemeFeature.State(
-					themeType: .light,
 					entries: fakeEntries(
 						with: .rectangle,
 						layout: .horizontal
-					)
+					),
+					themeType: .light
 				),
 				reducer: ThemeFeature()
 			)
@@ -95,11 +95,11 @@ struct ThemeView_Previews: PreviewProvider {
 		ThemeView(
 			store: Store(
 				initialState: ThemeFeature.State(
-					themeType: .dark,
 					entries: fakeEntries(
 						with: .rectangle,
 						layout: .horizontal
-					)
+					),
+					themeType: .dark
 				),
 				reducer: ThemeFeature()
 			)

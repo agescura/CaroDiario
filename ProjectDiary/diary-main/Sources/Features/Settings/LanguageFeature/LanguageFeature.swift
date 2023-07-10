@@ -5,10 +5,8 @@ import Models
 public struct LanguageFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		public var language: Localizable
-		
-		public var id: Localizable { self.language }
 		
 		public init(
 			language: Localizable

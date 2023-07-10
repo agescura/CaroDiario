@@ -30,7 +30,7 @@ public struct SharedState: Equatable {
 	public var navigateEntryDetail = false
 	public var entryDetailSelected: Entry?
 	
-	public var search: Search.State = Search.State()
+	public var search: SearchFeature.State = SearchFeature.State()
 	
 	public var showSplash: Bool
 	public var styleType: StyleType
@@ -102,7 +102,7 @@ public struct Home: ReducerProtocol {
 				self.sharedState.entryDetailSelected = newValue.entryDetailSelected
 			}
 		}
-		public var search: Search.State {
+		public var search: SearchFeature.State {
 			get { self.sharedState.search }
 			set { self.sharedState.search = newValue }
 		}
@@ -125,7 +125,7 @@ public struct Home: ReducerProtocol {
 		case tabBarSelected(TabViewType)
 		case starting
 		case entries(Entries.Action)
-		case search(Search.Action)
+		case search(SearchFeature.Action)
 		case settings(SettingsFeature.Action)
 	}
 	
@@ -137,7 +137,7 @@ public struct Home: ReducerProtocol {
 			SettingsFeature()
 		}
 		Scope(state: \.search, action: /Action.search) {
-			Search()
+			SearchFeature()
 		}
 		Reduce(self.core)
 	}

@@ -10,9 +10,7 @@ extension UserDefaultsClient {
         Self(
             boolForKey: userDefaults.bool(forKey:),
             setBool: { value, key in
-                .fireAndForget {
-                    userDefaults.set(value, forKey: key)
-                }
+					userDefaults.set(value, forKey: key)
             },
             stringForKey: userDefaults.string(forKey:),
             setString: { value, key in

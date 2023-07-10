@@ -131,6 +131,7 @@
 		95EFDB4C26D7F02D00C2B12F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		BD2A3298447210A07EE095A2 /* ProjectDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB841C347FD8D298EFFE0DFA /* ProjectDiaryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDiaryApp.swift; sourceTree = "<group>"; };
+		CE3AE5752A5AFA5300BDB6D9 /* ProjectDiary.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProjectDiary.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +209,7 @@
 		9537BBB526D5419A00650CF5 /* ProjectDiaryTests */ = {
 			isa = PBXGroup;
 			children = (
+				CE3AE5752A5AFA5300BDB6D9 /* ProjectDiary.xctestplan */,
 				9537BBB626D5419A00650CF5 /* ProjectDiaryTests.swift */,
 				9537BBB826D5419A00650CF5 /* Info.plist */,
 			);
@@ -634,7 +636,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = ProjectDiaryTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -655,7 +657,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				INFOPLIST_FILE = ProjectDiaryTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

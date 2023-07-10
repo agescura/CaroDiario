@@ -4,13 +4,11 @@ import ComposableArchitecture
 public struct ActivatePasscodeFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		@PresentationState public var insert: InsertPasscodeFeature.State?
 		
 		public var faceIdEnabled: Bool
 		public var hasPasscode: Bool
-		
-		public var id: Int { 1 }
 		
 		public init(
 			faceIdEnabled: Bool,

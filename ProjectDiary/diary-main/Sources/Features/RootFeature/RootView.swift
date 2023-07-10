@@ -77,11 +77,10 @@ public struct RootFeature: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
-				
 			case .appDelegate(.didFinishLaunching):
-				return Effect(value: .setUserInterfaceStyle)
+				return EffectTask(value: .setUserInterfaceStyle)
 				
 			case .setUserInterfaceStyle:
 				return .task { @MainActor in
@@ -104,28 +103,28 @@ public struct RootFeature: ReducerProtocol {
 				return .none
 				
 			case .featureAction(.onBoarding(.delegate(.skip))),
-					.featureAction(.onBoarding(.destination(.presented(.privacy(.skipAlertAction))))),
-					.featureAction(.onBoarding(.destination(.presented(.privacy(.style(.skipAlertAction)))))),
-					.featureAction(.onBoarding(.destination(.presented(.privacy(.style(.layout(.skipAlertAction))))))):
-				return Effect(value: RootFeature.Action.requestCameraStatus)
+					.featureAction(.onBoarding(.destination(.presented(.privacy(.delegate(.skip)))))),
+					.featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.delegate(.skip))))))))),
+					.featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.delegate(.skip)))))))))))):
+				return EffectTask(value: RootFeature.Action.requestCameraStatus)
 				
-			case .featureAction(.onBoarding(.destination(.presented(.privacy(.style(.layout(.theme(.startButtonTapped)))))))):
-				return Effect(value: .requestCameraStatus)
+			case .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.destination(.presented(.theme(.startButtonTapped)))))))))))))):
+				return EffectTask(value: .requestCameraStatus)
 					.delay(for: 0.001, scheduler: self.mainQueue)
 					.eraseToEffect()
 				
 			case .featureAction(.lockScreen(.matchedCode)):
-				return Effect(value: .requestCameraStatus)
+				return EffectTask(value: .requestCameraStatus)
 				
 			case .featureAction(.home(.settings(.destination(.presented(.menu(.toggleFaceId(true))))))),
 					.featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.toggleFaceId(isOn: true))))))))))),
 					.featureAction(.lockScreen(.checkFaceId)):
-				return Effect(value: .biometricAlertPresent(true))
+				return EffectTask(value: .biometricAlertPresent(true))
 				
 			case .featureAction(.home(.settings(.destination(.presented(.menu(.faceId(response:))))))),
 					.featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.faceId(response:))))))))))),
 					.featureAction(.lockScreen(.faceIdResponse)):
-				return Effect(value: .biometricAlertPresent(false))
+				return EffectTask(value: .biometricAlertPresent(false))
 					.delay(for: 10, scheduler: self.mainQueue)
 					.eraseToEffect()
 				
@@ -143,7 +142,7 @@ public struct RootFeature: ReducerProtocol {
 					}
 				}
 				
-				return Effect(value: .featureAction(.splash(.startAnimation)))
+				return EffectTask(value: .featureAction(.splash(.startAnimation)))
 				
 			case .requestCameraStatus:
 				return self.avCaptureDeviceClient.authorizationStatus()
@@ -188,7 +187,7 @@ public struct RootFeature: ReducerProtocol {
 						)
 					)
 				)
-				return Effect(value: .featureAction(.home(.starting)))
+				return EffectTask(value: .featureAction(.home(.starting)))
 				
 			case .process:
 				return .none
@@ -237,7 +236,7 @@ public struct RootFeature: ReducerProtocol {
 	private func coreData(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		if case .home = state.featureState {
 			switch action {
 				case .featureAction(.home(.entries(.onAppear))):
@@ -357,7 +356,7 @@ public struct RootFeature: ReducerProtocol {
 	private func userDefaults(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
 			case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.layout(.layoutChanged(layout)))))))))):
 				return self.userDefaultsClient.set(layoutType: layout)
@@ -369,8 +368,8 @@ public struct RootFeature: ReducerProtocol {
 				return self.userDefaultsClient.set(themeType: theme)
 					.fireAndForget()
 			case let .featureAction(.home(.settings(.toggleShowSplash(isOn: isOn)))):
-				return self.userDefaultsClient.setHideSplashScreen(!isOn)
-					.fireAndForget()
+				self.userDefaultsClient.setHideSplashScreen(!isOn)
+				return .none
 			case .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.turnOffPasscode))))))))))),
 					.featureAction(.home(.settings(.destination(.presented(.menu(.delegate(.turnOffPasscode))))))):
 				return self.userDefaultsClient.removePasscode()
@@ -380,8 +379,8 @@ public struct RootFeature: ReducerProtocol {
 					.fireAndForget()
 			case let .featureAction(.home(.settings(.destination(.presented(.menu(.faceId(response: faceId))))))),
 				let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.faceId(response: faceId))))))))))):
-				return self.userDefaultsClient.setFaceIDActivate(faceId)
-					.fireAndForget()
+				self.userDefaultsClient.setFaceIDActivate(faceId)
+				return .none
 			case let .featureAction(.home(.settings(.destination(.presented(.menu(.optionTimeForAskPasscode(changed: newOption))))))),
 				let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.optionTimeForAskPasscode(changed: newOption))))))))))):
 				return self.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value)
@@ -392,13 +391,14 @@ public struct RootFeature: ReducerProtocol {
 			case let .featureAction(.home(.settings(.destination(.presented(.language(.updateLanguageTapped(language))))))):
 				return self.userDefaultsClient.setLanguage(language.rawValue)
 					.fireAndForget()
-			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.style(.styleChanged(styleChanged))))))):
+			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.styleChanged(styleChanged))))))))):
 				return self.userDefaultsClient.set(styleType: styleChanged)
 					.fireAndForget()
-			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.style(.layout(.layoutChanged(layoutChanged)))))))):
+			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.layoutChanged(layoutChanged)))))))))))):
 				return self.userDefaultsClient.set(layoutType: layoutChanged)
 					.fireAndForget()
-			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.style(.layout(.theme(.themeChanged(themeChanged))))))))):
+			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.destination(.presented(
+				.theme(.themeChanged(themeChanged))))))))))))))):
 				return self.userDefaultsClient.set(themeType: themeChanged)
 					.fireAndForget()
 			default:

@@ -63,12 +63,12 @@ struct StyleView_Previews: PreviewProvider {
 		StyleView(
 			store: Store(
 				initialState: StyleFeature.State(
-					styleType: .rectangle,
-					layoutType: .horizontal,
 					entries: fakeEntries(
 						with: .rectangle,
 						layout: .horizontal
-					)
+					),
+					layoutType: .horizontal,
+					styleType: .rectangle
 					
 				),
 				reducer: StyleFeature()
@@ -79,12 +79,12 @@ struct StyleView_Previews: PreviewProvider {
 		StyleView(
 			store: Store(
 				initialState: StyleFeature.State(
-					styleType: .rounded,
-					layoutType: .horizontal,
 					entries: fakeEntries(
 						with: .rounded,
 						layout: .horizontal
-					)
+					),
+					layoutType: .horizontal,
+					styleType: .rounded
 					
 				),
 				reducer: StyleFeature()

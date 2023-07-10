@@ -64,3 +64,14 @@ extension SplashFeature.State.AnimationState {
 		}
 	}
 }
+
+struct SplashView_Previews: PreviewProvider {
+	static var previews: some View {
+		SplashView(
+			store: Store(
+				initialState: SplashFeature.State(),
+				reducer: SplashFeature()
+			)
+		)
+	}
+}

@@ -7,10 +7,8 @@ import FeedbackGeneratorClient
 public struct IconAppFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		public var iconAppType: IconAppType
-		
-		public var id: IconAppType { self.iconAppType }
 		
 		public init(
 			iconAppType: IconAppType

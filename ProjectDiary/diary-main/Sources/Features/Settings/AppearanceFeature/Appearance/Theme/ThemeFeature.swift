@@ -9,11 +9,9 @@ import UserDefaultsClient
 public struct ThemeFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
-		public var themeType: ThemeType = .system
+	public struct State: Equatable {
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		
-		public var id: ThemeType { self.themeType }
+		public var themeType: ThemeType = .system
 	}
 	
 	public enum Action: Equatable {

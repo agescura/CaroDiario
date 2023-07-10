@@ -54,7 +54,7 @@ extension TimeForAskPasscode {
 public struct MenuPasscodeFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		@PresentationState var confirmationDialog: ConfirmationDialogState<Action.Dialog>?
 		public var authenticationType: LocalAuthenticationType
 		public var faceIdEnabled: Bool
@@ -67,8 +67,6 @@ public struct MenuPasscodeFeature: ReducerProtocol {
 			.after(minutes: 30),
 			.after(minutes: 60)
 		]
-		
-		public var id: Int { 1 }
 		
 		public init(
 			authenticationType: LocalAuthenticationType,

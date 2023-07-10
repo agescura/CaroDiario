@@ -79,9 +79,7 @@ public struct SettingsFeature: ReducerProtocol {
 	@Dependency(\.storeKitClient) private var storeKitClient
 	
 	public struct Destination: ReducerProtocol {
-		public init() {}
-		
-		public enum State: Equatable, Identifiable {
+		public enum State: Equatable {
 			case about(AboutFeature.State)
 			case activate(ActivatePasscodeFeature.State)
 			case agreements(AgreementsFeature.State)
@@ -91,29 +89,8 @@ public struct SettingsFeature: ReducerProtocol {
 			case language(LanguageFeature.State)
 			case menu(MenuPasscodeFeature.State)
 			case microphone(Microphone.State)
-			public var id: AnyHashable {
-				switch self {
-					case let .about(state):
-						return state.id
-					case let .activate(state):
-						return state.id
-					case let .agreements(state):
-						return state.id
-					case let .appearance(state):
-						return state.id
-					case let .camera(state):
-						return state.id
-					case let .export(state):
-						return state.id
-					case let .language(state):
-						return state.id
-					case let .menu(state):
-						return state.id
-					case let .microphone(state):
-						return state.id
-				}
-			}
 		}
+		
 		public enum Action: Equatable {
 			case about(AboutFeature.Action)
 			case activate(ActivatePasscodeFeature.Action)
@@ -125,6 +102,7 @@ public struct SettingsFeature: ReducerProtocol {
 			case menu(MenuPasscodeFeature.Action)
 			case microphone(Microphone.Action)
 		}
+		
 		public var body: some ReducerProtocolOf<Self> {
 			Scope(state: /State.about, action: /Action.about) {
 				AboutFeature()

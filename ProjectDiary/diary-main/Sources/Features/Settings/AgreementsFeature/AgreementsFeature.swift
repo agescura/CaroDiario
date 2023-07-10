@@ -35,8 +35,6 @@ public struct AgreementsFeature: ReducerProtocol {
 	
 	public struct State: Equatable {
 		public init() {}
-		
-		public var id: Int { 1 }
 	}
 	
 	public enum Action: Equatable {

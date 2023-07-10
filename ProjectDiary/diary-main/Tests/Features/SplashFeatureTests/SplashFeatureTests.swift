@@ -1,35 +1,42 @@
-//
-//  SplashFeatureTests.swift
-//  SplashFeatureTests
-//
-//  Created by Albert Gil Escura on 26/6/21.
-//
-
-import XCTest
-@testable import SplashFeature
 import ComposableArchitecture
+@testable import SplashFeature
 import SwiftUI
+import XCTest
 
+@MainActor
 class SplashFeatureTests: XCTestCase {
-    func testSplashScreenHappyPath() {
-        let store = TestStore(
-            initialState: SplashState(),
-            reducer: splashReducer,
-            environment: SplashEnvironment(
-                userDefaultsClient: .noop,
-                mainQueue: .immediate
-            )
-        )
-        
-        store.send(.startAnimation)
-        store.receive(.verticalLineAnimation) {
-            $0.animation = .verticalLine
-        }
-        store.receive(.areaAnimation) {
-            $0.animation = .horizontalArea
-        }
-        store.receive(.finishAnimation) {
-            $0.animation = .finish
-        }
-    }
+	func testHappyPath() async {
+		let mainQueue = DispatchQueue.test
+		
+		let store = TestStore(
+			initialState: SplashFeature.State(),
+			reducer: SplashFeature()
+		) {
+			$0.mainQueue = mainQueue.eraseToAnyScheduler()
+		}
+		
+		await store.send(.startAnimation)
+		
+		await mainQueue.advance(by: .seconds(1))
+		
+		await store.receive(.animation(.start))
+		
+		await mainQueue.advance(by: .seconds(1))
+		
+		await store.receive(.animation(.verticalLine)) {
+			$0.animation = .verticalLine
+		}
+		
+		await mainQueue.advance(by: .seconds(1))
+		
+		await store.receive(.animation(.area)) {
+			$0.animation = .horizontalArea
+		}
+		
+		await store.receive(.animation(.finish)) {
+			$0.animation = .finish
+		}
+		
+		await store.receive(.delegate(.finishAnimation))
+	}
 }

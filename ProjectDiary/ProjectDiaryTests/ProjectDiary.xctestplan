@@ -1,0 +1,52 @@
+{
+  "configurations" : [
+    {
+      "id" : "E2A16CF5-17E1-4BBB-9ACE-17F2A0C0390A",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "SplashFeatureTests",
+        "name" : "SplashFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "AgreementsFeatureTests",
+        "name" : "AgreementsFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "SettingsFeatureTests",
+        "name" : "SettingsFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "OnboardingFeatureTests",
+        "name" : "OnboardingFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "PasscodeFeatureTests",
+        "name" : "PasscodeFeatureTests"
+      }
+    }
+  ],
+  "version" : 1
+}

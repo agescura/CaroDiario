@@ -7,18 +7,32 @@ import SwiftUI
 import Views
 
 public struct StyleView: View {
-	private let store: StoreOf<Style>
+	private let store: StoreOf<StyleFeature>
+	
+	private struct ViewState: Equatable {
+		let isAppClip: Bool
+		let styleType: StyleType
+		
+		init(
+			state: StyleFeature.State
+		) {
+			self.isAppClip	= state.isAppClip
+			self.styleType = state.styleType
+		}
+	}
 	
 	public init(
-		store: StoreOf<Style>
+		store: StoreOf<StyleFeature>
 	) {
 		self.store = store
 	}
 	
 	public var body: some View {
-		WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithViewStore(
+			self.store,
+			observe: ViewState.init
+		) { viewStore in
 			VStack {
-				
 				ScrollView(showsIndicators: false) {
 					VStack(alignment: .leading, spacing: 16) {
 						
@@ -32,7 +46,7 @@ public struct StyleView: View {
 						
 						Picker("",  selection: viewStore.binding(
 							get: \.styleType,
-							send: Style.Action.styleChanged
+							send: StyleFeature.Action.styleChanged
 						)) {
 							ForEach(StyleType.allCases, id: \.self) { type in
 								Text(type.rawValue.localized)
@@ -46,8 +60,9 @@ public struct StyleView: View {
 							ForEachStore(
 								store.scope(
 									state: \.entries,
-									action: Style.Action.entries(id:action:)),
-								content: DayEntriesRowView.init(store:)
+									action: StyleFeature.Action.entries
+								),
+								content: DayEntriesRowView.init
 							)
 						}
 						.accentColor(.chambray)
@@ -55,20 +70,14 @@ public struct StyleView: View {
 						.disabled(true)
 						.frame(minHeight: 200)
 						
-						NavigationLink(
-							"",
-							destination:
-								IfLetStore(
-									store.scope(
-										state: \.layout,
-										action: Style.Action.layout
-									),
-									then: LayoutView.init(store:)
-								),
-							isActive: viewStore.binding(
-								get: \.navigateLayout,
-								send: Style.Action.navigationLayout
-							)
+						NavigationLinkStore(
+							self.store.scope(
+								state: \.$destination,
+								action: StyleFeature.Action.destination
+							),
+							state: /StyleFeature.Destination.State.layout,
+							action: StyleFeature.Destination.Action.layout,
+							destination: LayoutView.init
 						)
 					}
 				}
@@ -79,26 +88,30 @@ public struct StyleView: View {
 							.adaptiveFont(.latoRegular, size: 16)
 						
 					}) {
-						viewStore.send(.skipAlertButtonTapped)
+						viewStore.send(.alertButtonTapped)
 					}
 					.opacity(viewStore.isAppClip ? 0.0 : 1.0)
 					.padding(.horizontal, 16)
-					.alert(
-						store.scope(state: \.skipAlert),
-						dismiss: .cancelSkipAlert
-					)
 				
 				PrimaryButtonView(
 					label: {
 						Text("OnBoarding.Continue".localized)
 							.adaptiveFont(.latoRegular, size: 16)
 					}) {
-						viewStore.send(.navigationLayout(true))
+						viewStore.send(.layoutButtonTapped)
 					}
 					.padding(.horizontal, 16)
 			}
 			.padding()
 			.navigationBarBackButtonHidden(true)
+			.alert(
+				store: self.store.scope(
+					state: \.$destination,
+					action: StyleFeature.Action.destination
+				),
+				state: /StyleFeature.Destination.State.alert,
+				action: StyleFeature.Destination.Action.alert
+			)
 		}
 	}
 }

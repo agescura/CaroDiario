@@ -8,10 +8,8 @@ import UIApplicationClient
 public struct Microphone: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		public var microphoneStatus: AudioRecordPermission
-		
-		public var id: AudioRecordPermission { self.microphoneStatus }
 		
 		public init(
 			microphoneStatus: AudioRecordPermission

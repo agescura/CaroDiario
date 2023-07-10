@@ -7,10 +7,8 @@ import UIApplicationClient
 public struct CameraFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		public var cameraStatus: AuthorizedVideoStatus
-		
-		public var id: AuthorizedVideoStatus { self.cameraStatus }
 		
 		public init(
 			cameraStatus: AuthorizedVideoStatus

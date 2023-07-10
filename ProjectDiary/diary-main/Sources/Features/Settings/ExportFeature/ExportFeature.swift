@@ -8,12 +8,10 @@ import UIApplicationClient
 public struct ExportFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		var pdf = Data()
 		@PresentationState var pdfPreview: PDFPreview.State?
 		var presentPreview = false
-		
-		public var id: Int { 1 }
 		
 		public init() {}
 	}

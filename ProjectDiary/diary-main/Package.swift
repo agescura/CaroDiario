@@ -874,7 +874,10 @@ let package = Package(
 		
 			.testTarget(
 				name: "OnboardingFeatureTests",
-				dependencies: ["OnboardingFeature"],
+				dependencies: [
+					"OnboardingFeature",
+					.product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+				],
 				path: "Tests/Features/OnboardingFeatureTests"
 			),
 		

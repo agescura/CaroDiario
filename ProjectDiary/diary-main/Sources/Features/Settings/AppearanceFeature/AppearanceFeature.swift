@@ -7,11 +7,9 @@ import TCAHelpers
 public struct AppearanceFeature: ReducerProtocol {
 	public init() {}
 	
-	public struct State: Equatable, Identifiable {
+	public struct State: Equatable {
 		public var appearanceSettings: AppearanceSettings
 		@PresentationState public var destination: Destination.State?
-		
-		public var id: Int { 1 }
 		
 		public init(
 			appearanceSettings: AppearanceSettings,
@@ -31,32 +29,20 @@ public struct AppearanceFeature: ReducerProtocol {
 	}
 	
 	public struct Destination: ReducerProtocol {
-		public init() {}
-		
-		public enum State: Equatable, Identifiable {
+		public enum State: Equatable {
 			case iconApp(IconAppFeature.State)
 			case layout(LayoutFeature.State)
 			case style(StyleFeature.State)
 			case theme(ThemeFeature.State)
-			public var id: AnyHashable {
-				switch self {
-					case let .iconApp(state):
-						return state.id
-					case let .layout(state):
-						return state.id
-					case let .style(state):
-						return state.id
-					case let .theme(state):
-						return state.id
-				}
-			}
 		}
+		
 		public enum Action: Equatable {
 			case iconApp(IconAppFeature.Action)
 			case layout(LayoutFeature.Action)
 			case style(StyleFeature.Action)
 			case theme(ThemeFeature.Action)
 		}
+		
 		public var body: some ReducerProtocolOf<Self> {
 			Scope(state: /State.iconApp, action: /Action.iconApp) {
 				IconAppFeature()
@@ -113,9 +99,9 @@ public struct AppearanceFeature: ReducerProtocol {
 				case .styleButtonTapped:
 					state.destination = .style(
 						StyleFeature.State(
-							styleType: state.appearanceSettings.styleType,
+							entries: fakeEntries(with: state.appearanceSettings.styleType, layout: state.appearanceSettings.layoutType),
 							layoutType: state.appearanceSettings.layoutType,
-							entries: fakeEntries(with: state.appearanceSettings.styleType, layout: state.appearanceSettings.layoutType)
+							styleType: state.appearanceSettings.styleType
 						)
 					)
 					return .none
@@ -123,8 +109,8 @@ public struct AppearanceFeature: ReducerProtocol {
 				case .themeButtonTapped:
 					state.destination = .theme(
 						ThemeFeature.State(
-							themeType: state.appearanceSettings.themeType,
-							entries: fakeEntries(with: state.appearanceSettings.styleType, layout: state.appearanceSettings.layoutType)
+							entries: fakeEntries(with: state.appearanceSettings.styleType, layout: state.appearanceSettings.layoutType),
+							themeType: state.appearanceSettings.themeType
 						)
 					)
 					return .none
