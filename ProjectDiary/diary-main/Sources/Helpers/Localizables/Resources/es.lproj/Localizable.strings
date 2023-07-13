@@ -66,7 +66,7 @@
 
 // AddEntryFeature
 
-"AddEntry.Title" = "Escribe una nueva entrada en el diario";
+"AddEntry.Title" = "Nueva entrada";
 "AddEntry.Finish" = "Añadir";
 "AddEntry.ChooseOption" = "Escoge una opción";
 "AddEntry.Camera" = "Cámara";
@@ -82,9 +82,7 @@
 "AddEntry.Exit.Message" = "Estás a punto de perder los datos introducidos.";
 "AddEntry.Exit.Yes" = "Si, entendido";
 "AddEntry.Edit" = "Estás editando la entrada";
-"AddEntry.Update" = "Finalizando";
-"Settings.ReviewAppStore" = "Valorar en la App Store";
-"Settings.ExportPDF" = "Exportar PDF";
+"AddEntry.Finish" = "Finalizar";
 
 // Image
 
@@ -127,6 +125,8 @@
 "Settings.GivePermission" = "Dar permiso";
 "Settings.Microphone" = "Micrófono";
 "Settings.Agreements" = "Agradecimientos";
+"Settings.ReviewAppStore" = "Valorar en la App Store";
+"Settings.ExportPDF" = "Exportar PDF";
 "Settings.Attachment.Image" = "Entradas con imágenes";
 "Settings.Attachment.Video" = "Entradas con videos";
 "Settings.Attachment.Audio" = "Entradas con audios";

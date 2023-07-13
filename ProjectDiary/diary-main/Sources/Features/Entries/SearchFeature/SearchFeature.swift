@@ -9,44 +9,32 @@ public struct SearchFeature: ReducerProtocol {
 	
 	public struct State: Equatable {
 		@PresentationState public var destination: Destination.State?
-		public var searchText: String = ""
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		
-		public var attachmentSearchState: AttachmentSearch.State?
-		public var navigateAttachmentSearch = false
-		
-		public var entryDetailState: EntryDetail.State?
-		public var navigateEntryDetail = false
-		public var entryDetailSelected: Entry?
+		public var searchText: String = ""
 		
 		public var entriesCount: Int {
 			entries.map(\.dayEntries.entries.count).reduce(0, +)
 		}
 		
 		public init(
-			searchText: String = "",
-			entries: IdentifiedArrayOf<DayEntriesRow.State> = []
+			entries: IdentifiedArrayOf<DayEntriesRow.State> = [],
+			searchText: String = ""
 		) {
-			self.searchText = searchText
 			self.entries = entries
+			self.searchText = searchText
 		}
 	}
 	
 	public enum Action: Equatable {
 		case destination(PresentationAction<Destination.Action>)
-		case searching(newText: String)
-		case searchResponse([[Entry]])
 		case entries(id: UUID, action: DayEntriesRow.Action)
-		case remove(Entry)
-		
-		case attachmentSearchAction(AttachmentSearch.Action)
-		case navigateAttachmentSearch(Bool)
+		case navigateAudioSearch
 		case navigateImageSearch
 		case navigateVideoSearch
-		case navigateAudioSearch
 		case navigateSearch(AttachmentSearchType, [[Entry]])
-		
-		case entryDetailAction(EntryDetail.Action)
+		case remove(Entry)
+		case searching(newText: String)
+		case searchResponse([[Entry]])
 	}
 	
 	@Dependency(\.backgroundQueue) private var backgroundQueue
@@ -89,34 +77,14 @@ public struct SearchFeature: ReducerProtocol {
 				case .destination:
 					return .none
 					
-				case let .searching(newText: newText):
-					state.searchText = newText
-					return .none
-					
-				case let .searchResponse(response):
-					var dayResult: IdentifiedArrayOf<DayEntriesRow.State> = []
-					
-					for entries in response {
-						let day = DayEntriesRow.State(dayEntry: .init(
-							entry: .init(uniqueElements: entries), style: self.userDefaultsClient.styleType, layout: self.userDefaultsClient.layoutType), id: self.uuid())
-						dayResult.append(day)
-					}
-					state.entries = dayResult
-					return .none
-					
 				case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
 					state.destination = .entryDetail(EntryDetail.State(entry: entry))
 					return .none
 					
 				case .entries:
 					return .none
-					
-				case .attachmentSearchAction:
-					return .none
-					
-				case let .navigateAttachmentSearch(value):
-					state.attachmentSearchState = value ? .init(type: .images, entries: []) : nil
-					state.navigateAttachmentSearch = value
+
+				case .navigateAudioSearch:
 					return .none
 					
 				case .navigateImageSearch:
@@ -125,8 +93,6 @@ public struct SearchFeature: ReducerProtocol {
 				case .navigateVideoSearch:
 					return .none
 
-				case .navigateAudioSearch:
-					return .none
 					
 				case let .navigateSearch(type, response):
 					var dayResult: IdentifiedArrayOf<DayEntriesRow.State> = []
@@ -145,15 +111,28 @@ public struct SearchFeature: ReducerProtocol {
 				case .remove:
 					return .none
 					
-				case .entryDetailAction:
+				case let .searching(newText: newText):
+					state.searchText = newText
 					return .none
+					
+				case let .searchResponse(response):
+					var dayResult: IdentifiedArrayOf<DayEntriesRow.State> = []
+					
+					for entries in response {
+						let day = DayEntriesRow.State(dayEntry: .init(
+							entry: .init(uniqueElements: entries), style: self.userDefaultsClient.styleType, layout: self.userDefaultsClient.layoutType), id: self.uuid())
+						dayResult.append(day)
+					}
+					state.entries = dayResult
+					return .none
+					
 			}
-		}
-		.forEach(\.entries, action: /Action.entries) {
-			DayEntriesRow()
 		}
 		.ifLet(\.$destination, action: /Action.destination) {
 			Destination()
+		}
+		.forEach(\.entries, action: /Action.entries) {
+			DayEntriesRow()
 		}
 	}
 }

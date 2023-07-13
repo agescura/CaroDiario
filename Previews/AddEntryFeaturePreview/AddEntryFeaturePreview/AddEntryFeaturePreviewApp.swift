@@ -29,7 +29,7 @@ struct AddEntryFeaturePreviewApp: App {
         WindowGroup {
             AddEntryView(
                 store: .init(
-                    initialState: .init(type: .add, entry: .init(id: .init(), date: .init(), startDay: .init(), text: .init(id: .init(), message: "", lastUpdated: .init()))),
+                    initialState: .init(entry: .init(id: .init(), date: .init(), startDay: .init(), text: .init(id: .init(), message: "", lastUpdated: .init()))),
                     reducer: addEntryReducer,
                     environment: .init(
                         fileClient: .live,

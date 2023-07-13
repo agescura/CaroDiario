@@ -66,7 +66,7 @@
 
 // AddEntryFeature
 
-"AddEntry.Title" = "Write a new entry to the diary";
+"AddEntry.Title" = "New entry";
 "AddEntry.Finish" = "Add";
 "AddEntry.ChooseOption" = "Choose an option";
 "AddEntry.Camera" = "Camera";
@@ -81,10 +81,8 @@
 "AddEntry.Exit" = "Exiting";
 "AddEntry.Exit.Message" = "Are you sure you want to lose the data?";
 "AddEntry.Exit.Yes" = "Yes, sure.";
-"AddEntry.Edit" = "You are editing the entry";
-"AddEntry.Update" = "Finishing";
-"Settings.ReviewAppStore" = "Rate on App Store";
-"Settings.ExportPDF" = "Export PDF";
+"AddEntry.Edit" = "Edit";
+"AddEntry.Finish" = "Finish";
 
 // Image
 
@@ -127,6 +125,8 @@
 "Settings.GivePermission" = "Give permission";
 "Settings.Microphone" = "Microphone";
 "Settings.Agreements" = "Agreements";
+"Settings.ReviewAppStore" = "Rate on App Store";
+"Settings.ExportPDF" = "Export PDF";
 "Settings.Attachment.Image" = "Entries with images";
 "Settings.Attachment.Video" = "Entries with videos";
 "Settings.Attachment.Audio" = "Entries with audios";

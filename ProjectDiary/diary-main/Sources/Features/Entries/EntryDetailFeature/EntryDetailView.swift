@@ -26,7 +26,7 @@ public struct EntryDetail: ReducerProtocol {
     public var meatballActionSheet: ConfirmationDialogState<EntryDetail.Action>?
     public var removeAlert: AlertState<EntryDetail.Action>?
     
-    public var addEntryState: AddEntry.State?
+    public var addEntryState: AddEntryFeature.State?
     public var presentAddEntry = false
     
     public var showAttachmentOverlayed = false
@@ -63,7 +63,7 @@ public struct EntryDetail: ReducerProtocol {
     case dismissRemoveAlert
     case remove(Entry)
     
-    case addEntryAction(AddEntry.Action)
+    case addEntryAction(AddEntryFeature.Action)
     case presentAddEntry(Bool)
     case presentAddEntryCompleted
     
@@ -87,7 +87,7 @@ public struct EntryDetail: ReducerProtocol {
         AttachmentRow()
       }
       .ifLet(\.addEntryState, action: /EntryDetail.Action.addEntryAction) {
-        AddEntry()
+        AddEntryFeature()
       }
     Scope(state: \.selectedAttachmentDetailState, action: /Action.attachmentDetail) {
       AttachmentDetail()
@@ -210,7 +210,7 @@ public struct EntryDetail: ReducerProtocol {
       
     case .presentAddEntry(true):
       state.presentAddEntry = true
-      state.addEntryState = .init(type: .edit, entry: state.entry)
+			 state.addEntryState = AddEntryFeature.State(entry: state.entry)
       return .none
       
     case .presentAddEntry(false):
@@ -343,9 +343,14 @@ public struct EntryDetailView: View {
         IfLetStore(
           store.scope(
             state: { $0.addEntryState },
-            action: EntryDetail.Action.addEntryAction),
-          then: AddEntryView.init(store:)
-        )
+            action: EntryDetail.Action.addEntryAction
+			 )
+		  ) { store in
+			  NavigationView {
+				  AddEntryView(store: store)
+					  .navigationTitle("AddEntry.Edit".localized)
+			  }
+		  }
       }
       .alert(
         store.scope(state: \.removeAlert),

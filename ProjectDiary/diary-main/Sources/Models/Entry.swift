@@ -1,10 +1,3 @@
-//
-//  Entry.swift
-//  Models
-//
-//  Created by Albert Gil Escura on 25/6/21.
-//
-
 import Foundation
 
 public struct Entry: Identifiable {
@@ -80,7 +73,6 @@ extension Entry {
 }
 
 extension Entry {
-    
     public var images: [EntryImage] {
         attachments.filter { $0 is EntryImage }.compactMap { $0 as? EntryImage }
     }
@@ -92,4 +84,34 @@ extension Entry {
     public var audios: [EntryAudio] {
         attachments.filter { $0 is EntryAudio }.compactMap { $0 as? EntryAudio }
     }
+}
+
+extension Entry {
+	public static var mock: Self {
+		Entry(
+			id: UUID(),
+			date: Date(),
+			startDay: Date(),
+			text: EntryText(
+				id: UUID(),
+				message: "Message",
+				lastUpdated: .init()
+			)
+		)
+	}
+}
+
+extension Entry {
+	public static var add: Self {
+		Entry(
+			id: UUID(),
+			date: Date(),
+			startDay: Date(),
+			text: EntryText(
+				id: UUID(),
+				message: "",
+				lastUpdated: Date()
+			)
+		)
+	}
 }

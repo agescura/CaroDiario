@@ -9,48 +9,53 @@ import AudioPickerFeature
 import AudioRecordFeature
 
 public struct AddEntryView: View {
-	private let store: StoreOf<AddEntry>
+	private let store: StoreOf<AddEntryFeature>
 	
+	private struct ViewState: Equatable {
+		let presentImagePicker: Bool
+		let text: String
+		let hasAttachments: Bool
+		let presentAudioPicker: Bool
+		let addAttachmentInFlight: Bool
+		let presentImagePickerSource: PickerSourceType
+		
+		init(
+			state: AddEntryFeature.State
+		) {
+			self.hasAttachments = state.attachments.count > 0
+			self.presentImagePicker = state.presentImagePicker
+			self.text = state.text
+			self.presentAudioPicker = state.presentAudioPicker
+			self.addAttachmentInFlight = state.addAttachmentInFlight
+			self.presentImagePickerSource = state.presentImagePickerSource
+		}
+	}
 	public init(
-		store: StoreOf<AddEntry>
+		store: StoreOf<AddEntryFeature>
 	) {
 		self.store = store
 	}
 	
 	public var body: some View {
-		WithViewStore(self.store, observe: { $0 }) { viewStore in
-			
+		WithViewStore(
+			self.store,
+			observe: ViewState.init
+		) { viewStore in
 			VStack(alignment: .leading, spacing: 24) {
-				HStack {
-					Text(viewStore.type.title)
-						.adaptiveFont(.latoBold, size: 16)
-						.foregroundColor(.adaptiveBlack)
-					Spacer()
-					
-					if viewStore.type == .add {
-						Button(action: {
-							viewStore.send(.dismissAlertButtonTapped)
-						}, label: {
-							Image(systemName: "xmark")
-								.foregroundColor(.adaptiveBlack)
-						})
-					}
-				}
-				
 				TextEditorView(
 					placeholder: "AddEntry.WriteSomething".localized,
 					text: viewStore.binding(
 						get: \.text,
-						send: AddEntry.Action.textEditorChange)
+						send: AddEntryFeature.Action.textEditorChange)
 				)
 				
-				if viewStore.attachments.count > 0 {
+				if viewStore.hasAttachments {
 					ScrollView(.horizontal, showsIndicators: false) {
 						LazyHStack(spacing: 8) {
 							ForEachStore(
-								store.scope(
+								self.store.scope(
 									state: \.attachments,
-									action: AddEntry.Action.attachments(id:action:)),
+									action: AddEntryFeature.Action.attachments(id:action:)),
 								content: AttachmentAddRowView.init(store:))
 						}
 					}
@@ -60,7 +65,7 @@ public struct AddEntryView: View {
 				HStack(spacing: 8) {
 					SecondaryButtonView(
 						label: {
-							Text(viewStore.type.finishTitle)
+							Text("AddEntry.Finish".localized)
 								.adaptiveFont(.latoRegular, size: 10)
 								.foregroundColor(.chambray)
 						},
@@ -68,7 +73,7 @@ public struct AddEntryView: View {
 					) {
 						viewStore.send(.addButtonTapped)
 					}
-					
+
 					SecondaryButtonView(
 						label: {
 							Image(systemName: "plus")
@@ -78,29 +83,35 @@ public struct AddEntryView: View {
 						},
 						inFlight: viewStore.addAttachmentInFlight
 					) {
-						viewStore.send(.plusAttachamentActionSheetButtonTapped)
+						viewStore.send(.confirmationDialogButtonTapped)
 					}
 					.frame(width: 56)
-					.confirmationDialog(
-						store.scope(state: \.plusAttachamentActionSheet),
-						dismiss: .dismissPlusActionSheet
-					)
 				}
 				.frame(height: 56)
 			}
 			.padding(24)
 			.alert(
-				store.scope(state: \.deniedCameraAlert),
-				dismiss: .dismissDeniedCameraAlert
+				store: self.store.scope(
+					state: \.$destination,
+					action: AddEntryFeature.Action.destination
+				),
+				state: /AddEntryFeature.Destination.State.alert,
+				action: AddEntryFeature.Destination.Action.alert
 			)
-			.alert(
-				store.scope(state: \.dismissAlert),
-				dismiss: .cancelDismissAlert
+			.confirmationDialog(
+				store: self.store.scope(
+					state: \.$destination,
+					action: AddEntryFeature.Action.destination
+				),
+				state: /AddEntryFeature.Destination.State.confirmationDialog,
+				action: AddEntryFeature.Destination.Action.confirmationDialog
 			)
-			.fullScreenCover(isPresented: viewStore.binding(
-				get: \.presentImagePicker,
-				send: AddEntry.Action.presentImagePicker
-			)) {
+			.fullScreenCover(
+				isPresented: viewStore.binding(
+					get: \.presentImagePicker,
+					send: AddEntryFeature.Action.presentImagePicker
+				)
+			) {
 				ImagePicker(
 					type: viewStore.presentImagePickerSource,
 					onImport: { response in
@@ -109,7 +120,12 @@ public struct AddEntryView: View {
 				)
 				.edgesIgnoringSafeArea(.all)
 			}
-			.fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioPicker, send: AddEntry.Action.presentAudioPicker)) {
+			.fullScreenCover(
+				isPresented: viewStore.binding(
+					get: \.presentAudioPicker,
+					send: AddEntryFeature.Action.presentAudioPicker
+				)
+			) {
 				AudioPicker { audio in
 					switch audio {
 						case let .audio(url):
@@ -117,17 +133,30 @@ public struct AddEntryView: View {
 					}
 				}
 			}
-			.fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioRecord, send: AddEntry.Action.presentAudioRecord)) {
-				IfLetStore(
-					store.scope(
-						state: { $0.audioRecordState },
-						action: AddEntry.Action.audioRecordAction),
-					then: AudioRecordView.init(store:)
-				)
-			}
+//			.fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioRecord, send: AddEntryFeature.Action.presentAudioRecord)) {
+//				IfLetStore(
+//					store.scope(
+//						state: { $0.audioRecordState },
+//						action: AddEntryFeature.Action.audioRecordAction),
+//					then: AudioRecordView.init(store:)
+//				)
+//			}
 			.onAppear {
 				viewStore.send(.onAppear)
 			}
 		}
+	}
+}
+
+struct AddEntryView_Previews: PreviewProvider {
+	static var previews: some View {
+		AddEntryView(
+			store: Store(
+				initialState: AddEntryFeature.State(
+					entry: .mock
+				),
+				reducer: AddEntryFeature()
+			)
+		)
 	}
 }

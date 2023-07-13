@@ -66,13 +66,12 @@
 
 // AddEntryFeature
 
-"AddEntry.Title" = "Escriu una nova entrada al diari";
+"AddEntry.Title" = "Nova entrada";
 "AddEntry.Finish" = "Afegeix";
 "AddEntry.ChooseOption" = "Selecciona una opció";
 "AddEntry.Camera" = "Càmera";
 "AddEntry.Photos" = "Llibreria de fotos";
 "AddEntry.WriteSomething" = "Escriu alguna cosa ...";
-"AddEntry.Add" = "Afegir";
 "AddEntry.PlayVideo" = "Reproduïr video";
 "AddEntry.RemoveVideo" = "Esborrar el video";
 "AddEntry.ShowImage" = "Veure la imatge";
@@ -81,8 +80,8 @@
 "AddEntry.Exit" = "Sortint";
 "AddEntry.Exit.Message" = "Estás a punt de perdre les dades introduïdes.";
 "AddEntry.Exit.Yes" = "Si, entesos";
-"AddEntry.Edit" = "Estàs editant l'entrada";
-"AddEntry.Update" = "Finalitzar";
+"AddEntry.Edit" = "Editar entrada";
+"AddEntry.Finish" = "Finalitzar";
 
 // Image
 

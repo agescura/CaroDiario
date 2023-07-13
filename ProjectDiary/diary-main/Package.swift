@@ -940,13 +940,10 @@ let package = Package(
 			dependencies: ["SettingsFeature"],
 			path: "Tests/Features/Settings/SettingsFeatureTests"
 		),
-		
-		// Splash
-		
-			.testTarget(
-				name: "SplashFeatureTests",
-				dependencies: ["SplashFeature"],
-				path: "Tests/Features/SplashFeatureTests"
-			),
+		.testTarget(
+			name: "SplashFeatureTests",
+			dependencies: ["SplashFeature"],
+			path: "Tests/Features/SplashFeatureTests"
+		),
 	]
 )

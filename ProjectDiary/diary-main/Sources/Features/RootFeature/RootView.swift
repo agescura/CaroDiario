@@ -276,7 +276,7 @@ public struct RootFeature: ReducerProtocol {
 					return self.coreDataClient.removeEntry(entry.id)
 						.fireAndForget()
 					
-				case let .featureAction(.home(.search(.entryDetailAction(.remove(entry))))):
+				case let .featureAction(.home(.search(.destination(.presented(.entryDetail(.remove(entry))))))):
 					return self.coreDataClient.removeEntry(entry.id)
 						.fireAndForget()
 					

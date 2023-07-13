@@ -24,7 +24,7 @@ import EntryDetailFeature
 public struct SharedState: Equatable {
 	public var isLoading: Bool = true
 	public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
-	public var addEntryState: AddEntry.State?
+	public var addEntryState: AddEntryFeature.State?
 	public var presentAddEntry = false
 	public var entryDetailState: EntryDetail.State?
 	public var navigateEntryDetail = false
