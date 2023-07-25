@@ -22,7 +22,7 @@ public struct Entries: ReducerProtocol {
 	public struct State: Equatable {
 		public var isLoading: Bool
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		public var addEntryState: AddEntryFeature.State?
+		@PresentationState public var addEntryState: AddEntryFeature.State?
 		public var presentAddEntry = false
 		public var entryDetailState: EntryDetail.State?
 		public var navigateEntryDetail = false
@@ -51,7 +51,7 @@ public struct Entries: ReducerProtocol {
 		case onAppear
 		case coreDataClientAction(CoreDataClient.Action)
 		case fetchEntriesResponse([[Entry]])
-		case addEntryAction(AddEntryFeature.Action)
+		case addEntryAction(PresentationAction<AddEntryFeature.Action>)
 		case presentAddEntry(Bool)
 		case presentAddEntryCompleted
 		case entries(id: UUID, action: DayEntriesRow.Action)
@@ -74,7 +74,7 @@ public struct Entries: ReducerProtocol {
 			.forEach(\.entries, action: /Action.entries) {
 				DayEntriesRow()
 			}
-			.ifLet(\.addEntryState, action: /Action.addEntryAction) {
+			.ifLet(\.$addEntryState, action: /Action.addEntryAction) {
 				AddEntryFeature()
 			}
 			.ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
@@ -85,14 +85,14 @@ public struct Entries: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
 				
 			case .onAppear:
 				return .none
 				
 			case let .coreDataClientAction(.entries(response)):
-				return Effect(value: .fetchEntriesResponse(response))
+				return EffectTask(value: .fetchEntriesResponse(response))
 					.receive(on: self.mainQueue)
 					.eraseToEffect()
 				
@@ -112,12 +112,8 @@ public struct Entries: ReducerProtocol {
 				state.isLoading = false
 				return .none
 				
-			case .addEntryAction(.addButtonTapped):
-				state.presentAddEntry = false
-				return .none
-				
-			case .addEntryAction(.finishAddEntry):
-				state.presentAddEntry = false
+			case .addEntryAction(.presented(.finishAddEntry)):
+				state.addEntryState = nil
 				return .none
 				
 			case .addEntryAction:
@@ -136,11 +132,11 @@ public struct Entries: ReducerProtocol {
 					)
 				)
 				state.addEntryState = AddEntryFeature.State(entry: newEntry)
-				return Effect(value: .addEntryAction(.createDraftEntry))
+				return EffectTask(value: .addEntryAction(.presented(.createDraftEntry)))
 				
 			case .presentAddEntry(false):
 				state.presentAddEntry = false
-				return Effect(value: .presentAddEntryCompleted)
+				return EffectTask(value: .presentAddEntryCompleted)
 					.delay(for: 0.3, scheduler: self.mainQueue)
 					.eraseToEffect()
 				
@@ -150,7 +146,7 @@ public struct Entries: ReducerProtocol {
 				
 			case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
 				state.entryDetailSelected = entry
-				return Effect(value: .navigateEntryDetail(true))
+				return EffectTask(value: .navigateEntryDetail(true))
 				
 			case .entries:
 				return .none
@@ -173,7 +169,7 @@ public struct Entries: ReducerProtocol {
 						.receive(on: self.mainQueue)
 						.eraseToEffect()
 						.map({ Entries.Action.remove(entry) }),
-					Effect(value: .navigateEntryDetail(false))
+					EffectTask(value: .navigateEntryDetail(false))
 				)
 				
 			case .entryDetailAction:

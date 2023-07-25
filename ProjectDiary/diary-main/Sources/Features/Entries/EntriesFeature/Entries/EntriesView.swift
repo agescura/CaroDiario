@@ -74,31 +74,24 @@ public struct EntriesView: View {
 						}
 				)
 				.fullScreenCover(
-					isPresented: viewStore.binding(
-						get: \.presentAddEntry,
-						send: Entries.Action.presentAddEntry
+					store: self.store.scope(
+						state: \.$addEntryState,
+						action: Entries.Action.addEntryAction
 					)
-				) {
-					IfLetStore(
-						store.scope(
-							state: \.addEntryState,
-							action: Entries.Action.addEntryAction
-						)
-					) { store in
-						NavigationView {
-							AddEntryView(store: store)
-								.navigationTitle("AddEntry.Title".localized)
-								.toolbar {
-									ToolbarItem(placement: .primaryAction) {
-										Button {
-											viewStore.send(.addEntryAction(.dismissAlertButtonTapped))
-										} label: {
-											Image(systemName: "xmark")
-												.foregroundColor(.adaptiveBlack)
-										}
+				) { store in
+					NavigationView {
+						AddEntryView(store: store)
+							.navigationTitle("AddEntry.Title".localized)
+							.toolbar {
+								ToolbarItem(placement: .primaryAction) {
+									Button {
+										viewStore.send(.addEntryAction(.presented(.dismissAlertButtonTapped)))
+									} label: {
+										Image(systemName: "xmark")
+											.foregroundColor(.adaptiveBlack)
 									}
 								}
-						}
+							}
 					}
 				}
 			}

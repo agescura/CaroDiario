@@ -24,7 +24,7 @@ public struct Entry: Identifiable {
 
 extension Entry: Equatable {
     public static func == (lhs: Entry, rhs: Entry) -> Bool {
-        lhs.id == rhs.id
+		 lhs.id == rhs.id && lhs.text == rhs.text
     }
 }
 
@@ -102,7 +102,7 @@ extension Entry {
 }
 
 extension Entry {
-	public static var add: Self {
+	public static var new: Self {
 		Entry(
 			id: UUID(),
 			date: Date(),

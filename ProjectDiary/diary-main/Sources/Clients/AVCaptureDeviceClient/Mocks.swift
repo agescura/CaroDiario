@@ -13,7 +13,7 @@ extension AVCaptureDeviceClient: TestDependencyKey {
 
 extension AVCaptureDeviceClient {
     public static let noop = Self(
-        authorizationStatus: { .fireAndForget {} },
+		authorizationStatus: { .notDetermined },
         requestAccess: { false }
     )
 }

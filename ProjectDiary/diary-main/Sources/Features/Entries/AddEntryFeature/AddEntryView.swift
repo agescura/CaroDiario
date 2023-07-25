@@ -11,25 +11,15 @@ import AudioRecordFeature
 public struct AddEntryView: View {
 	private let store: StoreOf<AddEntryFeature>
 	
-	private struct ViewState: Equatable {
-		let presentImagePicker: Bool
-		let text: String
+	struct ViewState: Equatable {
+		@BindingViewState var entry: Entry
+		@BindingViewState var presentImagePicker: Bool
 		let hasAttachments: Bool
-		let presentAudioPicker: Bool
+		@BindingViewState var presentAudioPicker: Bool
 		let addAttachmentInFlight: Bool
 		let presentImagePickerSource: PickerSourceType
-		
-		init(
-			state: AddEntryFeature.State
-		) {
-			self.hasAttachments = state.attachments.count > 0
-			self.presentImagePicker = state.presentImagePicker
-			self.text = state.text
-			self.presentAudioPicker = state.presentAudioPicker
-			self.addAttachmentInFlight = state.addAttachmentInFlight
-			self.presentImagePickerSource = state.presentImagePickerSource
-		}
 	}
+	
 	public init(
 		store: StoreOf<AddEntryFeature>
 	) {
@@ -39,29 +29,29 @@ public struct AddEntryView: View {
 	public var body: some View {
 		WithViewStore(
 			self.store,
-			observe: ViewState.init
+			observe: \.view,
+			send: { .view($0) }
 		) { viewStore in
 			VStack(alignment: .leading, spacing: 24) {
 				TextEditorView(
 					placeholder: "AddEntry.WriteSomething".localized,
-					text: viewStore.binding(
-						get: \.text,
-						send: AddEntryFeature.Action.textEditorChange)
+					text: viewStore.$entry.text.message
 				)
-				
 				if viewStore.hasAttachments {
 					ScrollView(.horizontal, showsIndicators: false) {
 						LazyHStack(spacing: 8) {
 							ForEachStore(
 								self.store.scope(
 									state: \.attachments,
-									action: AddEntryFeature.Action.attachments(id:action:)),
-								content: AttachmentAddRowView.init(store:))
+									action: AddEntryFeature.Action.attachments
+								),
+								content: AttachmentAddRowView.init
+							)
 						}
 					}
 					.frame(height: 52)
 				}
-				
+
 				HStack(spacing: 8) {
 					SecondaryButtonView(
 						label: {
@@ -69,7 +59,7 @@ public struct AddEntryView: View {
 								.adaptiveFont(.latoRegular, size: 10)
 								.foregroundColor(.chambray)
 						},
-						disabled: viewStore.text.isEmpty
+						disabled: viewStore.entry.text.message.isEmpty
 					) {
 						viewStore.send(.addButtonTapped)
 					}
@@ -107,10 +97,7 @@ public struct AddEntryView: View {
 				action: AddEntryFeature.Destination.Action.confirmationDialog
 			)
 			.fullScreenCover(
-				isPresented: viewStore.binding(
-					get: \.presentImagePicker,
-					send: AddEntryFeature.Action.presentImagePicker
-				)
+				isPresented: viewStore.$presentImagePicker
 			) {
 				ImagePicker(
 					type: viewStore.presentImagePickerSource,
@@ -121,10 +108,7 @@ public struct AddEntryView: View {
 				.edgesIgnoringSafeArea(.all)
 			}
 			.fullScreenCover(
-				isPresented: viewStore.binding(
-					get: \.presentAudioPicker,
-					send: AddEntryFeature.Action.presentAudioPicker
-				)
+				isPresented: viewStore.$presentAudioPicker
 			) {
 				AudioPicker { audio in
 					switch audio {
@@ -133,14 +117,31 @@ public struct AddEntryView: View {
 					}
 				}
 			}
-//			.fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioRecord, send: AddEntryFeature.Action.presentAudioRecord)) {
-//				IfLetStore(
-//					store.scope(
-//						state: { $0.audioRecordState },
-//						action: AddEntryFeature.Action.audioRecordAction),
-//					then: AudioRecordView.init(store:)
-//				)
-//			}
+			.fullScreenCover(
+				store: self.store.scope(
+					state: \.$destination,
+					action: AddEntryFeature.Action.destination
+				),
+				state: /AddEntryFeature.Destination.State.audioRecord,
+				action: AddEntryFeature.Destination.Action.audioRecord
+			) { store in
+				NavigationView {
+					AudioRecordView(store: store)
+						.toolbar {
+							ToolbarItem(placement: .primaryAction) {
+								Button {
+									viewStore.send(.dismiss)
+								} label: {
+									Image(systemName: "xmark")
+										.resizable()
+										.aspectRatio(contentMode: .fill)
+										.frame(width: 16, height: 16)
+										.foregroundColor(.chambray)
+								}
+							}
+						}
+				}
+			}
 			.onAppear {
 				viewStore.send(.onAppear)
 			}
@@ -148,15 +149,32 @@ public struct AddEntryView: View {
 	}
 }
 
+extension BindingViewStore<AddEntryFeature.State> {
+  var view: AddEntryView.ViewState {
+	  AddEntryView.ViewState(
+		entry: self.$entry,
+		presentImagePicker: self.$presentImagePicker,
+		hasAttachments: self.attachments.count > 0,
+		presentAudioPicker: self.$presentAudioPicker,
+		addAttachmentInFlight: self.addAttachmentInFlight,
+		presentImagePickerSource: self.presentImagePickerSource
+	  )
+  }
+}
+
 struct AddEntryView_Previews: PreviewProvider {
 	static var previews: some View {
-		AddEntryView(
-			store: Store(
-				initialState: AddEntryFeature.State(
-					entry: .mock
-				),
-				reducer: AddEntryFeature()
+		NavigationView {
+			AddEntryView(
+				store: Store(
+					initialState: AddEntryFeature.State(
+						entry: .mock
+					),
+					reducer: AddEntryFeature()
+				)
 			)
-		)
+			.navigationTitle("Add Entry")
+			.navigationBarTitleDisplayMode(.inline)
+		}
 	}
 }

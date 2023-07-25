@@ -94,8 +94,9 @@ public struct RootFeature: ReducerProtocol {
 						state.featureState = .lockScreen(.init(code: code))
 						return .none
 					} else {
-						return self.avCaptureDeviceClient.authorizationStatus()
-							.map(RootFeature.Action.startHome)
+						return .run { send in
+							await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+						}
 					}
 				}
 				
@@ -137,16 +138,18 @@ public struct RootFeature: ReducerProtocol {
 						state.featureState = .lockScreen(.init(code: code))
 						return .none
 					} else {
-						return self.avCaptureDeviceClient.authorizationStatus()
-							.map(RootFeature.Action.startHome)
+						return .run { send in
+							await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+						}
 					}
 				}
 				
 				return EffectTask(value: .featureAction(.splash(.startAnimation)))
 				
 			case .requestCameraStatus:
-				return self.avCaptureDeviceClient.authorizationStatus()
-					.map(RootFeature.Action.startHome)
+				return .run { send in
+					await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+				}
 				
 			case let .startHome(cameraStatus: status):
 				state.isFirstStarted = false
@@ -303,16 +306,16 @@ public struct RootFeature: ReducerProtocol {
 		if case let .home(homeState) = state.featureState,
 			let addEntryState = homeState.entries.addEntryState ?? homeState.entries.entryDetailState?.addEntryState {
 			switch action {
-				case .featureAction(.home(.entries(.addEntryAction(.createDraftEntry)))),
+				case .featureAction(.home(.entries(.addEntryAction(.presented(.createDraftEntry))))),
 						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.createDraftEntry))))):
 					return self.coreDataClient.createDraft(addEntryState.entry)
 						.fireAndForget()
 					
-				case .featureAction(.home(.entries(.addEntryAction(.addButtonTapped)))),
-						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.addButtonTapped))))):
+				case .featureAction(.home(.entries(.addEntryAction(.presented(.view(.addButtonTapped)))))),
+						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.view(.addButtonTapped)))))):
 					let entryText = EntryText(
 						id: self.uuid(),
-						message: addEntryState.text,
+						message: addEntryState.entry.text.message,
 						lastUpdated: self.now
 					)
 					return .merge(
@@ -321,27 +324,27 @@ public struct RootFeature: ReducerProtocol {
 						self.coreDataClient.publishEntry(addEntryState.entry)
 							.fireAndForget()
 					)
-				case let .featureAction(.home(.entries(.addEntryAction(.loadImageResponse(entryImage))))),
+				case let .featureAction(.home(.entries(.addEntryAction(.presented(.loadImageResponse(entryImage)))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadImageResponse(entryImage)))))):
 					return self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id)
 						.fireAndForget()
 					
-				case let .featureAction(.home(.entries(.addEntryAction(.loadVideoResponse(entryVideo))))),
+				case let .featureAction(.home(.entries(.addEntryAction(.presented(.loadVideoResponse(entryVideo)))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadVideoResponse(entryVideo)))))):
 					return self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id)
 						.fireAndForget()
 					
-				case let .featureAction(.home(.entries(.addEntryAction(.loadAudioResponse(entryAudio))))),
+				case let .featureAction(.home(.entries(.addEntryAction(.presented(.loadAudioResponse(entryAudio)))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadAudioResponse(entryAudio)))))):
 					return self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id)
 						.fireAndForget()
 					
-				case let .featureAction(.home(.entries(.addEntryAction(.removeAttachmentResponse(id))))),
+				case let .featureAction(.home(.entries(.addEntryAction(.presented(.removeAttachmentResponse(id)))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeAttachmentResponse(id)))))):
 					return self.coreDataClient.removeAttachmentEntry(id)
 						.fireAndForget()
 					
-				case .featureAction(.home(.entries(.addEntryAction(.removeDraftEntryDismissAlert)))),
+				case .featureAction(.home(.entries(.addEntryAction(.presented(.removeDraftEntryDismissAlert))))),
 						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeDraftEntryDismissAlert))))):
 					return self.coreDataClient.removeEntry(addEntryState.entry.id)
 						.fireAndForget()

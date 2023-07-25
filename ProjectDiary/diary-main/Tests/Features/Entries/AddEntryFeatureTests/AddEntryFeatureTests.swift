@@ -5,6 +5,7 @@ import Models
 import ImagePickerFeature
 import AttachmentsFeature
 
+@MainActor
 class AddEntryFeatureTests: XCTestCase {
 	
 	let id = UUID()
@@ -26,40 +27,12 @@ class AddEntryFeatureTests: XCTestCase {
 		url: url
 	)
 	
-	lazy var entry = Entry(
-		id: id,
-		date: date,
-		startDay: date,
-		text: EntryText(
-			id: id,
-			message: "message",
-			lastUpdated: date
-		),
-		attachments: [
-			entryImage,
-			entryVideo
-		]
-	)
-	
-	func testAddEntryHappyPath() {
+	func testAddEntryHappyPath() async {
 		let store = TestStore(
 			initialState: AddEntryFeature.State(
-				type: .add,
-				entry: entry
+				entry: .new
 			),
 			reducer: AddEntryFeature()
 		)
-		
-		store.send(.onAppear) {
-			$0.text = "message"
-			$0.attachments = [
-				AttachmentAddRow.State(id: self.imageId, attachment: .image(.init(entryImage: self.entryImage))),
-				AttachmentAddRow.State(id: self.videoId, attachment: .video(.init(entryVideo: self.entryVideo)))
-			]
-		}
-		
-		store.send(.textEditorChange("new text")) {
-			$0.text = "new text"
-		}
 	}
 }

@@ -1,10 +1,3 @@
-//
-//  Attachment.swift
-//  
-//
-//  Created by Albert Gil Escura on 1/8/21.
-//
-
 import Foundation
 
 public protocol EntryAttachment {

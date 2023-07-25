@@ -11,11 +11,11 @@ extension DependencyValues {
 }
 
 public struct AVCaptureDeviceClient {
-    public var authorizationStatus: () -> Effect<AuthorizedVideoStatus, Never>
+    public var authorizationStatus: () async -> AuthorizedVideoStatus
     public var requestAccess: () async -> Bool
     
     public init(
-        authorizationStatus: @escaping () -> Effect<AuthorizedVideoStatus, Never>,
+        authorizationStatus: @escaping () async -> AuthorizedVideoStatus,
         requestAccess: @escaping () async -> Bool
     ) {
         self.authorizationStatus = authorizationStatus

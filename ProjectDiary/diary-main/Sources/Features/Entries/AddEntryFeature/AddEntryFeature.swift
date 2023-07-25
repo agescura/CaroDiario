@@ -20,15 +20,12 @@ public struct AddEntryFeature: ReducerProtocol {
 	
 	public struct State: Equatable {
 		@PresentationState public var destination: Destination.State?
-		public var entry: Entry
-		public var text: String = ""
-		public var presentImagePicker: Bool = false
+		@BindingState public var entry: Entry
+		@BindingState public var presentImagePicker: Bool = false
 		public var presentImagePickerSource: PickerSourceType = .photoAlbum
-		public var presentAudioPicker: Bool = false
+		@BindingState public var presentAudioPicker: Bool = false
 		public var attachments: IdentifiedArrayOf<AttachmentAddRow.State> = []
 		public var addAttachmentInFlight: Bool = false
-		public var audioRecordState: AudioRecord.State?
-		public var presentAudioRecord: Bool = false
 		
 		public init(
 			entry: Entry
@@ -39,12 +36,7 @@ public struct AddEntryFeature: ReducerProtocol {
 	
 	public enum Action: Equatable {
 		case destination(PresentationAction<Destination.Action>)
-		case onAppear
-		case confirmationDialogButtonTapped
 		case createDraftEntry
-		case addButtonTapped
-		case textEditorChange(String)
-		case presentImagePicker(Bool)
 		case presentAudioPicker(Bool)
 		case presentCameraPicker(Bool)
 		case requestAuthorizationCamera
@@ -53,7 +45,6 @@ public struct AddEntryFeature: ReducerProtocol {
 		case deniedCameraAlertButtonTapped
 		case dismissDeniedCameraAlert
 		case settingActionTappedDeniedCameraAlert
-		case loadAttachment(PickerResponseType)
 		case loadImage(UIImage)
 		case loadImageResponse(EntryImage)
 		case loadVideo(URL)
@@ -67,8 +58,18 @@ public struct AddEntryFeature: ReducerProtocol {
 		case cancelDismissAlert
 		case removeDraftEntryDismissAlert
 		case finishAddEntry
-		case audioRecordAction(AudioRecord.Action)
-		case presentAudioRecord(Bool)
+		
+		case view(View)
+		
+		public enum View: BindableAction, Equatable {
+			case addButtonTapped
+			case binding(BindingAction<State>)
+			case confirmationDialogButtonTapped
+			case dismiss
+			case loadAttachment(PickerResponseType)
+			case loadAudio(URL)
+			case onAppear
+		}
 	}
 	
 	@Dependency(\.applicationClient) private var applicationClient
@@ -83,12 +84,12 @@ public struct AddEntryFeature: ReducerProtocol {
 	public struct Destination: ReducerProtocol {
 		public enum State: Equatable {
 			case alert(AlertState<Action.Alert>)
-			case audioRecord(AudioRecord.State)
+			case audioRecord(AudioRecordFeature.State)
 			case confirmationDialog(ConfirmationDialogState<Action.Dialog>)
 		}
 		public enum Action: Equatable {
 			case alert(Alert)
-			case audioRecord(AudioRecord.Action)
+			case audioRecord(AudioRecordFeature.Action)
 			case confirmationDialog(Dialog)
 			
 			public enum Alert: Equatable {
@@ -97,62 +98,127 @@ public struct AddEntryFeature: ReducerProtocol {
 			}
 			
 			public enum Dialog: Equatable {
-				case requestAuthorizationCamera
-				case presentImagePicker(Bool)
-				case presentAudioRecord(Bool)
+				case cameraButtonTapped
+				case imagePickerButtonTapped
+				case audioRecordButtonTapped
 			}
 		}
 		public var body: some ReducerProtocolOf<Self> {
 			Scope(state: /State.alert, action: /Action.alert) {}
 			Scope(state: /State.audioRecord, action: /Action.audioRecord) {
-				AudioRecord()
+				AudioRecordFeature()
 			}
 			Scope(state: /State.confirmationDialog, action: /Action.confirmationDialog) {}
 		}
 	}
+	
 	public var body: some ReducerProtocolOf<Self> {
+		BindingReducer(action: /Action.view)
 		Reduce { state, action in
 			switch action {
+				case let .view(viewAction):
+					switch viewAction {
+						case .addButtonTapped:
+							return .none
+							
+						case .binding(.set(\.$presentImagePicker, true)):
+							state.addAttachmentInFlight = true
+							state.presentImagePicker = true
+							state.presentImagePickerSource = .photoAlbum
+							return .none
+							
+						case .binding:
+							return .none
+							
+						case .confirmationDialogButtonTapped:
+							state.destination = .confirmationDialog(.chooseOption)
+							return .none
+							
+						case .dismiss:
+							return .send(.destination(.dismiss))
+							
+						case let .loadAttachment(response):
+							switch response {
+								case let .image(image):
+									return .send(.loadImage(image))
+								case let .video(url):
+									return .send(.loadVideo(url))
+							}
+							
+						case let .loadAudio(url):
+							let id = self.uuid()
+							let path = self.fileClient.path(id).appendingPathComponent(url.pathExtension)
+							
+							let entryAudio = EntryAudio(
+								id: id,
+								lastUpdated: self.now,
+								url: path)
+							
+							return self.fileClient.addAudio(url, entryAudio, self.backgroundQueue)
+								.receive(on: self.mainQueue)
+								.eraseToEffect()
+								.map(AddEntryFeature.Action.loadAudioResponse)
+							
+						case .onAppear:
+							var attachments: IdentifiedArrayOf<AttachmentAddRow.State> = []
+							
+							let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentAddRow.State? in
+								if let detailState = attachment.addDetail {
+									return AttachmentAddRow.State(id: attachment.id, attachment: detailState)
+								}
+								return nil
+							}
+							for attachment in entryAttachments {
+								attachments.append(attachment)
+							}
+							state.attachments = attachments
+							
+							return .none
+					}
+					
+				case .destination(.presented(.confirmationDialog(.cameraButtonTapped))):
+					return .run { send in
+						await send(.requestAuthorizationCameraResponse(self.avCaptureDeviceClient.authorizationStatus()))
+					}
+					return .none
+					
+				case .destination(.presented(.confirmationDialog(.imagePickerButtonTapped))):
+					state.addAttachmentInFlight = true
+					state.presentImagePicker = true
+					state.presentImagePickerSource = .photoAlbum
+					return .none
+					
+				case .destination(.presented(.alert(.removeDraftEntryDismissAlert))):
+					return .send(.removeDraftEntryDismissAlert)
+					
+				case .destination(.presented(.confirmationDialog(.audioRecordButtonTapped))):
+					state.destination = .audioRecord(AudioRecordFeature.State())
+					return .none
+					
+				case .destination(.presented(.audioRecord(.dismiss))):
+					state.destination = nil
+					return .none
+					
+				case .destination(.presented(.audioRecord(.addAudio))):
+					guard case let .audioRecord(audioRecordState) = state.destination,
+							let audioPath = audioRecordState.audioPath else { return .none }
+					
+					let id = self.uuid()
+					
+					let entryAudio = EntryAudio(
+						id: id,
+						lastUpdated: self.now,
+						url: audioPath
+					)
+					return self.fileClient.addAudio(audioPath, entryAudio, self.backgroundQueue)
+						.receive(on: self.mainQueue)
+						.eraseToEffect()
+						.map(AddEntryFeature.Action.loadAudioResponse)
+					
 				case .destination:
 					return .none
 					
-				case .onAppear:
-					state.text = state.entry.text.message
-					
-					var attachments: IdentifiedArrayOf<AttachmentAddRow.State> = []
-					
-					let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentAddRow.State? in
-						if let detailState = attachment.addDetail {
-							return AttachmentAddRow.State(id: attachment.id, attachment: detailState)
-						}
-						return nil
-					}
-					for attachment in entryAttachments {
-						attachments.append(attachment)
-					}
-					state.attachments = attachments
-					
-					return .none
-					
 				case .createDraftEntry:
-					return .none
-					
-				case .addButtonTapped:
-					return .none
-					
-				case let .textEditorChange(text):
-					state.text = text
-					return .none
-					
-				case .confirmationDialogButtonTapped:
-					state.destination = .confirmationDialog(.chooseOption)
-					return .none
-					
-				case let .presentImagePicker(value):
-					state.addAttachmentInFlight = true
-					
-					state.presentImagePicker = value
-					state.presentImagePickerSource = .photoAlbum
 					return .none
 					
 				case let .presentCameraPicker(value):
@@ -167,10 +233,7 @@ public struct AddEntryFeature: ReducerProtocol {
 					return .none
 					
 				case .requestAuthorizationCamera:
-					return self.avCaptureDeviceClient.authorizationStatus()
-						.receive(on: self.mainQueue)
-						.eraseToEffect()
-						.map(AddEntryFeature.Action.requestAuthorizationCameraResponse)
+					return .none
 					
 				case let .requestAuthorizationCameraResponse(response):
 					switch response {
@@ -199,14 +262,6 @@ public struct AddEntryFeature: ReducerProtocol {
 					
 				case .settingActionTappedDeniedCameraAlert:
 					return .fireAndForget { await self.applicationClient.openSettings() }
-					
-				case let .loadAttachment(response):
-					switch response {
-						case let .image(image):
-							return .send(.loadImage(image))
-						case let .video(url):
-							return .send(.loadVideo(url))
-					}
 					
 				case let .loadImage(image):
 					let id = self.uuid()
@@ -281,7 +336,7 @@ public struct AddEntryFeature: ReducerProtocol {
 				case let .loadAudioResponse(entryAudio):
 					state.addAttachmentInFlight = false
 					state.attachments.append(.init(id: entryAudio.id, attachment: .audio(.init(entryAudio: entryAudio))))
-					return .send(.presentAudioRecord(false))
+					return .send(.destination(.dismiss))
 					
 				case let .attachments(id: id, action: .attachment(.video(.remove))),
 					let .attachments(id: id, action: .attachment(.image(.remove))),
@@ -307,7 +362,7 @@ public struct AddEntryFeature: ReducerProtocol {
 					return .none
 					
 				case .dismissAlertButtonTapped:
-					if state.text.isEmpty && state.attachments.isEmpty {
+					if state.entry.text.message.isEmpty && state.attachments.isEmpty {
 						return .send(.removeDraftEntryDismissAlert)
 					}
 					
@@ -320,30 +375,12 @@ public struct AddEntryFeature: ReducerProtocol {
 				case .finishAddEntry:
 					return .none
 					
-				case .audioRecordAction(.addAudio):
-					guard let audioPath = state.audioRecordState?.audioPath else { return .none }
-					
-					let id = self.uuid()
-					
-					let entryAudio = EntryAudio(
-						id: id,
-						lastUpdated: self.now,
-						url: audioPath
-					)
-					return self.fileClient.addAudio(audioPath, entryAudio, self.backgroundQueue)
-						.receive(on: self.mainQueue)
-						.eraseToEffect()
-						.map(AddEntryFeature.Action.loadAudioResponse)
-					
 				default:
 					return .none
 			}
 		}
 		.forEach(\.attachments, action: /Action.attachments) {
 			AttachmentAddRow()
-		}
-		.ifLet(\.audioRecordState, action: /Action.audioRecordAction) {
-			AudioRecord()
 		}
 		.ifLet(\.$destination, action: /Action.destination) {
 			Destination()
@@ -359,13 +396,13 @@ extension ConfirmationDialogState where Action == AddEntryFeature.Destination.Ac
 			ButtonState(role: .cancel) {
 				TextState("Cancel".localized)
 			}
-			ButtonState(action: .requestAuthorizationCamera) {
+			ButtonState(action: .cameraButtonTapped) {
 				TextState("AddEntry.Camera".localized)
 			}
-			ButtonState(action: .presentImagePicker(true)) {
+			ButtonState(action: .imagePickerButtonTapped) {
 				TextState("AddEntry.Photos".localized)
 			}
-			ButtonState(action: .presentAudioRecord(true)) {
+			ButtonState(action: .audioRecordButtonTapped) {
 				TextState("Crear un audio")
 			}
 		}

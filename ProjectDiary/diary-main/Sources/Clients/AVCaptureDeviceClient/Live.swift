@@ -11,17 +11,17 @@ extension AVCaptureDeviceClient {
     public static let live = Self(
         authorizationStatus: {
             if !deviceHasCamera {
-                return Effect(value: .restricted)
+                return .restricted
             }
             switch AVCaptureDevice.authorizationStatus(for: AVMediaType.video) {
             case .notDetermined:
-                return Effect(value: .notDetermined)
+                return .notDetermined
             case .authorized:
-                return Effect(value: .authorized)
+                return .authorized
             case .restricted, .denied:
                 fallthrough
             @unknown default:
-                return Effect(value: .denied)
+                return .denied
             }
         },
         requestAccess: {
