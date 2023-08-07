@@ -1,6 +1,8 @@
+import AddEntryFeature
 import AppFeature
 import ComposableArchitecture
 import CoreDataClient
+import EntriesFeature
 import Models
 import PasscodeFeature
 import SettingsFeature
@@ -63,6 +65,8 @@ public struct RootFeature: ReducerProtocol {
 	}
 	
 	public var body: some ReducerProtocolOf<Self> {
+		Reduce(self.coreData)
+		Reduce(self.userDefaults)
 		Scope(state: \.appDelegate, action: /Action.appDelegate) {
 			EmptyReducer()
 		}
@@ -70,8 +74,6 @@ public struct RootFeature: ReducerProtocol {
 			AppReducer()
 		}
 		Reduce(self.core)
-		Reduce(self.coreData)
-		Reduce(self.userDefaults)
 	}
 	
 	private func core(
@@ -304,14 +306,14 @@ public struct RootFeature: ReducerProtocol {
 		}
 		
 		if case let .home(homeState) = state.featureState,
-			let addEntryState = homeState.entries.addEntryState ?? homeState.entries.entryDetailState?.addEntryState {
+			let addEntryState = homeState.entries.addEntryState {
 			switch action {
-				case .featureAction(.home(.entries(.addEntryAction(.presented(.createDraftEntry))))),
+				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.createDraftEntry)))))),
 						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.createDraftEntry))))):
 					return self.coreDataClient.createDraft(addEntryState.entry)
 						.fireAndForget()
 					
-				case .featureAction(.home(.entries(.addEntryAction(.presented(.view(.addButtonTapped)))))),
+				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.view(.addButtonTapped))))))),
 						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.view(.addButtonTapped)))))):
 					let entryText = EntryText(
 						id: self.uuid(),
@@ -324,27 +326,27 @@ public struct RootFeature: ReducerProtocol {
 						self.coreDataClient.publishEntry(addEntryState.entry)
 							.fireAndForget()
 					)
-				case let .featureAction(.home(.entries(.addEntryAction(.presented(.loadImageResponse(entryImage)))))),
+				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadImageResponse(entryImage))))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadImageResponse(entryImage)))))):
 					return self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id)
 						.fireAndForget()
 					
-				case let .featureAction(.home(.entries(.addEntryAction(.presented(.loadVideoResponse(entryVideo)))))),
+				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadVideoResponse(entryVideo))))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadVideoResponse(entryVideo)))))):
 					return self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id)
 						.fireAndForget()
 					
-				case let .featureAction(.home(.entries(.addEntryAction(.presented(.loadAudioResponse(entryAudio)))))),
+				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadAudioResponse(entryAudio))))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadAudioResponse(entryAudio)))))):
 					return self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id)
 						.fireAndForget()
 					
-				case let .featureAction(.home(.entries(.addEntryAction(.presented(.removeAttachmentResponse(id)))))),
+				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.removeAttachmentResponse(id))))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeAttachmentResponse(id)))))):
 					return self.coreDataClient.removeAttachmentEntry(id)
 						.fireAndForget()
 					
-				case .featureAction(.home(.entries(.addEntryAction(.presented(.removeDraftEntryDismissAlert))))),
+				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.removeDraftEntryDismissAlert)))))),
 						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeDraftEntryDismissAlert))))):
 					return self.coreDataClient.removeEntry(addEntryState.entry.id)
 						.fireAndForget()
@@ -427,5 +429,17 @@ public struct RootView: View {
 				action: RootFeature.Action.featureAction
 			)
 		)
+	}
+}
+
+extension Entries.State {
+	var addEntryState: AddEntryFeature.State? {
+		if case let .addEntry(state) = self.destination {
+			return state
+		}
+		if let state = self.entryDetailState?.addEntryState {
+			return state
+		}
+		return nil
 	}
 }

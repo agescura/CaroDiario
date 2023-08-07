@@ -24,8 +24,19 @@ public struct AddEntryFeature: ReducerProtocol {
 		@BindingState public var presentImagePicker: Bool = false
 		public var presentImagePickerSource: PickerSourceType = .photoAlbum
 		@BindingState public var presentAudioPicker: Bool = false
-		public var attachments: IdentifiedArrayOf<AttachmentAddRow.State> = []
 		public var addAttachmentInFlight: Bool = false
+		public var audioRecordPermission: AudioRecordPermission = .notDetermined
+		
+		public var attachments: AttachmentsFeature.State {
+			get {
+				AttachmentsFeature.State(
+					entry: self.entry
+				)
+			}
+			set {
+				
+			}
+		}
 		
 		public init(
 			entry: Entry
@@ -35,7 +46,9 @@ public struct AddEntryFeature: ReducerProtocol {
 	}
 	
 	public enum Action: Equatable {
+		case attachments(AttachmentsFeature.Action)
 		case destination(PresentationAction<Destination.Action>)
+		
 		case createDraftEntry
 		case presentAudioPicker(Bool)
 		case presentCameraPicker(Bool)
@@ -52,7 +65,6 @@ public struct AddEntryFeature: ReducerProtocol {
 		case loadVideoResponse(EntryVideo)
 		case loadAudio(URL)
 		case loadAudioResponse(EntryAudio)
-		case attachments(id: UUID, action: AttachmentAddRow.Action)
 		case removeAttachmentResponse(UUID)
 		case dismissAlertButtonTapped
 		case cancelDismissAlert
@@ -73,6 +85,7 @@ public struct AddEntryFeature: ReducerProtocol {
 	}
 	
 	@Dependency(\.applicationClient) private var applicationClient
+	@Dependency(\.avAudioSessionClient) private var avAudioSessionClient
 	@Dependency(\.avAssetClient) private var avAssetClient
 	@Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
 	@Dependency(\.backgroundQueue) private var backgroundQueue
@@ -84,17 +97,22 @@ public struct AddEntryFeature: ReducerProtocol {
 	public struct Destination: ReducerProtocol {
 		public enum State: Equatable {
 			case alert(AlertState<Action.Alert>)
+			case audio(AttachmentRowAudioDetailFeature.State)
 			case audioRecord(AudioRecordFeature.State)
 			case confirmationDialog(ConfirmationDialogState<Action.Dialog>)
+			case image(AttachmentRowImageDetailFeature.State)
 		}
 		public enum Action: Equatable {
 			case alert(Alert)
+			case audio(AttachmentRowAudioDetailFeature.Action)
 			case audioRecord(AudioRecordFeature.Action)
 			case confirmationDialog(Dialog)
+			case image(AttachmentRowImageDetailFeature.Action)
 			
 			public enum Alert: Equatable {
-				case settingActionTappedDeniedCameraAlert
+				case confirmRemoveImageButtonTapped
 				case removeDraftEntryDismissAlert
+				case settingActionTappedDeniedCameraAlert
 			}
 			
 			public enum Dialog: Equatable {
@@ -105,17 +123,42 @@ public struct AddEntryFeature: ReducerProtocol {
 		}
 		public var body: some ReducerProtocolOf<Self> {
 			Scope(state: /State.alert, action: /Action.alert) {}
+			Scope(state: /State.audio, action: /Action.audio) {
+				AttachmentRowAudioDetailFeature()
+			}
 			Scope(state: /State.audioRecord, action: /Action.audioRecord) {
 				AudioRecordFeature()
 			}
 			Scope(state: /State.confirmationDialog, action: /Action.confirmationDialog) {}
+			Scope(state: /State.image, action: /Action.image) {
+				AttachmentRowImageDetailFeature()
+			}
 		}
 	}
 	
 	public var body: some ReducerProtocolOf<Self> {
 		BindingReducer(action: /Action.view)
+		Scope(state: \.attachments, action: /Action.attachments) {
+			AttachmentsFeature()
+		}
 		Reduce { state, action in
 			switch action {
+				case let .attachments(.attachments(id: id, action: .attachment(.audio(.audioButtonTapped)))):
+					guard let entryAudio = state.entry.attachments.first(where: { $0.id == id }) as? EntryAudio else {
+						return .none
+					}
+					state.destination = .audio(
+						AttachmentRowAudioDetailFeature.State(entryAudio: entryAudio)
+					)
+					return .none
+				case let .attachments(.attachments(id: id, action: .attachment(.image(.imageButtonTapped)))):
+					guard let entryImage = state.entry.attachments.first(where: { $0.id == id }) as? EntryImage else {
+						return .none
+					}
+					state.destination = .image(
+						AttachmentRowImageDetailFeature.State(entryImage: entryImage)
+					)
+					return .none
 				case let .view(viewAction):
 					switch viewAction {
 						case .addButtonTapped:
@@ -160,27 +203,23 @@ public struct AddEntryFeature: ReducerProtocol {
 								.map(AddEntryFeature.Action.loadAudioResponse)
 							
 						case .onAppear:
-							var attachments: IdentifiedArrayOf<AttachmentAddRow.State> = []
-							
-							let entryAttachments = state.entry.attachments.compactMap { attachment -> AttachmentAddRow.State? in
-								if let detailState = attachment.addDetail {
-									return AttachmentAddRow.State(id: attachment.id, attachment: detailState)
-								}
-								return nil
-							}
-							for attachment in entryAttachments {
-								attachments.append(attachment)
-							}
-							state.attachments = attachments
-							
+							state.audioRecordPermission = self.avAudioSessionClient.recordPermission()
 							return .none
 					}
+					
+				case .destination(.presented(.image(.alert(.presented(.removeButtonTapped))))):
+					guard case let .image(imageDetailState) = state.destination,
+							let index = state.entry.attachments.firstIndex(where: { $0.id == imageDetailState.entryImage.id })
+					else { return .none }
+					
+					state.entry.attachments.remove(at: index)
+					state.destination = nil
+					return .none
 					
 				case .destination(.presented(.confirmationDialog(.cameraButtonTapped))):
 					return .run { send in
 						await send(.requestAuthorizationCameraResponse(self.avCaptureDeviceClient.authorizationStatus()))
 					}
-					return .none
 					
 				case .destination(.presented(.confirmationDialog(.imagePickerButtonTapped))):
 					state.addAttachmentInFlight = true
@@ -192,7 +231,15 @@ public struct AddEntryFeature: ReducerProtocol {
 					return .send(.removeDraftEntryDismissAlert)
 					
 				case .destination(.presented(.confirmationDialog(.audioRecordButtonTapped))):
-					state.destination = .audioRecord(AudioRecordFeature.State())
+					state.destination = .audioRecord(
+						AudioRecordFeature.State(
+							audioRecordPermission: state.audioRecordPermission
+						)
+					)
+					return .none
+					
+				case let .destination(.presented(.audioRecord(.requestMicrophonePermissionResponse(authorized)))):
+					state.audioRecordPermission = authorized ? .authorized : .denied
 					return .none
 					
 				case .destination(.presented(.audioRecord(.dismiss))):
@@ -250,11 +297,7 @@ public struct AddEntryFeature: ReducerProtocol {
 					}
 					
 				case let .requestAccessCameraResponse(granted):
-					if granted {
-						return .send(.presentCameraPicker(true))
-					} else {
-						return .send(.deniedCameraAlertButtonTapped)
-					}
+					return .send(granted ? .presentCameraPicker(true) : .deniedCameraAlertButtonTapped)
 					
 				case .deniedCameraAlertButtonTapped:
 					state.destination = .alert(.camera)
@@ -283,9 +326,7 @@ public struct AddEntryFeature: ReducerProtocol {
 					
 				case let .loadImageResponse(entryImage):
 					state.addAttachmentInFlight = false
-					state.attachments.append(
-						.init(id: entryImage.id, attachment: .image(.init(entryImage: entryImage)))
-					)
+					state.entry.attachments.append(entryImage)
 					return .none
 					
 				case let .loadVideo(url):
@@ -314,9 +355,7 @@ public struct AddEntryFeature: ReducerProtocol {
 					
 				case let .loadVideoResponse(entryVideo):
 					state.addAttachmentInFlight = false
-					state.attachments.append(
-						.init(id: entryVideo.id, attachment: .video(.init(entryVideo: entryVideo)))
-					)
+					state.entry.attachments.append(entryVideo)
 					return .none
 					
 				case let .loadAudio(url):
@@ -335,34 +374,31 @@ public struct AddEntryFeature: ReducerProtocol {
 					
 				case let .loadAudioResponse(entryAudio):
 					state.addAttachmentInFlight = false
-					state.attachments.append(.init(id: entryAudio.id, attachment: .audio(.init(entryAudio: entryAudio))))
+					state.entry.attachments.append(entryAudio)
 					return .send(.destination(.dismiss))
 					
-				case let .attachments(id: id, action: .attachment(.video(.remove))),
-					let .attachments(id: id, action: .attachment(.image(.remove))),
-					let .attachments(id: id, action: .attachment(.audio(.remove))):
-					guard let attachmentState = state.attachments[id: id]?.attachment else {
-						return .none
-					}
-					
-					return self.fileClient.removeAttachments(
-						[attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-						self.backgroundQueue
-					)
-					.receive(on: self.mainQueue)
-					.eraseToEffect()
-					.map { _ in attachmentState.attachment.id }
-					.map(AddEntryFeature.Action.removeAttachmentResponse)
+//				case let .attachments(id: id, action: .attachment(.video(.remove))),
+//					let .attachments(id: id, action: .attachment(.image(.remove))),
+//					let .attachments(id: id, action: .attachment(.audio(.remove))):
+//					guard let attachmentState = state.attachments[id: id]?.attachment else {
+//						return .none
+//					}
+//					
+//					return self.fileClient.removeAttachments(
+//						[attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
+//						self.backgroundQueue
+//					)
+//					.receive(on: self.mainQueue)
+//					.eraseToEffect()
+//					.map { _ in attachmentState.attachment.id }
+//					.map(AddEntryFeature.Action.removeAttachmentResponse)
 					
 				case let .removeAttachmentResponse(id):
-					state.attachments.remove(id: id)
-					return .none
-					
-				case .attachments:
+//					state.attachments.remove(id: id)
 					return .none
 					
 				case .dismissAlertButtonTapped:
-					if state.entry.text.message.isEmpty && state.attachments.isEmpty {
+					if state.entry.text.message.isEmpty && state.entry.attachments.isEmpty {
 						return .send(.removeDraftEntryDismissAlert)
 					}
 					
@@ -378,9 +414,6 @@ public struct AddEntryFeature: ReducerProtocol {
 				default:
 					return .none
 			}
-		}
-		.forEach(\.attachments, action: /Action.attachments) {
-			AttachmentAddRow()
 		}
 		.ifLet(\.$destination, action: /Action.destination) {
 			Destination()
@@ -431,6 +464,14 @@ extension AlertState where Action == AddEntryFeature.Destination.Action.Alert {
 			ButtonState.destructive(.init("AddEntry.Exit.Yes".localized), action: .send(.removeDraftEntryDismissAlert))
 		} message: {
 			TextState("AddEntry.Exit.Message".localized)
+		}
+	}
+	
+	static var remove: Self {
+		AlertState {
+			TextState("Image.Remove.Description".localized)
+		} actions: {
+			ButtonState.destructive(.init("Image.Remove.Title".localized), action: .send(.confirmRemoveImageButtonTapped))
 		}
 	}
 }

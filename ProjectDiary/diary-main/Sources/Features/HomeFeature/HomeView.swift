@@ -23,9 +23,8 @@ import EntryDetailFeature
 
 public struct SharedState: Equatable {
 	public var isLoading: Bool = true
+	public var destination: Entries.Destination.State?
 	public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
-	public var addEntryState: AddEntryFeature.State?
-	public var presentAddEntry = false
 	public var entryDetailState: EntryDetail.State?
 	public var navigateEntryDetail = false
 	public var entryDetailSelected: Entry?
@@ -83,20 +82,18 @@ public struct Home: ReducerProtocol {
 		public var entries: Entries.State {
 			get {
 				.init(
+					destination: self.sharedState.destination,
 					isLoading: self.sharedState.isLoading,
 					entries: self.sharedState.entries,
-					addEntryState: self.sharedState.addEntryState,
-					presentAddEntry: self.sharedState.presentAddEntry,
 					entryDetailState: self.sharedState.entryDetailState,
 					navigateEntryDetail: self.sharedState.navigateEntryDetail,
 					entryDetailSelected: self.sharedState.entryDetailSelected
 				)
 			}
 			set {
+				self.sharedState.destination = newValue.destination
 				self.sharedState.isLoading = newValue.isLoading
 				self.sharedState.entries = newValue.entries
-				self.sharedState.addEntryState = newValue.addEntryState
-				self.sharedState.presentAddEntry = newValue.presentAddEntry
 				self.sharedState.entryDetailState = newValue.entryDetailState
 				self.sharedState.navigateEntryDetail = newValue.navigateEntryDetail
 				self.sharedState.entryDetailSelected = newValue.entryDetailSelected

@@ -30,7 +30,9 @@ public struct AttachmentAddAudio: ReducerProtocol {
 	}
 	
 	public enum Action: Equatable {
+		case audioButtonTapped
 		case onAppear
+		
 		case presentAudioFullScreen(Bool)
 		
 		case remove
@@ -66,6 +68,8 @@ public struct AttachmentAddAudio: ReducerProtocol {
 		action: Action
 	) -> Effect<Action, Never> {
 		switch action {
+			case .audioButtonTapped:
+				return .none
 			case .onAppear:
 				return self.avAudioPlayerClient.create(id: PlayerManagerId(), url: state.entryAudio.url)
 					.map(AttachmentAddAudio.Action.audioPlayer)

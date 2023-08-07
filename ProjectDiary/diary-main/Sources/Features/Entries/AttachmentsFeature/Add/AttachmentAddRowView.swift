@@ -1,14 +1,8 @@
-//
-//  AttachmentAddRowView.swift
-//
-//  Created by Albert Gil Escura on 6/10/21.
-//
-
-import SwiftUI
 import ComposableArchitecture
 import Models
+import SwiftUI
 
-public struct AttachmentAddRow: ReducerProtocol {
+public struct AttachmentRowFeature: ReducerProtocol {
 	public init() {}
 	
 	public struct State: Identifiable, Equatable, Hashable {
@@ -36,10 +30,10 @@ public struct AttachmentAddRow: ReducerProtocol {
 }
 
 public struct AttachmentAddRowView: View {
-	private let store: StoreOf<AttachmentAddRow>
+	private let store: StoreOf<AttachmentRowFeature>
 	
 	public init(
-		store: StoreOf<AttachmentAddRow>
+		store: StoreOf<AttachmentRowFeature>
 	) {
 		self.store = store
 	}
@@ -48,7 +42,7 @@ public struct AttachmentAddRowView: View {
 		AttachmentAddView(
 			store: store.scope(
 				state: \.attachment,
-				action: AttachmentAddRow.Action.attachment
+				action: AttachmentRowFeature.Action.attachment
 			)
 		)
 	}

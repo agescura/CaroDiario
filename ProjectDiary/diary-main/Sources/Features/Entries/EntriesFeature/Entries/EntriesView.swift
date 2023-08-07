@@ -67,7 +67,7 @@ public struct EntriesView: View {
 				.navigationBarItems(
 					trailing:
 						Button(action: {
-							viewStore.send(.presentAddEntry(true))
+							viewStore.send(.addEntryButtonTapped)
 						}) {
 							Image(systemName: "plus")
 								.foregroundColor(.chambray)
@@ -75,9 +75,11 @@ public struct EntriesView: View {
 				)
 				.fullScreenCover(
 					store: self.store.scope(
-						state: \.$addEntryState,
-						action: Entries.Action.addEntryAction
-					)
+						state: \.$destination,
+						action: Entries.Action.destination
+					),
+					state: /Entries.Destination.State.addEntry,
+					action: Entries.Destination.Action.addEntry
 				) { store in
 					NavigationView {
 						AddEntryView(store: store)
@@ -85,7 +87,7 @@ public struct EntriesView: View {
 							.toolbar {
 								ToolbarItem(placement: .primaryAction) {
 									Button {
-										viewStore.send(.addEntryAction(.presented(.dismissAlertButtonTapped)))
+										viewStore.send(.destination(.presented(.addEntry(.dismissAlertButtonTapped))))
 									} label: {
 										Image(systemName: "xmark")
 											.foregroundColor(.adaptiveBlack)

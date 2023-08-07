@@ -14,7 +14,6 @@ public struct AddEntryView: View {
 	struct ViewState: Equatable {
 		@BindingViewState var entry: Entry
 		@BindingViewState var presentImagePicker: Bool
-		let hasAttachments: Bool
 		@BindingViewState var presentAudioPicker: Bool
 		let addAttachmentInFlight: Bool
 		let presentImagePickerSource: PickerSourceType
@@ -32,25 +31,17 @@ public struct AddEntryView: View {
 			observe: \.view,
 			send: { .view($0) }
 		) { viewStore in
-			VStack(alignment: .leading, spacing: 24) {
+			VStack(alignment: .leading, spacing: 16) {
 				TextEditorView(
 					placeholder: "AddEntry.WriteSomething".localized,
 					text: viewStore.$entry.text.message
 				)
-				if viewStore.hasAttachments {
-					ScrollView(.horizontal, showsIndicators: false) {
-						LazyHStack(spacing: 8) {
-							ForEachStore(
-								self.store.scope(
-									state: \.attachments,
-									action: AddEntryFeature.Action.attachments
-								),
-								content: AttachmentAddRowView.init
-							)
-						}
-					}
-					.frame(height: 52)
-				}
+				AttachmentsView(
+					store: self.store.scope(
+						state: \.attachments,
+						action: AddEntryFeature.Action.attachments
+					)
+				)
 
 				HStack(spacing: 8) {
 					SecondaryButtonView(
@@ -142,6 +133,56 @@ public struct AddEntryView: View {
 						}
 				}
 			}
+			.fullScreenCover(
+				store: self.store.scope(
+					state: \.$destination,
+					action: AddEntryFeature.Action.destination
+				),
+				state: /AddEntryFeature.Destination.State.image,
+				action: AddEntryFeature.Destination.Action.image
+			) { store in
+				NavigationView {
+					AttachmentRowImageDetailView(store: store)
+						.toolbar {
+							ToolbarItem(placement: .primaryAction) {
+								Button {
+									viewStore.send(.dismiss)
+								} label: {
+									Image(systemName: "xmark")
+										.resizable()
+										.aspectRatio(contentMode: .fill)
+										.frame(width: 16, height: 16)
+										.foregroundColor(.chambray)
+								}
+							}
+						}
+				}
+			}
+			.fullScreenCover(
+				store: self.store.scope(
+					state: \.$destination,
+					action: AddEntryFeature.Action.destination
+				),
+				state: /AddEntryFeature.Destination.State.audio,
+				action: AddEntryFeature.Destination.Action.audio
+			) { store in
+				NavigationView {
+					AttachmentRowAudioDetailView(store: store)
+						.toolbar {
+							ToolbarItem(placement: .primaryAction) {
+								Button {
+									viewStore.send(.dismiss)
+								} label: {
+									Image(systemName: "xmark")
+										.resizable()
+										.aspectRatio(contentMode: .fill)
+										.frame(width: 16, height: 16)
+										.foregroundColor(.chambray)
+								}
+							}
+						}
+				}
+			}
 			.onAppear {
 				viewStore.send(.onAppear)
 			}
@@ -154,7 +195,6 @@ extension BindingViewStore<AddEntryFeature.State> {
 	  AddEntryView.ViewState(
 		entry: self.$entry,
 		presentImagePicker: self.$presentImagePicker,
-		hasAttachments: self.attachments.count > 0,
 		presentAudioPicker: self.$presentAudioPicker,
 		addAttachmentInFlight: self.addAttachmentInFlight,
 		presentImagePickerSource: self.presentImagePickerSource

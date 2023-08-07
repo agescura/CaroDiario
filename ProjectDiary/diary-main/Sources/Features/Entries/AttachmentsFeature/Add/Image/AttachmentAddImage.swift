@@ -32,6 +32,7 @@ public struct AttachmentAddImage: ReducerProtocol {
 	}
 	
 	public enum Action: Equatable {
+		case imageButtonTapped
 		case presentImageFullScreen(Bool)
 		
 		case remove
@@ -51,8 +52,11 @@ public struct AttachmentAddImage: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
+			case .imageButtonTapped:
+				return .none
+				
 			case let .presentImageFullScreen(value):
 				state.presentImageFullScreen = value
 				return .none
@@ -117,63 +121,63 @@ struct AttachmentAddImageView: View {
 			ImageView(url: viewStore.entryImage.thumbnail)
 				.frame(width: 52, height: 52)
 				.onTapGesture {
-					viewStore.send(.presentImageFullScreen(true))
+					viewStore.send(.imageButtonTapped)
 				}
-				.fullScreenCover(isPresented: viewStore.binding(
-					get: \.presentImageFullScreen,
-					send: AttachmentAddImage.Action.presentImageFullScreen)
-				) {
-					ZStack(alignment: .topTrailing) {
-						ImageView(url: viewStore.entryImage.url)
-							.frame(maxWidth: .infinity, maxHeight: .infinity)
-							.animation(.easeIn(duration: 1.0), value: UUID())
-							.scaleEffect(viewStore.imageScale)
-							.offset(viewStore.currentPosition)
-							.gesture(
-								
-								MagnificationGesture(minimumScaleDelta: 0.1)
-									.onChanged({ value in
-										viewStore.send(.scaleOnChanged(value))
-									})
-									.simultaneously(with: TapGesture(count: 2).onEnded({
-										viewStore.send(.scaleTapGestureCount, animation: .spring())
-									}))
-									.simultaneously(with: DragGesture().onChanged({ value in
-										viewStore.send(.dragGesture(value), animation: .spring())
-									}))
-								
-							)
-						HStack(spacing: 32) {
-							Button(action: {
-								viewStore.send(.removeFullScreenAlertButtonTapped)
-							}) {
-								Image(systemName: "trash")
-									.resizable()
-									.aspectRatio(contentMode: .fill)
-									.frame(width: 16, height: 16)
-									.foregroundColor(.chambray)
-							}
-							
-							Button(action: {
-								viewStore.send(.presentImageFullScreen(false))
-							}) {
-								Image(systemName: "xmark")
-									.resizable()
-									.aspectRatio(contentMode: .fill)
-									.frame(width: 16, height: 16)
-									.foregroundColor(.chambray)
-							}
-						}
-						.padding()
-					}
-					.alert(
-						store.scope(state: \.removeFullScreenAlert),
-						dismiss: .cancelRemoveFullScreenAlert
-					)
-					.sheet(isPresented: self.$presented) {
-						ActivityView(activityItems: [UIImage(contentsOfFile: viewStore.entryImage.url.absoluteString) ?? Data()])
-					}
-				}
+//				.fullScreenCover(isPresented: viewStore.binding(
+//					get: \.presentImageFullScreen,
+//					send: AttachmentAddImage.Action.presentImageFullScreen)
+//				) {
+//					ZStack(alignment: .topTrailing) {
+//						ImageView(url: viewStore.entryImage.url)
+//							.frame(maxWidth: .infinity, maxHeight: .infinity)
+//							.animation(.easeIn(duration: 1.0), value: UUID())
+//							.scaleEffect(viewStore.imageScale)
+//							.offset(viewStore.currentPosition)
+//							.gesture(
+//								
+//								MagnificationGesture(minimumScaleDelta: 0.1)
+//									.onChanged({ value in
+//										viewStore.send(.scaleOnChanged(value))
+//									})
+//									.simultaneously(with: TapGesture(count: 2).onEnded({
+//										viewStore.send(.scaleTapGestureCount, animation: .spring())
+//									}))
+//									.simultaneously(with: DragGesture().onChanged({ value in
+//										viewStore.send(.dragGesture(value), animation: .spring())
+//									}))
+//								
+//							)
+//						HStack(spacing: 32) {
+//							Button(action: {
+//								viewStore.send(.removeFullScreenAlertButtonTapped)
+//							}) {
+//								Image(systemName: "trash")
+//									.resizable()
+//									.aspectRatio(contentMode: .fill)
+//									.frame(width: 16, height: 16)
+//									.foregroundColor(.chambray)
+//							}
+//							
+//							Button(action: {
+//								viewStore.send(.presentImageFullScreen(false))
+//							}) {
+//								Image(systemName: "xmark")
+//									.resizable()
+//									.aspectRatio(contentMode: .fill)
+//									.frame(width: 16, height: 16)
+//									.foregroundColor(.chambray)
+//							}
+//						}
+//						.padding()
+//					}
+//					.alert(
+//						store.scope(state: \.removeFullScreenAlert),
+//						dismiss: .cancelRemoveFullScreenAlert
+//					)
+//					.sheet(isPresented: self.$presented) {
+//						ActivityView(activityItems: [UIImage(contentsOfFile: viewStore.entryImage.url.absoluteString) ?? Data()])
+//					}
+//				}
 		}
 	}
 }

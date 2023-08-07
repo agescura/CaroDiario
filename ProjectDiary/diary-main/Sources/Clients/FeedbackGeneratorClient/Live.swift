@@ -9,8 +9,8 @@ extension FeedbackGeneratorClient {
     public static var live: Self {
         let generator = UISelectionFeedbackGenerator()
         return Self(
-            prepare: { generator.prepare() },
-            selectionChanged: { generator.selectionChanged() }
+            prepare: { await generator.prepare() },
+            selectionChanged: { await generator.selectionChanged() }
         )
     }
 }

@@ -1,46 +1,36 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 21/11/22.
-//
-
-import Foundation
-import ComposableArchitecture
+import AddEntryFeature
 import BackgroundQueue
+import ComposableArchitecture
+import CoreDataClient
+import EntryDetailFeature
+import FileClient
+import Foundation
+import Models
 import UIApplicationClient
 import UserDefaultsClient
-import FileClient
-import Models
-import AddEntryFeature
-import EntryDetailFeature
-import CoreDataClient
 
 public struct Entries: ReducerProtocol {
 	public init() {}
 	
 	public struct State: Equatable {
+		@PresentationState public var destination: Destination.State?
 		public var isLoading: Bool
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		@PresentationState public var addEntryState: AddEntryFeature.State?
-		public var presentAddEntry = false
 		public var entryDetailState: EntryDetail.State?
 		public var navigateEntryDetail = false
 		public var entryDetailSelected: Entry?
 		
 		public init(
+			destination: Destination.State? = nil,
 			isLoading: Bool = true,
 			entries: IdentifiedArrayOf<DayEntriesRow.State> = [],
-			addEntryState: AddEntryFeature.State? = nil,
-			presentAddEntry: Bool = false,
 			entryDetailState: EntryDetail.State? = nil,
 			navigateEntryDetail: Bool = false,
 			entryDetailSelected: Entry? = nil
 		) {
+			self.destination = destination
 			self.isLoading = isLoading
 			self.entries = entries
-			self.addEntryState = addEntryState
-			self.presentAddEntry = presentAddEntry
 			self.entryDetailState = entryDetailState
 			self.navigateEntryDetail = navigateEntryDetail
 			self.entryDetailSelected = entryDetailSelected
@@ -48,12 +38,11 @@ public struct Entries: ReducerProtocol {
 	}
 	
 	public enum Action: Equatable {
+		case addEntryButtonTapped
+		case destination(PresentationAction<Destination.Action>)
 		case onAppear
 		case coreDataClientAction(CoreDataClient.Action)
 		case fetchEntriesResponse([[Entry]])
-		case addEntryAction(PresentationAction<AddEntryFeature.Action>)
-		case presentAddEntry(Bool)
-		case presentAddEntryCompleted
 		case entries(id: UUID, action: DayEntriesRow.Action)
 		case remove(Entry)
 		case entryDetailAction(EntryDetail.Action)
@@ -69,16 +58,34 @@ public struct Entries: ReducerProtocol {
 	@Dependency(\.fileClient) private var fileClient
 	private struct CoreDataId: Hashable {}
 	
+	public struct Destination: ReducerProtocol {
+		public init() {}
+		
+		public enum State: Equatable {
+			case addEntry(AddEntryFeature.State)
+		}
+		
+		public enum Action: Equatable {
+			case addEntry(AddEntryFeature.Action)
+		}
+		
+		public var body: some ReducerProtocolOf<Self> {
+			Scope(state: /State.addEntry, action: /Action.addEntry) {
+				AddEntryFeature()
+			}
+		}
+	}
+	
 	public var body: some ReducerProtocolOf<Self> {
 		Reduce(self.core)
 			.forEach(\.entries, action: /Action.entries) {
 				DayEntriesRow()
 			}
-			.ifLet(\.$addEntryState, action: /Action.addEntryAction) {
-				AddEntryFeature()
-			}
 			.ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
 				EntryDetail()
+			}
+			.ifLet(\.$destination, action: /Action.destination) {
+				Destination()
 			}
 	}
 	
@@ -112,15 +119,15 @@ public struct Entries: ReducerProtocol {
 				state.isLoading = false
 				return .none
 				
-			case .addEntryAction(.presented(.finishAddEntry)):
-				state.addEntryState = nil
+			case .destination(.presented(.addEntry(.finishAddEntry))),
+					.destination(.presented(.addEntry(.view(.addButtonTapped)))):
+				state.destination = nil
 				return .none
 				
-			case .addEntryAction:
+			case .destination:
 				return .none
 				
-			case .presentAddEntry(true):
-				state.presentAddEntry = true
+			case .addEntryButtonTapped:
 				let newEntry = Entry(
 					id: self.uuid(),
 					date: self.now,
@@ -131,18 +138,8 @@ public struct Entries: ReducerProtocol {
 						lastUpdated: self.now
 					)
 				)
-				state.addEntryState = AddEntryFeature.State(entry: newEntry)
-				return EffectTask(value: .addEntryAction(.presented(.createDraftEntry)))
-				
-			case .presentAddEntry(false):
-				state.presentAddEntry = false
-				return EffectTask(value: .presentAddEntryCompleted)
-					.delay(for: 0.3, scheduler: self.mainQueue)
-					.eraseToEffect()
-				
-			case .presentAddEntryCompleted:
-				state.addEntryState = nil
-				return .none
+				state.destination = .addEntry(AddEntryFeature.State(entry: newEntry))
+				return .send(.destination(.presented(.addEntry(.createDraftEntry))))
 				
 			case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
 				state.entryDetailSelected = entry

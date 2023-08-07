@@ -6,7 +6,6 @@ public protocol EntryAttachment {
 }
 
 extension EntryAttachment {
-    
     var urls: [URL] {
         if let image = self as? EntryImage {
             return image.urls

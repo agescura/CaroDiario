@@ -30,7 +30,7 @@ public struct AudioRecordFeature: ReducerProtocol {
 		
 		
 		public init(
-			audioRecordPermission: AudioRecordPermission = .notDetermined
+			audioRecordPermission: AudioRecordPermission
 		) {
 			self.audioRecordPermission = audioRecordPermission
 		}
