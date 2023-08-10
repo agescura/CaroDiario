@@ -12,7 +12,6 @@ import AVAudioRecorderClient
 import EntryDetailFeature
 import Models
 import AVAssetClient
-import BackgroundQueue
 
 public struct AttachmentSearch: ReducerProtocol {
 	public init() {}
@@ -37,8 +36,6 @@ public struct AttachmentSearch: ReducerProtocol {
 	}
 	
 	@Dependency(\.fileClient) private var fileClient
-	@Dependency(\.backgroundQueue) private var backgroundQueue
-	@Dependency(\.mainQueue) private var mainQueue
 	
 	public var body: some ReducerProtocolOf<Self> {
 		Reduce(self.core)
@@ -53,11 +50,11 @@ public struct AttachmentSearch: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
 			case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
 				state.entryDetailSelected = entry
-				return Effect(value: .navigateEntryDetail(true))
+				return EffectTask(value: .navigateEntryDetail(true))
 				
 			case .entries:
 				return .none
@@ -75,13 +72,11 @@ public struct AttachmentSearch: ReducerProtocol {
 				return .none
 				
 			case let .entryDetailAction(.remove(entry)):
-				return .merge(
-					self.fileClient.removeAttachments(entry.attachments.urls, self.backgroundQueue)
-						.receive(on: self.mainQueue)
-						.eraseToEffect()
-						.map({ Action.remove(entry) }),
-					Effect(value: .navigateEntryDetail(false))
-				)
+				return .run { send in
+					await self.fileClient.removeAttachments(entry.attachments.urls)
+					await send(.remove(entry))
+					await send(.navigateEntryDetail(false))
+				}
 				
 			case .entryDetailAction:
 				return .none

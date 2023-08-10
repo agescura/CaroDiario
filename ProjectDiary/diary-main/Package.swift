@@ -10,10 +10,6 @@ let package = Package(
 	],
 	products: [
 		
-		// Schedulers
-		
-		.library(name: "BackgroundQueue", targets: ["BackgroundQueue"]),
-		
 		// Clients
 		
 			.library(
@@ -246,26 +242,18 @@ let package = Package(
 			),
 	],
 	dependencies: [
-		.package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", exact: "0.56.0"),
+		.package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", exact: "0.57.0"),
+		.package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.6.0"),
 		.package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.11.1"),
 	],
 	targets: [
 		
-		// Schedulers
-		
-		.target(
-			name: "BackgroundQueue",
-			dependencies: [
-				.product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-			],
-			path: "Sources/Clients/BackgroundQueue"
-		),
 		// Clients
 		
 			.target(
 				name: "AVAssetClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+					.product(name: "Dependencies", package: "swift-dependencies")
 				],
 				path: "Sources/Clients/AVAssetClient"
 			),
@@ -289,7 +277,7 @@ let package = Package(
 			.target(
 				name: "AVAudioSessionClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+					.product(name: "Dependencies", package: "swift-dependencies"),
 					"Models"
 				],
 				path: "Sources/Clients/AVAudioSessionClient"
@@ -298,7 +286,7 @@ let package = Package(
 			.target(
 				name: "AVCaptureDeviceClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+					.product(name: "Dependencies", package: "swift-dependencies"),
 					"Models"
 				],
 				path: "Sources/Clients/AVCaptureDeviceClient"
@@ -316,7 +304,7 @@ let package = Package(
 			.target(
 				name: "FeedbackGeneratorClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+					.product(name: "Dependencies", package: "swift-dependencies")
 				],
 				path: "Sources/Clients/FeedbackGeneratorClient"
 			),
@@ -324,8 +312,8 @@ let package = Package(
 			.target(
 				name: "FileClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-					.target(name: "Models")
+					.product(name: "Dependencies", package: "swift-dependencies"),
+					"Models"
 				],
 				path: "Sources/Clients/FileClient"
 			),
@@ -333,7 +321,7 @@ let package = Package(
 			.target(
 				name: "LocalAuthenticationClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+					.product(name: "Dependencies", package: "swift-dependencies"),
 					"Models"
 				],
 				path: "Sources/Clients/LocalAuthenticationClient"
@@ -342,7 +330,7 @@ let package = Package(
 			.target(
 				name: "PDFKitClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+					.product(name: "Dependencies", package: "swift-dependencies"),
 					"Models"
 				],
 				path: "Sources/Clients/PDFKitClient"
@@ -351,7 +339,7 @@ let package = Package(
 			.target(
 				name: "StoreKitClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+					.product(name: "Dependencies", package: "swift-dependencies")
 				],
 				path: "Sources/Clients/StoreKitClient"
 			),
@@ -359,7 +347,7 @@ let package = Package(
 			.target(
 				name: "UIApplicationClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+					.product(name: "Dependencies", package: "swift-dependencies")
 				],
 				path: "Sources/Clients/UIApplicationClient"
 			),
@@ -367,7 +355,7 @@ let package = Package(
 			.target(
 				name: "UserDefaultsClient",
 				dependencies: [
-					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+					.product(name: "Dependencies", package: "swift-dependencies"),
 					"Models"
 				],
 				path: "Sources/Clients/UserDefaultsClient"
@@ -429,8 +417,7 @@ let package = Package(
 					"AVAudioSessionClient",
 					"AVAudioPlayerClient",
 					"AudioRecordFeature",
-					"AVAssetClient",
-					"BackgroundQueue"
+					"AVAssetClient"
 				],
 				path: "Sources/Features/Entries/AddEntryFeature"
 			),
@@ -446,8 +433,7 @@ let package = Package(
 					"Localizables",
 					"AVAudioPlayerClient",
 					"UIApplicationClient",
-					"SwiftHelper",
-					"BackgroundQueue"
+					"SwiftHelper"
 				],
 				path: "Sources/Features/Entries/AttachmentsFeature"
 			),
@@ -523,8 +509,7 @@ let package = Package(
 					"CoreDataClient",
 					"UIApplicationClient",
 					"AVCaptureDeviceClient",
-					"FileClient",
-					"BackgroundQueue"
+					"FileClient"
 				],
 				path: "Sources/Features/Entries/SearchFeature"
 			),
@@ -654,7 +639,8 @@ let package = Package(
 				"UIApplicationClient",
 				"FeedbackGeneratorClient",
 				"Styles",
-				"Localizables"
+				"Localizables",
+				"SwiftUIHelper"
 			],
 			path: "Sources/Features/Settings/CameraFeature"
 		),

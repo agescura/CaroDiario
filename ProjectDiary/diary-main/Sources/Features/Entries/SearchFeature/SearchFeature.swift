@@ -37,9 +37,7 @@ public struct SearchFeature: ReducerProtocol {
 		case searchResponse([[Entry]])
 	}
 	
-	@Dependency(\.backgroundQueue) private var backgroundQueue
 	@Dependency(\.fileClient) private var fileClient
-	@Dependency(\.mainQueue) private var mainQueue
 	@Dependency(\.userDefaultsClient) private var userDefaultsClient
 	@Dependency(\.uuid) private var uuid
 	
@@ -69,10 +67,10 @@ public struct SearchFeature: ReducerProtocol {
 			switch action {
 					
 				case let .destination(.presented(.entryDetail(.remove(entry)))):
-					return self.fileClient.removeAttachments(entry.attachments.urls, self.backgroundQueue)
-						.receive(on: self.mainQueue)
-						.eraseToEffect()
-						.map({ SearchFeature.Action.remove(entry) })
+					return .run { send in
+						await self.fileClient.removeAttachments(entry.attachments.urls)
+						await send(.remove(entry))
+					}
 					
 				case .destination:
 					return .none

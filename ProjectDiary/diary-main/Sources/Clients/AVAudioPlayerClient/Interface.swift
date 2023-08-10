@@ -24,26 +24,26 @@ public struct AVAudioPlayerClient {
         }
     }
 
-    var create: (AnyHashable, URL) -> Effect<Action, Never> = { _, _ in .fireAndForget {} }
-    var destroy: (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} }
-    var duration: (AnyHashable) -> Effect<Double, Never> = { _ in .fireAndForget {} }
-    var play: (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} }
-    var pause: (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} }
-    var stop: (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} }
-    var isPlaying: (AnyHashable) -> Effect<Bool, Never> = { _ in .fireAndForget {}}
-    var currentTime: (AnyHashable) -> Effect<Double, Never> =  { _ in .fireAndForget {} }
-    var setCurrentTime: (AnyHashable, Double) -> Effect<Never, Never> = { _, _ in .fireAndForget {} }
+    var create: (AnyHashable, URL) -> EffectTask<Action> = { _, _ in .fireAndForget {} }
+    var destroy: (AnyHashable) -> EffectTask<Never> = { _ in .fireAndForget {} }
+    var duration: (AnyHashable) -> EffectTask<Double> = { _ in .fireAndForget {} }
+    var play: (AnyHashable) -> EffectTask<Never> = { _ in .fireAndForget {} }
+    var pause: (AnyHashable) -> EffectTask<Never> = { _ in .fireAndForget {} }
+    var stop: (AnyHashable) -> EffectTask<Never> = { _ in .fireAndForget {} }
+    var isPlaying: (AnyHashable) -> EffectTask<Bool> = { _ in .fireAndForget {}}
+    var currentTime: (AnyHashable) -> EffectTask<Double> =  { _ in .fireAndForget {} }
+    var setCurrentTime: (AnyHashable, Double) -> EffectTask<Never> = { _, _ in .fireAndForget {} }
     
     public init(
-        create: @escaping (AnyHashable, URL) -> Effect<AVAudioPlayerClient.Action, Never> = { _, _ in .fireAndForget {} },
-        destroy: @escaping (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} },
-        duration: @escaping (AnyHashable) -> Effect<Double, Never> = { _ in .fireAndForget {} },
-        play: @escaping (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} },
-        pause: @escaping (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} },
-        stop: @escaping (AnyHashable) -> Effect<Never, Never> = { _ in .fireAndForget {} },
-        isPlaying: @escaping (AnyHashable) -> Effect<Bool, Never> = { _ in .fireAndForget {}},
-        currentTime: @escaping (AnyHashable) -> Effect<Double, Never> =  { _ in .fireAndForget {} },
-        setCurrentTime: @escaping (AnyHashable, Double) -> Effect<Never, Never> = { _, _ in .fireAndForget {} }
+        create: @escaping (AnyHashable, URL) -> EffectTask<AVAudioPlayerClient.Action> = { _, _ in .fireAndForget {} },
+        destroy: @escaping (AnyHashable) -> EffectTask<Never> = { _ in .fireAndForget {} },
+        duration: @escaping (AnyHashable) -> EffectTask<Double> = { _ in .fireAndForget {} },
+        play: @escaping (AnyHashable) -> EffectTask<Never> = { _ in .fireAndForget {} },
+        pause: @escaping (AnyHashable) -> EffectTask<Never> = { _ in .fireAndForget {} },
+        stop: @escaping (AnyHashable) -> EffectTask<Never> = { _ in .fireAndForget {} },
+        isPlaying: @escaping (AnyHashable) -> EffectTask<Bool> = { _ in .fireAndForget {}},
+        currentTime: @escaping (AnyHashable) -> EffectTask<Double> =  { _ in .fireAndForget {} },
+        setCurrentTime: @escaping (AnyHashable, Double) -> EffectTask<Never> = { _, _ in .fireAndForget {} }
     ) {
         self.create = create
         self.destroy = destroy
@@ -56,39 +56,39 @@ public struct AVAudioPlayerClient {
         self.setCurrentTime = setCurrentTime
     }
 
-    public func create(id: AnyHashable, url: URL) -> Effect<Action, Never> {
+    public func create(id: AnyHashable, url: URL) -> EffectTask<Action> {
         create(id, url)
     }
 
-    public func destroy(id: AnyHashable) -> Effect<Never, Never> {
+    public func destroy(id: AnyHashable) -> EffectTask<Never> {
         destroy(id)
     }
     
-    public func duration(id: AnyHashable) -> Effect<Double, Never> {
+    public func duration(id: AnyHashable) -> EffectTask<Double> {
         duration(id)
     }
 
-    public func play(id: AnyHashable) -> Effect<Never, Never> {
+    public func play(id: AnyHashable) -> EffectTask<Never> {
         play(id)
     }
     
-    public func pause(id: AnyHashable) -> Effect<Never, Never> {
+    public func pause(id: AnyHashable) -> EffectTask<Never> {
         pause(id)
     }
 
-    public func stop(id: AnyHashable) -> Effect<Never, Never> {
+    public func stop(id: AnyHashable) -> EffectTask<Never> {
         stop(id)
     }
     
-    public func isPlaying(id: AnyHashable) -> Effect<Bool, Never> {
+    public func isPlaying(id: AnyHashable) -> EffectTask<Bool> {
         isPlaying(id)
     }
     
-    public func currentTime(id: AnyHashable) -> Effect<Double, Never> {
+    public func currentTime(id: AnyHashable) -> EffectTask<Double> {
         currentTime(id)
     }
     
-    public func setCurrentTime(id: AnyHashable, currentTime: Double) -> Effect<Never, Never> {
+    public func setCurrentTime(id: AnyHashable, currentTime: Double) -> EffectTask<Never> {
         setCurrentTime(id, currentTime)
     }
 }

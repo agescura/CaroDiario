@@ -1,5 +1,5 @@
-import ComposableArchitecture
 import Dependencies
+import UIKit
 import XCTestDynamicOverlay
 
 extension AVAssetClient: TestDependencyKey {
@@ -13,7 +13,7 @@ extension AVAssetClient: TestDependencyKey {
 
 extension AVAssetClient {
     public static let noop = Self(
-        commonMetadata: { _ in .fireAndForget {} },
-        generateThumbnail: { _ in .fireAndForget {} }
+		commonMetadata: { _ in CommonMetadata() },
+        generateThumbnail: { _ in UIImage() }
     )
 }

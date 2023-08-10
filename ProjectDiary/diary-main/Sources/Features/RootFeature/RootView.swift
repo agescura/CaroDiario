@@ -220,11 +220,11 @@ public struct RootFeature: ReducerProtocol {
 					value: self.userDefaultsClient.optionTimeForAskPasscode,
 					to: self.now
 				) {
-					return self.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode)
-						.fireAndForget()
+					self.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode)
+					return .none
 				}
-				return self.userDefaultsClient.removeOptionTimeForAskPasscode()
-					.fireAndForget()
+				self.userDefaultsClient.removeOptionTimeForAskPasscode()
+				return .none
 				
 			case .state:
 				return .none
@@ -364,48 +364,48 @@ public struct RootFeature: ReducerProtocol {
 	) -> EffectTask<Action> {
 		switch action {
 			case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.layout(.layoutChanged(layout)))))))))):
-				return self.userDefaultsClient.set(layoutType: layout)
-					.fireAndForget()
+				self.userDefaultsClient.set(layoutType: layout)
+				return .none
 			case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.style(.styleChanged(style)))))))))):
-				return self.userDefaultsClient.set(styleType: style)
-					.fireAndForget()
+				self.userDefaultsClient.set(styleType: style)
+				return .none
 			case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.theme(.themeChanged(theme)))))))))):
-				return self.userDefaultsClient.set(themeType: theme)
-					.fireAndForget()
+				self.userDefaultsClient.set(themeType: theme)
+				return .none
 			case let .featureAction(.home(.settings(.toggleShowSplash(isOn: isOn)))):
 				self.userDefaultsClient.setHideSplashScreen(!isOn)
 				return .none
 			case .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.turnOffPasscode))))))))))),
 					.featureAction(.home(.settings(.destination(.presented(.menu(.delegate(.turnOffPasscode))))))):
-				return self.userDefaultsClient.removePasscode()
-					.fireAndForget()
+				self.userDefaultsClient.removePasscode()
+				return .none
 			case let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.update(code: code))))))))):
-				return self.userDefaultsClient.setPasscode(code)
-					.fireAndForget()
+				self.userDefaultsClient.setPasscode(code)
+				return .none
 			case let .featureAction(.home(.settings(.destination(.presented(.menu(.faceId(response: faceId))))))),
 				let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.faceId(response: faceId))))))))))):
 				self.userDefaultsClient.setFaceIDActivate(faceId)
 				return .none
 			case let .featureAction(.home(.settings(.destination(.presented(.menu(.optionTimeForAskPasscode(changed: newOption))))))),
 				let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.optionTimeForAskPasscode(changed: newOption))))))))))):
-				return self.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value)
-					.fireAndForget()
+				self.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value)
+				return .none
 			case .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menuButtonTapped)))))))):
-				return self.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value)
-					.fireAndForget()
+				self.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value)
+				return .none
 			case let .featureAction(.home(.settings(.destination(.presented(.language(.updateLanguageTapped(language))))))):
-				return self.userDefaultsClient.setLanguage(language.rawValue)
-					.fireAndForget()
+				self.userDefaultsClient.setLanguage(language.rawValue)
+				return .none
 			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.styleChanged(styleChanged))))))))):
-				return self.userDefaultsClient.set(styleType: styleChanged)
-					.fireAndForget()
+				self.userDefaultsClient.set(styleType: styleChanged)
+				return .none
 			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.layoutChanged(layoutChanged)))))))))))):
-				return self.userDefaultsClient.set(layoutType: layoutChanged)
-					.fireAndForget()
+				self.userDefaultsClient.set(layoutType: layoutChanged)
+				return .none
 			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.destination(.presented(
 				.theme(.themeChanged(themeChanged))))))))))))))):
-				return self.userDefaultsClient.set(themeType: themeChanged)
-					.fireAndForget()
+				self.userDefaultsClient.set(themeType: themeChanged)
+				return .none
 			default:
 				break
 		}

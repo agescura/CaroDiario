@@ -247,8 +247,8 @@ public struct SettingsFeature: ReducerProtocol {
 				return .none
 				
 			case .reviewStoreKit:
-				return self.storeKitClient.requestReview()
-					.fireAndForget()
+				self.storeKitClient.requestReview()
+				return .none
 				
 			case .exportButtonTapped:
 				state.destination = .export(

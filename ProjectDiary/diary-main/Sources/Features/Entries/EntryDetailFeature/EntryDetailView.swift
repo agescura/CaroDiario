@@ -14,7 +14,6 @@ import AVAudioPlayerClient
 import AVAudioRecorderClient
 import AVAssetClient
 import UIApplicationClient
-import BackgroundQueue
 
 public struct EntryDetail: ReducerProtocol {
 	public init() {}
@@ -78,8 +77,6 @@ public struct EntryDetail: ReducerProtocol {
 	
 	@Dependency(\.applicationClient) private var applicationClient
 	@Dependency(\.fileClient) private var fileClient
-	@Dependency(\.backgroundQueue) private var backgroundQueue
-	@Dependency(\.mainQueue) private var mainQueue
 	
 	public var body: some ReducerProtocolOf<Self> {
 		Reduce(self.core)
@@ -97,15 +94,15 @@ public struct EntryDetail: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
 			case let .attachments(id: id, action: .attachment(.image(.presentImageFullScreen(true)))),
 				let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),
 				let .attachments(id: id, action: .attachment(.audio(.presentAudioFullScreen(true)))):
 				state.seletedAttachmentRowState = state.attachments[id: id]
 				state.showAttachmentOverlayed = true
-				return self.applicationClient.showTabView(true)
-					.fireAndForget()
+				self.applicationClient.showTabView(true)
+				return .none
 				
 			case let .selectedAttachmentRowAction(selected):
 				state.seletedAttachmentRowState = selected
@@ -113,8 +110,8 @@ public struct EntryDetail: ReducerProtocol {
 				
 			case .dismissAttachmentOverlayed:
 				state.showAttachmentOverlayed = false
-				return self.applicationClient.showTabView(false)
-					.fireAndForget()
+				self.applicationClient.showTabView(false)
+				return .none
 				
 			case .attachmentDetail:
 				return .none
@@ -122,8 +119,8 @@ public struct EntryDetail: ReducerProtocol {
 			case .processShareAttachment:
 				let attachmentState = state.seletedAttachmentRowState.attachment
 				
-				return self.applicationClient.share(attachmentState.url, .attachment)
-					.fireAndForget()
+				self.applicationClient.share(attachmentState.url, .attachment)
+				return .none
 				
 			case .onAppear:
 				return .none
@@ -150,18 +147,16 @@ public struct EntryDetail: ReducerProtocol {
 			case .removeAttachment:
 				let attachmentState = state.seletedAttachmentRowState.attachment
 				
-				return self.fileClient.removeAttachments(
-					[attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-					self.backgroundQueue
-				)
-				.receive(on: self.mainQueue)
-				.eraseToEffect()
-				.map { _ in attachmentState.attachment.id }
-				.map(Action.removeAttachmentResponse)
+				return .run { send in
+					await self.fileClient.removeAttachments(
+						[attachmentState.thumbnail, attachmentState.url].compactMap { $0 }
+					)
+					await send(.removeAttachmentResponse(attachmentState.attachment.id))
+				}
 				
 			case let .removeAttachmentResponse(id):
 				state.attachments.remove(id: id)
-				return Effect(value: .dismissAttachmentOverlayed)
+				return .send(.dismissAttachmentOverlayed)
 				
 			case .attachments:
 				return .none
@@ -199,7 +194,7 @@ public struct EntryDetail: ReducerProtocol {
 			case .addEntryAction(.view(.addButtonTapped)):
 				state.presentAddEntry = false
 				state.addEntryState = nil
-				return Effect(value: .onAppear)
+				return .send(.onAppear)
 				
 			case .addEntryAction(.finishAddEntry):
 				state.presentAddEntry = false
@@ -215,17 +210,17 @@ public struct EntryDetail: ReducerProtocol {
 				
 			case .presentAddEntry(false):
 				state.presentAddEntry = false
-				return Effect(value: .presentAddEntryCompleted)
-					.delay(for: 0.3, scheduler: self.mainQueue)
-					.eraseToEffect()
+				return .run { send in
+					await send(.presentAddEntryCompleted)
+				}
 				
 			case .presentAddEntryCompleted:
 				state.addEntryState = nil
-				return Effect(value: .onAppear)
+				return .send(.onAppear)
 				
 			case .processShare:
-				return self.applicationClient.share(state.entry.text.message, .text)
-					.fireAndForget()
+				self.applicationClient.share(state.entry.text.message, .text)
+				return .none
 		}
 	}
 }

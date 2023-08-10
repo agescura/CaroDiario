@@ -3,7 +3,6 @@ import ComposableArchitecture
 import Models
 import AddEntryFeature
 import EntryDetailFeature
-import BackgroundQueue
 
 public struct EntriesView: View {
 	private let store: StoreOf<Entries>

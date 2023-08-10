@@ -1,4 +1,3 @@
-import ComposableArchitecture
 import UIKit
 import Dependencies
 
@@ -10,12 +9,12 @@ extension DependencyValues {
 }
 
 public struct AVAssetClient {
-    public var commonMetadata: (URL) -> Effect<CommonMetadata, Never>
-    public var generateThumbnail: (URL) -> Effect<UIImage, Error>
+    public var commonMetadata: (URL) throws -> CommonMetadata
+    public var generateThumbnail: (URL) throws -> UIImage
     
     public init(
-        commonMetadata: @escaping (URL) -> Effect<AVAssetClient.CommonMetadata, Never>,
-        generateThumbnail: @escaping (URL) -> Effect<UIImage, Error>
+        commonMetadata: @escaping (URL) throws -> CommonMetadata,
+        generateThumbnail: @escaping (URL) throws -> UIImage
     ) {
         self.commonMetadata = commonMetadata
         self.generateThumbnail = generateThumbnail

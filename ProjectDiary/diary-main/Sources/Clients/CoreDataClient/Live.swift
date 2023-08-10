@@ -23,7 +23,7 @@ extension CoreDataClient {
         return Self(
             
             create: { id in
-                Effect.run { subscriber in
+                EffectTask.run { subscriber in
                     let delegate = CoreDataNotifier(
                         coreDataStack: coreDataStack,
                         subscriber: subscriber
@@ -42,7 +42,7 @@ extension CoreDataClient {
             
             destroy: { id in
                 .fireAndForget {
-                    dependencies[id]?.subscriber.send(completion: .finished)
+//                    dependencies[id]?.subscriber.send(completion: .finished)
                     dependencies[id] = nil
                 }
             },
@@ -281,7 +281,7 @@ extension CoreDataClient {
                 } catch let error as NSError {
                     print("ERROR: \(error.localizedDescription)")
                 }
-                return Effect(value: entries)
+                return EffectTask(value: entries)
             }
         )
     }()
@@ -289,16 +289,16 @@ extension CoreDataClient {
 
 struct Dependencies {
     let delegate: CoreDataNotifier
-    let subscriber: Effect<CoreDataClient.Action, Never>.Subscriber
+    let subscriber: EffectTask<CoreDataClient.Action>.Subscriber
 }
 
 var dependencies: [AnyHashable: Dependencies] = [:]
 
 class CoreDataNotifier: NSObject {
     let coreDataStack: CoreDataStack
-    let subscriber: Effect<CoreDataClient.Action, Never>.Subscriber
+    let subscriber: EffectTask<CoreDataClient.Action>.Subscriber
     
-    init(coreDataStack: CoreDataStack, subscriber: Effect<CoreDataClient.Action, Never>.Subscriber) {
+    init(coreDataStack: CoreDataStack, subscriber: EffectTask<CoreDataClient.Action>.Subscriber) {
         self.coreDataStack = coreDataStack
         self.subscriber = subscriber
         

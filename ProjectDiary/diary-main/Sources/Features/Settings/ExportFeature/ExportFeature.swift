@@ -43,8 +43,8 @@ public struct ExportFeature: ReducerProtocol {
 					}
 					
 				case let .presentActivityView(file):
-					return self.applicationClient.share(file, .pdf)
-						.fireAndForget()
+					self.applicationClient.share(file, .pdf)
+					return .none
 					
 				case .previewPDFButtonTapped:
 					return .none

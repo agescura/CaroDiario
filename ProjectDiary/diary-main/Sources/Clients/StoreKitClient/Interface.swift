@@ -1,5 +1,4 @@
 import Foundation
-import ComposableArchitecture
 import Dependencies
 
 extension DependencyValues {
@@ -10,10 +9,10 @@ extension DependencyValues {
 }
 
 public struct StoreKitClient {
-    public var requestReview: () -> Effect<Never, Never>
+    public var requestReview: () -> Void
     
     public init(
-        requestReview: @escaping () -> Effect<Never, Never>
+        requestReview: @escaping () -> Void
     ) {
         self.requestReview = requestReview
     }

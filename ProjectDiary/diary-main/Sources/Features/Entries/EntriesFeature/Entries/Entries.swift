@@ -1,5 +1,4 @@
 import AddEntryFeature
-import BackgroundQueue
 import ComposableArchitecture
 import CoreDataClient
 import EntryDetailFeature
@@ -53,7 +52,6 @@ public struct Entries: ReducerProtocol {
 	@Dependency(\.uuid) private var uuid
 	@Dependency(\.mainRunLoop.now.date) private var now
 	@Dependency(\.applicationClient) private var applicationClient
-	@Dependency(\.backgroundQueue) private var backgroundQueue
 	@Dependency(\.userDefaultsClient) private var userDefaultsClient
 	@Dependency(\.fileClient) private var fileClient
 	private struct CoreDataId: Hashable {}
@@ -161,13 +159,11 @@ public struct Entries: ReducerProtocol {
 				return .none
 				
 			case let .entryDetailAction(.remove(entry)):
-				return .merge(
-					self.fileClient.removeAttachments(entry.attachments.urls, self.backgroundQueue)
-						.receive(on: self.mainQueue)
-						.eraseToEffect()
-						.map({ Entries.Action.remove(entry) }),
-					EffectTask(value: .navigateEntryDetail(false))
-				)
+				return .run { send in
+					await self.fileClient.removeAttachments(entry.attachments.urls)
+					await send(.remove(entry))
+					await send(.navigateEntryDetail(false))
+				}
 				
 			case .entryDetailAction:
 				return .none

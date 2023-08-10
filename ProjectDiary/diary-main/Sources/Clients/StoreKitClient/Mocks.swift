@@ -1,5 +1,4 @@
 import Foundation
-import ComposableArchitecture
 import Dependencies
 import XCTestDynamicOverlay
 
@@ -13,6 +12,6 @@ extension StoreKitClient: TestDependencyKey {
 
 extension StoreKitClient {
   public static let noop = Self(
-    requestReview: { .none }
+    requestReview: { }
   )
 }

@@ -86,7 +86,7 @@ public struct AudioRecordFeature: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
 			case .onAppear:
 				return self.avAudioRecorderClient.create(id: RecorderManagerId())

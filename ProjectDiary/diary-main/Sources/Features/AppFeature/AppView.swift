@@ -61,27 +61,33 @@ public struct AppView: View {
 	}
 	
 	public var body: some View {
-		SwitchStore(self.store) {
-			CaseLet(
-				state: /AppReducer.State.splash,
-				action: AppReducer.Action.splash,
-				then: SplashView.init(store:)
-			)
-			CaseLet(
-				state: /AppReducer.State.onBoarding,
-				action: AppReducer.Action.onBoarding,
-				then: WelcomeView.init(store:)
-			)
-			CaseLet(
-				state: /AppReducer.State.lockScreen,
-				action: AppReducer.Action.lockScreen,
-				then: LockScreenView.init(store:)
-			)
-			CaseLet(
-				state: /AppReducer.State.home,
-				action: AppReducer.Action.home,
-				then: HomeView.init(store:)
-			)
+		SwitchStore(self.store) { state in
+			switch state {
+				case .splash:
+					CaseLet(
+						/AppReducer.State.splash,
+						 action: AppReducer.Action.splash,
+						 then: SplashView.init
+					)
+				case .onBoarding:
+					CaseLet(
+						/AppReducer.State.onBoarding,
+						 action: AppReducer.Action.onBoarding,
+						 then: WelcomeView.init
+					)
+				case .lockScreen:
+					CaseLet(
+						/AppReducer.State.lockScreen,
+						 action: AppReducer.Action.lockScreen,
+						 then: LockScreenView.init
+					)
+				case .home:
+					CaseLet(
+						/AppReducer.State.home,
+						 action: AppReducer.Action.home,
+						 then: HomeView.init
+					)
+			}
 		}
 	}
 }

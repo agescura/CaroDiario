@@ -1,5 +1,4 @@
 import Foundation
-import ComposableArchitecture
 import Dependencies
 import XCTestDynamicOverlay
 
@@ -10,7 +9,6 @@ extension FileClient: TestDependencyKey {
     path: XCTUnimplemented("\(Self.self).path"),
     removeAttachments: XCTUnimplemented("\(Self.self).removeAttachments"),
     addImage: XCTUnimplemented("\(Self.self).addImage"),
-    loadImage: XCTUnimplemented("\(Self.self).loadImage"),
     addVideo: XCTUnimplemented("\(Self.self).addVideo"),
     addAudio: XCTUnimplemented("\(Self.self).addAudio")
   )
@@ -19,12 +17,9 @@ extension FileClient: TestDependencyKey {
 extension FileClient {
     public static let noop: FileClient = Self(
         path: { _ in URL(string: "www.apple.com")! },
-        removeAttachments: { _, _ in .fireAndForget {} },
-        addImage: { image, entryImage, _ in
-            return .fireAndForget {}
-        },
-        loadImage: { _, _ in .fireAndForget {} },
-        addVideo: { _, _, _, _ in .fireAndForget {} },
-        addAudio: { _, _ , _ in .fireAndForget {} }
+        removeAttachments: { _ in },
+        addImage: { _, entryImage in entryImage },
+        addVideo: { _, _, entryVideo in entryVideo },
+        addAudio: { _, entryAudio  in entryAudio }
     )
 }

@@ -1,6 +1,5 @@
 import Foundation
 import AVFoundation
-import ComposableArchitecture
 import Dependencies
 
 extension AVCaptureDeviceClient: DependencyKey {

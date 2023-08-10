@@ -1,5 +1,4 @@
 import Foundation
-import ComposableArchitecture
 import UIKit
 import Dependencies
 
@@ -18,69 +17,39 @@ extension FileClient {
                 }
                 return url.appendingPathComponent(id.uuidString)
             },
-            removeAttachments: { paths, queue in
-                .future { promise in
-                    queue.schedule {
-                        for path in paths {
-                            try? fileManager.removeItem(at: path)
-                        }
-                        promise(.success(()))
-                    }
-                }
+            removeAttachments: { paths in
+					for path in paths {
+						 try? fileManager.removeItem(at: path)
+					}
             },
-            addImage: { image, entryImage, queue in
-                .future { promise in
-                    queue.schedule {
-                        try? image
-                            .resized()
-                            .pngData()!
-                            .write(to: entryImage.url, options: .atomic)
-                        
-                        try? image
-                            .resized(for: CGSize(width: 200, height: 200))
-                            .pngData()!
-                            .write(to: entryImage.thumbnail, options: .atomic)
-                        
-                        promise(.success(entryImage))
-                    }
-                }
+            addImage: { image, entryImage in
+					try? image
+						 .resized()
+						 .pngData()!
+						 .write(to: entryImage.url, options: .atomic)
+					
+					try? image
+						 .resized(for: CGSize(width: 200, height: 200))
+						 .pngData()!
+						 .write(to: entryImage.thumbnail, options: .atomic)
+					
+					return entryImage
             },
-            loadImage: { entryImage,  queue in
-                    .future { promise in
-                        queue.schedule {
-                            URLSession.shared.dataTask(with: entryImage.url) { data, response, error in
-                                guard let data = data, error == nil else {
-                                    return
-                                }
-                                
-                                DispatchQueue.main.async {
-                                    promise(.success(data))
-                                }
-                            }
-                            .resume()
-                        }
-                    }
-            },
-            addVideo: { source, thumbnail, entryVideo, queue in
-                    .future { promise in
-                        queue.schedule {
-                            try? fileManager.copyItem(at: source, to: entryVideo.url)
-                            try? thumbnail
-                                .resized(for: CGSize(width: 200, height: 200))
-                                .pngData()!
-                                .write(to: entryVideo.thumbnail, options: .atomic)
-                            promise(.success(entryVideo))
-                        }
-                    }
+            addVideo: { source, thumbnail, entryVideo in
+					try? fileManager.copyItem(at: source, to: entryVideo.url)
+					
+					try? thumbnail
+						 .resized(for: CGSize(width: 200, height: 200))
+						 .pngData()!
+						 .write(to: entryVideo.thumbnail, options: .atomic)
+					
+					return entryVideo
             },
             
-            addAudio: { source, entryAudio, queue in
-                .future { promise in
-                    queue.schedule {
-                        try? fileManager.copyItem(at: source, to: entryAudio.url)
-                        promise(.success(entryAudio))
-                    }
-                }
+            addAudio: { source, entryAudio in
+					try? fileManager.copyItem(at: source, to: entryAudio.url)
+					
+					return entryAudio
             }
         )
     }

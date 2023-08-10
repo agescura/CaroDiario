@@ -11,6 +11,6 @@ public struct AttachmentRowAudioDetailView: View {
 	}
 	
 	public var body: some View {
-		Text("Attachment")
+		Text("Audio")
 	}
 }

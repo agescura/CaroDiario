@@ -142,7 +142,7 @@ public struct Home: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
 			case let .tabBarSelected(tab):
 				state.selectedTabBar = tab
@@ -157,6 +157,18 @@ public struct Home: ReducerProtocol {
 public struct HomeView: View {
 	private let store: StoreOf<Home>
 	
+	private struct ViewState: Equatable {
+		let tabBars: [TabViewType]
+		let selectedTabBar: TabViewType
+		
+		init(
+			state: Home.State
+		) {
+			self.tabBars = state.tabBars
+			self.selectedTabBar = state.selectedTabBar
+		}
+	}
+	
 	public init(
 		store: StoreOf<Home>
 	) {
@@ -164,7 +176,10 @@ public struct HomeView: View {
 	}
 	
 	public var body: some View {
-		WithViewStore(self.store) { viewStore in
+		WithViewStore(
+			self.store,
+			observe: ViewState.init
+		) { viewStore in
 			TabView(
 				selection: viewStore.binding(
 					get: { $0.selectedTabBar },

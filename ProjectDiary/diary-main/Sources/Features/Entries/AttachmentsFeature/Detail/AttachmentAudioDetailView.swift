@@ -52,7 +52,7 @@ public struct AttachmentAudioDetail: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
 			case .onAppear:
 				return self.avAudioPlayerClient.create(id: PlayerManagerId(), url: state.entryAudio.url)

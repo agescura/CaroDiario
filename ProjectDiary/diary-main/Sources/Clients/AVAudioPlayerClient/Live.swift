@@ -80,16 +80,16 @@ extension AVAudioPlayerClient {
 private struct Dependencies {
     var delegate: AVAudioPlayerDelegate
     var player: AVAudioPlayer
-    let subscriber: Effect<AVAudioPlayerClient.Action, Never>.Subscriber
+    let subscriber: EffectTask<AVAudioPlayerClient.Action>.Subscriber
     let queue: OperationQueue
 }
 
 private var dependencies: [AnyHashable: Dependencies] = [:]
 
 private class AudioPlayerManagerDelegate: NSObject, AVAudioPlayerDelegate {
-    let subscriber: Effect<AVAudioPlayerClient.Action, Never>.Subscriber
+    let subscriber: EffectTask<AVAudioPlayerClient.Action>.Subscriber
 
-    init(_ subscriber: Effect<AVAudioPlayerClient.Action, Never>.Subscriber) {
+    init(_ subscriber: EffectTask<AVAudioPlayerClient.Action>.Subscriber) {
         self.subscriber = subscriber
     }
 

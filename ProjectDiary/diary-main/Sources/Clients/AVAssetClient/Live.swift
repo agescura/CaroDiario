@@ -1,7 +1,5 @@
-import ComposableArchitecture
 import AVKit
 import Models
-import Combine
 import Dependencies
 
 extension AVAssetClient: DependencyKey {
@@ -24,7 +22,7 @@ extension AVAssetClient {
                 }
             }
             
-            return Effect(value: commonMetadata)
+            return commonMetadata
         },
         
         generateThumbnail: { url in
@@ -36,10 +34,9 @@ extension AVAssetClient {
                 let cgImage = try imageGenerator.copyCGImage(at: .zero,
                                                              actualTime: nil)
 
-                return Effect(value: UIImage(cgImage: cgImage))
+                return UIImage(cgImage: cgImage)
             } catch {
-                return Fail(error: AVAssetError.generatedThumbnailFailed)
-                    .eraseToEffect()
+                throw AVAssetError.generatedThumbnailFailed
             }
         }
     )

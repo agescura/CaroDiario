@@ -183,6 +183,31 @@ public struct AddEntryView: View {
 						}
 				}
 			}
+			.fullScreenCover(
+				store: self.store.scope(
+					state: \.$destination,
+					action: AddEntryFeature.Action.destination
+				),
+				state: /AddEntryFeature.Destination.State.video,
+				action: AddEntryFeature.Destination.Action.video
+			) { store in
+				NavigationView {
+					AttachmentRowVideoDetailView(store: store)
+						.toolbar {
+							ToolbarItem(placement: .primaryAction) {
+								Button {
+									viewStore.send(.dismiss)
+								} label: {
+									Image(systemName: "xmark")
+										.resizable()
+										.aspectRatio(contentMode: .fill)
+										.frame(width: 16, height: 16)
+										.foregroundColor(.chambray)
+								}
+							}
+						}
+				}
+			}
 			.onAppear {
 				viewStore.send(.onAppear)
 			}

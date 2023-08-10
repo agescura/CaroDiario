@@ -1,12 +1,5 @@
-//
-//  Live.swift  
-//
-//  Created by Albert Gil Escura on 18/9/21.
-//
-
 import Foundation
 import PDFKit
-import ComposableArchitecture
 import Models
 import Localizables
 import Dependencies

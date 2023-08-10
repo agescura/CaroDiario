@@ -1,6 +1,4 @@
 import Dependencies
-import Combine
-import ComposableArchitecture
 import Foundation
 import Models
 
@@ -16,25 +14,25 @@ public struct UserDefaultsClient {
 	public var setBool: (Bool, String) -> Void
 	
 	public var stringForKey: (String) -> String?
-	public var setString: (String, String) -> EffectTask<Never>
+	public var setString: (String, String) -> Void
 	
 	public var intForKey: (String) -> Int?
-	public var setInt: (Int, String) -> EffectTask<Never>
+	public var setInt: (Int, String) -> Void
 	
 	public var dateForKey: (String) -> Date?
-	public var setDate: (Date, String) -> EffectTask<Never>
-	public var remove: (String) -> EffectTask<Never>
+	public var setDate: (Date, String) -> Void
+	public var remove: (String) -> Void
 	
 	public init(
 		boolForKey: @escaping (String) -> Bool,
 		setBool: @escaping (Bool, String) -> Void,
 		stringForKey: @escaping (String) -> String?,
-		setString: @escaping (String, String) -> EffectTask<Never>,
+		setString: @escaping (String, String) -> Void,
 		intForKey: @escaping (String) -> Int?,
-		setInt: @escaping (Int, String) -> EffectTask<Never>,
+		setInt: @escaping (Int, String) -> Void,
 		dateForKey: @escaping (String) -> Date?,
-		setDate: @escaping (Date, String) -> EffectTask<Never>,
-		remove: @escaping (String) -> EffectTask<Never>
+		setDate: @escaping (Date, String) -> Void,
+		remove: @escaping (String) -> Void
 	) {
 		self.boolForKey = boolForKey
 		self.setBool = setBool
@@ -68,7 +66,7 @@ public struct UserDefaultsClient {
 		return StyleType(rawValue: value) ?? .rectangle
 	}
 	
-	public func set(styleType: StyleType) -> EffectTask<Never> {
+	public func set(styleType: StyleType) -> Void {
 		setString(styleType.rawValue, stringForStylingKey)
 	}
 	
@@ -77,7 +75,7 @@ public struct UserDefaultsClient {
 		return LayoutType(rawValue: value) ?? .horizontal
 	}
 	
-	public func set(layoutType: LayoutType) -> EffectTask<Never> {
+	public func set(layoutType: LayoutType) -> Void {
 		setString(layoutType.rawValue, stringForLayoutKey)
 	}
 	
@@ -86,7 +84,7 @@ public struct UserDefaultsClient {
 		return ThemeType(rawValue: value) ?? .system
 	}
 	
-	public func set(themeType: ThemeType) -> EffectTask<Never> {
+	public func set(themeType: ThemeType) -> Void {
 		setString(themeType.rawValue, stringForThemeKey)
 	}
 	
@@ -94,11 +92,11 @@ public struct UserDefaultsClient {
 		stringForKey(passcodeKey)
 	}
 	
-	public func setPasscode(_ string: String) -> EffectTask<Never> {
+	public func setPasscode(_ string: String) -> Void {
 		setString(string, passcodeKey)
 	}
 	
-	public func removePasscode() -> EffectTask<Never> {
+	public func removePasscode() -> Void {
 		remove(passcodeKey)
 	}
 	
@@ -114,11 +112,11 @@ public struct UserDefaultsClient {
 		dateForKey(timeForAskPasscodeKey)
 	}
 	
-	public func setTimeForAskPasscode(_ value: Date) -> EffectTask<Never> {
+	public func setTimeForAskPasscode(_ value: Date) -> Void {
 		setDate(value, timeForAskPasscodeKey)
 	}
 	
-	public func removeTimeForAskPasscode() -> EffectTask<Never> {
+	public func removeTimeForAskPasscode() -> Void {
 		remove(timeForAskPasscodeKey)
 	}
 	
@@ -126,11 +124,11 @@ public struct UserDefaultsClient {
 		intForKey(optionTimeForAskPasscodeKey) ?? 0
 	}
 	
-	public func setOptionTimeForAskPasscode(_ value: Int) -> EffectTask<Never> {
+	public func setOptionTimeForAskPasscode(_ value: Int) -> Void {
 		setInt(value, optionTimeForAskPasscodeKey)
 	}
 	
-	public func removeOptionTimeForAskPasscode() -> EffectTask<Never> {
+	public func removeOptionTimeForAskPasscode() -> Void {
 		remove(optionTimeForAskPasscodeKey)
 	}
 	
@@ -138,7 +136,7 @@ public struct UserDefaultsClient {
 		stringForKey(languageCodeKey) ?? "en"
 	}
 	
-	public func setLanguage(_ value: String) -> EffectTask<Never> {
+	public func setLanguage(_ value: String) -> Void {
 		setString(value, languageCodeKey)
 	}
 	

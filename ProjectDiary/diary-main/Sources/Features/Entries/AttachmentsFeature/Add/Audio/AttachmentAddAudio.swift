@@ -54,7 +54,6 @@ public struct AttachmentAddAudio: ReducerProtocol {
 	
 	@Dependency(\.fileClient) private var fileClient
 	@Dependency(\.avAudioPlayerClient) private var avAudioPlayerClient
-	@Dependency(\.mainQueue) private var mainQueue
 	
 	private struct PlayerManagerId: Hashable {}
 	private struct PlayerTimerId: Hashable {}
@@ -66,7 +65,7 @@ public struct AttachmentAddAudio: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> Effect<Action, Never> {
+	) -> EffectTask<Action> {
 		switch action {
 			case .audioButtonTapped:
 				return .none
@@ -200,7 +199,7 @@ struct AttachmentAddAudioView: View {
 						.frame(width: 8, height: 8)
 				)
 				.onTapGesture {
-					viewStore.send(.presentAudioFullScreen(true))
+					viewStore.send(.audioButtonTapped)
 				}
 				.fullScreenCover(
 					isPresented: viewStore.binding(

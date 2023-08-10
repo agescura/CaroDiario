@@ -1,4 +1,3 @@
-import ComposableArchitecture
 import Dependencies
 import UIKit
 
@@ -16,8 +15,8 @@ public struct UIApplicationClient {
 	public let openSettings: @Sendable () async -> Void
 	public var open: @Sendable (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Void
 	public var canOpen: (URL) -> Bool
-	public let share: (Any, UIApplicationClient.PopoverPosition) -> Effect<Never, Never>
-	public let showTabView: (Bool) -> Effect<Never, Never>
+	public let share: (Any, UIApplicationClient.PopoverPosition) -> Void
+	public let showTabView: (Bool) -> Void
 	public var setUserInterfaceStyle: @Sendable (UIUserInterfaceStyle) async -> Void
 	
 	public enum PopoverPosition {
@@ -33,8 +32,8 @@ public struct UIApplicationClient {
 		openSettings: @escaping @Sendable () async -> Void,
 		open: @escaping @Sendable (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Void,
 		canOpen: @escaping (URL) -> Bool,
-		share: @escaping (Any, UIApplicationClient.PopoverPosition) -> Effect<Never, Never>,
-		showTabView: @escaping (Bool) -> Effect<Never, Never>,
+		share: @escaping (Any, UIApplicationClient.PopoverPosition) -> Void,
+		showTabView: @escaping (Bool) -> Void,
 		setUserInterfaceStyle: @escaping @Sendable (UIUserInterfaceStyle) async -> Void
 	) {
 		self.alternateIconName = alternateIconName
