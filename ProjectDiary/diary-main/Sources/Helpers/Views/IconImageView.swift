@@ -1,9 +1,3 @@
-//
-//  IconImageView.swift  
-//
-//  Created by Albert Gil Escura on 10/9/21.
-//
-
 import SwiftUI
 import SwiftUIHelper
 

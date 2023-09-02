@@ -208,9 +208,6 @@ public struct AddEntryView: View {
 						}
 				}
 			}
-			.onAppear {
-				viewStore.send(.onAppear)
-			}
 		}
 	}
 }
@@ -235,7 +232,7 @@ struct AddEntryView_Previews: PreviewProvider {
 					initialState: AddEntryFeature.State(
 						entry: .mock
 					),
-					reducer: AddEntryFeature()
+					reducer: AddEntryFeature.init
 				)
 			)
 			.navigationTitle("Add Entry")

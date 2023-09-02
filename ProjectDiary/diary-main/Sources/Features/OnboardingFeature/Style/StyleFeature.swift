@@ -67,7 +67,7 @@ public struct StyleFeature: ReducerProtocol {
 					
 				case .destination(.presented(.alert(.skipButtonTapped))):
 					return .run { send in
-	//					self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
+						self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
 						await send(.delegate(.skip))
 					}
 					
@@ -95,7 +95,7 @@ public struct StyleFeature: ReducerProtocol {
 				case let .styleChanged(styleChanged):
 					state.styleType = styleChanged
 					state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-					return .fireAndForget {
+					return .run { _ in
 						await self.feedbackGeneratorClient.selectionChanged()
 					}
 					

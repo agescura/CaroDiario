@@ -1,9 +1,3 @@
-//
-//  PrimaryButtonView.swift
-//
-//  Created by Albert Gil Escura on 27/6/21.
-//
-
 import SwiftUI
 
 public struct PrimaryButtonView<Label>: View where Label : View {

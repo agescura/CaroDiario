@@ -1,10 +1,3 @@
-//
-//  PDFFeaturePreviewApp.swift
-//  PDFFeaturePreview
-//
-//  Created by Albert Gil Escura on 20/9/21.
-//
-
 import SwiftUI
 import ExportFeature
 import ComposableArchitecture

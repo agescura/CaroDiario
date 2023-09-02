@@ -24,7 +24,6 @@ public struct AddEntryFeature: ReducerProtocol {
 		public var presentImagePickerSource: PickerSourceType = .photoAlbum
 		@BindingState public var presentAudioPicker: Bool = false
 		public var addAttachmentInFlight: Bool = false
-		public var audioRecordPermission: AudioRecordPermission = .notDetermined
 		
 		public var attachments: AttachmentsFeature.State {
 			get {
@@ -79,7 +78,6 @@ public struct AddEntryFeature: ReducerProtocol {
 			case dismiss
 			case loadAttachment(PickerResponseType)
 			case loadAudio(URL)
-			case onAppear
 		}
 	}
 	
@@ -202,10 +200,6 @@ public struct AddEntryFeature: ReducerProtocol {
 							return .run { send in
 								await send(.loadAudioResponse(self.fileClient.addAudio(url, entryAudio)))
 							}
-							
-						case .onAppear:
-							state.audioRecordPermission = self.avAudioSessionClient.recordPermission()
-							return .none
 					}
 					
 				case let .destination(.presented(presented)):
@@ -235,17 +229,11 @@ public struct AddEntryFeature: ReducerProtocol {
 							
 						case .confirmationDialog(.audioRecordButtonTapped):
 							state.destination = .audioRecord(
-								AudioRecordFeature.State(
-									audioRecordPermission: state.audioRecordPermission
-								)
+								AudioRecordFeature.State()
 							)
 							return .none
 							
-						case let .audioRecord(.requestMicrophonePermissionResponse(authorized)):
-							state.audioRecordPermission = authorized ? .authorized : .denied
-							return .none
-							
-						case .audioRecord(.dismiss):
+						case .audioRecord(.delegate(.dismiss)):
 							state.destination = nil
 							return .none
 							
@@ -291,8 +279,8 @@ public struct AddEntryFeature: ReducerProtocol {
 				case let .requestAuthorizationCameraResponse(response):
 					switch response {
 						case .notDetermined:
-							return .task {
-								.requestAccessCameraResponse(await self.avCaptureDeviceClient.requestAccess())
+							return .run { send in
+								await send(.requestAccessCameraResponse(self.avCaptureDeviceClient.requestAccess()))
 							}
 						case .denied:
 							return .send(.deniedCameraAlertButtonTapped)
@@ -310,7 +298,7 @@ public struct AddEntryFeature: ReducerProtocol {
 					return .none
 					
 				case .settingActionTappedDeniedCameraAlert:
-					return .fireAndForget { await self.applicationClient.openSettings() }
+					return .run { _ in await self.applicationClient.openSettings() }
 					
 				case let .loadImage(image):
 					let id = self.uuid()
@@ -379,24 +367,7 @@ public struct AddEntryFeature: ReducerProtocol {
 					state.entry.attachments.append(entryAudio)
 					return .send(.destination(.dismiss))
 					
-//				case let .attachments(id: id, action: .attachment(.video(.remove))),
-//					let .attachments(id: id, action: .attachment(.image(.remove))),
-//					let .attachments(id: id, action: .attachment(.audio(.remove))):
-//					guard let attachmentState = state.attachments[id: id]?.attachment else {
-//						return .none
-//					}
-//					
-//					return self.fileClient.removeAttachments(
-//						[attachmentState.thumbnail, attachmentState.url].compactMap { $0 },
-//						self.backgroundQueue
-//					)
-//					.receive(on: self.mainQueue)
-//					.eraseToEffect()
-//					.map { _ in attachmentState.attachment.id }
-//					.map(AddEntryFeature.Action.removeAttachmentResponse)
-					
-				case let .removeAttachmentResponse(id):
-//					state.attachments.remove(id: id)
+				case .removeAttachmentResponse:
 					return .none
 					
 				case .dismissAlertButtonTapped:

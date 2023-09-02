@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 5/9/21.
-//
-
 import Foundation
 
 extension Double {

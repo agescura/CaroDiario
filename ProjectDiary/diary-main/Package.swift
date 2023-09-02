@@ -242,7 +242,7 @@ let package = Package(
 			),
 	],
 	dependencies: [
-		.package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", exact: "0.57.0"),
+		.package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", exact: "0.59.0"),
 		.package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.6.0"),
 		.package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.11.1"),
 	],

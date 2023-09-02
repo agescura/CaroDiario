@@ -33,9 +33,9 @@ public struct CameraFeature: ReducerProtocol {
 				case .cameraButtonTapped:
 					switch state.cameraStatus {
 						case .notDetermined:
-							return .task { @MainActor in
+							return .run { @MainActor send in
 								await self.feedbackGeneratorClient.selectionChanged()
-								return .requestAccessResponse(await self.avCaptureDeviceClient.requestAccess())
+								await send(.requestAccessResponse(self.avCaptureDeviceClient.requestAccess()))
 							}
 							
 						default:
@@ -49,7 +49,7 @@ public struct CameraFeature: ReducerProtocol {
 					
 				case .goToSettings:
 					guard state.cameraStatus != .notDetermined else { return .none }
-					return .fireAndForget { await self.applicationClient.openSettings() }
+					return .run { _ in await self.applicationClient.openSettings() }
 			}
 		}
 	}

@@ -1,9 +1,3 @@
-//
-//  PDFViewRepresentable.swift
-//
-//  Created by Albert Gil Escura on 19/9/21.
-//
-
 import PDFKit
 import SwiftUI
 

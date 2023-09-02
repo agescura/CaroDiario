@@ -1,10 +1,3 @@
-//
-//  IconType.swift
-//  
-//
-//  Created by Albert Gil Escura on 28/7/21.
-//
-
 import Foundation
 
 public enum IconAppType: String, CaseIterable {

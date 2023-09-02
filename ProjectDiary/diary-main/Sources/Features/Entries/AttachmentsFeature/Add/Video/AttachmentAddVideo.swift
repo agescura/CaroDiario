@@ -121,10 +121,10 @@ struct AttachmentAddVideoView: View {
 						VideoPlayer(player: AVPlayer(url: viewStore.entryVideo.url))
 							.edgesIgnoringSafeArea([.bottom, .horizontal])
 					}
-					.alert(
-						store.scope(state: \.videoAlert),
-						dismiss: .cancelRemoveFullScreenAlert
-					)
+//					.alert(
+//						store.scope(state: \.videoAlert),
+//						dismiss: .cancelRemoveFullScreenAlert
+//					)
 				}
 			}
 		}

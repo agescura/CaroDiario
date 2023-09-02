@@ -85,7 +85,7 @@ struct AppearanceView_Previews: PreviewProvider {
 					initialState: AppearanceFeature.State(
 						appearanceSettings: .defaultValue
 					),
-					reducer: AppearanceFeature()
+					reducer: AppearanceFeature.init
 				)
 			)
 		}

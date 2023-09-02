@@ -1,10 +1,3 @@
-//
-//  Font.swift
-//  SharedStyles
-//
-//  Created by Albert Gil Escura on 27/6/21.
-//
-
 import SwiftUI
 
 public enum LatoFonts: String, CaseIterable {

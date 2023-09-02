@@ -1,9 +1,3 @@
-//
-//  CustomTextField.swift
-//
-//  Created by Albert Gil Escura on 6/7/21.
-//
-
 import SwiftUI
 
 struct CustomTextField: UIViewRepresentable {

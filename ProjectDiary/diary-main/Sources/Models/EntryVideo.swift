@@ -1,10 +1,3 @@
-//
-//  EntryVideo.swift
-//  
-//
-//  Created by Albert Gil Escura on 31/7/21.
-//
-
 import Foundation
 
 public struct EntryVideo: EntryAttachment, Equatable, Identifiable, Hashable {

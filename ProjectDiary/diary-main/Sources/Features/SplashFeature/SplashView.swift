@@ -70,7 +70,7 @@ struct SplashView_Previews: PreviewProvider {
 		SplashView(
 			store: Store(
 				initialState: SplashFeature.State(),
-				reducer: SplashFeature()
+				reducer: SplashFeature.init
 			)
 		)
 	}

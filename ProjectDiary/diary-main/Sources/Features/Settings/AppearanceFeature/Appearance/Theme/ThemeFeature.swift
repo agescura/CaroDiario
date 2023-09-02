@@ -27,7 +27,7 @@ public struct ThemeFeature: ReducerProtocol {
 			switch action {
 				case let .themeChanged(newTheme):
 					state.themeType = newTheme
-					return .fireAndForget {
+					return .run { _ in
 						await self.setUserInterfaceStyle(newTheme.userInterfaceStyle)
 						await self.feedbackGeneratorClient.selectionChanged()
 					}

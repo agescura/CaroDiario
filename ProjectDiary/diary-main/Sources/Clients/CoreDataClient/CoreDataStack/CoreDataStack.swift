@@ -1,10 +1,3 @@
-//
-//  CoreDataStack.swift
-//  
-//
-//  Created by Albert Gil Escura on 24/7/21.
-//
-
 import CoreData
 
 class CoreDataStack {

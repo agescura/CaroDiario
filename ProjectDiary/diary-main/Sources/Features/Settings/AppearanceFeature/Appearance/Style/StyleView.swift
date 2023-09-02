@@ -71,7 +71,7 @@ struct StyleView_Previews: PreviewProvider {
 					styleType: .rectangle
 					
 				),
-				reducer: StyleFeature()
+				reducer: StyleFeature.init
 			)
 		)
 		.previewDisplayName("Rectangle")
@@ -87,7 +87,7 @@ struct StyleView_Previews: PreviewProvider {
 					styleType: .rounded
 					
 				),
-				reducer: StyleFeature()
+				reducer: StyleFeature.init
 			)
 		)
 		.previewDisplayName("Rounded")

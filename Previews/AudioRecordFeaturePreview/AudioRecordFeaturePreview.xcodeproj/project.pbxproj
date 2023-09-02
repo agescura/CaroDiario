@@ -11,11 +11,6 @@
 		9565C2C526D97F17004DB3D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9565C2C426D97F17004DB3D9 /* Assets.xcassets */; };
 		9565C2C826D97F17004DB3D9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9565C2C726D97F17004DB3D9 /* Preview Assets.xcassets */; };
 		9565C2D126D97F40004DB3D9 /* AudioRecordFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2D026D97F40004DB3D9 /* AudioRecordFeature */; };
-		9565C2D326D97F5A004DB3D9 /* AVAudioPlayerClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2D226D97F5A004DB3D9 /* AVAudioPlayerClientLive */; };
-		9565C2D526D97F5A004DB3D9 /* AVAudioRecorderClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2D426D97F5A004DB3D9 /* AVAudioRecorderClientLive */; };
-		9565C2D726D97F5A004DB3D9 /* AVAudioSessionClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2D626D97F5A004DB3D9 /* AVAudioSessionClientLive */; };
-		9565C2EB26D9906B004DB3D9 /* UIApplicationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2EA26D9906B004DB3D9 /* UIApplicationClientLive */; };
-		95EAF5C726DEB79F00718C91 /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 95EAF5C626DEB79F00718C91 /* FileClientLive */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +19,7 @@
 		9565C2C426D97F17004DB3D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9565C2C726D97F17004DB3D9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9565C2C926D97F17004DB3D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CECA6F312A9A312500E7E5ED /* AudioRecordFeaturePreview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AudioRecordFeaturePreview.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,11 +27,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9565C2D726D97F5A004DB3D9 /* AVAudioSessionClientLive in Frameworks */,
-				9565C2D526D97F5A004DB3D9 /* AVAudioRecorderClientLive in Frameworks */,
-				9565C2D326D97F5A004DB3D9 /* AVAudioPlayerClientLive in Frameworks */,
-				95EAF5C726DEB79F00718C91 /* FileClientLive in Frameworks */,
-				9565C2EB26D9906B004DB3D9 /* UIApplicationClientLive in Frameworks */,
 				9565C2D126D97F40004DB3D9 /* AudioRecordFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,6 +54,7 @@
 		9565C2BF26D97F15004DB3D9 /* AudioRecordFeaturePreview */ = {
 			isa = PBXGroup;
 			children = (
+				CECA6F312A9A312500E7E5ED /* AudioRecordFeaturePreview.entitlements */,
 				9565C2C026D97F15004DB3D9 /* AudioRecordFeaturePreviewApp.swift */,
 				9565C2C426D97F17004DB3D9 /* Assets.xcassets */,
 				9565C2C926D97F17004DB3D9 /* Info.plist */,
@@ -104,11 +96,6 @@
 			name = AudioRecordFeaturePreview;
 			packageProductDependencies = (
 				9565C2D026D97F40004DB3D9 /* AudioRecordFeature */,
-				9565C2D226D97F5A004DB3D9 /* AVAudioPlayerClientLive */,
-				9565C2D426D97F5A004DB3D9 /* AVAudioRecorderClientLive */,
-				9565C2D626D97F5A004DB3D9 /* AVAudioSessionClientLive */,
-				9565C2EA26D9906B004DB3D9 /* UIApplicationClientLive */,
-				95EAF5C626DEB79F00718C91 /* FileClientLive */,
 			);
 			productName = AudioRecordFeaturePreview;
 			productReference = 9565C2BD26D97F15004DB3D9 /* AudioRecordFeaturePreview.app */;
@@ -291,6 +278,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AudioRecordFeaturePreview/AudioRecordFeaturePreview.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AudioRecordFeaturePreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CCGZFCU763;
@@ -313,6 +301,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AudioRecordFeaturePreview/AudioRecordFeaturePreview.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AudioRecordFeaturePreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CCGZFCU763;
@@ -357,26 +346,6 @@
 		9565C2D026D97F40004DB3D9 /* AudioRecordFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AudioRecordFeature;
-		};
-		9565C2D226D97F5A004DB3D9 /* AVAudioPlayerClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioPlayerClientLive;
-		};
-		9565C2D426D97F5A004DB3D9 /* AVAudioRecorderClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioRecorderClientLive;
-		};
-		9565C2D626D97F5A004DB3D9 /* AVAudioSessionClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioSessionClientLive;
-		};
-		9565C2EA26D9906B004DB3D9 /* UIApplicationClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UIApplicationClientLive;
-		};
-		95EAF5C626DEB79F00718C91 /* FileClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FileClientLive;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

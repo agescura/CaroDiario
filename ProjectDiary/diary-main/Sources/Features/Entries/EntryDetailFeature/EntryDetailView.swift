@@ -235,7 +235,10 @@ public struct EntryDetailView: View {
 	}
 	
 	public var body: some View {
-		WithViewStore(self.store) { viewStore in
+		WithViewStore(
+			self.store,
+			observe: { $0 }
+		) { viewStore in
 			ScrollView(showsIndicators: false) {
 				VStack(spacing: 16) {
 					
@@ -331,7 +334,7 @@ public struct EntryDetailView: View {
 			)
 			.fullScreenCover(
 				isPresented: viewStore.binding(
-					get: { $0.presentAddEntry },
+					get: \.presentAddEntry,
 					send: EntryDetail.Action.presentAddEntry
 				)
 			) {
@@ -347,10 +350,10 @@ public struct EntryDetailView: View {
 					}
 				}
 			}
-			.alert(
-				store.scope(state: \.removeAlert),
-				dismiss: .dismissRemoveAlert
-			)
+//			.alert(
+//				store.scope(state: \.removeAlert),
+//				dismiss: .dismissRemoveAlert
+//			)
 			.onAppear {
 				viewStore.send(.onAppear)
 			}
@@ -381,10 +384,10 @@ public struct EntryDetailView: View {
 								.foregroundColor(.chambray)
 						}
 					)
-					.confirmationDialog(
-						store.scope(state: \.meatballActionSheet),
-						dismiss: .dismissMeatballActionSheet
-					)
+//					.confirmationDialog(
+//						store.scope(state: \.meatballActionSheet),
+//						dismiss: .dismissMeatballActionSheet
+//					)
 				}
 			)
 			.navigationBarHidden(viewStore.showAttachmentOverlayed)

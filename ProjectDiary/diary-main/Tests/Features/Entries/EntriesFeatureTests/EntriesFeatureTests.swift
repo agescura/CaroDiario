@@ -1,10 +1,3 @@
-//
-//  EntriesFeatureTests.swift
-//  
-//
-//  Created by Albert Gil Escura on 11/7/21.
-//
-
 import XCTest
 @testable import EntriesFeature
 import ComposableArchitecture

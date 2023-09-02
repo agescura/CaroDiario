@@ -1,10 +1,3 @@
-//
-//  EntryImage.swift
-//  ProjectDiary
-//
-//  Created by Albert Gil Escura on 5/7/21.
-//
-
 import Foundation
 
 public struct EntryImage: EntryAttachment, Equatable, Identifiable, Hashable {

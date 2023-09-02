@@ -82,12 +82,12 @@ public struct RootFeature: ReducerProtocol {
 	) -> EffectTask<Action> {
 		switch action {
 			case .appDelegate(.didFinishLaunching):
-				return EffectTask(value: .setUserInterfaceStyle)
+				return .send(.setUserInterfaceStyle)
 				
 			case .setUserInterfaceStyle:
-				return .task { @MainActor in
+				return .run { @MainActor send in
 					await self.applicationClient.setUserInterfaceStyle(self.userDefaultsClient.themeType.userInterfaceStyle)
-					return .startFirstScreen
+					send(.startFirstScreen)
 				}
 				
 			case .featureAction(.splash(.delegate(.finishAnimation))):
@@ -109,27 +109,29 @@ public struct RootFeature: ReducerProtocol {
 					.featureAction(.onBoarding(.destination(.presented(.privacy(.delegate(.skip)))))),
 					.featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.delegate(.skip))))))))),
 					.featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.delegate(.skip)))))))))))):
-				return EffectTask(value: RootFeature.Action.requestCameraStatus)
+				return .send(.requestCameraStatus)
 				
 			case .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.destination(.presented(.theme(.startButtonTapped)))))))))))))):
-				return EffectTask(value: .requestCameraStatus)
-					.delay(for: 0.001, scheduler: self.mainQueue)
-					.eraseToEffect()
+				return .run { send in
+					try await self.mainQueue.sleep(for: .seconds(0.001))
+					await send(.requestCameraStatus)
+				}
 				
 			case .featureAction(.lockScreen(.matchedCode)):
-				return EffectTask(value: .requestCameraStatus)
+				return .send(.requestCameraStatus)
 				
 			case .featureAction(.home(.settings(.destination(.presented(.menu(.toggleFaceId(true))))))),
 					.featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.toggleFaceId(isOn: true))))))))))),
 					.featureAction(.lockScreen(.checkFaceId)):
-				return EffectTask(value: .biometricAlertPresent(true))
+				return .send(.biometricAlertPresent(true))
 				
 			case .featureAction(.home(.settings(.destination(.presented(.menu(.faceId(response:))))))),
 					.featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.faceId(response:))))))))))),
 					.featureAction(.lockScreen(.faceIdResponse)):
-				return EffectTask(value: .biometricAlertPresent(false))
-					.delay(for: 10, scheduler: self.mainQueue)
-					.eraseToEffect()
+				return .run { send in
+					try await self.mainQueue.sleep(for: .seconds(10))
+					await send(.biometricAlertPresent(false))
+				}
 				
 			case .featureAction:
 				return .none
@@ -146,7 +148,7 @@ public struct RootFeature: ReducerProtocol {
 					}
 				}
 				
-				return EffectTask(value: .featureAction(.splash(.startAnimation)))
+				return .send(.featureAction(.splash(.startAnimation)))
 				
 			case .requestCameraStatus:
 				return .run { send in
@@ -192,7 +194,7 @@ public struct RootFeature: ReducerProtocol {
 						)
 					)
 				)
-				return EffectTask(value: .featureAction(.home(.starting)))
+				return .send(.featureAction(.home(.starting)))
 				
 			case .process:
 				return .none

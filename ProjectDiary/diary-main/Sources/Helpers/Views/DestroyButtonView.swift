@@ -1,9 +1,3 @@
-//
-//  DestroyButtonView.swift
-//
-//  Created by Albert Gil Escura on 12/7/21.
-//
-
 import SwiftUI
 
 public struct DestroyButtonView: View {

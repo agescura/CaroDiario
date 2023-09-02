@@ -1,10 +1,3 @@
-//
-//  ColorScheme.swift
-//  
-//
-//  Created by Albert Gil Escura on 27/7/21.
-//
-
 import UIKit
 
 public enum ThemeType: String, CaseIterable, Codable {

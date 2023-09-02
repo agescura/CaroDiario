@@ -61,7 +61,7 @@ struct IconAppView_Previews: PreviewProvider {
 				initialState: IconAppFeature.State(
 					iconAppType: .light
 				),
-				reducer: IconAppFeature()
+				reducer: IconAppFeature.init
 			)
 		)
 	}

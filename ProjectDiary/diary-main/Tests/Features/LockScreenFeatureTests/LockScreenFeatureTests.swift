@@ -1,10 +1,3 @@
-//
-//  LockScreenFeatureTests.swift
-//  
-//
-//  Created by Albert Gil Escura on 25/7/21.
-//
-
 import XCTest
 @testable import LockScreenFeature
 import ComposableArchitecture

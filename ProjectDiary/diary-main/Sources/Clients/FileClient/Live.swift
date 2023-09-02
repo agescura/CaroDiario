@@ -80,23 +80,3 @@ extension UIImage {
             }
     }
 }
-
-//import AVKit
-//
-//extension URL {
-//    func generateThumbnail() -> UIImage? {
-//        do {
-//            let asset = AVURLAsset(url: self)
-//            let imageGenerator = AVAssetImageGenerator(asset: asset)
-//            imageGenerator.appliesPreferredTrackTransform = true
-//
-//            let cgImage = try imageGenerator.copyCGImage(at: .zero,
-//                                                         actualTime: nil)
-//
-//            return UIImage(cgImage: cgImage)
-//        } catch {
-//            print(error.localizedDescription)
-//            return nil
-//        }
-//    }
-//}

@@ -38,7 +38,7 @@ public struct AboutFeature: ReducerProtocol {
 					return .none
 					
 				case .dialog(.presented(.mail)):
-					return .fireAndForget {
+					return .run { _ in
 						var components = URLComponents()
 						components.scheme = "mailto"
 						components.path = "carodiarioapp@gmail.com"
@@ -50,7 +50,7 @@ public struct AboutFeature: ReducerProtocol {
 					}
 					
 				case .dialog(.presented(.gmail)):
-					return .fireAndForget {
+					return .run { _ in
 						let compose = "googlegmail:///co?subject=Bug in Caro Diario&body=<Explain your bug here>&to=carodiarioapp@gmail.com"
 							.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
 						let url = URL(string: compose)!
@@ -58,7 +58,7 @@ public struct AboutFeature: ReducerProtocol {
 					}
 					
 				case .dialog(.presented(.outlook)):
-					return .fireAndForget {
+					return .run { _ in
 						let compose = "ms-outlook://compose?to=carodiarioapp@gmail.com&subject=Bug in Caro Diario&body=<Explain your bug here>"
 							.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
 						let url = URL(string: compose)!

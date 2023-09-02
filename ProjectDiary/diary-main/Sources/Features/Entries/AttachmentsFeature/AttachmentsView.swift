@@ -12,7 +12,7 @@ public struct AttachmentsView: View {
 	
 	public var body: some View {
 		WithViewStore(
-			self.store.actionless,
+			self.store,
 			observe: \.attachments.isEmpty
 		) { viewStore in
 			ScrollView(.horizontal, showsIndicators: false) {

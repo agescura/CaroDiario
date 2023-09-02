@@ -52,21 +52,21 @@ public struct LockScreen: ReducerProtocol {
 		switch action {
 			case let .numberButtonTapped(item):
 				if item == .biometric(.touchId) || item == .biometric(.faceId) {
-					return Effect(value: .checkFaceId)
+					return .send(.checkFaceId)
 				}
 				if let value = item.value {
 					state.codeToMatch.append("\(value)")
 				}
 				if state.code == state.codeToMatch {
-					return Effect(value: .matchedCode)
+					return .send(.matchedCode)
 				} else if state.code.count == state.codeToMatch.count {
-					return Effect(value: .failedCode)
+					return .send(.failedCode)
 				}
 				return .none
 				
 			case .onAppear:
 				return .merge(
-					Effect(value: .checkFaceId),
+					.send(.checkFaceId),
 					.run { send in
 						await send(.determine(self.localAuthenticationClient.determineType()))
 					}
@@ -104,9 +104,10 @@ public struct LockScreen: ReducerProtocol {
 				
 			case let .faceIdResponse(value):
 				if value {
-					return Effect(value: .matchedCode)
-						.delay(for: 0.5, scheduler: self.mainQueue)
-						.eraseToEffect()
+					return .run { send in
+						try await self.mainQueue.sleep(for: .seconds(0.5))
+						await send(.matchedCode)
+					}
 				}
 				return .none
 				
@@ -116,9 +117,10 @@ public struct LockScreen: ReducerProtocol {
 			case .failedCode:
 				state.wrongAttempts = 4
 				state.codeToMatch = ""
-				return Effect(value: .reset)
-					.delay(for: 0.5, scheduler: self.mainQueue)
-					.eraseToEffect()
+				return .run { send in
+					try await self.mainQueue.sleep(for: .seconds(0.5))
+					await send(.reset)
+				}
 				
 			case .reset:
 				state.wrongAttempts = 0

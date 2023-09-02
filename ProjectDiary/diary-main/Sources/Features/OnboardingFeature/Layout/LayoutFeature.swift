@@ -74,7 +74,7 @@ public struct LayoutFeature: ReducerProtocol {
 				case let .layoutChanged(layoutChanged):
 					state.layoutType = layoutChanged
 					state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-					return .fireAndForget {
+					return .run { _ in
 						await self.feedbackGeneratorClient.selectionChanged()
 					}
 					
@@ -89,7 +89,7 @@ public struct LayoutFeature: ReducerProtocol {
 							)
 						)
 					)
-					return .fireAndForget {
+					return .run { _ in
 						await self.setUserInterfaceStyle(type.userInterfaceStyle)
 					}
 			}

@@ -1,10 +1,3 @@
-//
-//  OnBoardingPreviewApp.swift
-//  OnBoardingPreview
-//
-//  Created by Albert Gil Escura on 2/8/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import OnboardingFeature

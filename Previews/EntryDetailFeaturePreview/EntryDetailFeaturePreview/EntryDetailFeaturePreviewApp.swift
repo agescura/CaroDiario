@@ -1,10 +1,3 @@
-//
-//  EntryDetailFeaturePreviewApp.swift
-//  EntryDetailFeaturePreview
-//
-//  Created by Albert Gil Escura on 10/8/21.
-//
-
 import SwiftUI
 import EntryDetailFeature
 import CoreDataClientLive

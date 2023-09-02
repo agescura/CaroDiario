@@ -37,7 +37,7 @@ public struct LayoutFeature: ReducerProtocol {
 					state.layoutType = appearanceChanged
 					state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
 					
-					return .fireAndForget {
+					return .run { _ in
 						await self.feedbackGeneratorClient.selectionChanged()
 					}
 					

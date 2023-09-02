@@ -67,7 +67,7 @@ public struct PrivacyFeature: ReducerProtocol {
 					
 				case .destination(.presented(.alert(.skipButtonTapped))):
 					return .run { send in
-						//					self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
+						self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
 						await send(.delegate(.skip))
 					}
 					

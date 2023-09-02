@@ -67,7 +67,7 @@ struct LayoutView_Previews: PreviewProvider {
 						layout: .vertical
 					)
 				),
-				reducer: LayoutFeature()
+				reducer: LayoutFeature.init
 			)
 		)
 		.previewDisplayName("Vertical")
@@ -82,7 +82,7 @@ struct LayoutView_Previews: PreviewProvider {
 						layout: .horizontal
 					)
 				),
-				reducer: LayoutFeature()
+				reducer: LayoutFeature.init
 			)
 		)
 		.previewDisplayName("Horizontal")

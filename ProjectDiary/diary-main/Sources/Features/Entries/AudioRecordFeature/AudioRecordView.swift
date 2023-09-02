@@ -5,15 +5,18 @@ import Styles
 import Localizables
 import SwiftHelper
 import Models
+import AVAudioRecorderClient
 
-extension AudioRecordPermission {
+extension RecordPermission {
 	var description: String {
 		switch self {
-			case .authorized:
+			case .granted:
 				return "AudioRecord.Authorized".localized
 			case .denied:
 				return "AudioRecord.Denied".localized
-			case .notDetermined:
+			case .undetermined:
+				fallthrough
+			@unknown default:
 				return "AudioRecord.NotDetermined".localized
 		}
 	}
@@ -37,7 +40,7 @@ public struct AudioRecordView: View {
 				
 				switch viewStore.audioRecordPermission {
 						
-					case .notDetermined:
+					case .undetermined:
 						Text(viewStore.audioRecordPermission.description)
 							.multilineTextAlignment(.center)
 							.foregroundColor(.chambray)
@@ -59,7 +62,7 @@ public struct AudioRecordView: View {
 							action: { viewStore.send(.goToSettings) }
 						)
 						
-					case .authorized:
+					case .granted:
 						
 						Group {
 							ZStack(alignment: .leading) {
@@ -70,15 +73,6 @@ public struct AudioRecordView: View {
 									.fill(Color.red)
 									.frame(width: viewStore.playerProgress, height: 8)
 									.animation(nil, value: UUID())
-									.gesture(
-										DragGesture()
-											.onChanged { value in
-												viewStore.send(.dragOnChanged(value.location))
-											}
-											.onEnded { value in
-												viewStore.send(.dragOnEnded(value.location))
-											}
-									)
 							}
 							
 							HStack {
@@ -102,50 +96,27 @@ public struct AudioRecordView: View {
 								
 								Spacer()
 								
-								HStack(spacing: 42) {
-									Button(action: {
-										viewStore.send(.playerGoBackward)
-									}, label: {
-										Image(systemName: "gobackward.15")
-											.resizable()
-											.aspectRatio(contentMode: .fill)
-											.frame(width: 24, height: 24)
-											.foregroundColor(.chambray)
-									})
-									
-									
-									Button(action: {
-										viewStore.send(.playButtonTapped)
-									}, label: {
-										Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")
-											.resizable()
-											.aspectRatio(contentMode: .fill)
-											.frame(width: 32, height: 32)
-											.foregroundColor(.chambray)
-									})
-									
-									Button(action: {
-										viewStore.send(.playerGoForward)
-									}, label: {
-										Image(systemName: "goforward.15")
-											.resizable()
-											.aspectRatio(contentMode: .fill)
-											.frame(width: 24, height: 24)
-											.foregroundColor(.chambray)
-									})
+								Button {
+									viewStore.send(.playButtonTapped)
+								} label: {
+									Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")
+										.resizable()
+										.aspectRatio(contentMode: .fill)
+										.frame(width: 32, height: 32)
+										.foregroundColor(.chambray)
 								}
 								
 								Spacer()
 								
-								Button(action: {
+								Button {
 									viewStore.send(.removeAudioRecord)
-								}, label: {
+								} label: {
 									Image(systemName: "trash")
 										.resizable()
 										.aspectRatio(contentMode: .fill)
 										.frame(width: 20, height: 20)
 										.foregroundColor(.chambray)
-								})
+								}
 							}
 							
 							Spacer()
@@ -187,12 +158,10 @@ public struct AudioRecordView: View {
 				viewStore.send(.onAppear)
 			}
 			.alert(
-				store.scope(state: \.dismissAlert),
-				dismiss: .dismissCancelAlert
-			)
-			.alert(
-				store.scope(state: \.recordAlert),
-				dismiss: .recordCancelAlert
+				store: self.store.scope(
+					state: \.$alert,
+					action: AudioRecordFeature.Action.alert
+				)
 			)
 		}
 	}

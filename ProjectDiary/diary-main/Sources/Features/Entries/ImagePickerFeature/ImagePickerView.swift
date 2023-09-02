@@ -1,9 +1,3 @@
-//
-//  ImagePickerView.swift
-//
-//  Created by Albert Gil Escura on 3/7/21.
-//
-
 import SwiftUI
 import MobileCoreServices
 import UniformTypeIdentifiers

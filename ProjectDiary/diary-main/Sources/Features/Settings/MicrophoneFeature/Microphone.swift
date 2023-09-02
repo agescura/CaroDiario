@@ -35,12 +35,12 @@ public struct Microphone: ReducerProtocol {
 				case .microphoneButtonTapped:
 					switch state.microphoneStatus {
 						case .notDetermined:
-							return .task { @MainActor in
+							return .run { @MainActor send in
 								await self.feedbackGeneratorClient.selectionChanged()
 								do {
-									return .requestAccessResponse(try await self.avAudioSessionClient.requestRecordPermission())
+									try await send(.requestAccessResponse(self.avAudioSessionClient.requestRecordPermission()))
 								} catch {
-									return .requestAccessResponse(false)
+									send(.requestAccessResponse(false))
 								}
 							}
 							
@@ -55,7 +55,7 @@ public struct Microphone: ReducerProtocol {
 					
 				case .goToSettings:
 					guard state.microphoneStatus != .notDetermined else { return .none }
-					return .fireAndForget { await self.applicationClient.openSettings() }
+					return .run { _ in await self.applicationClient.openSettings() }
 			}
 		}
 	}

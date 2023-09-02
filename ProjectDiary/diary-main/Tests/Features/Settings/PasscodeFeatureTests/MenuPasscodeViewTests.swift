@@ -1,10 +1,3 @@
-//
-//  MenuPasscodeViewTests.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/7/21.
-//
-
 import XCTest
 @testable import PasscodeFeature
 import ComposableArchitecture

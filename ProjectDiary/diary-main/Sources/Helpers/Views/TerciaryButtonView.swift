@@ -1,9 +1,3 @@
-//
-//  TerciaryButtonView.swift  
-//
-//  Created by Albert Gil Escura on 20/7/21.
-//
-
 import SwiftUI
 
 public struct TerciaryButtonView<Label>: View where Label : View {

@@ -1,10 +1,3 @@
-//
-//  RecordButtonView.swift
-//  
-//
-//  Created by Albert Gil Escura on 28/8/21.
-//
-
 import SwiftUI
 
 struct RecordButtonView: View {

@@ -51,7 +51,7 @@ struct LanguageView_Previews: PreviewProvider {
 					initialState: LanguageFeature.State(
 						language: .english
 					),
-					reducer: LanguageFeature()
+					reducer: LanguageFeature.init
 				)
 			)
 		}
@@ -63,7 +63,7 @@ struct LanguageView_Previews: PreviewProvider {
 					initialState: LanguageFeature.State(
 						language: .spanish
 					),
-					reducer: LanguageFeature()
+					reducer: LanguageFeature.init
 				)
 			)
 		}

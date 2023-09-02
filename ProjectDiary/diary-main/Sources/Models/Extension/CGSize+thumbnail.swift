@@ -1,10 +1,3 @@
-//
-//  CGSize+thumbnail.swift
-//  
-//
-//  Created by Albert Gil Escura on 26/7/21.
-//
-
 import UIKit
 
 extension CGSize {

@@ -97,9 +97,7 @@ public struct Entries: ReducerProtocol {
 				return .none
 				
 			case let .coreDataClientAction(.entries(response)):
-				return EffectTask(value: .fetchEntriesResponse(response))
-					.receive(on: self.mainQueue)
-					.eraseToEffect()
+				return .send(.fetchEntriesResponse(response))
 				
 			case let .fetchEntriesResponse(response):
 				var dayResult: IdentifiedArrayOf<DayEntriesRow.State> = []
@@ -141,7 +139,7 @@ public struct Entries: ReducerProtocol {
 				
 			case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
 				state.entryDetailSelected = entry
-				return EffectTask(value: .navigateEntryDetail(true))
+				return .send(.navigateEntryDetail(true))
 				
 			case .entries:
 				return .none

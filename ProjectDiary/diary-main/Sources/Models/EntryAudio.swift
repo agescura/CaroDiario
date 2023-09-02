@@ -1,10 +1,3 @@
-//
-//  EntryAudio.swift
-//  
-//
-//  Created by Albert Gil Escura on 24/8/21.
-//
-
 import Foundation
 
 public struct EntryAudio: EntryAttachment, Equatable, Identifiable, Hashable {

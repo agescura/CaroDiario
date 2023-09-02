@@ -240,7 +240,7 @@ struct SettingsView_Previews: PreviewProvider {
 					microphoneStatus: .notDetermined,
 					userSettings: .defaultValue
 				),
-				reducer: SettingsFeature()
+				reducer: SettingsFeature.init
 			)
 		)
 	}

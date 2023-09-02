@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 20/8/22.
-//
-
 import XCTest
 @testable import PasscodeFeature
 import ComposableArchitecture

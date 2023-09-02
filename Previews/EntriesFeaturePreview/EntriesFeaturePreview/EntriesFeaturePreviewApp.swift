@@ -1,10 +1,3 @@
-//
-//  EntriesFeaturePreviewApp.swift
-//  EntriesFeaturePreview
-//
-//  Created by Albert Gil Escura on 9/8/21.
-//
-
 import SwiftUI
 import ComposableArchitecture
 import EntriesFeature

@@ -29,7 +29,7 @@ public struct StyleFeature: ReducerProtocol {
 				case let .styleChanged(styleChanged):
 					state.styleType = styleChanged
 					state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-					return .fireAndForget {
+					return .run { _ in
 						await self.feedbackGeneratorClient.selectionChanged()
 					}
 			}

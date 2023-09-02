@@ -73,7 +73,7 @@ struct ThemeView_Previews: PreviewProvider {
 					),
 					themeType: .system
 				),
-				reducer: ThemeFeature()
+				reducer: ThemeFeature.init
 			)
 		)
 		.previewDisplayName("System")
@@ -87,7 +87,7 @@ struct ThemeView_Previews: PreviewProvider {
 					),
 					themeType: .light
 				),
-				reducer: ThemeFeature()
+				reducer: ThemeFeature.init
 			)
 		)
 		.previewDisplayName("Light")
@@ -101,7 +101,7 @@ struct ThemeView_Previews: PreviewProvider {
 					),
 					themeType: .dark
 				),
-				reducer: ThemeFeature()
+				reducer: ThemeFeature.init
 			)
 		)
 		.previewDisplayName("Dark")

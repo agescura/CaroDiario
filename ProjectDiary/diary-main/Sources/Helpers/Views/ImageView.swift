@@ -1,9 +1,3 @@
-//
-//  ImageView.swift 
-//
-//  Created by Albert Gil Escura on 20/7/21.
-//
-
 import SwiftUI
 
 public struct ImageView: View {

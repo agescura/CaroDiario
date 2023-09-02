@@ -54,7 +54,7 @@ public struct AttachmentSearch: ReducerProtocol {
 		switch action {
 			case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
 				state.entryDetailSelected = entry
-				return EffectTask(value: .navigateEntryDetail(true))
+				return .send(.navigateEntryDetail(true))
 				
 			case .entries:
 				return .none

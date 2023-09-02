@@ -89,7 +89,7 @@ public struct InsertPasscodeFeature: ReducerProtocol {
 					if state.step == .secondCode,
 						state.code.count == state.maxNumbersCode {
 						if state.code == state.firstCode {
-							return Effect(value: .menuButtonTapped)
+							return .send(.menuButtonTapped)
 						} else {
 							state.step = .firstCode
 							state.code = ""

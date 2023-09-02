@@ -1,9 +1,3 @@
-//
-//  PhotoPickerView.swift
-//
-//  Created by Albert Gil Escura on 8/8/21.
-//
-
 import SwiftUI
 import PhotosUI
 

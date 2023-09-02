@@ -1,10 +1,3 @@
-//
-//  StyleType.swift
-//  Models
-//
-//  Created by Albert Gil Escura on 4/7/21.
-//
-
 import Foundation
 
 public enum StyleType: String, CaseIterable, Identifiable {

@@ -1,10 +1,3 @@
-//
-//  Live.swift
-//  CoredataClient
-//
-//  Created by Albert Gil Escura on 28/6/21.
-//
-
 import Foundation
 import CoreData
 import ComposableArchitecture
@@ -298,13 +291,21 @@ class CoreDataNotifier: NSObject {
     let coreDataStack: CoreDataStack
     let subscriber: EffectTask<CoreDataClient.Action>.Subscriber
     
-    init(coreDataStack: CoreDataStack, subscriber: EffectTask<CoreDataClient.Action>.Subscriber) {
+    init(
+		coreDataStack: CoreDataStack,
+		subscriber: EffectTask<CoreDataClient.Action>.Subscriber
+	 ) {
         self.coreDataStack = coreDataStack
         self.subscriber = subscriber
         
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(contextObjectsDidChange(_:)), name: Notification.Name.NSManagedObjectContextObjectsDidChange, object: nil)
+        NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(contextObjectsDidChange(_:)),
+			name: Notification.Name.NSManagedObjectContextObjectsDidChange,
+			object: nil
+		  )
         
         fetchTodos()
     }

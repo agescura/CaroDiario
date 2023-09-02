@@ -1,10 +1,3 @@
-//
-//  StyleModifier.swift
-//  
-//
-//  Created by Albert Gil Escura on 27/7/21.
-//
-
 import SwiftUI
 import Styles
 import Models

@@ -1,9 +1,3 @@
-//
-//  ShakeGeometryEffect.swift  
-//
-//  Created by Albert Gil Escura on 19/7/21.
-//
-
 import SwiftUI
 
 public struct ShakeGeometryEffect: GeometryEffect {

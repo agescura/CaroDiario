@@ -12,7 +12,7 @@ public struct UIApplicationClient {
 	public let alternateIconName: String?
 	public var setAlternateIconName: (String?) async throws -> Void
 	public let supportsAlternateIcons: () -> Bool
-	public let openSettings: @Sendable () async -> Void
+	public var openSettings: @Sendable () async -> Void
 	public var open: @Sendable (URL, [UIApplication.OpenExternalURLOptionsKey: Any]) async -> Void
 	public var canOpen: (URL) -> Bool
 	public let share: (Any, UIApplicationClient.PopoverPosition) -> Void

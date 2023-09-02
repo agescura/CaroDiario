@@ -1,10 +1,3 @@
-//
-//  RootFeatureTests.swift
-//  
-//
-//  Created by Albert Gil Escura on 16/7/21.
-//
-
 import XCTest
 @testable import RootFeature
 import ComposableArchitecture

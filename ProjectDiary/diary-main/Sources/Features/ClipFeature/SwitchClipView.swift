@@ -1,10 +1,3 @@
-//
-//  SwitchClipView.swift
-//  
-//
-//  Created by Albert Gil Escura on 8/10/21.
-//
-
 import ComposableArchitecture
 import SwiftUI
 import SplashFeature

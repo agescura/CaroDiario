@@ -40,7 +40,7 @@ public struct Theme: ReducerProtocol {
 		switch action {
 			case let .themeChanged(themeChanged):
 				state.themeType = themeChanged
-				return .fireAndForget {
+				return .run { _ in
 					await self.setUserInterfaceStyle(themeChanged.userInterfaceStyle)
 					await self.feedbackGeneratorClient.selectionChanged()
 				}
@@ -49,8 +49,8 @@ public struct Theme: ReducerProtocol {
 				return .none
 				
 			case .startButtonTapped:
-				return .run { send in
-					await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
+				return .run { _ in
+					self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
 				}
 		}
 	}

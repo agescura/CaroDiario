@@ -1,9 +1,3 @@
-//
-//  SearchBar.swift
-//
-//  Created by Albert Gil Escura on 24/8/21.
-//
-
 import SwiftUI
 
 class SearchBar: NSObject, ObservableObject {

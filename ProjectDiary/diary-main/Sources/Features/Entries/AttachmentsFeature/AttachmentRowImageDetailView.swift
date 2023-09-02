@@ -13,25 +13,32 @@ public struct AttachmentRowImageDetailView: View {
 	}
 	
 	public var body: some View {
-		WithViewStore(self.store) { viewStore in
+		WithViewStore(
+			self.store,
+			observe: { $0 }
+		) { viewStore in
 			ImageView(url: viewStore.entryImage.url)
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.animation(.easeIn(duration: 1.0), value: UUID())
 				.scaleEffect(viewStore.imageScale)
 				.offset(viewStore.currentPosition)
 				.gesture(
-					
 					MagnificationGesture(minimumScaleDelta: 0.1)
-						.onChanged({ value in
+						.onChanged { value in
 							viewStore.send(.scaleOnChanged(value))
-						})
-						.simultaneously(with: TapGesture(count: 2).onEnded({
-							viewStore.send(.scaleTapGestureCount, animation: .spring())
-						}))
-						.simultaneously(with: DragGesture().onChanged({ value in
-							viewStore.send(.dragGesture(value), animation: .spring())
-						}))
-					
+						}
+						.simultaneously(
+							with: TapGesture(count: 2)
+								.onEnded {
+									viewStore.send(.scaleTapGestureCount, animation: .spring())
+								}
+						)
+						.simultaneously(
+							with: DragGesture()
+								.onChanged { value in
+									viewStore.send(.dragGesture(value), animation: .spring())
+								}
+						)
 				)
 				.sheet(isPresented: self.$presented) {
 					ActivityView(activityItems: [UIImage(contentsOfFile: viewStore.entryImage.url.absoluteString) ?? Data()])
@@ -55,6 +62,16 @@ public struct AttachmentRowImageDetailView: View {
 						action: AttachmentRowImageDetailFeature.Action.alert
 					)
 				)
+		}
+	}
+}
+
+extension AlertState where Action == AttachmentRowImageDetailFeature.Action.Alert {
+	static var remove: Self {
+		AlertState {
+			TextState("Image.Remove.Description".localized)
+		} actions: {
+			ButtonState.destructive(.init("Image.Remove.Title".localized), action: .send(.removeButtonTapped))
 		}
 	}
 }

@@ -108,22 +108,8 @@ struct WelcomeView_Previews: PreviewProvider {
 		WelcomeView(
 			store: Store(
 				initialState: WelcomeFeature.State(
-//					destination: .privacy(
-//						PrivacyFeature.State(
-//							destination: .style(
-//								StyleFeature.State(
-//									styleType: .rectangle,
-//									layoutType: .horizontal,
-//									entries: fakeEntries(
-//										with: .rectangle,
-//										layout: .horizontal
-//									)
-//								)
-//							)
-//						)
-//					)
 				),
-				reducer: WelcomeFeature()
+				reducer: WelcomeFeature.init
 			)
 		)
 	}

@@ -132,7 +132,7 @@ public struct MenuPasscodeFeature: ReducerProtocol {
 					
 				case let .toggleFaceId(isOn: value):
 					if !value {
-						return EffectTask(value: .faceId(response: value))
+						return .send(.faceId(response: value))
 					}
 					return .run { [type = state.authenticationType] send in
 						await send(.faceId(response: self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [type.rawValue]))))

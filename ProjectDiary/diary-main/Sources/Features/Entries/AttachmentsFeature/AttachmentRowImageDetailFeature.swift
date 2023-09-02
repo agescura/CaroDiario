@@ -67,13 +67,3 @@ public struct AttachmentRowImageDetailFeature: ReducerProtocol {
 		}
 	}
 }
-
-extension AlertState where Action == AttachmentRowImageDetailFeature.Action.Alert {
-	static var remove: Self {
-		AlertState {
-			TextState("Image.Remove.Description".localized)
-		} actions: {
-			ButtonState.destructive(.init("Image.Remove.Title".localized), action: .send(.removeButtonTapped))
-		}
-	}
-}

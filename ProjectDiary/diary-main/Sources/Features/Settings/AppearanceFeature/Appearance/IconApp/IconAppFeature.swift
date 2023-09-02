@@ -29,7 +29,7 @@ public struct IconAppFeature: ReducerProtocol {
 			switch action {
 				case let .iconAppChanged(newIconApp):
 					state.iconAppType = newIconApp
-					return .fireAndForget {
+					return .run { _ in
 						try await self.applicationClient.setAlternateIconName(newIconApp == .dark ? "AppIcon-2" : nil)
 						await self.feedbackGeneratorClient.selectionChanged()
 					}

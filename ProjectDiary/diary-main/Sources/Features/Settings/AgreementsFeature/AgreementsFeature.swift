@@ -48,7 +48,7 @@ public struct AgreementsFeature: ReducerProtocol {
 			switch action {
 				case let .open(type):
 					guard let url = URL(string: type.urlString) else { return .none }
-					return .fireAndForget { await self.open(url, [:]) }
+					return .run { _ in await self.open(url, [:]) }
 			}
 		}
 	}
