@@ -29,19 +29,17 @@ extension CoreDataClient {
     public static let noop = Self(
         create: { _ in .fireAndForget {} },
         destroy: { _ in .fireAndForget {} },
-        createDraft: { entry in
-            return .fireAndForget {}
-        },
-        publishEntry: { _ in .fireAndForget {} },
-        removeEntry: { _ in .fireAndForget {} },
-        fetchEntry: { _ in .fireAndForget {} },
-        fetchAll: { .fireAndForget {} },
-        updateMessage: { _, _ in .fireAndForget {} },
-        addAttachmentEntry: { _, _ in .fireAndForget {} },
-        removeAttachmentEntry: { _  in .fireAndForget {} },
-        searchEntries: { _ in .fireAndForget {} },
-        searchImageEntries: { .fireAndForget {} },
-        searchVideoEntries: { .fireAndForget {} },
-        searchAudioEntries: { .fireAndForget {} }
+        createDraft: { _ in },
+        publishEntry: { _ in },
+        removeEntry: { _ in },
+		  fetchEntry: { _ in Entry.mock },
+        fetchAll: { [] },
+        updateMessage: { _, _ in },
+        addAttachmentEntry: { _, _ in },
+        removeAttachmentEntry: { _  in },
+        searchEntries: { _ in [] },
+        searchImageEntries: { [] },
+        searchVideoEntries: { [] },
+        searchAudioEntries: { [] }
     )
 }

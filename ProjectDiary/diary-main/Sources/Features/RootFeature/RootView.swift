@@ -252,40 +252,49 @@ public struct RootFeature: ReducerProtocol {
 						.eraseToEffect()
 						.map({ Action.featureAction(.home(.entries(.coreDataClientAction($0)))) })
 				case let .featureAction(.home(.entries(.remove(entry)))):
-					return self.coreDataClient.removeEntry(entry.id)
-						.fireAndForget()
+					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
 				case .featureAction(.home(.settings(.destination(.presented(.export(.processPDF)))))):
-					return self.coreDataClient.fetchAll()
-						.map({ Action.featureAction(.home(.settings(.destination(.presented(.export(.generatePDF($0))))))) })
+					return .run { send in
+						await send(
+							.featureAction(.home(.settings(.destination(.presented(.export(.generatePDF(self.coreDataClient.fetchAll())))))))
+						)
+					}
 					
 				case .featureAction(.home(.settings(.destination(.presented(.export(.previewPDFButtonTapped)))))):
-					return self.coreDataClient.fetchAll()
-						.map({ Action.featureAction(.home(.settings(.destination(.presented(.export(.generatePreview($0))))))) })
+					return .run { send in
+						await send(
+							.featureAction(.home(.settings(.destination(.presented(.export(.generatePreview(self.coreDataClient.fetchAll())))))))
+						)
+					}
 					
 				case let .featureAction(.home(.search(.searching(newText: newText)))):
-					return self.coreDataClient.searchEntries(newText)
-						.map({ Action.featureAction(.home(.search(.searchResponse($0)))) })
+					return .run { send in
+						await send(
+							.featureAction(.home(.search(.searchResponse(self.coreDataClient.searchEntries(newText)))))
+						)
+					}
 					
 				case .featureAction(.home(.search(.navigateImageSearch))):
-					return self.coreDataClient.searchImageEntries()
-						.map({ Action.featureAction(.home(.search(.navigateSearch(.images, $0)))) })
+					return .run { send in
+						await send(.featureAction(.home(.search(.navigateSearch(.images, self.coreDataClient.searchImageEntries())))))
+					}
 					
 				case .featureAction(.home(.search(.navigateVideoSearch))):
-					return self.coreDataClient.searchVideoEntries()
-						.map({ Action.featureAction(.home(.search(.navigateSearch(.videos, $0)))) })
+					return .run { send in
+						await send(.featureAction(.home(.search(.navigateSearch(.videos, self.coreDataClient.searchVideoEntries())))))
+					}
 					
 				case .featureAction(.home(.search(.navigateAudioSearch))):
-					return self.coreDataClient.searchAudioEntries()
-						.map({ Action.featureAction(.home(.search(.navigateSearch(.audios, $0)))) })
+					return .run { send in
+						await send(.featureAction(.home(.search(.navigateSearch(.audios, self.coreDataClient.searchAudioEntries())))))
+					}
 					
 				case let .featureAction(.home(.search(.remove(entry)))):
-					return self.coreDataClient.removeEntry(entry.id)
-						.fireAndForget()
+					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
 				case let .featureAction(.home(.search(.destination(.presented(.entryDetail(.remove(entry))))))):
-					return self.coreDataClient.removeEntry(entry.id)
-						.fireAndForget()
+					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
 				default:
 					break
@@ -296,11 +305,24 @@ public struct RootFeature: ReducerProtocol {
 			let entryDetailState = homeState.entries.entryDetailState {
 			switch action {
 				case .featureAction(.home(.entries(.entryDetailAction(.onAppear)))):
-					return self.coreDataClient.fetchEntry(entryDetailState.entry)
-						.map({ Action.featureAction(.home(.entries(.entryDetailAction(.entryResponse($0))))) })
+					return .run { send in
+						await send(
+							.featureAction(
+								.home(
+									.entries(
+										.entryDetailAction(
+											.entryResponse(
+												self.coreDataClient.fetchEntry(entryDetailState.entry)
+											)
+										)
+									)
+								)
+							)
+						)
+					}
 					
 				case let .featureAction(.home(.entries(.entryDetailAction(.removeAttachmentResponse(id))))):
-					return self.coreDataClient.removeAttachmentEntry(id).fireAndForget()
+					return .run { _ in await self.coreDataClient.removeAttachmentEntry(id) }
 					
 				default:
 					break
@@ -312,8 +334,9 @@ public struct RootFeature: ReducerProtocol {
 			switch action {
 				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.createDraftEntry)))))),
 						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.createDraftEntry))))):
-					return self.coreDataClient.createDraft(addEntryState.entry)
-						.fireAndForget()
+					return .run { _ in
+						await self.coreDataClient.createDraft(addEntryState.entry)
+					}
 					
 				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.view(.addButtonTapped))))))),
 						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.view(.addButtonTapped)))))):
@@ -322,36 +345,30 @@ public struct RootFeature: ReducerProtocol {
 						message: addEntryState.entry.text.message,
 						lastUpdated: self.now
 					)
-					return .merge(
-						self.coreDataClient.updateMessage(entryText, addEntryState.entry)
-							.fireAndForget(),
-						self.coreDataClient.publishEntry(addEntryState.entry)
-							.fireAndForget()
-					)
+					return .run { _ in
+						await self.coreDataClient.updateMessage(entryText, addEntryState.entry)
+						await self.coreDataClient.publishEntry(addEntryState.entry)
+						
+					}
 				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadImageResponse(entryImage))))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadImageResponse(entryImage)))))):
-					return self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id)
-						.fireAndForget()
+					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id) }
 					
 				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadVideoResponse(entryVideo))))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadVideoResponse(entryVideo)))))):
-					return self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id)
-						.fireAndForget()
+					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id) }
 					
 				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadAudioResponse(entryAudio))))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadAudioResponse(entryAudio)))))):
-					return self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id)
-						.fireAndForget()
+					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id) }
 					
 				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.removeAttachmentResponse(id))))))),
 					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeAttachmentResponse(id)))))):
-					return self.coreDataClient.removeAttachmentEntry(id)
-						.fireAndForget()
+					return .run { _ in await self.coreDataClient.removeAttachmentEntry(id) }
 					
 				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.removeDraftEntryDismissAlert)))))),
 						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeDraftEntryDismissAlert))))):
-					return self.coreDataClient.removeEntry(addEntryState.entry.id)
-						.fireAndForget()
+					return .run { _ in await self.coreDataClient.removeEntry(addEntryState.entry.id) }
 					
 				default:
 					break

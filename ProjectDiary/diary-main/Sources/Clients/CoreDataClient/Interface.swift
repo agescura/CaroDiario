@@ -26,34 +26,34 @@ public struct CoreDataClient {
     public var create: (AnyHashable) -> EffectTask<Action>
     public var destroy: (AnyHashable) -> EffectTask<Never>
     
-    public var createDraft: (Entry) -> EffectTask<Void>
-    public var publishEntry: (Entry) -> EffectTask<Void>
-    public var removeEntry: (UUID) -> EffectTask<Void>
-    public var fetchEntry: (Entry) -> EffectTask<Entry>
-    public var fetchAll: () -> EffectTask<[[Entry]]>
-    public var updateMessage: (EntryText, Entry) -> EffectTask<Void>
-    public var addAttachmentEntry: (EntryAttachment, UUID) -> EffectTask<Void>
-    public var removeAttachmentEntry: (UUID) -> EffectTask<Void>
-    public var searchEntries: (String) -> EffectTask<[[Entry]]>
-    public var searchImageEntries: () -> EffectTask<[[Entry]]>
-    public var searchVideoEntries: () -> EffectTask<[[Entry]]>
-    public var searchAudioEntries: () -> EffectTask<[[Entry]]>
+    public var createDraft: (Entry) async -> Void
+    public var publishEntry: (Entry) async -> Void
+    public var removeEntry: (UUID) async -> Void
+    public var fetchEntry: (Entry) async -> Entry
+    public var fetchAll: () async -> [[Entry]]
+    public var updateMessage: (EntryText, Entry) async -> Void
+    public var addAttachmentEntry: (EntryAttachment, UUID) async -> Void
+    public var removeAttachmentEntry: (UUID) async -> Void
+    public var searchEntries: (String) async -> [[Entry]]
+    public var searchImageEntries: () async -> [[Entry]]
+    public var searchVideoEntries: () async -> [[Entry]]
+    public var searchAudioEntries: () async -> [[Entry]]
     
     public init(
         create: @escaping  (AnyHashable) -> EffectTask<Action>,
         destroy: @escaping (AnyHashable) -> EffectTask<Never>,
-        createDraft: @escaping (Entry) -> EffectTask<Void>,
-        publishEntry: @escaping (Entry) -> EffectTask<Void>,
-        removeEntry: @escaping (UUID) -> EffectTask<Void>,
-        fetchEntry: @escaping (Entry) -> EffectTask<Entry>,
-        fetchAll: @escaping () -> EffectTask<[[Entry]]>,
-        updateMessage: @escaping (EntryText, Entry) -> EffectTask<Void>,
-        addAttachmentEntry: @escaping (EntryAttachment, UUID) -> EffectTask<Void>,
-        removeAttachmentEntry: @escaping (UUID) -> EffectTask<Void>,
-        searchEntries: @escaping (String) -> EffectTask<[[Entry]]>,
-        searchImageEntries: @escaping () -> EffectTask<[[Entry]]>,
-        searchVideoEntries: @escaping () -> EffectTask<[[Entry]]>,
-        searchAudioEntries: @escaping () -> EffectTask<[[Entry]]>
+        createDraft: @escaping (Entry) async -> Void,
+        publishEntry: @escaping (Entry) async -> Void,
+        removeEntry: @escaping (UUID) async -> Void,
+        fetchEntry: @escaping (Entry) async -> Entry,
+        fetchAll: @escaping () async -> [[Entry]],
+        updateMessage: @escaping (EntryText, Entry) async -> Void,
+        addAttachmentEntry: @escaping (EntryAttachment, UUID) async -> Void,
+        removeAttachmentEntry: @escaping (UUID) async -> Void,
+        searchEntries: @escaping (String) async -> [[Entry]],
+        searchImageEntries: @escaping () async -> [[Entry]],
+        searchVideoEntries: @escaping () async -> [[Entry]],
+        searchAudioEntries: @escaping () async -> [[Entry]]
     ) {
         self.create = create
         self.destroy = destroy

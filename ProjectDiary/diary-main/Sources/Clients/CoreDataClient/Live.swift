@@ -80,7 +80,6 @@ extension CoreDataClient {
                 }
                 
                 coreDataStack.saveContext()
-                return Effect(value: ())
             },
             
             publishEntry: { entry in
@@ -94,7 +93,6 @@ extension CoreDataClient {
                     print("ERROR: \(error.localizedDescription)")
                 }
                 coreDataStack.saveContext()
-                return Effect(value: ())
             },
             
             removeEntry: { entry in
@@ -108,7 +106,6 @@ extension CoreDataClient {
                     print("ERROR: \(error.localizedDescription)")
                 }
                 coreDataStack.saveContext()
-                return Effect(value: ())
             },
             
             fetchEntry: { entry in
@@ -117,7 +114,7 @@ extension CoreDataClient {
                 do {
                     if let entryMO = try coreDataStack.managedContext.fetch(request).first,
                        let entry = entryMO.toEntry() {
-                        return Effect(value: entry)
+                        return entry
                     }
                 } catch let error as NSError {
                     print("ERROR: \(error.localizedDescription)")
@@ -140,7 +137,7 @@ extension CoreDataClient {
                 } catch let error as NSError {
                     print("ERROR: \(error.localizedDescription)")
                 }
-                return Effect(value: entriesByDay)
+                return entriesByDay
             },
             
             updateMessage: { message, entry in
@@ -155,7 +152,6 @@ extension CoreDataClient {
                     print("ERROR: \(error.localizedDescription)")
                 }
                 coreDataStack.saveContext()
-                return Effect(value: ())
             },
             
             addAttachmentEntry: { attachment, entry in
@@ -190,7 +186,6 @@ extension CoreDataClient {
                     print("ERROR: \(error.localizedDescription)")
                 }
                 coreDataStack.saveContext()
-                return Effect(value: ())
             },
             
             removeAttachmentEntry: { attachment in
@@ -204,7 +199,6 @@ extension CoreDataClient {
                     print("ERROR: \(error.localizedDescription)")
                 }
                 coreDataStack.saveContext()
-                return Effect(value: ())
             },
             
             searchEntries: { query in
@@ -220,7 +214,7 @@ extension CoreDataClient {
                 } catch let error as NSError {
                     print("ERROR: \(error.localizedDescription)")
                 }
-                return Effect(value: entries)
+                return entries
             },
             
             searchImageEntries: {
@@ -238,7 +232,7 @@ extension CoreDataClient {
                 } catch let error as NSError {
                     print("ERROR: \(error.localizedDescription)")
                 }
-                return Effect(value: entries)
+                return entries
             },
             
             searchVideoEntries: {
@@ -256,7 +250,7 @@ extension CoreDataClient {
                 } catch let error as NSError {
                     print("ERROR: \(error.localizedDescription)")
                 }
-                return Effect(value: entries)
+                return entries
             },
             
             searchAudioEntries: {
@@ -274,7 +268,7 @@ extension CoreDataClient {
                 } catch let error as NSError {
                     print("ERROR: \(error.localizedDescription)")
                 }
-                return EffectTask(value: entries)
+                return entries
             }
         )
     }()
