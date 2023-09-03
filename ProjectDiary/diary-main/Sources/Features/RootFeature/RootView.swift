@@ -8,6 +8,7 @@ import PasscodeFeature
 import SettingsFeature
 import SwiftUI
 import UIApplicationClient
+import HomeFeature
 
 public struct RootFeature: Reducer {
 	public init() {}
@@ -53,7 +54,7 @@ public struct RootFeature: Reducer {
 	}
 	
 	@Dependency(\.applicationClient) private var applicationClient
-	@Dependency(\.avAudioSessionClient) private var avAudioSessionClient
+	@Dependency(\.avAudioRecorderClient) private var avAudioRecorderClient
 	@Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
 	@Dependency(\.coreDataClient) private var coreDataClient
 	@Dependency(\.mainQueue) private var mainQueue
@@ -160,7 +161,7 @@ public struct RootFeature: Reducer {
 				state.featureState = .home(
 					.init(
 						tabBars: [.entries, .search, .settings],
-						sharedState: .init(
+						sharedState: SharedState(
 							showSplash: !self.userDefaultsClient.hideSplashScreen,
 							styleType: self.userDefaultsClient.styleType,
 							layoutType: self.userDefaultsClient.layoutType,
@@ -169,14 +170,13 @@ public struct RootFeature: Reducer {
 							language: Localizable(rawValue: self.userDefaultsClient.language) ?? .spanish,
 							hasPasscode: (self.userDefaultsClient.passcodeCode ?? "").count > 0,
 							cameraStatus: status,
-							microphoneStatus: self.avAudioSessionClient.recordPermission(),
+							microphoneStatus: self.avAudioRecorderClient.recordPermission(),
 							optionTimeForAskPasscode: self.userDefaultsClient.optionTimeForAskPasscode,
 							faceIdEnabled: self.userDefaultsClient.isFaceIDActivate
 						),
 						settings: SettingsFeature.State(
 							cameraStatus: status,
-							destination: nil,
-							microphoneStatus: self.avAudioSessionClient.recordPermission(),
+							microphoneStatus: self.avAudioRecorderClient.recordPermission(),
 							userSettings: UserSettings(
 								showSplash: !self.userDefaultsClient.hideSplashScreen,
 								hasShownOnboarding: true,
@@ -453,7 +453,7 @@ public struct RootView: View {
 	}
 }
 
-extension Entries.State {
+extension EntriesFeature.State {
 	var addEntryState: AddEntryFeature.State? {
 		if case let .addEntry(state) = self.destination {
 			return state

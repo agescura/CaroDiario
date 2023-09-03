@@ -39,7 +39,7 @@ public struct MicrophoneView: View {
               .foregroundColor(.chambray)
               .adaptiveFont(.latoRegular, size: 10)
             Spacer()
-            if viewStore.microphoneStatus == .notDetermined {
+            if viewStore.microphoneStatus == .undetermined {
               Text("Settings.GivePermission".localized)
                 .foregroundColor(.adaptiveGray)
                 .adaptiveFont(.latoRegular, size: 8)
@@ -58,28 +58,27 @@ public struct MicrophoneView: View {
   }
 }
 
-
-extension AudioRecordPermission {
+extension RecordPermission {
   public var description: String {
     switch self {
-    case .authorized:
+    case .granted:
       return "microphone.authorized.description".localized
     case .denied:
       return "microphone.denied.description".localized
-    case .notDetermined:
+    case .undetermined:
       return "microphone.notDetermined.description".localized
     }
   }
 }
 
-extension AudioRecordPermission {
+extension RecordPermission {
   public var title: String {
     switch self {
-    case .authorized:
+    case .granted:
       return "microphone.authorized".localized
     case .denied:
       return "microphone.denied".localized
-    case .notDetermined:
+    case .undetermined:
       return "microphone.notDetermined".localized
     }
   }

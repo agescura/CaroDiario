@@ -12,7 +12,6 @@ import UIApplicationClient
 import AVCaptureDeviceClient
 import FeedbackGeneratorClient
 import SearchFeature
-import AVAudioSessionClient
 import AVAudioPlayerClient
 import AVAudioRecorderClient
 import StoreKitClient
@@ -23,9 +22,9 @@ import EntryDetailFeature
 
 public struct SharedState: Equatable {
 	public var isLoading: Bool = true
-	public var destination: Entries.Destination.State?
+	public var destination: EntriesFeature.Destination.State?
 	public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
-	public var entryDetailState: EntryDetail.State?
+	public var entryDetailState: EntryDetailFeature.State?
 	public var navigateEntryDetail = false
 	public var entryDetailSelected: Entry?
 	
@@ -40,7 +39,7 @@ public struct SharedState: Equatable {
 	public var authenticationType: LocalAuthenticationType = .none
 	public var hasPasscode: Bool
 	public var cameraStatus: AuthorizedVideoStatus
-	public var microphoneStatus: AudioRecordPermission
+	public var microphoneStatus: RecordPermission
 	public var optionTimeForAskPasscode: Int
 	public var faceIdEnabled: Bool
 	
@@ -53,7 +52,7 @@ public struct SharedState: Equatable {
 		language: Localizable,
 		hasPasscode: Bool,
 		cameraStatus: AuthorizedVideoStatus,
-		microphoneStatus: AudioRecordPermission,
+		microphoneStatus: RecordPermission,
 		optionTimeForAskPasscode: Int,
 		faceIdEnabled: Bool
 	) {
@@ -79,7 +78,7 @@ public struct Home: Reducer {
 		public var selectedTabBar: TabViewType
 		public var sharedState: SharedState
 		
-		public var entries: Entries.State {
+		public var entries: EntriesFeature.State {
 			get {
 				.init(
 					destination: self.sharedState.destination,
@@ -121,14 +120,14 @@ public struct Home: Reducer {
 	public enum Action: Equatable {
 		case tabBarSelected(TabViewType)
 		case starting
-		case entries(Entries.Action)
+		case entries(EntriesFeature.Action)
 		case search(SearchFeature.Action)
 		case settings(SettingsFeature.Action)
 	}
 	
 	public var body: some ReducerOf<Self> {
 		Scope(state: \.entries, action: /Action.entries) {
-			Entries()
+			EntriesFeature()
 		}
 		Scope(state: \.settings, action: /Action.settings) {
 			SettingsFeature()

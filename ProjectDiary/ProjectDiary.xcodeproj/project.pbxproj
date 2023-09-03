@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,7 +37,6 @@
 		95DE30D6292BEBCD00DCA78A /* CoreDataClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95DE30D5292BEBCD00DCA78A /* CoreDataClient */; };
 		95EC5F08292B754900D27AC0 /* AVCaptureDeviceClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95EC5F07292B754900D27AC0 /* AVCaptureDeviceClient */; };
 		95EC5F0A292B813500D27AC0 /* PDFKitClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95EC5F09292B813500D27AC0 /* PDFKitClient */; };
-		95EC5F0C292B8B1A00D27AC0 /* AVAudioSessionClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95EC5F0B292B8B1A00D27AC0 /* AVAudioSessionClient */; };
 		95EFDB4826D7F02500C2B12F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 95EFDB4A26D7F02500C2B12F /* InfoPlist.strings */; };
 		B86555E7B0250F1C8F3C7CDD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D710050662204AD38B1B6B3 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -167,7 +166,6 @@
 				95171CF8292950BF00098B06 /* AVAudioPlayerClient in Frameworks */,
 				95171CF02928E1E700098B06 /* UIApplicationClient in Frameworks */,
 				95171CF229293EF200098B06 /* FeedbackGeneratorClient in Frameworks */,
-				95EC5F0C292B8B1A00D27AC0 /* AVAudioSessionClient in Frameworks */,
 				95171CF429294EA200098B06 /* FileClient in Frameworks */,
 				95EC5F08292B754900D27AC0 /* AVCaptureDeviceClient in Frameworks */,
 			);
@@ -339,7 +337,6 @@
 				95171CF7292950BF00098B06 /* AVAudioPlayerClient */,
 				95EC5F07292B754900D27AC0 /* AVCaptureDeviceClient */,
 				95EC5F09292B813500D27AC0 /* PDFKitClient */,
-				95EC5F0B292B8B1A00D27AC0 /* AVAudioSessionClient */,
 				95D524C6292BAAF40078B982 /* LocalAuthenticationClient */,
 				95D524C8292BAC520078B982 /* StoreKitClient */,
 				95D524CA292BC3350078B982 /* AVAudioRecorderClient */,
@@ -400,8 +397,9 @@
 		B05D5D5443CE6230D470EC0E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1410;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					9537BBB326D5419A00650CF5 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -922,10 +920,6 @@
 		95EC5F09292B813500D27AC0 /* PDFKitClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PDFKitClient;
-		};
-		95EC5F0B292B8B1A00D27AC0 /* AVAudioSessionClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioSessionClient;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

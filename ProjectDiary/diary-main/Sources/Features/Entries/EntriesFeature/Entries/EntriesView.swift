@@ -5,17 +5,19 @@ import AddEntryFeature
 import EntryDetailFeature
 
 public struct EntriesView: View {
-	private let store: StoreOf<Entries>
+	private let store: StoreOf<EntriesFeature>
 	
 	public init(
-		store: StoreOf<Entries>
+		store: StoreOf<EntriesFeature>
 	) {
 		self.store = store
 	}
 	
 	public var body: some View {
-		WithViewStore(self.store, observe: { $0 }) { viewStore in
-			
+		WithViewStore(
+			self.store,
+			observe: { $0 }
+		) { viewStore in
 			NavigationView {
 				ScrollView(.vertical) {
 					if viewStore.isLoading {
@@ -40,7 +42,7 @@ public struct EntriesView: View {
 								ForEachStore(
 									store.scope(
 										state: \.entries,
-										action: Entries.Action.entries(id:action:)),
+										action: EntriesFeature.Action.entries(id:action:)),
 									content: DayEntriesRowView.init(store:)
 								)
 							}
@@ -51,13 +53,13 @@ public struct EntriesView: View {
 									IfLetStore(
 										store.scope(
 											state: \.entryDetailState,
-											action: Entries.Action.entryDetailAction
+											action: EntriesFeature.Action.entryDetailAction
 										),
 										then: EntryDetailView.init(store:)
 									),
 								isActive: viewStore.binding(
 									get: \.navigateEntryDetail,
-									send: Entries.Action.navigateEntryDetail)
+									send: EntriesFeature.Action.navigateEntryDetail)
 							)
 						}
 					}
@@ -75,10 +77,10 @@ public struct EntriesView: View {
 				.fullScreenCover(
 					store: self.store.scope(
 						state: \.$destination,
-						action: Entries.Action.destination
+						action: EntriesFeature.Action.destination
 					),
-					state: /Entries.Destination.State.addEntry,
-					action: Entries.Destination.Action.addEntry
+					state: /EntriesFeature.Destination.State.addEntry,
+					action: EntriesFeature.Destination.Action.addEntry
 				) { store in
 					NavigationView {
 						AddEntryView(store: store)

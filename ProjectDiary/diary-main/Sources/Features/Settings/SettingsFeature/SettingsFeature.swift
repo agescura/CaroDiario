@@ -30,14 +30,14 @@ public struct SettingsFeature: Reducer {
 		public var hasPasscode: Bool
 		
 		public var cameraStatus: AuthorizedVideoStatus
-		public var microphoneStatus: AudioRecordPermission
+		public var microphoneStatus: RecordPermission
 		public var optionTimeForAskPasscode: Int
 		public var faceIdEnabled: Bool
 		
 		public init(
 			cameraStatus: AuthorizedVideoStatus,
 			destination: Destination.State? = nil,
-			microphoneStatus: AudioRecordPermission,
+			microphoneStatus: RecordPermission,
 			userSettings: UserSettings
 		) {
 			self.destination = destination

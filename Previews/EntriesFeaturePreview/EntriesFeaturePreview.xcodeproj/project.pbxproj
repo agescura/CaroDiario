@@ -3,23 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		951114A8270F4A860096EA31 /* AVAssetClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 951114A7270F4A860096EA31 /* AVAssetClientLive */; };
-		955764E226D7AC2700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 955764E126D7AC2700C8BD84 /* AVCaptureDeviceClientLive */; };
-		9565C2E526D98C86004DB3D9 /* AVAudioPlayerClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2E426D98C86004DB3D9 /* AVAudioPlayerClientLive */; };
-		9565C2E726D98C86004DB3D9 /* AVAudioRecorderClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2E626D98C86004DB3D9 /* AVAudioRecorderClientLive */; };
-		9565C2E926D98C86004DB3D9 /* AVAudioSessionClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 9565C2E826D98C86004DB3D9 /* AVAudioSessionClientLive */; };
 		959AF02326C1A5A900CD2322 /* EntriesFeaturePreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959AF02226C1A5A900CD2322 /* EntriesFeaturePreviewApp.swift */; };
 		959AF02726C1A5AA00CD2322 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 959AF02626C1A5AA00CD2322 /* Assets.xcassets */; };
 		959AF02A26C1A5AA00CD2322 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 959AF02926C1A5AA00CD2322 /* Preview Assets.xcassets */; };
 		959AF03326C1A64300CD2322 /* EntriesFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 959AF03226C1A64300CD2322 /* EntriesFeature */; };
-		959AF03726C1A64E00CD2322 /* CoreDataClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 959AF03626C1A64E00CD2322 /* CoreDataClientLive */; };
-		959AF03926C1A64E00CD2322 /* FileClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 959AF03826C1A64E00CD2322 /* FileClientLive */; };
-		959AF03B26C1A64E00CD2322 /* UIApplicationClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 959AF03A26C1A64E00CD2322 /* UIApplicationClientLive */; };
-		959AF03D26C1A64E00CD2322 /* UserDefaultsClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 959AF03C26C1A64E00CD2322 /* UserDefaultsClientLive */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,16 +26,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				959AF03726C1A64E00CD2322 /* CoreDataClientLive in Frameworks */,
-				959AF03926C1A64E00CD2322 /* FileClientLive in Frameworks */,
 				959AF03326C1A64300CD2322 /* EntriesFeature in Frameworks */,
-				959AF03B26C1A64E00CD2322 /* UIApplicationClientLive in Frameworks */,
-				9565C2E526D98C86004DB3D9 /* AVAudioPlayerClientLive in Frameworks */,
-				959AF03D26C1A64E00CD2322 /* UserDefaultsClientLive in Frameworks */,
-				955764E226D7AC2700C8BD84 /* AVCaptureDeviceClientLive in Frameworks */,
-				951114A8270F4A860096EA31 /* AVAssetClientLive in Frameworks */,
-				9565C2E726D98C86004DB3D9 /* AVAudioRecorderClientLive in Frameworks */,
-				9565C2E926D98C86004DB3D9 /* AVAudioSessionClientLive in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,15 +94,6 @@
 			name = EntriesFeaturePreview;
 			packageProductDependencies = (
 				959AF03226C1A64300CD2322 /* EntriesFeature */,
-				959AF03626C1A64E00CD2322 /* CoreDataClientLive */,
-				959AF03826C1A64E00CD2322 /* FileClientLive */,
-				959AF03A26C1A64E00CD2322 /* UIApplicationClientLive */,
-				959AF03C26C1A64E00CD2322 /* UserDefaultsClientLive */,
-				955764E126D7AC2700C8BD84 /* AVCaptureDeviceClientLive */,
-				9565C2E426D98C86004DB3D9 /* AVAudioPlayerClientLive */,
-				9565C2E626D98C86004DB3D9 /* AVAudioRecorderClientLive */,
-				9565C2E826D98C86004DB3D9 /* AVAudioSessionClientLive */,
-				951114A7270F4A860096EA31 /* AVAssetClientLive */,
 			);
 			productName = EntriesFeaturePreview;
 			productReference = 959AF01F26C1A5A900CD2322 /* EntriesFeaturePreview.app */;
@@ -132,8 +105,9 @@
 		959AF01726C1A5A900CD2322 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					959AF01E26C1A5A900CD2322 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -366,45 +340,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		951114A7270F4A860096EA31 /* AVAssetClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAssetClientLive;
-		};
-		955764E126D7AC2700C8BD84 /* AVCaptureDeviceClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVCaptureDeviceClientLive;
-		};
-		9565C2E426D98C86004DB3D9 /* AVAudioPlayerClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioPlayerClientLive;
-		};
-		9565C2E626D98C86004DB3D9 /* AVAudioRecorderClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioRecorderClientLive;
-		};
-		9565C2E826D98C86004DB3D9 /* AVAudioSessionClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AVAudioSessionClientLive;
-		};
 		959AF03226C1A64300CD2322 /* EntriesFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = EntriesFeature;
-		};
-		959AF03626C1A64E00CD2322 /* CoreDataClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CoreDataClientLive;
-		};
-		959AF03826C1A64E00CD2322 /* FileClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FileClientLive;
-		};
-		959AF03A26C1A64E00CD2322 /* UIApplicationClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UIApplicationClientLive;
-		};
-		959AF03C26C1A64E00CD2322 /* UserDefaultsClientLive */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UserDefaultsClientLive;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

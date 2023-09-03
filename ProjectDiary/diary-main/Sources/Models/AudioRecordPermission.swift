@@ -1,7 +1,7 @@
 import Foundation
 
-public enum AudioRecordPermission {
-    case authorized
-    case denied
-    case notDetermined
+public enum RecordPermission {
+	case undetermined
+	case denied
+	case granted
 }

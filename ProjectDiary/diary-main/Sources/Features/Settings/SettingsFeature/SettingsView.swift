@@ -21,7 +21,7 @@ public struct SettingsView: View {
 		let cameraStatus: AuthorizedVideoStatus
 		let hasPasscode: Bool
 		let language: Localizable
-		let microphoneStatus: AudioRecordPermission
+		let microphoneStatus: RecordPermission
 		let showSplash: Bool
 		
 		init(
@@ -237,7 +237,7 @@ struct SettingsView_Previews: PreviewProvider {
 							)
 						)
 					),
-					microphoneStatus: .notDetermined,
+					microphoneStatus: .undetermined,
 					userSettings: .defaultValue
 				),
 				reducer: SettingsFeature.init

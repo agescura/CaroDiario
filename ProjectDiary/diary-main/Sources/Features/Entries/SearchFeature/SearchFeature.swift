@@ -44,12 +44,12 @@ public struct SearchFeature: Reducer {
 	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case attachmentSearch(AttachmentSearch.State)
-			case entryDetail(EntryDetail.State)
+			case entryDetail(EntryDetailFeature.State)
 		}
 		
 		public enum Action: Equatable {
 			case attachmentSearch(AttachmentSearch.Action)
-			case entryDetail(EntryDetail.Action)
+			case entryDetail(EntryDetailFeature.Action)
 		}
 		
 		public var body: some ReducerOf<Self> {
@@ -57,7 +57,7 @@ public struct SearchFeature: Reducer {
 				AttachmentSearch()
 			}
 			Scope(state: /State.entryDetail, action: /Action.entryDetail) {
-				EntryDetail()
+				EntryDetailFeature()
 			}
 		}
 	}
@@ -76,7 +76,7 @@ public struct SearchFeature: Reducer {
 					return .none
 					
 				case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
-					state.destination = .entryDetail(EntryDetail.State(entry: entry))
+					state.destination = .entryDetail(EntryDetailFeature.State(entry: entry))
 					return .none
 					
 				case .entries:

@@ -9,7 +9,6 @@ import LocalAuthenticationClient
 import UIApplicationClient
 import AVCaptureDeviceClient
 import FeedbackGeneratorClient
-import AVAudioSessionClient
 import AVAudioPlayerClient
 import AVAudioRecorderClient
 import StoreKitClient

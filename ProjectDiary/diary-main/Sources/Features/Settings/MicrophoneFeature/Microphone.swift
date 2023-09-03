@@ -4,15 +4,16 @@ import Models
 import AVAudioSessionClient
 import FeedbackGeneratorClient
 import UIApplicationClient
+import AVAudioRecorderClient
 
 public struct Microphone: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
-		public var microphoneStatus: AudioRecordPermission
+		public var microphoneStatus: RecordPermission
 		
 		public init(
-			microphoneStatus: AudioRecordPermission
+			microphoneStatus: RecordPermission
 		) {
 			self.microphoneStatus = microphoneStatus
 		}
@@ -21,27 +22,23 @@ public struct Microphone: Reducer {
 	public enum Action: Equatable {
 		case microphoneButtonTapped
 		
-		case requestAccessResponse(Bool)
+		case requestAccessResponse(RecordPermission)
 		case goToSettings
 	}
 	
 	@Dependency(\.applicationClient) private var applicationClient
 	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
-	@Dependency(\.avAudioSessionClient) private var avAudioSessionClient
+	@Dependency(\.avAudioRecorderClient) private var avAudioRecorderClient
 	
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .microphoneButtonTapped:
 					switch state.microphoneStatus {
-						case .notDetermined:
+						case .undetermined:
 							return .run { @MainActor send in
 								await self.feedbackGeneratorClient.selectionChanged()
-								do {
-									try await send(.requestAccessResponse(self.avAudioSessionClient.requestRecordPermission()))
-								} catch {
-									send(.requestAccessResponse(false))
-								}
+								await send(.requestAccessResponse(self.avAudioRecorderClient.requestRecordPermission()))
 							}
 							
 						default:
@@ -49,12 +46,12 @@ public struct Microphone: Reducer {
 					}
 					return .none
 					
-				case let .requestAccessResponse(authorized):
-					state.microphoneStatus = authorized ? .authorized : .denied
+				case let .requestAccessResponse(recordPermission):
+					state.microphoneStatus = recordPermission
 					return .none
 					
 				case .goToSettings:
-					guard state.microphoneStatus != .notDetermined else { return .none }
+					guard state.microphoneStatus != .undetermined else { return .none }
 					return .run { _ in await self.applicationClient.openSettings() }
 			}
 		}

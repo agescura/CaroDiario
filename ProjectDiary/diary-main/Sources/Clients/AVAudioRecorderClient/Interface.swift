@@ -1,12 +1,7 @@
 import ComposableArchitecture
-import Foundation
 import Dependencies
-
-public enum RecordPermission {
-	case undetermined
-	case denied
-	case granted
-}
+import Foundation
+import Models
 
 extension DependencyValues {
 	public var avAudioRecorderClient: AVAudioRecorderClient {

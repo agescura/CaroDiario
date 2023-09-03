@@ -19,7 +19,7 @@ public struct AttachmentSearch: Reducer {
 	public struct State: Equatable {
 		public var type: AttachmentSearchType
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		public var entryDetailState: EntryDetail.State?
+		public var entryDetailState: EntryDetailFeature.State?
 		public var navigateEntryDetail = false
 		public var entryDetailSelected: Entry?
 		
@@ -31,7 +31,7 @@ public struct AttachmentSearch: Reducer {
 	public enum Action: Equatable {
 		case entries(id: UUID, action: DayEntriesRow.Action)
 		case remove(Entry)
-		case entryDetailAction(EntryDetail.Action)
+		case entryDetailAction(EntryDetailFeature.Action)
 		case navigateEntryDetail(Bool)
 	}
 	
@@ -43,7 +43,7 @@ public struct AttachmentSearch: Reducer {
 				DayEntriesRow()
 			}
 			.ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
-				EntryDetail()
+				EntryDetailFeature()
 			}
 	}
 	

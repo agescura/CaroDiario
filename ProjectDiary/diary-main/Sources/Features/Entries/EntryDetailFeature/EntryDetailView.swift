@@ -15,15 +15,15 @@ import AVAudioRecorderClient
 import AVAssetClient
 import UIApplicationClient
 
-public struct EntryDetail: Reducer {
+public struct EntryDetailFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
 		public var entry: Entry
 		public var attachments: IdentifiedArrayOf<AttachmentRow.State> = []
 		
-		public var meatballActionSheet: ConfirmationDialogState<EntryDetail.Action>?
-		public var removeAlert: AlertState<EntryDetail.Action>?
+		public var meatballActionSheet: ConfirmationDialogState<EntryDetailFeature.Action>?
+		public var removeAlert: AlertState<EntryDetailFeature.Action>?
 		
 		public var addEntryState: AddEntryFeature.State?
 		public var presentAddEntry = false
@@ -83,7 +83,7 @@ public struct EntryDetail: Reducer {
 			.forEach(\.attachments, action: /Action.attachments) {
 				AttachmentRow()
 			}
-			.ifLet(\.addEntryState, action: /EntryDetail.Action.addEntryAction) {
+			.ifLet(\.addEntryState, action: /EntryDetailFeature.Action.addEntryAction) {
 				AddEntryFeature()
 			}
 		Scope(state: \.selectedAttachmentDetailState, action: /Action.attachmentDetail) {
@@ -226,10 +226,10 @@ public struct EntryDetail: Reducer {
 }
 
 public struct EntryDetailView: View {
-	private let store: StoreOf<EntryDetail>
+	private let store: StoreOf<EntryDetailFeature>
 	
 	public init(
-		store: StoreOf<EntryDetail>
+		store: StoreOf<EntryDetailFeature>
 	) {
 		self.store = store
 	}
@@ -249,7 +249,7 @@ public struct EntryDetailView: View {
 								ForEachStore(
 									store.scope(
 										state: \.attachments,
-										action: EntryDetail.Action.attachments(id:action:)),
+										action: EntryDetailFeature.Action.attachments(id:action:)),
 									content: AttachmentRowView.init(store:)
 								)
 							}
@@ -281,12 +281,12 @@ public struct EntryDetailView: View {
 						
 						ZStack {
 							ScrollView(.init()) {
-								TabView(selection: viewStore.binding(get: \.seletedAttachmentRowState, send: EntryDetail.Action.selectedAttachmentRowAction)) {
+								TabView(selection: viewStore.binding(get: \.seletedAttachmentRowState, send: EntryDetailFeature.Action.selectedAttachmentRowAction)) {
 									ForEach(viewStore.attachments) { attachment in
 										AttachmentDetailView(
 											store: store.scope(
 												state: \.selectedAttachmentDetailState,
-												action: EntryDetail.Action.attachmentDetail))
+												action: EntryDetailFeature.Action.attachmentDetail))
 										.tag(attachment)
 									}
 								}
@@ -335,13 +335,13 @@ public struct EntryDetailView: View {
 			.fullScreenCover(
 				isPresented: viewStore.binding(
 					get: \.presentAddEntry,
-					send: EntryDetail.Action.presentAddEntry
+					send: EntryDetailFeature.Action.presentAddEntry
 				)
 			) {
 				IfLetStore(
 					store.scope(
 						state: { $0.addEntryState },
-						action: EntryDetail.Action.addEntryAction
+						action: EntryDetailFeature.Action.addEntryAction
 					)
 				) { store in
 					NavigationView {

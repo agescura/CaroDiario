@@ -8,14 +8,14 @@ import Models
 import UIApplicationClient
 import UserDefaultsClient
 
-public struct Entries: Reducer {
+public struct EntriesFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
 		@PresentationState public var destination: Destination.State?
 		public var isLoading: Bool
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		public var entryDetailState: EntryDetail.State?
+		public var entryDetailState: EntryDetailFeature.State?
 		public var navigateEntryDetail = false
 		public var entryDetailSelected: Entry?
 		
@@ -23,7 +23,7 @@ public struct Entries: Reducer {
 			destination: Destination.State? = nil,
 			isLoading: Bool = true,
 			entries: IdentifiedArrayOf<DayEntriesRow.State> = [],
-			entryDetailState: EntryDetail.State? = nil,
+			entryDetailState: EntryDetailFeature.State? = nil,
 			navigateEntryDetail: Bool = false,
 			entryDetailSelected: Entry? = nil
 		) {
@@ -44,7 +44,7 @@ public struct Entries: Reducer {
 		case fetchEntriesResponse([[Entry]])
 		case entries(id: UUID, action: DayEntriesRow.Action)
 		case remove(Entry)
-		case entryDetailAction(EntryDetail.Action)
+		case entryDetailAction(EntryDetailFeature.Action)
 		case navigateEntryDetail(Bool)
 	}
 	
@@ -80,7 +80,7 @@ public struct Entries: Reducer {
 				DayEntriesRow()
 			}
 			.ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
-				EntryDetail()
+				EntryDetailFeature()
 			}
 			.ifLet(\.$destination, action: /Action.destination) {
 				Destination()

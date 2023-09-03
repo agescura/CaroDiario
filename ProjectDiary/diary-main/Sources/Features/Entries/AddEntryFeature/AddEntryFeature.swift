@@ -82,7 +82,6 @@ public struct AddEntryFeature: Reducer {
 	}
 	
 	@Dependency(\.applicationClient) private var applicationClient
-	@Dependency(\.avAudioSessionClient) private var avAudioSessionClient
 	@Dependency(\.avAssetClient) private var avAssetClient
 	@Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
 	@Dependency(\.fileClient) private var fileClient

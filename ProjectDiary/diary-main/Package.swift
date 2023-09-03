@@ -53,11 +53,6 @@ let package = Package(
 			),
 		
 			.library(
-				name: "AVAudioSessionClient",
-				targets: ["AVAudioSessionClient"]
-			),
-		
-			.library(
 				name: "AVAssetClient",
 				targets: ["AVAssetClient"]
 			),
@@ -275,15 +270,6 @@ let package = Package(
 			),
 		
 			.target(
-				name: "AVAudioSessionClient",
-				dependencies: [
-					.product(name: "Dependencies", package: "swift-dependencies"),
-					"Models"
-				],
-				path: "Sources/Clients/AVAudioSessionClient"
-			),
-		
-			.target(
 				name: "AVCaptureDeviceClient",
 				dependencies: [
 					.product(name: "Dependencies", package: "swift-dependencies"),
@@ -374,7 +360,6 @@ let package = Package(
 					"AVCaptureDeviceClient",
 					"FeedbackGeneratorClient",
 					"SearchFeature",
-					"AVAudioSessionClient",
 					"UserDefaultsClient",
 					"CoreDataClient",
 					"FileClient",
@@ -414,7 +399,6 @@ let package = Package(
 					"UIApplicationClient",
 					"AudioPickerFeature",
 					"AVAudioRecorderClient",
-					"AVAudioSessionClient",
 					"AVAudioPlayerClient",
 					"AudioRecordFeature",
 					"AVAssetClient"
@@ -452,7 +436,6 @@ let package = Package(
 					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
 					"FileClient",
 					"AVAudioRecorderClient",
-					"AVAudioSessionClient",
 					"AVAudioPlayerClient",
 					"Views",
 					"UIApplicationClient",
@@ -529,7 +512,6 @@ let package = Package(
 					"AddEntryFeature",
 					"AVCaptureDeviceClient",
 					"FeedbackGeneratorClient",
-					"AVAudioSessionClient",
 					"SearchFeature",
 					"StoreKitClient",
 					"PDFKitClient"
@@ -576,7 +558,6 @@ let package = Package(
 					.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
 					"AppFeature",
 					"AVCaptureDeviceClient",
-					"AVAudioSessionClient",
 					"UserDefaultsClient",
 					"CoreDataClient",
 					"FileClient",
@@ -677,7 +658,6 @@ let package = Package(
 				.product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
 				"UIApplicationClient",
 				"FeedbackGeneratorClient",
-				"AVAudioSessionClient",
 				"Localizables",
 				"Styles",
 				"Views"
@@ -717,7 +697,6 @@ let package = Package(
 				"LocalAuthenticationClient",
 				"FeedbackGeneratorClient",
 				"EntriesFeature",
-				"AVAudioSessionClient",
 				"StoreKitClient",
 				"PDFKitClient",
 				"PDFPreviewFeature",
