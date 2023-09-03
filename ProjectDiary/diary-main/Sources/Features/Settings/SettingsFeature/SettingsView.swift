@@ -31,7 +31,7 @@ public struct SettingsView: View {
 			self.cameraStatus = state.cameraStatus
 			self.hasPasscode = state.hasPasscode
 			self.language = state.language
-			self.microphoneStatus = state.microphoneStatus
+			self.microphoneStatus = state.recordPermission
 			self.showSplash = state.showSplash
 		}
 	}

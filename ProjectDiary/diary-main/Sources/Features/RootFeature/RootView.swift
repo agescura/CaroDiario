@@ -170,7 +170,7 @@ public struct RootFeature: Reducer {
 							language: Localizable(rawValue: self.userDefaultsClient.language) ?? .spanish,
 							hasPasscode: (self.userDefaultsClient.passcodeCode ?? "").count > 0,
 							cameraStatus: status,
-							microphoneStatus: self.avAudioRecorderClient.recordPermission(),
+							recordPermission: self.avAudioRecorderClient.recordPermission(),
 							optionTimeForAskPasscode: self.userDefaultsClient.optionTimeForAskPasscode,
 							faceIdEnabled: self.userDefaultsClient.isFaceIDActivate
 						),

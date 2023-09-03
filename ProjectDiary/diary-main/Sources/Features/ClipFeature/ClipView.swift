@@ -4,111 +4,71 @@ import UserDefaultsClient
 import FeedbackGeneratorClient
 import UIApplicationClient
 
-public struct ClipState: Equatable {
-	public var featureState: SwitchClipState
+public struct ClipFeature: Reducer {
+	public init() {}
 	
-	public init(
-		featureState: SwitchClipState
-	) {
-		self.featureState = featureState
-	}
-}
-
-public enum ClipAction: Equatable {
-	case featureAction(SwitchClipAction)
-	case onAppear
-}
-
-public struct ClipEnvironment {
-	public let userDefaultsClient: UserDefaultsClient
-	public let applicationClient: UIApplicationClient
-	public let feedbackGeneratorClient: FeedbackGeneratorClient
-	public let mainQueue: AnySchedulerOf<DispatchQueue>
-	public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-	public let date: () -> Date
-	public let uuid: () -> UUID
-	
-	public init(
-		userDefaultsClient: UserDefaultsClient,
-		applicationClient: UIApplicationClient,
-		feedbackGeneratorClient: FeedbackGeneratorClient,
-		mainQueue: AnySchedulerOf<DispatchQueue>,
-		backgroundQueue: AnySchedulerOf<DispatchQueue>,
-		date: @escaping () -> Date,
-		uuid: @escaping () -> UUID
-	) {
-		self.userDefaultsClient = userDefaultsClient
-		self.applicationClient = applicationClient
-		self.feedbackGeneratorClient = feedbackGeneratorClient
-		self.mainQueue = mainQueue
-		self.backgroundQueue = backgroundQueue
-		self.date = date
-		self.uuid = uuid
-	}
-}
-
-public let clipReducer: Reducer<
-	ClipState,
-	ClipAction,
-	ClipEnvironment
-> = .combine(
-	switchClipReducer
-		.pullback(
-			state: \ClipState.featureState,
-			action: /ClipAction.featureAction,
-			environment: {
-				SwitchClipEnvironment(
-					userDefaultsClient: $0.userDefaultsClient,
-					feedbackGeneratorClient: $0.feedbackGeneratorClient,
-					mainQueue: $0.mainQueue,
-					backgroundQueue: $0.backgroundQueue,
-					date: $0.date,
-					uuid: $0.uuid)
-			}
-		),
-	.init { state, action, environment in
-		switch action {
-			case .onAppear:
-				return Effect(value: ClipAction.featureAction(.splash(.startAnimation)))
-				
-			case .featureAction(.onBoarding(.privacyOnBoardingAction(.styleOnBoardingAction(.layoutOnBoardingAction(.themeOnBoardingAction(.startButtonTapped)))))):
-				return .merge(
-					environment.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
-						.fireAndForget(),
-					environment.applicationClient.open(URL(string: "itms-apps://itunes.apple.com/app/apple-store/id375380948?mt=8")!, [:])
-						.fireAndForget()
-				)
-				
-			case .featureAction(.splash(.finishAnimation)):
-				state.featureState = .onBoarding(.init(isAppClip: true))
-				return .none
-				
-			case .featureAction:
-				return .none
+	public struct State: Equatable {
+		public var featureState: SwitchClipFeature.State
+		
+		public init(
+			featureState: SwitchClipFeature.State
+		) {
+			self.featureState = featureState
 		}
 	}
-)
+	
+	public enum Action: Equatable {
+		case featureAction(SwitchClipFeature.Action)
+		case onAppear
+	}
+	
+	@Dependency(\.userDefaultsClient) private var userDefaultsClient
+	@Dependency(\.applicationClient) private var applicationClient
+	
+	public var body: some ReducerOf<Self> {
+		Scope(state: \.featureState, action: /Action.featureAction) {
+			SwitchClipFeature()
+		}
+		Reduce { state, action in
+			switch action {
+				case .onAppear:
+					return .send(.featureAction(.splash(.startAnimation)))
+					
+				case .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.destination(.presented(.theme(.startButtonTapped)))))))))))))):
+					return .run { _ in
+						self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
+						await self.applicationClient.open(URL(string: "itms-apps://itunes.apple.com/app/apple-store/id375380948?mt=8")!, [:])
+					}
+					
+				case .featureAction(.splash(.animation(.finish))):
+					state.featureState = .onBoarding(.init(isAppClip: true))
+					return .none
+					
+				case .featureAction:
+					return .none
+			}
+		}
+	}
+}
 
 public struct ClipView: View {
-	private let store: Store<ClipState, ClipAction>
+	private let store: StoreOf<ClipFeature>
 	
 	public init(
-		store: Store<ClipState, ClipAction>
+		store: StoreOf<ClipFeature>
 	) {
 		self.store = store
 	}
 	
 	public var body: some View {
-		WithViewStore(store.stateless) { viewStore in
-			SwitchClipView(
-				store: store.scope(
-					state: \.featureState,
-					action: ClipAction.featureAction
-				)
+		SwitchClipView(
+			store: store.scope(
+				state: \.featureState,
+				action: ClipFeature.Action.featureAction
 			)
-			.onAppear {
-				viewStore.send(.onAppear)
-			}
+		)
+		.onAppear {
+			self.store.send(.onAppear)
 		}
 	}
 }

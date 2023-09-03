@@ -2,7 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 
 public struct AttachmentsView: View {
-	let store: StoreOf<AttachmentsFeature>
+	private let store: StoreOf<AttachmentsFeature>
 	
 	public init(
 		store: StoreOf<AttachmentsFeature>

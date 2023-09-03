@@ -10,12 +10,12 @@ public struct Microphone: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
-		public var microphoneStatus: RecordPermission
+		public var recordPermission: RecordPermission
 		
 		public init(
-			microphoneStatus: RecordPermission
+			recordPermission: RecordPermission
 		) {
-			self.microphoneStatus = microphoneStatus
+			self.recordPermission = recordPermission
 		}
 	}
 	
@@ -34,7 +34,7 @@ public struct Microphone: Reducer {
 		Reduce { state, action in
 			switch action {
 				case .microphoneButtonTapped:
-					switch state.microphoneStatus {
+					switch state.recordPermission {
 						case .undetermined:
 							return .run { @MainActor send in
 								await self.feedbackGeneratorClient.selectionChanged()
@@ -47,11 +47,11 @@ public struct Microphone: Reducer {
 					return .none
 					
 				case let .requestAccessResponse(recordPermission):
-					state.microphoneStatus = recordPermission
+					state.recordPermission = recordPermission
 					return .none
 					
 				case .goToSettings:
-					guard state.microphoneStatus != .undetermined else { return .none }
+					guard state.recordPermission != .undetermined else { return .none }
 					return .run { _ in await self.applicationClient.openSettings() }
 			}
 		}

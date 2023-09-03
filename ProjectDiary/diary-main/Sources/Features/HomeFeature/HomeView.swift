@@ -39,7 +39,7 @@ public struct SharedState: Equatable {
 	public var authenticationType: LocalAuthenticationType = .none
 	public var hasPasscode: Bool
 	public var cameraStatus: AuthorizedVideoStatus
-	public var microphoneStatus: RecordPermission
+	public var recordPermission: RecordPermission
 	public var optionTimeForAskPasscode: Int
 	public var faceIdEnabled: Bool
 	
@@ -52,7 +52,7 @@ public struct SharedState: Equatable {
 		language: Localizable,
 		hasPasscode: Bool,
 		cameraStatus: AuthorizedVideoStatus,
-		microphoneStatus: RecordPermission,
+		recordPermission: RecordPermission,
 		optionTimeForAskPasscode: Int,
 		faceIdEnabled: Bool
 	) {
@@ -64,7 +64,7 @@ public struct SharedState: Equatable {
 		self.language = language
 		self.hasPasscode = hasPasscode
 		self.cameraStatus = cameraStatus
-		self.microphoneStatus = microphoneStatus
+		self.recordPermission = recordPermission
 		self.optionTimeForAskPasscode = optionTimeForAskPasscode
 		self.faceIdEnabled = faceIdEnabled
 	}

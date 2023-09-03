@@ -135,7 +135,6 @@ public struct AttachmentAddAudio: Reducer {
 					await startPlaying
 				}
 				.cancellable(id: CancelID.timer)
-
 		}
 	}
 }

@@ -3,7 +3,7 @@ import SwiftUI
 import Views
 
 public struct AttachmentRowImageDetailView: View {
-	let store: StoreOf<AttachmentRowImageDetailFeature>
+	private let store: StoreOf<AttachmentRowImageDetailFeature>
 	@State private var presented = false
 	
 	public init(

@@ -10,18 +10,9 @@ struct ClipApp: App {
     var body: some Scene {
         WindowGroup {
             ClipView(
-                store: .init(
+                store: Store(
                     initialState: .init(featureState: .splash(.init())),
-                    reducer: clipReducer,
-                    environment: .init(
-                        userDefaultsClient: .live(userDefaults:)(),
-                        applicationClient: .live,
-                        feedbackGeneratorClient: .live,
-                        mainQueue: .main,
-                        backgroundQueue: .main,
-                        date: Date.init,
-                        uuid: UUID.init
-                    )
+                    reducer: clipReducer
                 )
             )
         }

@@ -30,7 +30,7 @@ public struct SettingsFeature: Reducer {
 		public var hasPasscode: Bool
 		
 		public var cameraStatus: AuthorizedVideoStatus
-		public var microphoneStatus: RecordPermission
+		public var recordPermission: RecordPermission
 		public var optionTimeForAskPasscode: Int
 		public var faceIdEnabled: Bool
 		
@@ -51,7 +51,7 @@ public struct SettingsFeature: Reducer {
 			self.optionTimeForAskPasscode = userSettings.optionTimeForAskPasscode
 			self.faceIdEnabled = userSettings.faceIdEnabled
 			self.language = userSettings.language
-			self.microphoneStatus = microphoneStatus
+			self.recordPermission = microphoneStatus
 		}
 	}
 	
@@ -200,7 +200,7 @@ public struct SettingsFeature: Reducer {
 					case let .camera(cameraState):
 						state.cameraStatus = cameraState.cameraStatus
 					case let .microphone(microphoneState):
-						state.microphoneStatus = microphoneState.microphoneStatus
+						state.recordPermission = microphoneState.recordPermission
 					case .about, .activate, .agreements, .appearance, .export, .language, .menu, .none:
 						break
 				}
@@ -230,7 +230,7 @@ public struct SettingsFeature: Reducer {
 				
 			case .microphoneButtonTapped:
 				state.destination = .microphone(
-					Microphone.State(microphoneStatus: state.microphoneStatus)
+					Microphone.State(recordPermission: state.recordPermission)
 				)
 				return .none
 				

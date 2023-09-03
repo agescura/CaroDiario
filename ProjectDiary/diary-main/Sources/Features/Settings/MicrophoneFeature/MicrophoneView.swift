@@ -20,10 +20,10 @@ public struct MicrophoneView: View {
         Section(
           footer:
             Group {
-              if viewStore.microphoneStatus != .denied {
-                Text(viewStore.microphoneStatus.description)
+              if viewStore.recordPermission != .denied {
+                Text(viewStore.recordPermission.description)
               } else {
-                Text(viewStore.microphoneStatus.description)
+                Text(viewStore.recordPermission.description)
                 + Text(" ") +
                 Text("Settings.GoToSettings".localized)
                   .underline()
@@ -35,11 +35,11 @@ public struct MicrophoneView: View {
             }
         ) {
           HStack {
-            Text(viewStore.microphoneStatus.title.localized)
+            Text(viewStore.recordPermission.title.localized)
               .foregroundColor(.chambray)
               .adaptiveFont(.latoRegular, size: 10)
             Spacer()
-            if viewStore.microphoneStatus == .undetermined {
+            if viewStore.recordPermission == .undetermined {
               Text("Settings.GivePermission".localized)
                 .foregroundColor(.adaptiveGray)
                 .adaptiveFont(.latoRegular, size: 8)

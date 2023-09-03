@@ -5,96 +5,54 @@ import OnboardingFeature
 import UserDefaultsClient
 import FeedbackGeneratorClient
 
-public enum SwitchClipState: Equatable {
-    case splash(SplashState)
-    case onBoarding(WelcomeOnBoardingState)
+public struct SwitchClipFeature: Reducer {
+	public init() {}
+	
+	public enum State: Equatable {
+		case splash(SplashFeature.State)
+		case onBoarding(WelcomeFeature.State)
+	}
+	
+	public enum Action: Equatable {
+		case splash(SplashFeature.Action)
+		case onBoarding(WelcomeFeature.Action)
+	}
+	
+	public var body: some ReducerOf<Self> {
+		Scope(state: /State.splash, action: /Action.splash) {
+			SplashFeature()
+		}
+		Scope(state: /State.onBoarding, action: /Action.onBoarding) {
+			WelcomeFeature()
+		}
+	}
 }
-
-public enum SwitchClipAction: Equatable {
-    case splash(SplashAction)
-    case onBoarding(WelcomeOnBoardingAction)
-}
-
-public struct SwitchClipEnvironment {
-    public let userDefaultsClient: UserDefaultsClient
-    public let feedbackGeneratorClient: FeedbackGeneratorClient
-    public let mainQueue: AnySchedulerOf<DispatchQueue>
-    public let backgroundQueue: AnySchedulerOf<DispatchQueue>
-    public let date: () -> Date
-    public let uuid: () -> UUID
-    
-    public init(
-        userDefaultsClient: UserDefaultsClient,
-        feedbackGeneratorClient: FeedbackGeneratorClient,
-        mainQueue: AnySchedulerOf<DispatchQueue>,
-        backgroundQueue: AnySchedulerOf<DispatchQueue>,
-        date: @escaping () -> Date,
-        uuid: @escaping () -> UUID
-    ) {
-        self.userDefaultsClient = userDefaultsClient
-        self.feedbackGeneratorClient = feedbackGeneratorClient
-        self.mainQueue = mainQueue
-        self.backgroundQueue = backgroundQueue
-        self.date = date
-        self.uuid = uuid
-    }
-}
-
-public let switchClipReducer: Reducer<
-    SwitchClipState,
-    SwitchClipAction,
-    SwitchClipEnvironment
-> = .combine(
-    splashReducer
-        .pullback(
-            state: /SwitchClipState.splash,
-            action: /SwitchClipAction.splash,
-            environment: { SplashEnvironment(
-                userDefaultsClient: $0.userDefaultsClient,
-                mainQueue: $0.mainQueue)
-            }
-        ),
-    welcomeOnBoardingReducer
-        .pullback(
-            state: /SwitchClipState.onBoarding,
-            action: /SwitchClipAction.onBoarding,
-            environment: { WelcomeOnBoardingEnvironment(
-                userDefaultsClient: $0.userDefaultsClient,
-                feedbackGeneratorClient: $0.feedbackGeneratorClient,
-                mainQueue: $0.mainQueue,
-                backgroundQueue: $0.backgroundQueue,
-                date: $0.date,
-                uuid: $0.uuid)
-            }
-        ),
-    
-        .init { state, action, environment in
-            return .none
-        }
-)
 
 public struct SwitchClipView: View {
-    private let store: Store<SwitchClipState, SwitchClipAction>
-    
-    public init(
-        store: Store<SwitchClipState, SwitchClipAction>
-    ) {
-        self.store = store
-    }
-    
-    public var body: some View {
-        SwitchStore(store) {
-            CaseLet(
-                state: /SwitchClipState.splash,
-                action: SwitchClipAction.splash,
-                then: SplashView.init
-            )
-            
-            CaseLet(
-                state: /SwitchClipState.onBoarding,
-                action: SwitchClipAction.onBoarding,
-                then: WelcomeOnBoardingView.init
-            )
-        }
-    }
+	private let store: StoreOf<SwitchClipFeature>
+	
+	public init(
+		store: StoreOf<SwitchClipFeature>
+	) {
+		self.store = store
+	}
+	
+	public var body: some View {
+		SwitchStore(self.store) { state in
+			switch state {
+				case .splash:
+					CaseLet(
+						/SwitchClipFeature.State.splash,
+						 action: SwitchClipFeature.Action.splash,
+						 then: SplashView.init
+					)
+				case .onBoarding:
+					CaseLet(
+						/SwitchClipFeature.State.onBoarding,
+						 action: SwitchClipFeature.Action.onBoarding,
+						 then: WelcomeView.init
+					)
+			}
+		}
+	}
 }
