@@ -5,7 +5,7 @@ import Views
 import Models
 import AVAudioPlayerClient
 
-public struct AttachmentAddAudio: ReducerProtocol {
+public struct AttachmentAddAudio: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -51,14 +51,14 @@ public struct AttachmentAddAudio: ReducerProtocol {
 		case timer
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 	}
 	
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case .audioPlayerDidFinish(.success(true)):
 				state.playerProgress = 0

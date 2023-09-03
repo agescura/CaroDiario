@@ -57,16 +57,9 @@ class ShareViewController: SLComposeServiceViewController {
 							text: EntryText(id: UUID(), message: self.textView.text!, lastUpdated: date),
 							attachments: [entryVideo]
 						)
-						self.coreDataClientLive.createDraft(entry)
-							.eraseToEffect()
-							.flatMap(maxPublishers: .max(1)) { [unowned self] in
-								return self.coreDataClientLive.publishEntry(self.entry!)
-									.eraseToEffect()
-							}
-							.sink(receiveValue: { [unowned self] _ in
-								self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-							})
-							.store(in: &self.bag)
+						await self.coreDataClientLive.createDraft(entry)
+						await self.coreDataClientLive.publishEntry(self.entry!)
+						self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
 					}
 				}
 			}
@@ -95,16 +88,9 @@ class ShareViewController: SLComposeServiceViewController {
 							attachments: [entryImage]
 						)
 						self.entry = entry
-						return self.coreDataClientLive.createDraft(entry)
-							.eraseToEffect()
-							.flatMap(maxPublishers: .max(1)) { [unowned self] in
-								return self.coreDataClientLive.publishEntry(self.entry!)
-									.eraseToEffect()
-							}
-							.sink(receiveValue: { [unowned self] _ in
-								self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-							})
-							.store(in: &self.bag)
+						await self.coreDataClientLive.createDraft(entry)
+						await self.coreDataClientLive.publishEntry(self.entry!)
+						self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
 					}
 				}
 			}
@@ -120,7 +106,7 @@ class ShareViewController: SLComposeServiceViewController {
 					
 					Task {
 						let entryAudio = EntryAudio(id: id, lastUpdated: date, url: path)
-						_ = await self.fileClientLive.addAudio(url, entryAudio)
+						_ = self.fileClientLive.addAudio(url, entryAudio)
 						let entry = Entry(
 							id: UUID(),
 							date: date,
@@ -129,16 +115,9 @@ class ShareViewController: SLComposeServiceViewController {
 							attachments: [entryAudio]
 						)
 						self.entry = entry
-						return self.coreDataClientLive.createDraft(entry)
-							.eraseToEffect()
-							.flatMap(maxPublishers: .max(1)) { [unowned self] in
-								return self.coreDataClientLive.publishEntry(self.entry!)
-									.eraseToEffect()
-							}
-							.sink(receiveValue: { [unowned self] _ in
-								self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-							})
-							.store(in: &self.bag)
+						await self.coreDataClientLive.createDraft(entry)
+						await self.coreDataClientLive.publishEntry(self.entry!)
+						self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
 					}
 				}
 			}

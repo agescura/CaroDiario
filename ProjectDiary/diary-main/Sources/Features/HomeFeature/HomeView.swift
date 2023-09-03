@@ -71,7 +71,7 @@ public struct SharedState: Equatable {
 	}
 }
 
-public struct Home: ReducerProtocol {
+public struct Home: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -126,7 +126,7 @@ public struct Home: ReducerProtocol {
 		case settings(SettingsFeature.Action)
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Scope(state: \.entries, action: /Action.entries) {
 			Entries()
 		}
@@ -142,7 +142,7 @@ public struct Home: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case let .tabBarSelected(tab):
 				state.selectedTabBar = tab

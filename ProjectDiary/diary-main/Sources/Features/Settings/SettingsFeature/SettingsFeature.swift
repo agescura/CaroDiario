@@ -12,7 +12,7 @@ import Models
 import StoreKitClient
 import LocalAuthenticationClient
 
-public struct SettingsFeature: ReducerProtocol {
+public struct SettingsFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -78,7 +78,7 @@ public struct SettingsFeature: ReducerProtocol {
 	@Dependency(\.localAuthenticationClient) private var localAuthenticationClient
 	@Dependency(\.storeKitClient) private var storeKitClient
 	
-	public struct Destination: ReducerProtocol {
+	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case about(AboutFeature.State)
 			case activate(ActivatePasscodeFeature.State)
@@ -103,7 +103,7 @@ public struct SettingsFeature: ReducerProtocol {
 			case microphone(Microphone.Action)
 		}
 		
-		public var body: some ReducerProtocolOf<Self> {
+		public var body: some ReducerOf<Self> {
 			Scope(state: /State.about, action: /Action.about) {
 				AboutFeature()
 			}
@@ -134,7 +134,7 @@ public struct SettingsFeature: ReducerProtocol {
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 			.ifLet(\.$destination, action: /Action.destination) {
 				Destination()
@@ -144,7 +144,7 @@ public struct SettingsFeature: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case .onAppear:
 				return .run { send in

@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import Models
 
-public struct AttachmentRowVideoDetailFeature: ReducerProtocol {
+public struct AttachmentRowVideoDetailFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -18,7 +18,7 @@ public struct AttachmentRowVideoDetailFeature: ReducerProtocol {
 		
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		EmptyReducer()
 	}
 }

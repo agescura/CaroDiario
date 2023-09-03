@@ -14,7 +14,7 @@ import ImagePickerFeature
 import Models
 import UIKit
 
-public struct AddEntryFeature: ReducerProtocol {
+public struct AddEntryFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -89,7 +89,7 @@ public struct AddEntryFeature: ReducerProtocol {
 	@Dependency(\.mainRunLoop.now.date) private var now
 	@Dependency(\.uuid) private var uuid
 	
-	public struct Destination: ReducerProtocol {
+	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case alert(AlertState<Action.Alert>)
 			case audio(AttachmentRowAudioDetailFeature.State)
@@ -118,7 +118,7 @@ public struct AddEntryFeature: ReducerProtocol {
 				case audioRecordButtonTapped
 			}
 		}
-		public var body: some ReducerProtocolOf<Self> {
+		public var body: some ReducerOf<Self> {
 			Scope(state: /State.alert, action: /Action.alert) {}
 			Scope(state: /State.audio, action: /Action.audio) {
 				AttachmentRowAudioDetailFeature()
@@ -136,7 +136,7 @@ public struct AddEntryFeature: ReducerProtocol {
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		BindingReducer(action: /Action.view)
 		Scope(state: \.attachments, action: /Action.attachments) {
 			AttachmentsFeature()

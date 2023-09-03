@@ -7,7 +7,7 @@ import LocalAuthenticationClient
 import Localizables
 import Models
 
-public struct LockScreen: ReducerProtocol {
+public struct LockScreen: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -41,14 +41,14 @@ public struct LockScreen: ReducerProtocol {
 	@Dependency(\.localAuthenticationClient) private var localAuthenticationClient
 	@Dependency(\.mainQueue) private var mainQueue
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 	}
 	
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case let .numberButtonTapped(item):
 				if item == .biometric(.touchId) || item == .biometric(.faceId) {

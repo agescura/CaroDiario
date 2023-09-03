@@ -2,7 +2,7 @@ import ComposableArchitecture
 import Foundation
 import Models
 
-public struct LanguageFeature: ReducerProtocol {
+public struct LanguageFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -19,7 +19,7 @@ public struct LanguageFeature: ReducerProtocol {
 		case updateLanguageTapped(Localizable)
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case let .updateLanguageTapped(language):

@@ -51,7 +51,7 @@ extension TimeForAskPasscode {
 	}
 }
 
-public struct MenuPasscodeFeature: ReducerProtocol {
+public struct MenuPasscodeFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -101,7 +101,7 @@ public struct MenuPasscodeFeature: ReducerProtocol {
 	@Dependency(\.mainQueue) private var mainQueue
 	@Dependency(\.localAuthenticationClient) private var localAuthenticationClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .confirmationDialogButtonTapped:

@@ -13,7 +13,7 @@ import EntryDetailFeature
 import Models
 import AVAssetClient
 
-public struct AttachmentSearch: ReducerProtocol {
+public struct AttachmentSearch: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -37,7 +37,7 @@ public struct AttachmentSearch: ReducerProtocol {
 	
 	@Dependency(\.fileClient) private var fileClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 			.forEach(\.entries, action: /Action.entries) {
 				DayEntriesRow()
@@ -50,7 +50,7 @@ public struct AttachmentSearch: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
 				state.entryDetailSelected = entry

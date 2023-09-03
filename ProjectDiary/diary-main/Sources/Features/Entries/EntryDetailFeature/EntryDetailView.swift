@@ -15,7 +15,7 @@ import AVAudioRecorderClient
 import AVAssetClient
 import UIApplicationClient
 
-public struct EntryDetail: ReducerProtocol {
+public struct EntryDetail: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -78,7 +78,7 @@ public struct EntryDetail: ReducerProtocol {
 	@Dependency(\.applicationClient) private var applicationClient
 	@Dependency(\.fileClient) private var fileClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 			.forEach(\.attachments, action: /Action.attachments) {
 				AttachmentRow()
@@ -94,7 +94,7 @@ public struct EntryDetail: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case let .attachments(id: id, action: .attachment(.image(.presentImageFullScreen(true)))),
 				let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),

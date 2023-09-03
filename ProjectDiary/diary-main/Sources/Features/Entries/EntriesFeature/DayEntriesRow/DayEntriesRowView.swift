@@ -4,7 +4,7 @@ import Localizables
 import Styles
 import Models
 
-public struct DayEntriesRow: ReducerProtocol {
+public struct DayEntriesRow: Reducer {
 	public init() {}
 	
 	public struct State: Identifiable, Equatable {
@@ -24,7 +24,7 @@ public struct DayEntriesRow: ReducerProtocol {
 		case dayEntry(DayEntries.Action)
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		EmptyReducer()
 	}
 }

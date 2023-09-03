@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Views
 import Models
 
-public struct AttachmentAudio: ReducerProtocol {
+public struct AttachmentAudio: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -20,7 +20,7 @@ public struct AttachmentAudio: ReducerProtocol {
 		case presentAudioFullScreen(Bool)
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		EmptyReducer()
 	}
 }

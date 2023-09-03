@@ -9,7 +9,7 @@ import SettingsFeature
 import SwiftUI
 import UIApplicationClient
 
-public struct RootFeature: ReducerProtocol {
+public struct RootFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -64,7 +64,7 @@ public struct RootFeature: ReducerProtocol {
 		case coreData
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.coreData)
 		Reduce(self.userDefaults)
 		Scope(state: \.appDelegate, action: /Action.appDelegate) {
@@ -79,7 +79,7 @@ public struct RootFeature: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case .appDelegate(.didFinishLaunching):
 				return .send(.setUserInterfaceStyle)
@@ -243,14 +243,16 @@ public struct RootFeature: ReducerProtocol {
 	private func coreData(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		if case .home = state.featureState {
 			switch action {
 				case .featureAction(.home(.entries(.onAppear))):
-					return self.coreDataClient.create(CancelID.coreData)
-						.receive(on: self.mainQueue)
-						.eraseToEffect()
-						.map({ Action.featureAction(.home(.entries(.coreDataClientAction($0)))) })
+					return .run { send in
+						for await entries in await self.coreDataClient.subscriber() {
+							await send(.featureAction(.home(.entries(.coreDataClientAction(.entries(entries))))))
+						}
+					}
+
 				case let .featureAction(.home(.entries(.remove(entry)))):
 					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
@@ -380,7 +382,7 @@ public struct RootFeature: ReducerProtocol {
 	private func userDefaults(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.layout(.layoutChanged(layout)))))))))):
 				self.userDefaultsClient.set(layoutType: layout)

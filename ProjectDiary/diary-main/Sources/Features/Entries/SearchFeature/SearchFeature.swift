@@ -4,7 +4,7 @@ import EntriesFeature
 import EntryDetailFeature
 import Models
 
-public struct SearchFeature: ReducerProtocol {
+public struct SearchFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -41,7 +41,7 @@ public struct SearchFeature: ReducerProtocol {
 	@Dependency(\.userDefaultsClient) private var userDefaultsClient
 	@Dependency(\.uuid) private var uuid
 	
-	public struct Destination: ReducerProtocol {
+	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case attachmentSearch(AttachmentSearch.State)
 			case entryDetail(EntryDetail.State)
@@ -52,7 +52,7 @@ public struct SearchFeature: ReducerProtocol {
 			case entryDetail(EntryDetail.Action)
 		}
 		
-		public var body: some ReducerProtocolOf<Self> {
+		public var body: some ReducerOf<Self> {
 			Scope(state: /State.attachmentSearch, action: /Action.attachmentSearch) {
 				AttachmentSearch()
 			}
@@ -62,7 +62,7 @@ public struct SearchFeature: ReducerProtocol {
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 					

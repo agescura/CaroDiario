@@ -7,7 +7,7 @@ import Localizables
 import UIApplicationClient
 import AVKit
 
-public struct AttachmentAddVideo: ReducerProtocol {
+public struct AttachmentAddVideo: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -31,14 +31,14 @@ public struct AttachmentAddVideo: ReducerProtocol {
 		case cancelRemoveFullScreenAlert
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 	}
 	
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case let .presentVideoPlayer(value):
 				state.presentVideoPlayer = value

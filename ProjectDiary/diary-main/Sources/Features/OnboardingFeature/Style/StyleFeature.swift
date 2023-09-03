@@ -5,7 +5,7 @@ import Models
 import Foundation
 import UserDefaultsClient
 
-public struct StyleFeature: ReducerProtocol {
+public struct StyleFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -32,7 +32,7 @@ public struct StyleFeature: ReducerProtocol {
 	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
 	@Dependency(\.userDefaultsClient) private var userDefaultsClient
 	
-	public struct Destination: ReducerProtocol {
+	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case alert(AlertState<Action.Alert>)
 			case layout(LayoutFeature.State)
@@ -47,7 +47,7 @@ public struct StyleFeature: ReducerProtocol {
 			}
 		}
 		
-		public var body: some ReducerProtocolOf<Self> {
+		public var body: some ReducerOf<Self> {
 			Scope(state: /State.alert, action: /Action.alert) {}
 			Scope(state: /State.layout, action: /Action.layout) {
 				LayoutFeature()
@@ -55,7 +55,7 @@ public struct StyleFeature: ReducerProtocol {
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alertButtonTapped:

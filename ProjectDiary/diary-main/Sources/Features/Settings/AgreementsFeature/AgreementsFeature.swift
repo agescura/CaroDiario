@@ -30,7 +30,7 @@ public enum AgreementType {
 	}
 }
 
-public struct AgreementsFeature: ReducerProtocol {
+public struct AgreementsFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -43,7 +43,7 @@ public struct AgreementsFeature: ReducerProtocol {
 	
 	@Dependency(\.applicationClient.open) private var open
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case let .open(type):

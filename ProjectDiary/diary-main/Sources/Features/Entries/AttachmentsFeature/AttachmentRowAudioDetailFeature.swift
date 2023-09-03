@@ -3,7 +3,7 @@ import Foundation
 import Models
 import SwiftUI
 
-public struct AttachmentRowAudioDetailFeature: ReducerProtocol {
+public struct AttachmentRowAudioDetailFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -44,7 +44,7 @@ public struct AttachmentRowAudioDetailFeature: ReducerProtocol {
 		case timer
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alertButtonTapped:

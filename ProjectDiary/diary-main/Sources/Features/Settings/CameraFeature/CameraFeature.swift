@@ -4,7 +4,7 @@ import FeedbackGeneratorClient
 import Models
 import UIApplicationClient
 
-public struct CameraFeature: ReducerProtocol {
+public struct CameraFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -27,7 +27,7 @@ public struct CameraFeature: ReducerProtocol {
 	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
 	@Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .cameraButtonTapped:

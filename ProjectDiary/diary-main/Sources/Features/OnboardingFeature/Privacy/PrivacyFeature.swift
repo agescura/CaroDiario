@@ -3,7 +3,7 @@ import EntriesFeature
 import Foundation
 import UserDefaultsClient
 
-public struct PrivacyFeature: ReducerProtocol {
+public struct PrivacyFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -32,7 +32,7 @@ public struct PrivacyFeature: ReducerProtocol {
 	
 	@Dependency(\.userDefaultsClient) private var userDefaultsClient
 	
-	public struct Destination: ReducerProtocol {
+	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case alert(AlertState<Action.Alert>)
 			case style(StyleFeature.State)
@@ -47,7 +47,7 @@ public struct PrivacyFeature: ReducerProtocol {
 			}
 		}
 		
-		public var body: some ReducerProtocolOf<Self> {
+		public var body: some ReducerOf<Self> {
 			Scope(state: /State.alert, action: /Action.alert) {}
 			Scope(state: /State.style, action: /Action.style) {
 				StyleFeature()
@@ -55,7 +55,7 @@ public struct PrivacyFeature: ReducerProtocol {
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alertButtonTapped:

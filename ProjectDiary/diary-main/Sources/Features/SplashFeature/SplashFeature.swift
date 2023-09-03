@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import Foundation
 
-public struct SplashFeature: ReducerProtocol {
+public struct SplashFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -40,7 +40,7 @@ public struct SplashFeature: ReducerProtocol {
 	
 	@Dependency(\.mainQueue) private var mainQueue
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .animation(.start):

@@ -3,7 +3,7 @@ import SwiftUI
 import Models
 import Views
 
-public struct AttachmentImageDetail: ReducerProtocol {
+public struct AttachmentImageDetail: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -33,14 +33,14 @@ public struct AttachmentImageDetail: ReducerProtocol {
 		case dragGesture(DragGesture.Value)
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 	}
 	
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case let .scaleOnChanged(value):
 				let maxScale: CGFloat = 3.0

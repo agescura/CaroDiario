@@ -7,7 +7,7 @@ import FileClient
 import Localizables
 import Models
 
-public struct AudioRecordFeature: ReducerProtocol {
+public struct AudioRecordFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -78,7 +78,7 @@ public struct AudioRecordFeature: ReducerProtocol {
 		case timer
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alert(.presented(.newRecord)):

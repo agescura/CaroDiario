@@ -2,7 +2,7 @@ import ComposableArchitecture
 import Foundation
 import Models
 
-public struct AttachmentsFeature: ReducerProtocol {
+public struct AttachmentsFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -33,7 +33,7 @@ public struct AttachmentsFeature: ReducerProtocol {
 		case attachments(id: UUID, action: AttachmentRowFeature.Action)
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .attachments:

@@ -4,7 +4,7 @@ import Models
 import UIApplicationClient
 import FeedbackGeneratorClient
 
-public struct IconAppFeature: ReducerProtocol {
+public struct IconAppFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -24,7 +24,7 @@ public struct IconAppFeature: ReducerProtocol {
 	@Dependency(\.applicationClient) private var applicationClient
 	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case let .iconAppChanged(newIconApp):

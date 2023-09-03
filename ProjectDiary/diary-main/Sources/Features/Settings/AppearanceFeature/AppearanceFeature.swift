@@ -4,7 +4,7 @@ import Foundation
 import Models
 import TCAHelpers
 
-public struct AppearanceFeature: ReducerProtocol {
+public struct AppearanceFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -28,7 +28,7 @@ public struct AppearanceFeature: ReducerProtocol {
 		case themeButtonTapped
 	}
 	
-	public struct Destination: ReducerProtocol {
+	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case iconApp(IconAppFeature.State)
 			case layout(LayoutFeature.State)
@@ -43,7 +43,7 @@ public struct AppearanceFeature: ReducerProtocol {
 			case theme(ThemeFeature.Action)
 		}
 		
-		public var body: some ReducerProtocolOf<Self> {
+		public var body: some ReducerOf<Self> {
 			Scope(state: /State.iconApp, action: /Action.iconApp) {
 				IconAppFeature()
 			}
@@ -59,7 +59,7 @@ public struct AppearanceFeature: ReducerProtocol {
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .destination(.dismiss):

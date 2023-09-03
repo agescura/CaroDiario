@@ -5,7 +5,7 @@ import FeedbackGeneratorClient
 import Models
 import EntriesFeature
 
-public struct Theme: ReducerProtocol {
+public struct Theme: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -26,7 +26,7 @@ public struct Theme: ReducerProtocol {
 	@Dependency(\.applicationClient.setUserInterfaceStyle) private var setUserInterfaceStyle
 	@Dependency(\.userDefaultsClient) private var userDefaultsClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 			.forEach(\.entries, action: /Action.entries) {
 				DayEntriesRow()
@@ -36,7 +36,7 @@ public struct Theme: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case let .themeChanged(themeChanged):
 				state.themeType = themeChanged

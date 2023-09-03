@@ -5,7 +5,7 @@ import PDFKitClient
 import PDFPreviewFeature
 import UIApplicationClient
 
-public struct ExportFeature: ReducerProtocol {
+public struct ExportFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -31,7 +31,7 @@ public struct ExportFeature: ReducerProtocol {
 	@Dependency(\.applicationClient) private var applicationClient
 	@Dependency(\.pdfKitClient) private var pdfKitClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .processPDF:

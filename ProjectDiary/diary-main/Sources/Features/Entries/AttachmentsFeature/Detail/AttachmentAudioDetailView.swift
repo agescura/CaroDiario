@@ -6,7 +6,7 @@ import UIApplicationClient
 import AVAudioPlayerClient
 import SwiftHelper
 
-public struct AttachmentAudioDetail: ReducerProtocol {
+public struct AttachmentAudioDetail: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -35,14 +35,14 @@ public struct AttachmentAudioDetail: ReducerProtocol {
 	private struct PlayerManagerId: Hashable {}
 	private struct PlayerTimerId: Hashable {}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 	}
 	
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case .playButtonTapped:
 				return .none

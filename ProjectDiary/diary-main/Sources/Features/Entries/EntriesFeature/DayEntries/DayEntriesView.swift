@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Models
 import Styles
 
-public struct DayEntries: ReducerProtocol {
+public struct DayEntries: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -28,14 +28,14 @@ public struct DayEntries: ReducerProtocol {
     case navigateDetail(Entry)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
   }
   
   private func core(
     state: inout State,
     action: Action
-  ) -> EffectTask<Action> {
+  ) -> Effect<Action> {
     switch action {
     case .toggleLongDate:
       state.showLongDate = !state.showLongDate

@@ -3,7 +3,7 @@ import Foundation
 import Models
 import SwiftUI
 
-public struct AttachmentRowImageDetailFeature: ReducerProtocol {
+public struct AttachmentRowImageDetailFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -33,7 +33,7 @@ public struct AttachmentRowImageDetailFeature: ReducerProtocol {
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alertButtonTapped:

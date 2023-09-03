@@ -61,7 +61,7 @@ struct AboutView_Previews: PreviewProvider {
 			AboutView(
 				store: Store(
 					initialState: AboutFeature.State(),
-					reducer: AboutFeature()
+					reducer: AboutFeature.init
 				)
 			)
 		}

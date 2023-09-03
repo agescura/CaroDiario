@@ -3,7 +3,7 @@ import FeedbackGeneratorClient
 import Foundation
 import UserDefaultsClient
 
-public struct WelcomeFeature: ReducerProtocol {
+public struct WelcomeFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -41,7 +41,7 @@ public struct WelcomeFeature: ReducerProtocol {
 		case timer
 	}
 	
-	public struct Destination: ReducerProtocol {
+	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case alert(AlertState<Action.Alert>)
 			case privacy(PrivacyFeature.State)
@@ -56,7 +56,7 @@ public struct WelcomeFeature: ReducerProtocol {
 			}
 		}
 		
-		public var body: some ReducerProtocolOf<Self> {
+		public var body: some ReducerOf<Self> {
 			Scope(state: /State.alert, action: /Action.alert) {}
 			Scope(state: /State.privacy, action: /Action.privacy) {
 				PrivacyFeature()
@@ -64,7 +64,7 @@ public struct WelcomeFeature: ReducerProtocol {
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alertButtonTapped:

@@ -8,7 +8,7 @@ import Models
 import UIApplicationClient
 import UserDefaultsClient
 
-public struct Entries: ReducerProtocol {
+public struct Entries: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -56,7 +56,7 @@ public struct Entries: ReducerProtocol {
 	@Dependency(\.fileClient) private var fileClient
 	private struct CoreDataId: Hashable {}
 	
-	public struct Destination: ReducerProtocol {
+	public struct Destination: Reducer {
 		public init() {}
 		
 		public enum State: Equatable {
@@ -67,14 +67,14 @@ public struct Entries: ReducerProtocol {
 			case addEntry(AddEntryFeature.Action)
 		}
 		
-		public var body: some ReducerProtocolOf<Self> {
+		public var body: some ReducerOf<Self> {
 			Scope(state: /State.addEntry, action: /Action.addEntry) {
 				AddEntryFeature()
 			}
 		}
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 			.forEach(\.entries, action: /Action.entries) {
 				DayEntriesRow()
@@ -90,7 +90,7 @@ public struct Entries: ReducerProtocol {
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 				
 			case .onAppear:

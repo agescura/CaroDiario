@@ -4,7 +4,7 @@ import FeedbackGeneratorClient
 import Foundation
 import Models
 
-public struct StyleFeature: ReducerProtocol {
+public struct StyleFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -20,7 +20,7 @@ public struct StyleFeature: ReducerProtocol {
 	
 	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .entries:

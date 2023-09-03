@@ -25,7 +25,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 				appDelegate: .init(),
 				featureState: .splash(.init())
 			),
-			reducer: RootFeature()._printChanges()
+			reducer: { RootFeature() }
 		)
 	}
 	

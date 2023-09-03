@@ -6,7 +6,7 @@ import Views
 import Models
 import UIApplicationClient
 
-public struct AttachmentAddImage: ReducerProtocol {
+public struct AttachmentAddImage: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -45,14 +45,14 @@ public struct AttachmentAddImage: ReducerProtocol {
 		case dragGesture(DragGesture.Value)
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
 	}
 	
 	private func core(
 		state: inout State,
 		action: Action
-	) -> EffectTask<Action> {
+	) -> Effect<Action> {
 		switch action {
 			case .imageButtonTapped:
 				return .none

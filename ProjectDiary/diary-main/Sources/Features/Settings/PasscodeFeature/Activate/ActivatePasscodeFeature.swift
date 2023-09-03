@@ -1,7 +1,7 @@
 import Foundation
 import ComposableArchitecture
 
-public struct ActivatePasscodeFeature: ReducerProtocol {
+public struct ActivatePasscodeFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -24,7 +24,7 @@ public struct ActivatePasscodeFeature: ReducerProtocol {
 		case insertButtonTapped
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .insert(.dismiss):

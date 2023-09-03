@@ -18,7 +18,7 @@ import StoreKitClient
 import PDFKitClient
 import AVAssetClient
 
-public struct AppReducer: ReducerProtocol {
+public struct AppReducer: Reducer {
 	public init() {}
 	
 	public enum State: Equatable {
@@ -35,7 +35,7 @@ public struct AppReducer: ReducerProtocol {
 		case home(Home.Action)
 	}
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Scope(state: /State.splash, action: /Action.splash) {
 			SplashFeature()
 		}

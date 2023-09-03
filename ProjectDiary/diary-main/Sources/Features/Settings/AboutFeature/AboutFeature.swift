@@ -8,7 +8,7 @@ enum MailType: String {
 	case outlook = "ms-outlook"
 }
 
-public struct AboutFeature: ReducerProtocol {
+public struct AboutFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -30,7 +30,7 @@ public struct AboutFeature: ReducerProtocol {
 	
 	@Dependency(\.applicationClient) private var applicationClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .confirmationDialogButtonTapped:

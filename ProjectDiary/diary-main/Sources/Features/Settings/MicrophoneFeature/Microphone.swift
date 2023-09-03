@@ -5,7 +5,7 @@ import AVAudioSessionClient
 import FeedbackGeneratorClient
 import UIApplicationClient
 
-public struct Microphone: ReducerProtocol {
+public struct Microphone: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -29,7 +29,7 @@ public struct Microphone: ReducerProtocol {
 	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
 	@Dependency(\.avAudioSessionClient) private var avAudioSessionClient
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .microphoneButtonTapped:

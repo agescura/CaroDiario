@@ -6,7 +6,7 @@ import Models
 import UIApplicationClient
 import UserDefaultsClient
 
-public struct ThemeFeature: ReducerProtocol {
+public struct ThemeFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -22,7 +22,7 @@ public struct ThemeFeature: ReducerProtocol {
 	@Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
 	@Dependency(\.applicationClient.setUserInterfaceStyle) private var setUserInterfaceStyle
 	
-	public var body: some ReducerProtocolOf<Self> {
+	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case let .themeChanged(newTheme):
