@@ -8,7 +8,7 @@ class PrivacyFeatureTests: XCTestCase {
 	func testHappyPath() async {
 		let store = TestStore(
 			initialState: PrivacyFeature.State(),
-			reducer: PrivacyFeature()
+			reducer: PrivacyFeature.init
 		) {
 			$0.userDefaultsClient.stringForKey = { _ in "" }
 		}
@@ -16,12 +16,12 @@ class PrivacyFeatureTests: XCTestCase {
 		await store.send(.styleButtonTapped) {
 			$0.destination = .style(
 				StyleFeature.State(
-					styleType: .rectangle,
-					layoutType: .horizontal,
 					entries: fakeEntries(
 						with: .rectangle,
 						layout: .horizontal
-					)
+					),
+					layoutType: .horizontal,
+					styleType: .rectangle
 				)
 			)
 		}
@@ -30,7 +30,7 @@ class PrivacyFeatureTests: XCTestCase {
 	func testPresentAlertSkip() async {
 		let store = TestStore(
 			initialState: PrivacyFeature.State(),
-			reducer: PrivacyFeature()
+			reducer: PrivacyFeature.init
 		)
 		
 		await store.send(.alertButtonTapped) {

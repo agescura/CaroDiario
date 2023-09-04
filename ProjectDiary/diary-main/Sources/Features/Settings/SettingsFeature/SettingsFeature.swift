@@ -37,7 +37,7 @@ public struct SettingsFeature: Reducer {
 		public init(
 			cameraStatus: AuthorizedVideoStatus,
 			destination: Destination.State? = nil,
-			microphoneStatus: RecordPermission,
+			recordPermission: RecordPermission,
 			userSettings: UserSettings
 		) {
 			self.destination = destination
@@ -51,7 +51,7 @@ public struct SettingsFeature: Reducer {
 			self.optionTimeForAskPasscode = userSettings.optionTimeForAskPasscode
 			self.faceIdEnabled = userSettings.faceIdEnabled
 			self.language = userSettings.language
-			self.recordPermission = microphoneStatus
+			self.recordPermission = recordPermission
 		}
 	}
 	

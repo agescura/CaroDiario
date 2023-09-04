@@ -237,7 +237,7 @@ struct SettingsView_Previews: PreviewProvider {
 							)
 						)
 					),
-					microphoneStatus: .undetermined,
+					recordPermission: .undetermined,
 					userSettings: .defaultValue
 				),
 				reducer: SettingsFeature.init

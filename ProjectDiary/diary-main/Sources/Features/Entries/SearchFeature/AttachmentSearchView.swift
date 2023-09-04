@@ -7,7 +7,6 @@ import UserDefaultsClient
 import AVCaptureDeviceClient
 import UIApplicationClient
 import AVAudioPlayerClient
-import AVAudioSessionClient
 import AVAudioRecorderClient
 import EntryDetailFeature
 import Models
@@ -71,7 +70,7 @@ public struct AttachmentSearch: Reducer {
 				}
 				return .none
 				
-			case let .entryDetailAction(.remove(entry)):
+			case let .entryDetailAction(.destination(.presented(.alert(.remove(entry))))):
 				return .run { send in
 					await self.fileClient.removeAttachments(entry.attachments.urls)
 					await send(.remove(entry))

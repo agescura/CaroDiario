@@ -1,7 +1,6 @@
 import Foundation
 import ComposableArchitecture
 import Models
-import AVAudioSessionClient
 import FeedbackGeneratorClient
 import UIApplicationClient
 import AVAudioRecorderClient

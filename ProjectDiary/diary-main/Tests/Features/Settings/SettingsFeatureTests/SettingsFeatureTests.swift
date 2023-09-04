@@ -14,7 +14,7 @@ class SettingsFeatureTests: XCTestCase {
 		let store = TestStore(
 			initialState: SettingsFeature.State(
 				cameraStatus: .notDetermined,
-				microphoneStatus: .notDetermined,
+				recordPermission: .undetermined,
 				userSettings: UserSettings(
 					showSplash: true,
 					hasShownOnboarding: true,
@@ -30,7 +30,7 @@ class SettingsFeatureTests: XCTestCase {
 					faceIdEnabled: false
 				)
 			),
-			reducer: SettingsFeature()
+			reducer: SettingsFeature.init
 		)
 		
 		await store.send(.toggleShowSplash(isOn: false)) {

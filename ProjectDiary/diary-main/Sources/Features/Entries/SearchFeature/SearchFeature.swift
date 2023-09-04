@@ -66,7 +66,7 @@ public struct SearchFeature: Reducer {
 		Reduce { state, action in
 			switch action {
 					
-				case let .destination(.presented(.entryDetail(.remove(entry)))):
+				case let .destination(.presented(.entryDetail(.destination(.presented(.alert(.remove(entry))))))):
 					return .run { send in
 						await self.fileClient.removeAttachments(entry.attachments.urls)
 						await send(.remove(entry))

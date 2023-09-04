@@ -14,6 +14,20 @@ public struct StyleFeature: Reducer {
 		public var isAppClip = false
 		public var layoutType: LayoutType
 		public var styleType: StyleType
+		
+		public init(
+			destination: Destination.State? = nil,
+			entries: IdentifiedArrayOf<DayEntriesRow.State>,
+			isAppClip: Bool = false,
+			layoutType: LayoutType,
+			styleType: StyleType
+		) {
+			self.destination = destination
+			self.entries = entries
+			self.isAppClip = isAppClip
+			self.layoutType = layoutType
+			self.styleType = styleType
+		}
 	}
 	
 	public enum Action: Equatable {

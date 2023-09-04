@@ -15,24 +15,15 @@ public struct EntriesFeature: Reducer {
 		@PresentationState public var destination: Destination.State?
 		public var isLoading: Bool
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		public var entryDetailState: EntryDetailFeature.State?
-		public var navigateEntryDetail = false
-		public var entryDetailSelected: Entry?
 		
 		public init(
 			destination: Destination.State? = nil,
 			isLoading: Bool = true,
-			entries: IdentifiedArrayOf<DayEntriesRow.State> = [],
-			entryDetailState: EntryDetailFeature.State? = nil,
-			navigateEntryDetail: Bool = false,
-			entryDetailSelected: Entry? = nil
+			entries: IdentifiedArrayOf<DayEntriesRow.State> = []
 		) {
 			self.destination = destination
 			self.isLoading = isLoading
 			self.entries = entries
-			self.entryDetailState = entryDetailState
-			self.navigateEntryDetail = navigateEntryDetail
-			self.entryDetailSelected = entryDetailSelected
 		}
 	}
 	
@@ -44,8 +35,6 @@ public struct EntriesFeature: Reducer {
 		case fetchEntriesResponse([[Entry]])
 		case entries(id: UUID, action: DayEntriesRow.Action)
 		case remove(Entry)
-		case entryDetailAction(EntryDetailFeature.Action)
-		case navigateEntryDetail(Bool)
 	}
 	
 	@Dependency(\.mainQueue) private var mainQueue
@@ -54,22 +43,26 @@ public struct EntriesFeature: Reducer {
 	@Dependency(\.applicationClient) private var applicationClient
 	@Dependency(\.userDefaultsClient) private var userDefaultsClient
 	@Dependency(\.fileClient) private var fileClient
-	private struct CoreDataId: Hashable {}
 	
 	public struct Destination: Reducer {
 		public init() {}
 		
 		public enum State: Equatable {
 			case addEntry(AddEntryFeature.State)
+			case detail(EntryDetailFeature.State)
 		}
 		
 		public enum Action: Equatable {
 			case addEntry(AddEntryFeature.Action)
+			case detail(EntryDetailFeature.Action)
 		}
 		
 		public var body: some ReducerOf<Self> {
 			Scope(state: /State.addEntry, action: /Action.addEntry) {
 				AddEntryFeature()
+			}
+			Scope(state: /State.detail, action: /Action.detail) {
+				EntryDetailFeature()
 			}
 		}
 	}
@@ -78,9 +71,6 @@ public struct EntriesFeature: Reducer {
 		Reduce(self.core)
 			.forEach(\.entries, action: /Action.entries) {
 				DayEntriesRow()
-			}
-			.ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
-				EntryDetailFeature()
 			}
 			.ifLet(\.$destination, action: /Action.destination) {
 				Destination()
@@ -92,7 +82,6 @@ public struct EntriesFeature: Reducer {
 		action: Action
 	) -> Effect<Action> {
 		switch action {
-				
 			case .onAppear:
 				return .none
 				
@@ -120,6 +109,13 @@ public struct EntriesFeature: Reducer {
 				state.destination = nil
 				return .none
 				
+			case let .destination(.presented(.detail(.destination(.presented(.alert(.remove(entry))))))):
+				state.destination = nil
+				return .run { send in
+					await self.fileClient.removeAttachments(entry.attachments.urls)
+					await send(.remove(entry))
+				}
+				
 			case .destination:
 				return .none
 				
@@ -138,32 +134,13 @@ public struct EntriesFeature: Reducer {
 				return .send(.destination(.presented(.addEntry(.createDraftEntry))))
 				
 			case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
-				state.entryDetailSelected = entry
-				return .send(.navigateEntryDetail(true))
+				state.destination = .detail(EntryDetailFeature.State(entry: entry))
+				return .none
 				
 			case .entries:
 				return .none
 				
 			case .remove:
-				return .none
-				
-			case let .navigateEntryDetail(value):
-				guard let entry = state.entryDetailSelected else { return .none }
-				state.navigateEntryDetail = value
-				state.entryDetailState = value ? .init(entry: entry) : nil
-				if value == false {
-					state.entryDetailSelected = nil
-				}
-				return .none
-				
-			case let .entryDetailAction(.remove(entry)):
-				return .run { send in
-					await self.fileClient.removeAttachments(entry.attachments.urls)
-					await send(.remove(entry))
-					await send(.navigateEntryDetail(false))
-				}
-				
-			case .entryDetailAction:
 				return .none
 		}
 	}

@@ -2,7 +2,6 @@ import Foundation
 import ComposableArchitecture
 import AVAssetClient
 import AVAudioRecorderClient
-import AVAudioSessionClient
 import AVAudioPlayerClient
 import AVCaptureDeviceClient
 import UIApplicationClient

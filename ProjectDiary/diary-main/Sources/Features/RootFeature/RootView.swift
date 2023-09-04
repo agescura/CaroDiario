@@ -176,7 +176,7 @@ public struct RootFeature: Reducer {
 						),
 						settings: SettingsFeature.State(
 							cameraStatus: status,
-							microphoneStatus: self.avAudioRecorderClient.recordPermission(),
+							recordPermission: self.avAudioRecorderClient.recordPermission(),
 							userSettings: UserSettings(
 								showSplash: !self.userDefaultsClient.hideSplashScreen,
 								hasShownOnboarding: true,
@@ -295,7 +295,7 @@ public struct RootFeature: Reducer {
 				case let .featureAction(.home(.search(.remove(entry)))):
 					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
-				case let .featureAction(.home(.search(.destination(.presented(.entryDetail(.remove(entry))))))):
+				case let .featureAction(.home(.search(.destination(.presented(.entryDetail(.destination(.presented(.alert(.remove(entry)))))))))):
 					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
 				default:
@@ -304,17 +304,21 @@ public struct RootFeature: Reducer {
 		}
 		
 		if case let .home(homeState) = state.featureState,
-			let entryDetailState = homeState.entries.entryDetailState {
+			case let .detail(entryDetailState) = homeState.entries.destination {
 			switch action {
-				case .featureAction(.home(.entries(.entryDetailAction(.onAppear)))):
+				case .featureAction(.home(.entries(.destination(.presented(.detail(.onAppear)))))):
 					return .run { send in
 						await send(
 							.featureAction(
 								.home(
 									.entries(
-										.entryDetailAction(
-											.entryResponse(
-												self.coreDataClient.fetchEntry(entryDetailState.entry)
+										.destination(
+											.presented(
+												.detail(
+													.entryResponse(
+														self.coreDataClient.fetchEntry(entryDetailState.entry)
+													)
+												)
 											)
 										)
 									)
@@ -323,7 +327,7 @@ public struct RootFeature: Reducer {
 						)
 					}
 					
-				case let .featureAction(.home(.entries(.entryDetailAction(.removeAttachmentResponse(id))))):
+				case let .featureAction(.home(.entries(.destination(.presented(.detail(.removeAttachmentResponse(id))))))):
 					return .run { _ in await self.coreDataClient.removeAttachmentEntry(id) }
 					
 				default:
@@ -335,13 +339,13 @@ public struct RootFeature: Reducer {
 			let addEntryState = homeState.entries.addEntryState {
 			switch action {
 				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.createDraftEntry)))))),
-						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.createDraftEntry))))):
+						.featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.createDraftEntry))))))))):
 					return .run { _ in
 						await self.coreDataClient.createDraft(addEntryState.entry)
 					}
 					
 				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.view(.addButtonTapped))))))),
-						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.view(.addButtonTapped)))))):
+						.featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.view(.addButtonTapped)))))))))):
 					let entryText = EntryText(
 						id: self.uuid(),
 						message: addEntryState.entry.text.message,
@@ -353,23 +357,23 @@ public struct RootFeature: Reducer {
 						
 					}
 				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadImageResponse(entryImage))))))),
-					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadImageResponse(entryImage)))))):
+					let .featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadImageResponse(entryImage)))))))))):
 					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id) }
 					
 				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadVideoResponse(entryVideo))))))),
-					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadVideoResponse(entryVideo)))))):
+					let .featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadVideoResponse(entryVideo)))))))))):
 					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id) }
 					
 				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadAudioResponse(entryAudio))))))),
-					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.loadAudioResponse(entryAudio)))))):
+					let .featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadAudioResponse(entryAudio)))))))))):
 					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id) }
 					
 				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.removeAttachmentResponse(id))))))),
-					let .featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeAttachmentResponse(id)))))):
+					let .featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.removeAttachmentResponse(id)))))))))):
 					return .run { _ in await self.coreDataClient.removeAttachmentEntry(id) }
 					
 				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.removeDraftEntryDismissAlert)))))),
-						.featureAction(.home(.entries(.entryDetailAction(.addEntryAction(.removeDraftEntryDismissAlert))))):
+						.featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.removeDraftEntryDismissAlert))))))))):
 					return .run { _ in await self.coreDataClient.removeEntry(addEntryState.entry.id) }
 					
 				default:
@@ -458,7 +462,8 @@ extension EntriesFeature.State {
 		if case let .addEntry(state) = self.destination {
 			return state
 		}
-		if let state = self.entryDetailState?.addEntryState {
+		if case let .detail(detailState) = self.destination,
+			case let .edit(state) = detailState.destination {
 			return state
 		}
 		return nil

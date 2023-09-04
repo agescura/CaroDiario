@@ -4,7 +4,6 @@ import MobileCoreServices
 import CoreDataClient
 import FileClient
 import Models
-import Combine
 import UniformTypeIdentifiers
 import AVAssetClient
 import ComposableArchitecture
@@ -16,8 +15,6 @@ class ShareViewController: SLComposeServiceViewController {
 	let avAssetClient: AVAssetClient = .live
 	
 	var entry: Entry?
-	
-	var bag = Set<AnyCancellable>()
 	
 	override func isContentValid() -> Bool {
 		return self.textView.text.count > 0

@@ -10,7 +10,7 @@ class WelcomeFeatureTests: XCTestCase {
 		
 		let store = TestStore(
 			initialState: WelcomeFeature.State(),
-			reducer: WelcomeFeature()
+			reducer: WelcomeFeature.init
 		) {
 			$0.mainQueue = mainQueue.eraseToAnyScheduler()
 		}
@@ -46,7 +46,7 @@ class WelcomeFeatureTests: XCTestCase {
 	func testPresentAlertSkipCancellingEffects() async {
 		let store = TestStore(
 			initialState: WelcomeFeature.State(),
-			reducer: WelcomeFeature()
+			reducer: WelcomeFeature.init
 		)
 		
 		await store.send(.alertButtonTapped) {
@@ -66,9 +66,10 @@ class WelcomeFeatureTests: XCTestCase {
 		
 		let store = Store(
 			initialState: WelcomeFeature.State(),
-			reducer: WelcomeFeature()
-				.dependency(\.mainQueue, mainQueue.eraseToAnyScheduler())
-		)
+			reducer: WelcomeFeature.init
+		) {
+			$0.mainQueue = mainQueue.eraseToAnyScheduler()
+		}
 		let view = WelcomeView(store: store)
 		
 		let vc = UIHostingController(rootView: view)

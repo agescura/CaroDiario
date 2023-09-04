@@ -3,6 +3,7 @@ import ComposableArchitecture
 import Models
 import AddEntryFeature
 import EntryDetailFeature
+import TCAHelpers
 
 public struct EntriesView: View {
 	private let store: StoreOf<EntriesFeature>
@@ -47,20 +48,16 @@ public struct EntriesView: View {
 								)
 							}
 							
-							NavigationLink(
-								"",
-								destination:
-									IfLetStore(
-										store.scope(
-											state: \.entryDetailState,
-											action: EntriesFeature.Action.entryDetailAction
-										),
-										then: EntryDetailView.init(store:)
-									),
-								isActive: viewStore.binding(
-									get: \.navigateEntryDetail,
-									send: EntriesFeature.Action.navigateEntryDetail)
-							)
+							NavigationLinkStore(
+								self.store.scope(
+									state: \.$destination,
+									action: EntriesFeature.Action.destination
+								),
+								state: /EntriesFeature.Destination.State.detail,
+								action: EntriesFeature.Destination.Action.detail
+							) { store in
+								EntryDetailView(store: store)
+							}
 						}
 					}
 				}

@@ -8,7 +8,7 @@ class AgreementsFeatureTests: XCTestCase {
   func testOpenComposableArchitecture() async {
     let store = TestStore(
       initialState: .init(),
-      reducer: AgreementsFeature()
+		reducer: AgreementsFeature.init
     )
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "https://github.com/pointfreeco/swift-composable-architecture")
@@ -20,7 +20,7 @@ class AgreementsFeatureTests: XCTestCase {
   func testOpenRayWenderlich() async {
     let store = TestStore(
       initialState: .init(),
-      reducer: AgreementsFeature()
+		reducer: AgreementsFeature.init
     )
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "https://www.raywenderlich.com/")
@@ -32,7 +32,7 @@ class AgreementsFeatureTests: XCTestCase {
   func testOpenPointfree() async {
     let store = TestStore(
       initialState: .init(),
-      reducer: AgreementsFeature()
+		reducer: AgreementsFeature.init
     )
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "https://www.pointfree.co/")
@@ -47,7 +47,7 @@ class AgreementsFeatureTests: XCTestCase {
     let view = AgreementsView(
       store: .init(
         initialState: .init(),
-        reducer: AgreementsFeature()
+		  reducer: AgreementsFeature.init
       )
     )
     

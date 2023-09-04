@@ -10,7 +10,7 @@ class SplashFeatureTests: XCTestCase {
 		
 		let store = TestStore(
 			initialState: SplashFeature.State(),
-			reducer: SplashFeature()
+			reducer: SplashFeature.init
 		) {
 			$0.mainQueue = mainQueue.eraseToAnyScheduler()
 		}

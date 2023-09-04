@@ -24,9 +24,6 @@ public struct SharedState: Equatable {
 	public var isLoading: Bool = true
 	public var destination: EntriesFeature.Destination.State?
 	public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
-	public var entryDetailState: EntryDetailFeature.State?
-	public var navigateEntryDetail = false
-	public var entryDetailSelected: Entry?
 	
 	public var search: SearchFeature.State = SearchFeature.State()
 	
@@ -80,22 +77,16 @@ public struct Home: Reducer {
 		
 		public var entries: EntriesFeature.State {
 			get {
-				.init(
+				EntriesFeature.State(
 					destination: self.sharedState.destination,
 					isLoading: self.sharedState.isLoading,
-					entries: self.sharedState.entries,
-					entryDetailState: self.sharedState.entryDetailState,
-					navigateEntryDetail: self.sharedState.navigateEntryDetail,
-					entryDetailSelected: self.sharedState.entryDetailSelected
+					entries: self.sharedState.entries
 				)
 			}
 			set {
 				self.sharedState.destination = newValue.destination
 				self.sharedState.isLoading = newValue.isLoading
 				self.sharedState.entries = newValue.entries
-				self.sharedState.entryDetailState = newValue.entryDetailState
-				self.sharedState.navigateEntryDetail = newValue.navigateEntryDetail
-				self.sharedState.entryDetailSelected = newValue.entryDetailSelected
 			}
 		}
 		public var search: SearchFeature.State {
