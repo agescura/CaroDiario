@@ -15,7 +15,7 @@ class SplashFeatureTests: XCTestCase {
 			$0.mainQueue = mainQueue.eraseToAnyScheduler()
 		}
 		
-		await store.send(.startAnimation)
+		await store.send(.onAppear)
 		
 		await mainQueue.advance(by: .seconds(1))
 		

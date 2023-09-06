@@ -149,7 +149,7 @@ public struct RootFeature: Reducer {
 					}
 				}
 				
-				return .send(.featureAction(.splash(.startAnimation)))
+				return .none
 				
 			case .requestCameraStatus:
 				return .run { send in

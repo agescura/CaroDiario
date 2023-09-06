@@ -35,12 +35,12 @@ public struct LayoutFeature: Reducer {
 	public struct Destination: Reducer {
 		public enum State: Equatable {
 			case alert(AlertState<Action.Alert>)
-			case theme(Theme.State)
+			case theme(ThemeFeature.State)
 		}
 		
 		public enum Action: Equatable {
 			case alert(Alert)
-			case theme(Theme.Action)
+			case theme(ThemeFeature.Action)
 			
 			public enum Alert: Equatable {
 				case skipButtonTapped
@@ -50,7 +50,7 @@ public struct LayoutFeature: Reducer {
 		public var body: some ReducerOf<Self> {
 			Scope(state: /State.alert, action: /Action.alert) {}
 			Scope(state: /State.theme, action: /Action.theme) {
-				Theme()
+				ThemeFeature()
 			}
 		}
 	}
@@ -64,6 +64,12 @@ public struct LayoutFeature: Reducer {
 
 				case .delegate:
 					return .none
+					
+				case .destination(.presented(.alert(.skipButtonTapped))):
+					return .run { send in
+						self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
+						await send(.delegate(.skip))
+					}
 					
 				case .destination:
 					return .none
@@ -81,7 +87,7 @@ public struct LayoutFeature: Reducer {
 				case .themeButtonTapped:
 					let type = self.userDefaultsClient.themeType
 					state.destination = .theme(
-						Theme.State(
+						ThemeFeature.State(
 							themeType: type,
 							entries: fakeEntries(
 								with: self.userDefaultsClient.styleType,

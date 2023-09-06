@@ -5,7 +5,7 @@ import FeedbackGeneratorClient
 import Models
 import EntriesFeature
 
-public struct Theme: Reducer {
+public struct ThemeFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {

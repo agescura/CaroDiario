@@ -4,24 +4,31 @@ import EntriesFeature
 import XCTest
 
 @MainActor
-class PrivacyFeatureTests: XCTestCase {
+class LayoutFeatureTests: XCTestCase {
 	func testHappyPath() async {
 		let store = TestStore(
-			initialState: PrivacyFeature.State(),
-			reducer: PrivacyFeature.init
+			initialState: LayoutFeature.State(
+				entries: fakeEntries(
+					with: .rectangle,
+					layout: .horizontal
+				),
+				layoutType: .horizontal,
+				styleType: .rectangle
+			),
+			reducer: LayoutFeature.init
 		) {
 			$0.userDefaultsClient.stringForKey = { _ in "" }
+			$0.applicationClient.setUserInterfaceStyle = { _ in }
 		}
 		
-		await store.send(.styleButtonTapped) {
-			$0.destination = .style(
-				StyleFeature.State(
+		await store.send(.themeButtonTapped) {
+			$0.destination = .theme(
+				ThemeFeature.State(
+					themeType: .system,
 					entries: fakeEntries(
 						with: .rectangle,
 						layout: .horizontal
-					),
-					layoutType: .horizontal,
-					styleType: .rectangle
+					)
 				)
 			)
 		}
@@ -30,8 +37,15 @@ class PrivacyFeatureTests: XCTestCase {
 	func testPresentAlertSkip() async {
 		var setBoolCalled = (false, "")
 		let store = TestStore(
-			initialState: PrivacyFeature.State(),
-			reducer: PrivacyFeature.init
+			initialState: LayoutFeature.State(
+				entries: fakeEntries(
+					with: .rectangle,
+					layout: .horizontal
+				),
+				layoutType: .horizontal,
+				styleType: .rectangle
+			),
+			reducer: LayoutFeature.init
 		) {
 			$0.userDefaultsClient.setBool = { setBoolCalled = ($0, $1) }
 		}
@@ -48,5 +62,6 @@ class PrivacyFeatureTests: XCTestCase {
 		XCTAssertEqual(setBoolCalled.1, "hasShownOnboardingKey")
 		
 		await store.receive(.delegate(.skip))
+		
 	}
 }

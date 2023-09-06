@@ -32,6 +32,9 @@ public struct SplashView: View {
 				}
 			}
 			.ignoresSafeArea()
+			.onAppear {
+				viewStore.send(.onAppear)
+			}
 		}
 	}
 }

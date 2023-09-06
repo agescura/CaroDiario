@@ -24,7 +24,7 @@ public struct SplashFeature: Reducer {
 	public enum Action: Equatable {
 		case animation(Animation)
 		case delegate(Delegate)
-		case startAnimation
+		case onAppear
 		
 		public enum Animation: Equatable {
 			case area
@@ -43,6 +43,17 @@ public struct SplashFeature: Reducer {
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
+				case .animation(.area):
+					state.animation = .horizontalArea
+					return .run { send in
+						try await self.mainQueue.sleep(for: .seconds(1))
+						await send(.animation(.finish))
+					}
+					
+				case .animation(.finish):
+					state.animation = .finish
+					return .send(.delegate(.finishAnimation))
+					
 				case .animation(.start):
 					return .run { send in
 						try await self.mainQueue.sleep(for: .seconds(1))
@@ -56,21 +67,10 @@ public struct SplashFeature: Reducer {
 						await send(.animation(.area))
 					}
 					
-				case .animation(.area):
-					state.animation = .horizontalArea
-					return .run { send in
-						try await self.mainQueue.sleep(for: .seconds(1))
-						await send(.animation(.finish))
-					}
-					
-				case .animation(.finish):
-					state.animation = .finish
-					return .send(.delegate(.finishAnimation))
-					
 				case .delegate:
 					return .none
 					
-				case .startAnimation:
+				case .onAppear:
 					return .send(.animation(.start))
 			}
 		}

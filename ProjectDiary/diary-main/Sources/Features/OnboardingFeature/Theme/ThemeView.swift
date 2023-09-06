@@ -7,10 +7,10 @@ import EntriesFeature
 import Styles
 
 public struct ThemeView: View {
-	private let store: StoreOf<Theme>
+	private let store: StoreOf<ThemeFeature>
 	
 	public init(
-		store: StoreOf<Theme>
+		store: StoreOf<ThemeFeature>
 	) {
 		self.store = store
 	}
@@ -32,7 +32,7 @@ public struct ThemeView: View {
 						
 						Picker("",  selection: viewStore.binding(
 							get: \.themeType,
-							send: Theme.Action.themeChanged
+							send: ThemeFeature.Action.themeChanged
 						)) {
 							ForEach(ThemeType.allCases, id: \.self) { type in
 								Text(type.rawValue.localized)
@@ -46,7 +46,7 @@ public struct ThemeView: View {
 							ForEachStore(
 								store.scope(
 									state: \.entries,
-									action: Theme.Action.entries(id:action:)),
+									action: ThemeFeature.Action.entries(id:action:)),
 								content: DayEntriesRowView.init(store:)
 							)
 						}
