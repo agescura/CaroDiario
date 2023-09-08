@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Localizable: String, CaseIterable, Identifiable {
+public enum Localizable: String, CaseIterable, Identifiable, Codable {
     case english = "en"
     case spanish = "es"
     case catalan = "ca"

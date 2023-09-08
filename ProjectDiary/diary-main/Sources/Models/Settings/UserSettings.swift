@@ -1,6 +1,6 @@
 import Foundation
 
-public struct UserSettings: Equatable {
+public struct UserSettings: Equatable, Codable {
 	public var showSplash: Bool
 	public var hasShownOnboarding: Bool
 	public var appearance: AppearanceSettings

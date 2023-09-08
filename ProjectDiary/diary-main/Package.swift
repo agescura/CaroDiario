@@ -780,24 +780,32 @@ let package = Package(
 			),
 		
 		// Tests
+			
+		// Clients
+		
+		.testTarget(
+			name: "UserDefaultsClientTests",
+			dependencies: ["UserDefaultsClient"],
+			path: "Tests/Clients/UserDefaultsClientTests"
+		),
 		
 		// Features
 		
 		// AppFeature
 		
-			.testTarget(
-				name: "AppFeatureTests",
-				dependencies: ["AppFeature"],
-				path: "Tests/Features/AppFeatureTests"
-			),
+		.testTarget(
+			name: "AppFeatureTests",
+			dependencies: ["AppFeature"],
+			path: "Tests/Features/AppFeatureTests"
+		),
 		
 		// Entries
 		
-			.testTarget(
-				name: "AddEntryFeatureTests",
-				dependencies: ["AddEntryFeature"],
-				path: "Tests/Features/Entries/AddEntryFeatureTests"
-			),
+		.testTarget(
+			name: "AddEntryFeatureTests",
+			dependencies: ["AddEntryFeature"],
+			path: "Tests/Features/Entries/AddEntryFeatureTests"
+		),
 		.testTarget(
 			name: "AttachmentsFeatureTests",
 			dependencies: ["AttachmentsFeature"],

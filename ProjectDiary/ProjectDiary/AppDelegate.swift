@@ -21,7 +21,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 	override init() {
 		self.store = Store(
 			initialState: .init(
-				appDelegate: .init(),
 				featureState: .splash(.init())
 			),
 			reducer: { RootFeature()._printChanges() }

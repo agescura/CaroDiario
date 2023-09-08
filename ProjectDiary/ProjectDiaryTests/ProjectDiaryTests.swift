@@ -4,5 +4,4 @@ import ComposableArchitecture
 import RootFeature
 import SwiftUI
 
-class ProjectDiaryTests: XCTestCase {
-}
+class ProjectDiaryTests: XCTestCase {}

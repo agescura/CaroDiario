@@ -1,6 +1,6 @@
 import Foundation
 
-public enum StyleType: String, CaseIterable, Identifiable {
+public enum StyleType: String, CaseIterable, Identifiable, Codable {
     case rectangle = "Style.Rectangle"
     case rounded = "Style.Rounded"
     

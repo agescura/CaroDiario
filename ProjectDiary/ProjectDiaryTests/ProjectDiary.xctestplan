@@ -46,6 +46,13 @@
         "identifier" : "PasscodeFeatureTests",
         "name" : "PasscodeFeatureTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "UserDefaultsClientTests",
+        "name" : "UserDefaultsClientTests"
+      }
     }
   ],
   "version" : 1

@@ -10,7 +10,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-        appDelegate.store.send(.appDelegate(.didFinishLaunching))
+        appDelegate.store.send(.didFinishLaunching)
     }
     
     func windowScene(

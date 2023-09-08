@@ -10,6 +10,9 @@ extension DependencyValues {
 }
 
 public struct UserDefaultsClient {
+	public var userSettings: () -> UserSettings
+	public var setUserSettings: (UserSettings) -> Void
+	
 	public var boolForKey: (String) -> Bool
 	public var setBool: (Bool, String) -> Void
 	
@@ -24,6 +27,9 @@ public struct UserDefaultsClient {
 	public var remove: (String) -> Void
 	
 	public init(
+		userSettings: @escaping () -> UserSettings,
+		setUserSettings: @escaping (UserSettings) -> Void,
+		
 		boolForKey: @escaping (String) -> Bool,
 		setBool: @escaping (Bool, String) -> Void,
 		stringForKey: @escaping (String) -> String?,
@@ -34,6 +40,9 @@ public struct UserDefaultsClient {
 		setDate: @escaping (Date, String) -> Void,
 		remove: @escaping (String) -> Void
 	) {
+		self.userSettings = userSettings
+		self.setUserSettings = setUserSettings
+		
 		self.boolForKey = boolForKey
 		self.setBool = setBool
 		self.stringForKey = stringForKey

@@ -1,6 +1,6 @@
 import Foundation
 
-public enum IconAppType: String, CaseIterable {
+public enum IconAppType: String, CaseIterable, Codable {
     case light = "Style.Light"
     case dark = "Style.Dark"
     
