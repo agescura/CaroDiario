@@ -16,26 +16,6 @@ import Views
 public struct SettingsView: View {
 	private let store: StoreOf<SettingsFeature>
 	
-	private struct ViewState: Equatable {
-		let authenticationType: LocalAuthenticationType
-		let cameraStatus: AuthorizedVideoStatus
-		let hasPasscode: Bool
-		let language: Localizable
-		let microphoneStatus: RecordPermission
-		let showSplash: Bool
-		
-		init(
-			state: SettingsFeature.State
-		) {
-			self.authenticationType = state.authenticationType
-			self.cameraStatus = state.cameraStatus
-			self.hasPasscode = state.hasPasscode
-			self.language = state.language
-			self.microphoneStatus = state.recordPermission
-			self.showSplash = state.showSplash
-		}
-	}
-	
 	public init(
 		store: StoreOf<SettingsFeature>
 	) {
@@ -45,7 +25,7 @@ public struct SettingsView: View {
 	public var body: some View {
 		WithViewStore(
 			self.store,
-			observe: ViewState.init
+			observe: \.userSettings
 		) { viewStore in
 			NavigationView {
 				VStack {
@@ -94,7 +74,7 @@ public struct SettingsView: View {
 
 						Section {
 							PasscodeRowView(
-								title: "Settings.Code".localized(with: [viewStore.authenticationType.rawValue]),
+								title: "Settings.Code".localized(with: [/*viewStore.authenticationType.rawValue*/]),
 								status: viewStore.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
 							)
 							.contentShape(Rectangle())
@@ -117,7 +97,7 @@ public struct SettingsView: View {
 								action: SettingsFeature.Destination.Action.camera,
 								onTap: { viewStore.send(.cameraButtonTapped) },
 								destination: CameraView.init,
-								label: { CameraRowView(title: viewStore.cameraStatus.rawValue.localized) }
+								label: { CameraRowView(title: "viewStore.cameraStatus.rawValue.localized") }
 							)
 							
 							NavigationLinkStore(
@@ -129,7 +109,7 @@ public struct SettingsView: View {
 								action: SettingsFeature.Destination.Action.microphone,
 								onTap: { viewStore.send(.microphoneButtonTapped) },
 								destination: MicrophoneView.init,
-								label: { MicrophoneRowView(title: viewStore.microphoneStatus.title.localized) }
+								label: { MicrophoneRowView(title: "viewStore.microphoneStatus.title.localized") }
 							)
 						}
 
@@ -221,23 +201,6 @@ struct SettingsView_Previews: PreviewProvider {
 		SettingsView(
 			store: Store(
 				initialState: SettingsFeature.State(
-					cameraStatus: .notDetermined,
-					destination: .appearance(
-						AppearanceFeature.State(
-							appearanceSettings: .defaultValue,
-							destination: .layout(
-								LayoutFeature.State(
-									layoutType: .horizontal,
-									styleType: .rectangle,
-									entries: fakeEntries(
-										with: .rectangle,
-										layout: .horizontal
-									)
-								)
-							)
-						)
-					),
-					recordPermission: .undetermined,
 					userSettings: .defaultValue
 				),
 				reducer: SettingsFeature.init

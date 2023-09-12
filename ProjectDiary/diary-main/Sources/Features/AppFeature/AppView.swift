@@ -23,15 +23,15 @@ public struct AppReducer: Reducer {
 	public enum State: Equatable {
 		case splash(SplashFeature.State)
 		case onBoarding(WelcomeFeature.State)
-		case lockScreen(LockScreen.State)
-		case home(Home.State)
+		case lockScreen(LockScreenFeature.State)
+		case home(HomeFeature.State)
 	}
 	
 	public enum Action: Equatable {
 		case splash(SplashFeature.Action)
 		case onBoarding(WelcomeFeature.Action)
-		case lockScreen(LockScreen.Action)
-		case home(Home.Action)
+		case lockScreen(LockScreenFeature.Action)
+		case home(HomeFeature.Action)
 	}
 	
 	public var body: some ReducerOf<Self> {
@@ -42,10 +42,10 @@ public struct AppReducer: Reducer {
 			WelcomeFeature()
 		}
 		Scope(state: /State.lockScreen, action: /Action.lockScreen) {
-			LockScreen()
+			LockScreenFeature()
 		}
 		Scope(state: /State.home, action: /Action.home) {
-			Home()
+			HomeFeature()
 		}
 	}
 }

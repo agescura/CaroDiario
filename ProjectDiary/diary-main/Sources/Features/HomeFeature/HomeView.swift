@@ -67,100 +67,11 @@ public struct SharedState: Equatable {
 	}
 }
 
-public struct Home: Reducer {
-	public init() {}
-	
-	public struct State: Equatable {
-		public var tabBars: [TabViewType]
-		public var selectedTabBar: TabViewType
-		public var sharedState: SharedState
-		
-		public var entries: EntriesFeature.State {
-			get {
-				EntriesFeature.State(
-					destination: self.sharedState.destination,
-					isLoading: self.sharedState.isLoading,
-					entries: self.sharedState.entries
-				)
-			}
-			set {
-				self.sharedState.destination = newValue.destination
-				self.sharedState.isLoading = newValue.isLoading
-				self.sharedState.entries = newValue.entries
-			}
-		}
-		public var search: SearchFeature.State {
-			get { self.sharedState.search }
-			set { self.sharedState.search = newValue }
-		}
-		public var settings: SettingsFeature.State
-		
-		public init(
-			tabBars: [TabViewType],
-			selectedTabBar: TabViewType = .entries,
-			sharedState: SharedState,
-			settings: SettingsFeature.State
-		) {
-			self.tabBars = tabBars
-			self.selectedTabBar = selectedTabBar
-			self.sharedState = sharedState
-			self.settings = settings
-		}
-	}
-	
-	public enum Action: Equatable {
-		case tabBarSelected(TabViewType)
-		case starting
-		case entries(EntriesFeature.Action)
-		case search(SearchFeature.Action)
-		case settings(SettingsFeature.Action)
-	}
-	
-	public var body: some ReducerOf<Self> {
-		Scope(state: \.entries, action: /Action.entries) {
-			EntriesFeature()
-		}
-		Scope(state: \.settings, action: /Action.settings) {
-			SettingsFeature()
-		}
-		Scope(state: \.search, action: /Action.search) {
-			SearchFeature()
-		}
-		Reduce(self.core)
-	}
-	
-	private func core(
-		state: inout State,
-		action: Action
-	) -> Effect<Action> {
-		switch action {
-			case let .tabBarSelected(tab):
-				state.selectedTabBar = tab
-				return .none
-				
-			case .starting, .entries, .settings, .search:
-				return .none
-		}
-	}
-}
-
 public struct HomeView: View {
-	private let store: StoreOf<Home>
-	
-	private struct ViewState: Equatable {
-		let tabBars: [TabViewType]
-		let selectedTabBar: TabViewType
-		
-		init(
-			state: Home.State
-		) {
-			self.tabBars = state.tabBars
-			self.selectedTabBar = state.selectedTabBar
-		}
-	}
+	private let store: StoreOf<HomeFeature>
 	
 	public init(
-		store: StoreOf<Home>
+		store: StoreOf<HomeFeature>
 	) {
 		self.store = store
 	}
@@ -168,21 +79,48 @@ public struct HomeView: View {
 	public var body: some View {
 		WithViewStore(
 			self.store,
-			observe: ViewState.init
+			observe: \.selectedTab
 		) { viewStore in
 			TabView(
-				selection: viewStore.binding(
-					get: { $0.selectedTabBar },
-					send: Home.Action.tabBarSelected)
+				selection: viewStore.binding(send: HomeFeature.Action.tabBarSelected)
 			) {
-				ForEach(viewStore.tabBars, id: \.self) { type in
-					type.view(for: self.store)
-						.tabItem {
-							VStack {
-								Image(systemName: type.icon)
-								Text(type.rawValue)
-							}
-						}
+				EntriesView(
+					store: store.scope(
+						state: \.entries,
+						action: HomeFeature.Action.entries
+					)
+				)
+				.tabItem {
+					VStack {
+						Image(systemName: "note.text")
+						Text("Home.TabView.Entries".localized)
+					}
+				}
+				
+				SearchView(
+					store: store.scope(
+						state: \.search,
+						action: HomeFeature.Action.search
+					)
+				)
+				.tabItem {
+					VStack {
+						Image(systemName: "magnifyingglass")
+						Text("Home.TabView.Search".localized)
+					}
+				}
+				
+				SettingsView(
+					store: store.scope(
+						state: \.settings,
+						action: HomeFeature.Action.settings
+					)
+				)
+				.tabItem {
+					VStack {
+						Image(systemName: "gear")
+						Text("Home.TabView.Settings".localized)
+					}
 				}
 			}
 			.accentColor(.chambray)
@@ -191,35 +129,15 @@ public struct HomeView: View {
 	}
 }
 
-extension TabViewType {
-	
-	@ViewBuilder
-	func view(for store: StoreOf<Home>) -> some View {
-		switch self {
-				
-			case .entries:
-				EntriesView(
-					store: store.scope(
-						state: \.entries,
-						action: Home.Action.entries
-					)
-				)
-				
-			case .search:
-				SearchView(
-					store: store.scope(
-						state: \.search,
-						action: Home.Action.search
-					)
-				)
-				
-			case .settings:
-				SettingsView(
-					store: store.scope(
-						state: \.settings,
-						action: Home.Action.settings
-					)
-				)
-		}
+struct HomeView_Previews: PreviewProvider {
+	static var previews: some View {
+		HomeView(
+			store: Store(
+				initialState: HomeFeature.State(
+					userSettings: .defaultValue
+				),
+				reducer: HomeFeature.init
+			)
+		)
 	}
 }

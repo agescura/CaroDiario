@@ -17,41 +17,14 @@ public struct SettingsFeature: Reducer {
 	
 	public struct State: Equatable {
 		@PresentationState public var destination: Destination.State?
-		
-		public var showSplash: Bool
-		
-		public var styleType: StyleType
-		public var layoutType: LayoutType
-		public var themeType: ThemeType
-		public var iconAppType: IconAppType
-		public var language: Localizable
-		
-		public var authenticationType: LocalAuthenticationType = .none
-		public var hasPasscode: Bool
-		
-		public var cameraStatus: AuthorizedVideoStatus
-		public var recordPermission: RecordPermission
-		public var optionTimeForAskPasscode: Int
-		public var faceIdEnabled: Bool
+		public var userSettings: UserSettings
 		
 		public init(
-			cameraStatus: AuthorizedVideoStatus,
 			destination: Destination.State? = nil,
-			recordPermission: RecordPermission,
 			userSettings: UserSettings
 		) {
 			self.destination = destination
-			self.showSplash = userSettings.showSplash
-			self.styleType = userSettings.appearance.styleType
-			self.layoutType = userSettings.appearance.layoutType
-			self.themeType = userSettings.appearance.themeType
-			self.hasPasscode = userSettings.hasPasscode
-			self.iconAppType = userSettings.appearance.iconAppType
-			self.cameraStatus = cameraStatus
-			self.optionTimeForAskPasscode = userSettings.optionTimeForAskPasscode
-			self.faceIdEnabled = userSettings.faceIdEnabled
-			self.language = userSettings.language
-			self.recordPermission = recordPermission
+			self.userSettings = userSettings
 		}
 	}
 	
@@ -60,7 +33,7 @@ public struct SettingsFeature: Reducer {
 		case destination(PresentationAction<Destination.Action>)
 		case appearanceButtonTapped
 		
-		case toggleShowSplash(isOn: Bool)
+		case showSplash(isOn: Bool)
 		case biometricResult(LocalAuthenticationType)
 		
 		case languageButtonTapped
@@ -154,37 +127,32 @@ public struct SettingsFeature: Reducer {
 			case .appearanceButtonTapped:
 				state.destination = .appearance(
 					AppearanceFeature.State(
-						appearanceSettings: AppearanceSettings(
-							styleType: state.styleType,
-							layoutType: state.layoutType,
-							themeType: state.themeType,
-							iconAppType: state.iconAppType
-						)
+						appearanceSettings: state.userSettings.appearance
 					)
 				)
 				return .none
 				
 			case .languageButtonTapped:
 				state.destination = .language(
-					LanguageFeature.State(language: state.language)
+					LanguageFeature.State(language: state.userSettings.language)
 				)
 				return .none
 				
 			case let .toggleShowSplash(isOn):
-				state.showSplash = isOn
+				state.userSettings.showSplash = isOn
 				return .none
 				
 			case let .biometricResult(result):
-				state.authenticationType = result
+//				state.userSettings.authenticationType = result
 				return .none
 				
 			case.destination(.presented(.activate(.insert(.presented(.menuButtonTapped))))):
-				state.hasPasscode = true
+//				state.userSettings.hasPasscode = true
 				return .none
 				
 			case .destination(.presented(.menu(.delegate(.turnOffPasscode)))),
 					.destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.turnOffPasscode)))))))):
-				state.hasPasscode = false
+//				state.userSettings.hasPasscode = false
 				state.destination = nil
 				return .none
 			
@@ -198,9 +166,11 @@ public struct SettingsFeature: Reducer {
 			case .destination(.dismiss):
 				switch state.destination {
 					case let .camera(cameraState):
-						state.cameraStatus = cameraState.cameraStatus
+//						state.cameraStatus = cameraState.cameraStatus
+						break
 					case let .microphone(microphoneState):
-						state.recordPermission = microphoneState.recordPermission
+//						state.recordPermission = microphoneState.recordPermission
+						break
 					case .about, .activate, .agreements, .appearance, .export, .language, .menu, .none:
 						break
 				}
@@ -212,32 +182,32 @@ public struct SettingsFeature: Reducer {
 			case .activateButtonTapped:
 				state.destination = .activate(
 					ActivatePasscodeFeature.State(
-						faceIdEnabled: state.faceIdEnabled,
-						hasPasscode: state.hasPasscode
+						faceIdEnabled: state.userSettings.faceIdEnabled,
+						hasPasscode: state.userSettings.hasPasscode
 					)
 				)
 				return .none
 				
 			case .menuButtonTapped:
-				state.destination = .menu(
-					MenuPasscodeFeature.State(
-						authenticationType: state.authenticationType,
-						optionTimeForAskPasscode: state.optionTimeForAskPasscode,
-						faceIdEnabled: state.faceIdEnabled
-					)
-				)
+//				state.destination = .menu(
+//					MenuPasscodeFeature.State(
+//						authenticationType: state.userSettings.authenticationType,
+//						optionTimeForAskPasscode: state.userSettings.optionTimeForAskPasscode,
+//						faceIdEnabled: state.userSettings.faceIdEnabled
+//					)
+//				)
 				return .none
 				
 			case .microphoneButtonTapped:
-				state.destination = .microphone(
-					Microphone.State(recordPermission: state.recordPermission)
-				)
+//				state.destination = .microphone(
+//					Microphone.State(recordPermission: state.recordPermission)
+//				)
 				return .none
 				
 			case .cameraButtonTapped:
-				state.destination = .camera(
-					CameraFeature.State(cameraStatus: state.cameraStatus)
-				)
+//				state.destination = .camera(
+//					CameraFeature.State(cameraStatus: state.cameraStatus)
+//				)
 				return .none
 				
 			case .agreementsButtonTapped:

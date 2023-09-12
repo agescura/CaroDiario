@@ -9,20 +9,14 @@ public struct SearchFeature: Reducer {
 	
 	public struct State: Equatable {
 		@PresentationState public var destination: Destination.State?
-		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
+		public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
 		public var searchText: String = ""
 		
 		public var entriesCount: Int {
 			entries.map(\.dayEntries.entries.count).reduce(0, +)
 		}
 		
-		public init(
-			entries: IdentifiedArrayOf<DayEntriesRow.State> = [],
-			searchText: String = ""
-		) {
-			self.entries = entries
-			self.searchText = searchText
-		}
+		public init() {}
 	}
 	
 	public enum Action: Equatable {

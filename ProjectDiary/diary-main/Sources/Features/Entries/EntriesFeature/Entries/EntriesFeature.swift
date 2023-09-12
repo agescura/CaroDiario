@@ -13,17 +13,16 @@ public struct EntriesFeature: Reducer {
 	
 	public struct State: Equatable {
 		@PresentationState public var destination: Destination.State?
-		public var isLoading: Bool
-		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
+		public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
+		public var isLoading: Bool = true
+		public var userSettings: UserSettings
 		
 		public init(
 			destination: Destination.State? = nil,
-			isLoading: Bool = true,
-			entries: IdentifiedArrayOf<DayEntriesRow.State> = []
+			userSettings: UserSettings
 		) {
 			self.destination = destination
-			self.isLoading = isLoading
-			self.entries = entries
+			self.userSettings = userSettings
 		}
 	}
 	

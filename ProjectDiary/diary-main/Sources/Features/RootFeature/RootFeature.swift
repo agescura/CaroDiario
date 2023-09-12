@@ -15,9 +15,8 @@ public struct RootFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
-		public var featureState: AppReducer.State
+		public var app: AppReducer.State = .splash(SplashFeature.State())
 		public var userSettings: UserSettings = .defaultValue
-		
 		
 		public var isFirstStarted = true
 		public var isBiometricAlertPresent = false
@@ -29,20 +28,13 @@ public struct RootFeature: Reducer {
 			case unknown
 		}
 		
-		public init(
-			featureState: AppReducer.State
-		) {
-			self.featureState = featureState
-		}
+		public init() {}
 	}
 	
 	public enum Action: Equatable {
+		case app(AppReducer.Action)
 		case didFinishLaunching
-		case featureAction(AppReducer.Action)
 		case userSettingsResponse(UserSettings)
-		
-		case setUserInterfaceStyle
-		case startFirstScreen
 		
 		case requestCameraStatus
 		case startHome(cameraStatus: AuthorizedVideoStatus)
@@ -69,11 +61,14 @@ public struct RootFeature: Reducer {
 	public var body: some ReducerOf<Self> {
 //		Reduce(self.coreData)
 //		Reduce(self.userDefaults)
-		Scope(state: \.featureState, action: /Action.featureAction) {
+		Scope(state: \.app, action: /Action.app) {
 			AppReducer()
 		}
 		Reduce { state, action in
 			switch action {
+				case .app:
+					return .none
+
 				case .didFinishLaunching:
 					return .run { send in
 						let userSettings = self.userDefaultsClient.userSettings()
@@ -81,23 +76,23 @@ public struct RootFeature: Reducer {
 						await send(.userSettingsResponse(userSettings))
 					}
 					
-				case .featureAction:
-					return .none
-					
 				case let .userSettingsResponse(userSettings):
 					state.userSettings = userSettings
 					
-					if state.userSettings.showSplash {
-						state.featureState = .splash(SplashFeature.State())
+					if userSettings.showSplash {
 						return .none
 					}
 					
-					if !state.userSettings.passcode.isEmpty {
-						state.featureState = .lockScreen(LockScreen.State(code: state.userSettings.passcode))
+					if !userSettings.passcode.isEmpty {
+						state.app = .lockScreen(LockScreenFeature.State(code: userSettings.passcode))
 						return .none
 					}
 					
-					state.featureState = .onBoarding(WelcomeFeature.State())
+					if !userSettings.hasShownOnboarding {
+						state.app = .onBoarding(WelcomeFeature.State())
+						return .none
+					}
+					
 					return .none
 					
 				default:
@@ -289,58 +284,58 @@ public struct RootFeature: Reducer {
 		state: inout State,
 		action: Action
 	) -> Effect<Action> {
-		if case .home = state.featureState {
+		if case .home = state.app {
 			switch action {
-				case .featureAction(.home(.entries(.onAppear))):
+				case .app(.home(.entries(.onAppear))):
 					return .run { send in
 						for await entries in await self.coreDataClient.subscriber() {
-							await send(.featureAction(.home(.entries(.coreDataClientAction(.entries(entries))))))
+							await send(.app(.home(.entries(.coreDataClientAction(.entries(entries))))))
 						}
 					}
 
-				case let .featureAction(.home(.entries(.remove(entry)))):
+				case let .app(.home(.entries(.remove(entry)))):
 					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
-				case .featureAction(.home(.settings(.destination(.presented(.export(.processPDF)))))):
+				case .app(.home(.settings(.destination(.presented(.export(.processPDF)))))):
 					return .run { send in
 						await send(
-							.featureAction(.home(.settings(.destination(.presented(.export(.generatePDF(self.coreDataClient.fetchAll())))))))
+							.app(.home(.settings(.destination(.presented(.export(.generatePDF(self.coreDataClient.fetchAll())))))))
 						)
 					}
 					
-				case .featureAction(.home(.settings(.destination(.presented(.export(.previewPDFButtonTapped)))))):
+				case .app(.home(.settings(.destination(.presented(.export(.previewPDFButtonTapped)))))):
 					return .run { send in
 						await send(
-							.featureAction(.home(.settings(.destination(.presented(.export(.generatePreview(self.coreDataClient.fetchAll())))))))
+							.app(.home(.settings(.destination(.presented(.export(.generatePreview(self.coreDataClient.fetchAll())))))))
 						)
 					}
 					
-				case let .featureAction(.home(.search(.searching(newText: newText)))):
+				case let .app(.home(.search(.searching(newText: newText)))):
 					return .run { send in
 						await send(
-							.featureAction(.home(.search(.searchResponse(self.coreDataClient.searchEntries(newText)))))
+							.app(.home(.search(.searchResponse(self.coreDataClient.searchEntries(newText)))))
 						)
 					}
 					
-				case .featureAction(.home(.search(.navigateImageSearch))):
+				case .app(.home(.search(.navigateImageSearch))):
 					return .run { send in
-						await send(.featureAction(.home(.search(.navigateSearch(.images, self.coreDataClient.searchImageEntries())))))
+						await send(.app(.home(.search(.navigateSearch(.images, self.coreDataClient.searchImageEntries())))))
 					}
 					
-				case .featureAction(.home(.search(.navigateVideoSearch))):
+				case .app(.home(.search(.navigateVideoSearch))):
 					return .run { send in
-						await send(.featureAction(.home(.search(.navigateSearch(.videos, self.coreDataClient.searchVideoEntries())))))
+						await send(.app(.home(.search(.navigateSearch(.videos, self.coreDataClient.searchVideoEntries())))))
 					}
 					
-				case .featureAction(.home(.search(.navigateAudioSearch))):
+				case .app(.home(.search(.navigateAudioSearch))):
 					return .run { send in
-						await send(.featureAction(.home(.search(.navigateSearch(.audios, self.coreDataClient.searchAudioEntries())))))
+						await send(.app(.home(.search(.navigateSearch(.audios, self.coreDataClient.searchAudioEntries())))))
 					}
 					
-				case let .featureAction(.home(.search(.remove(entry)))):
+				case let .app(.home(.search(.remove(entry)))):
 					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
-				case let .featureAction(.home(.search(.destination(.presented(.entryDetail(.destination(.presented(.alert(.remove(entry)))))))))):
+				case let .app(.home(.search(.destination(.presented(.entryDetail(.destination(.presented(.alert(.remove(entry)))))))))):
 					return .run { _ in await self.coreDataClient.removeEntry(entry.id) }
 					
 				default:
@@ -348,13 +343,13 @@ public struct RootFeature: Reducer {
 			}
 		}
 		
-		if case let .home(homeState) = state.featureState,
+		if case let .home(homeState) = state.app,
 			case let .detail(entryDetailState) = homeState.entries.destination {
 			switch action {
-				case .featureAction(.home(.entries(.destination(.presented(.detail(.onAppear)))))):
+				case .app(.home(.entries(.destination(.presented(.detail(.onAppear)))))):
 					return .run { send in
 						await send(
-							.featureAction(
+							.app(
 								.home(
 									.entries(
 										.destination(
@@ -372,7 +367,7 @@ public struct RootFeature: Reducer {
 						)
 					}
 					
-				case let .featureAction(.home(.entries(.destination(.presented(.detail(.removeAttachmentResponse(id))))))):
+				case let .app(.home(.entries(.destination(.presented(.detail(.removeAttachmentResponse(id))))))):
 					return .run { _ in await self.coreDataClient.removeAttachmentEntry(id) }
 					
 				default:
@@ -380,17 +375,17 @@ public struct RootFeature: Reducer {
 			}
 		}
 		
-		if case let .home(homeState) = state.featureState,
+		if case let .home(homeState) = state.app,
 			let addEntryState = homeState.entries.addEntryState {
 			switch action {
-				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.createDraftEntry)))))),
-						.featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.createDraftEntry))))))))):
+				case .app(.home(.entries(.destination(.presented(.addEntry(.createDraftEntry)))))),
+						.app(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.createDraftEntry))))))))):
 					return .run { _ in
 						await self.coreDataClient.createDraft(addEntryState.entry)
 					}
 					
-				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.view(.addButtonTapped))))))),
-						.featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.view(.addButtonTapped)))))))))):
+				case .app(.home(.entries(.destination(.presented(.addEntry(.view(.addButtonTapped))))))),
+						.app(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.view(.addButtonTapped)))))))))):
 					let entryText = EntryText(
 						id: self.uuid(),
 						message: addEntryState.entry.text.message,
@@ -401,24 +396,24 @@ public struct RootFeature: Reducer {
 						await self.coreDataClient.publishEntry(addEntryState.entry)
 						
 					}
-				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadImageResponse(entryImage))))))),
-					let .featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadImageResponse(entryImage)))))))))):
+				case let .app(.home(.entries(.destination(.presented(.addEntry(.loadImageResponse(entryImage))))))),
+					let .app(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadImageResponse(entryImage)))))))))):
 					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryImage, addEntryState.entry.id) }
 					
-				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadVideoResponse(entryVideo))))))),
-					let .featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadVideoResponse(entryVideo)))))))))):
+				case let .app(.home(.entries(.destination(.presented(.addEntry(.loadVideoResponse(entryVideo))))))),
+					let .app(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadVideoResponse(entryVideo)))))))))):
 					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryVideo, addEntryState.entry.id) }
 					
-				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.loadAudioResponse(entryAudio))))))),
-					let .featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadAudioResponse(entryAudio)))))))))):
+				case let .app(.home(.entries(.destination(.presented(.addEntry(.loadAudioResponse(entryAudio))))))),
+					let .app(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.loadAudioResponse(entryAudio)))))))))):
 					return .run { _ in await self.coreDataClient.addAttachmentEntry(entryAudio, addEntryState.entry.id) }
 					
-				case let .featureAction(.home(.entries(.destination(.presented(.addEntry(.removeAttachmentResponse(id))))))),
-					let .featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.removeAttachmentResponse(id)))))))))):
+				case let .app(.home(.entries(.destination(.presented(.addEntry(.removeAttachmentResponse(id))))))),
+					let .app(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.removeAttachmentResponse(id)))))))))):
 					return .run { _ in await self.coreDataClient.removeAttachmentEntry(id) }
 					
-				case .featureAction(.home(.entries(.destination(.presented(.addEntry(.removeDraftEntryDismissAlert)))))),
-						.featureAction(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.removeDraftEntryDismissAlert))))))))):
+				case .app(.home(.entries(.destination(.presented(.addEntry(.removeDraftEntryDismissAlert)))))),
+						.app(.home(.entries(.destination(.presented(.detail(.destination(.presented(.edit(.removeDraftEntryDismissAlert))))))))):
 					return .run { _ in await self.coreDataClient.removeEntry(addEntryState.entry.id) }
 					
 				default:
@@ -433,46 +428,46 @@ public struct RootFeature: Reducer {
 		action: Action
 	) -> Effect<Action> {
 		switch action {
-			case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.layout(.layoutChanged(layout)))))))))):
+			case let .app(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.layout(.layoutChanged(layout)))))))))):
 				self.userDefaultsClient.set(layoutType: layout)
 				return .none
-			case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.style(.styleChanged(style)))))))))):
+			case let .app(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.style(.styleChanged(style)))))))))):
 				self.userDefaultsClient.set(styleType: style)
 				return .none
-			case let .featureAction(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.theme(.themeChanged(theme)))))))))):
+			case let .app(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.theme(.themeChanged(theme)))))))))):
 				self.userDefaultsClient.set(themeType: theme)
 				return .none
-			case let .featureAction(.home(.settings(.toggleShowSplash(isOn: isOn)))):
+			case let .app(.home(.settings(.toggleShowSplash(isOn: isOn)))):
 				self.userDefaultsClient.setHideSplashScreen(!isOn)
 				return .none
-			case .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.turnOffPasscode))))))))))),
-					.featureAction(.home(.settings(.destination(.presented(.menu(.delegate(.turnOffPasscode))))))):
+			case .app(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.turnOffPasscode))))))))))),
+					.app(.home(.settings(.destination(.presented(.menu(.delegate(.turnOffPasscode))))))):
 				self.userDefaultsClient.removePasscode()
 				return .none
-			case let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.update(code: code))))))))):
+			case let .app(.home(.settings(.destination(.presented(.activate(.insert(.presented(.update(code: code))))))))):
 				self.userDefaultsClient.setPasscode(code)
 				return .none
-			case let .featureAction(.home(.settings(.destination(.presented(.menu(.faceId(response: faceId))))))),
-				let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.faceId(response: faceId))))))))))):
+			case let .app(.home(.settings(.destination(.presented(.menu(.faceId(response: faceId))))))),
+				let .app(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.faceId(response: faceId))))))))))):
 				self.userDefaultsClient.setFaceIDActivate(faceId)
 				return .none
-			case let .featureAction(.home(.settings(.destination(.presented(.menu(.optionTimeForAskPasscode(changed: newOption))))))),
-				let .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.optionTimeForAskPasscode(changed: newOption))))))))))):
+			case let .app(.home(.settings(.destination(.presented(.menu(.optionTimeForAskPasscode(changed: newOption))))))),
+				let .app(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.optionTimeForAskPasscode(changed: newOption))))))))))):
 				self.userDefaultsClient.setOptionTimeForAskPasscode(newOption.value)
 				return .none
-			case .featureAction(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menuButtonTapped)))))))):
+			case .app(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menuButtonTapped)))))))):
 				self.userDefaultsClient.setOptionTimeForAskPasscode(TimeForAskPasscode.never.value)
 				return .none
-			case let .featureAction(.home(.settings(.destination(.presented(.language(.updateLanguageTapped(language))))))):
+			case let .app(.home(.settings(.destination(.presented(.language(.updateLanguageTapped(language))))))):
 				self.userDefaultsClient.setLanguage(language.rawValue)
 				return .none
-			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.styleChanged(styleChanged))))))))):
+			case let .app(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.styleChanged(styleChanged))))))))):
 				self.userDefaultsClient.set(styleType: styleChanged)
 				return .none
-			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.layoutChanged(layoutChanged)))))))))))):
+			case let .app(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.layoutChanged(layoutChanged)))))))))))):
 				self.userDefaultsClient.set(layoutType: layoutChanged)
 				return .none
-			case let .featureAction(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.destination(.presented(
+			case let .app(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.destination(.presented(
 				.theme(.themeChanged(themeChanged))))))))))))))):
 				self.userDefaultsClient.set(themeType: themeChanged)
 				return .none

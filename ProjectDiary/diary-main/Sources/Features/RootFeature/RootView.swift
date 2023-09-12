@@ -14,8 +14,8 @@ public struct RootView: View {
 	public var body: some View {
 		AppView(
 			store: self.store.scope(
-				state: \.featureState,
-				action: RootFeature.Action.featureAction
+				state: \.app,
+				action: RootFeature.Action.app
 			)
 		)
 	}

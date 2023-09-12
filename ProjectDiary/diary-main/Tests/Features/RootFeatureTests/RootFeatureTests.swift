@@ -1,181 +1,68 @@
-import XCTest
-@testable import RootFeature
 import ComposableArchitecture
+import Models
+import LockScreenFeature
+import OnboardingFeature
+import SplashFeature
+@testable import RootFeature
 import SwiftUI
-import UserDefaultsClient
-import EntriesFeature
+import XCTest
 
 @MainActor
 class RootFeatureTests: XCTestCase {
-    func testOpeningFirstTime() async {
-        var setBoolCalled = false
-        let emptyUserDefaultsClient = UserDefaultsClient(
-            boolForKey: { _ in false },
-            setBool: { value, key in
-                if key == "hasShownOnboardingKey", value {
-                    setBoolCalled = true
-                }
-                return .none
-            },
-            stringForKey: { _ in nil },
-            setString: { _, _ in .none },
-            intForKey: { _ in nil },
-            setInt: { _, _ in .fireAndForget {}},
-            dateForKey: { _ in nil },
-            setDate: { _, _ in .fireAndForget {} },
-            remove: { _ in .fireAndForget {} }
-        )
-
-        let store = TestStore(
-            initialState: RootState(
-                appDelegate: .init(),
-                featureState: .splash(.init())
-            ),
-            reducer: rootReducer,
-            environment: RootEnvironment(
-                coreDataClient: .noop,
-                fileClient: .noop,
-                userDefaultsClient: emptyUserDefaultsClient,
-                localAuthenticationClient: .noop,
-                applicationClient: .noop,
-                avCaptureDeviceClient: .noop,
-                feedbackGeneratorClient: .noop,
-                avAudioSessionClient: .noop,
-                avAudioPlayerClient: .noop,
-                avAudioRecorderClient: .noop,
-                storeKitClient: .noop,
-                pdfKitClient: .noop,
-                avAssetClient: .noop,
-                mainQueue: .immediate,
-                backgroundQueue: .immediate,
-                date: Date.init,
-                uuid: UUID.init
-            )
-        )
-        
-        await store.send(.appDelegate(.didFinishLaunching))
-        await store.receive(.setUserInterfaceStyle)
-        await store.receive(.startFirstScreen)
-        await store.receive(.featureAction(.splash(.startAnimation)))
-        await store.receive(.featureAction(.splash(.verticalLineAnimation))) {
-            $0.featureState = .splash(.init(animation: .verticalLine))
-        }
-        await store.receive(.featureAction(.splash(.areaAnimation))) {
-            $0.featureState = .splash(.init(animation: .horizontalArea))
-        }
-        await store.receive(.featureAction(.splash(.finishAnimation))) {
-            $0.featureState = .onBoarding(.init())
-        }
+    func test_openingFirstTime_NavigateToSplash() async {
+		 let userSettings = UserSettings.defaultValue
+		 
+		 let store = TestStore(
+			initialState: RootFeature.State(),
+			reducer: RootFeature.init
+		 ) {
+			 $0.userDefaultsClient.userSettings = { userSettings }
+			 $0.applicationClient.setUserInterfaceStyle = { _ in }
+		 }
+		 
+		 await store.send(.didFinishLaunching)
+		 await store.receive(.userSettingsResponse(.defaultValue))
+		 
     }
     
-    func testReopeningWithSplashEnabled() async {
-        let emptyUserDefaultsClient = UserDefaultsClient(
-            boolForKey: { key in
-                if key == "hasShownOnboardingKey" {
-                    return true
-                }
-                return false
-            },
-            setBool: { _, _ in .none },
-            stringForKey: { _ in nil },
-            setString: { _, _ in .none },
-            intForKey: { _ in nil },
-            setInt: { _, _ in .fireAndForget {}},
-            dateForKey: { _ in nil },
-            setDate: { _, _ in .fireAndForget {} },
-            remove: { _ in .fireAndForget {} }
-        )
-        let store = TestStore(
-            initialState: RootState(
-                appDelegate: .init(),
-                featureState: .splash(.init())
-            ),
-            reducer: rootReducer,
-            environment: RootEnvironment(
-                coreDataClient: .noop,
-                fileClient: .noop,
-                userDefaultsClient: emptyUserDefaultsClient,
-                localAuthenticationClient: .noop,
-                applicationClient: .noop,
-                avCaptureDeviceClient: .noop,
-                feedbackGeneratorClient: .noop,
-                avAudioSessionClient: .noop,
-                avAudioPlayerClient: .noop,
-                avAudioRecorderClient: .noop,
-                storeKitClient: .noop,
-                pdfKitClient: .noop,
-                avAssetClient: .noop,
-                mainQueue: .immediate,
-                backgroundQueue: .immediate,
-                date: Date.init,
-                uuid: UUID.init
-            )
-        )
-        
-        await store.send(.appDelegate(.didFinishLaunching))
-        await store.receive(.setUserInterfaceStyle)
-        await store.receive(.startFirstScreen)
-        await store.receive(.featureAction(.splash(.startAnimation)))
-        await store.receive(.featureAction(.splash(.verticalLineAnimation))) {
-            $0.featureState = .splash(.init(animation: .verticalLine))
-        }
-        await store.receive(.featureAction(.splash(.areaAnimation))) {
-            $0.featureState = .splash(.init(animation: .horizontalArea))
-        }
-        await store.receive(.featureAction(.splash(.finishAnimation))) {
-            $0.featureState = .splash(.init(animation: .finish))
-        }
+    func test_openingDisabledSplashAndShownOnboarding_NavigateToHome() async {
+		 var userSettings = UserSettings.defaultValue
+		 userSettings.hasShownOnboarding = true
+		 userSettings.showSplash = false
+		 
+		 let store = TestStore(
+			initialState: RootFeature.State(),
+			reducer: RootFeature.init
+		 ) {
+			 $0.userDefaultsClient.userSettings = { userSettings }
+			 $0.applicationClient.setUserInterfaceStyle = { _ in }
+		 }
+		 
+		 await store.send(.didFinishLaunching)
+		 await store.receive(.userSettingsResponse(userSettings)) {
+			 $0.userSettings = userSettings
+			 $0.app = .splash(SplashFeature.State())
+		 }
     }
     
-    func testReopeningAppWithSplashDisabled() async {
-        let emptyUserDefaultsClient = UserDefaultsClient(
-            boolForKey: { key in
-                if key == "hasShownOnboardingKey" {
-                    return true
-                }
-                if key == "hideSplashScreenKey" {
-                    return true
-                }
-                return false
-            },
-            setBool: { _, _ in .none },
-            stringForKey: { _ in nil },
-            setString: { _, _ in .none },
-            intForKey: { _ in nil },
-            setInt: { _, _ in .fireAndForget {}},
-            dateForKey: { _ in nil },
-            setDate: { _, _ in .fireAndForget {} },
-            remove: { _ in .fireAndForget {} }
-        )
-        let store = TestStore(
-            initialState: RootState(
-                appDelegate: .init(),
-                featureState: .splash(.init())
-            ),
-            reducer: rootReducer,
-            environment: RootEnvironment(
-                coreDataClient: .noop,
-                fileClient: .noop,
-                userDefaultsClient: emptyUserDefaultsClient,
-                localAuthenticationClient: .noop,
-                applicationClient: .noop,
-                avCaptureDeviceClient: .noop,
-                feedbackGeneratorClient: .noop,
-                avAudioSessionClient: .noop,
-                avAudioPlayerClient: .noop,
-                avAudioRecorderClient: .noop,
-                storeKitClient: .noop,
-                pdfKitClient: .noop,
-                avAssetClient: .noop,
-                mainQueue: .immediate,
-                backgroundQueue: .immediate,
-                date: Date.init,
-                uuid: UUID.init
-            )
-        )
-        
-        await store.send(.appDelegate(.didFinishLaunching))
-        await store.receive(.setUserInterfaceStyle)
-        await store.receive(.startFirstScreen)
+	func test_openingDisabledSplashAndPasscode_NavigateToHome() async {
+		let passcode = "1111"
+		var userSettings = UserSettings.defaultValue
+		userSettings.passcode = passcode
+		userSettings.showSplash = false
+		
+		let store = TestStore(
+		  initialState: RootFeature.State(),
+		  reducer: RootFeature.init
+		) {
+			$0.userDefaultsClient.userSettings = { userSettings }
+			$0.applicationClient.setUserInterfaceStyle = { _ in }
+		}
+		
+		await store.send(.didFinishLaunching)
+		await store.receive(.userSettingsResponse(userSettings)) {
+			$0.userSettings = userSettings
+			$0.app = .lockScreen(LockScreenFeature.State(code: passcode))
+		}
     }
 }
