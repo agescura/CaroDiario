@@ -15,7 +15,7 @@ public struct RootFeature: Reducer {
 	public init() {}
 	
 	public struct State: Equatable {
-		public var app: AppReducer.State = .splash(SplashFeature.State())
+		public var app: AppFeature.State = .empty
 		public var userSettings: UserSettings = .defaultValue
 		
 		public var isFirstStarted = true
@@ -32,7 +32,7 @@ public struct RootFeature: Reducer {
 	}
 	
 	public enum Action: Equatable {
-		case app(AppReducer.Action)
+		case app(AppFeature.Action)
 		case didFinishLaunching
 		case userSettingsResponse(UserSettings)
 		
@@ -62,24 +62,47 @@ public struct RootFeature: Reducer {
 //		Reduce(self.coreData)
 //		Reduce(self.userDefaults)
 		Scope(state: \.app, action: /Action.app) {
-			AppReducer()
+			AppFeature()
 		}
 		Reduce { state, action in
 			switch action {
+				case .app(.splash(.delegate(.finishAnimation))):
+					if !state.userSettings.passcode.isEmpty {
+						state.app = .lockScreen(LockScreenFeature.State(code: state.userSettings.passcode))
+						return .none
+					}
+					
+					if !state.userSettings.hasShownOnboarding {
+						state.app = .onBoarding(WelcomeFeature.State())
+						return .none
+					}
+					
+					state.app = .home(HomeFeature.State(userSettings: state.userSettings))
+					return .none
+					
+				case .app(.onBoarding(.delegate(.skip))),
+						.app(.onBoarding(.destination(.presented(.privacy(.delegate(.skip)))))),
+						.app(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.delegate(.skip))))))))),
+						.app(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.delegate(.skip)))))))))))),
+						.app(.onBoarding(.destination(.presented(.privacy(.destination(.presented(.style(.destination(.presented(.layout(.destination(.presented(.theme(.startButtonTapped)))))))))))))):
+					state.app = .home(HomeFeature.State(userSettings: state.userSettings))
+					return .none
+					
 				case .app:
 					return .none
 
 				case .didFinishLaunching:
-					return .run { send in
+					return .run { @MainActor send in
 						let userSettings = self.userDefaultsClient.userSettings()
 						await self.applicationClient.setUserInterfaceStyle(userSettings.appearance.themeType.userInterfaceStyle)
-						await send(.userSettingsResponse(userSettings))
+						send(.userSettingsResponse(userSettings))
 					}
 					
 				case let .userSettingsResponse(userSettings):
 					state.userSettings = userSettings
 					
 					if userSettings.showSplash {
+						state.app = .splash(SplashFeature.State())
 						return .none
 					}
 					
@@ -92,6 +115,8 @@ public struct RootFeature: Reducer {
 						state.app = .onBoarding(WelcomeFeature.State())
 						return .none
 					}
+					
+					state.app = .home(HomeFeature.State(userSettings: userSettings))
 					
 					return .none
 					
@@ -437,7 +462,7 @@ public struct RootFeature: Reducer {
 			case let .app(.home(.settings(.destination(.presented(.appearance(.destination(.presented(.theme(.themeChanged(theme)))))))))):
 				self.userDefaultsClient.set(themeType: theme)
 				return .none
-			case let .app(.home(.settings(.toggleShowSplash(isOn: isOn)))):
+			case let .app(.home(.settings(.showSplash(isOn: isOn)))):
 				self.userDefaultsClient.setHideSplashScreen(!isOn)
 				return .none
 			case .app(.home(.settings(.destination(.presented(.activate(.insert(.presented(.menu(.presented(.delegate(.turnOffPasscode))))))))))),

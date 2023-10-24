@@ -66,20 +66,15 @@ public struct HomeFeature: Reducer {
 		Scope(state: \.search, action: /Action.search) {
 			SearchFeature()
 		}
-		Reduce(self.core)
-	}
-	
-	private func core(
-		state: inout State,
-		action: Action
-	) -> Effect<Action> {
-		switch action {
-			case let .tabBarSelected(tab):
-				state.selectedTab = tab
-				return .none
-				
-			case .starting, .entries, .settings, .search:
-				return .none
+		Reduce { state, action in
+			switch action {
+				case let .tabBarSelected(tab):
+					state.selectedTab = tab
+					return .none
+					
+				case .starting, .entries, .settings, .search:
+					return .none
+			}
 		}
 	}
 }

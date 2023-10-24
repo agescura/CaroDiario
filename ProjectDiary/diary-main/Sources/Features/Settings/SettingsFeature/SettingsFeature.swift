@@ -18,6 +18,8 @@ public struct SettingsFeature: Reducer {
 	public struct State: Equatable {
 		@PresentationState public var destination: Destination.State?
 		public var userSettings: UserSettings
+		public var cameraStatus: AuthorizedVideoStatus = .notDetermined
+		public var microphoneStatus: RecordPermission = .undetermined
 		
 		public init(
 			destination: Destination.State? = nil,
@@ -30,6 +32,7 @@ public struct SettingsFeature: Reducer {
 	
 	public enum Action: Equatable {
 		case onAppear
+		case cameraStatusResponse(AuthorizedVideoStatus)
 		case destination(PresentationAction<Destination.Action>)
 		case appearanceButtonTapped
 		
@@ -50,6 +53,8 @@ public struct SettingsFeature: Reducer {
 	@Dependency(\.mainQueue) private var mainQueue
 	@Dependency(\.localAuthenticationClient) private var localAuthenticationClient
 	@Dependency(\.storeKitClient) private var storeKitClient
+	@Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
+	@Dependency(\.avAudioRecorderClient) private var avAudioRecorderClient
 	
 	public struct Destination: Reducer {
 		public enum State: Equatable {
@@ -120,7 +125,9 @@ public struct SettingsFeature: Reducer {
 	) -> Effect<Action> {
 		switch action {
 			case .onAppear:
+				state.microphoneStatus = self.avAudioRecorderClient.recordPermission()
 				return .run { send in
+					await send(.cameraStatusResponse(self.avCaptureDeviceClient.authorizationStatus()))
 					await send(.biometricResult(self.localAuthenticationClient.determineType()))
 				}
 				
@@ -132,13 +139,17 @@ public struct SettingsFeature: Reducer {
 				)
 				return .none
 				
+			case let .cameraStatusResponse(cameraStatus):
+				state.cameraStatus = cameraStatus
+				return .none
+				
 			case .languageButtonTapped:
 				state.destination = .language(
 					LanguageFeature.State(language: state.userSettings.language)
 				)
 				return .none
 				
-			case let .toggleShowSplash(isOn):
+			case let .showSplash(isOn):
 				state.userSettings.showSplash = isOn
 				return .none
 				

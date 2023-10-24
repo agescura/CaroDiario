@@ -25,7 +25,7 @@ public struct SettingsView: View {
 	public var body: some View {
 		WithViewStore(
 			self.store,
-			observe: \.userSettings
+			observe: { $0 }
 		) { viewStore in
 			NavigationView {
 				VStack {
@@ -33,8 +33,8 @@ public struct SettingsView: View {
 						Section {
 							Toggle(
 								isOn: viewStore.binding(
-									get: \.showSplash,
-									send: SettingsFeature.Action.toggleShowSplash
+									get: \.userSettings.showSplash,
+									send: SettingsFeature.Action.showSplash
 								),
 								label: SplashRowView.init
 							)
@@ -66,26 +66,26 @@ public struct SettingsView: View {
 								label: {
 									LanguageRowView(
 										title: "Settings.Language".localized,
-										status: viewStore.language.localizable.localized
+										status: "viewStore.language.localizable.localized"
 									)
 								}
 							)
 						}
 
-						Section {
-							PasscodeRowView(
-								title: "Settings.Code".localized(with: [/*viewStore.authenticationType.rawValue*/]),
-								status: viewStore.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
-							)
-							.contentShape(Rectangle())
-							.onTapGesture {
-								if viewStore.hasPasscode {
-									viewStore.send(.menuButtonTapped)
-								} else {
-									viewStore.send(.activateButtonTapped)
-								}
-							}
-						}
+//						Section {
+//							PasscodeRowView(
+//								title: "Settings.Code".localized(with: [/*viewStore.authenticationType.rawValue*/]),
+//								status: viewStore.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
+//							)
+//							.contentShape(Rectangle())
+//							.onTapGesture {
+////								if viewStore.hasPasscode {
+////									viewStore.send(.menuButtonTapped)
+////								} else {
+////									viewStore.send(.activateButtonTapped)
+////								}
+//							}
+//						}
 
 						Section {
 							NavigationLinkStore(
@@ -97,7 +97,7 @@ public struct SettingsView: View {
 								action: SettingsFeature.Destination.Action.camera,
 								onTap: { viewStore.send(.cameraButtonTapped) },
 								destination: CameraView.init,
-								label: { CameraRowView(title: "viewStore.cameraStatus.rawValue.localized") }
+								label: { CameraRowView(title: viewStore.cameraStatus.rawValue.localized) }
 							)
 							
 							NavigationLinkStore(
@@ -109,7 +109,7 @@ public struct SettingsView: View {
 								action: SettingsFeature.Destination.Action.microphone,
 								onTap: { viewStore.send(.microphoneButtonTapped) },
 								destination: MicrophoneView.init,
-								label: { MicrophoneRowView(title: "viewStore.microphoneStatus.title.localized") }
+								label: { MicrophoneRowView(title: viewStore.microphoneStatus.title.localized) }
 							)
 						}
 
