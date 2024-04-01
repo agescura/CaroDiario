@@ -86,7 +86,7 @@ public struct EntryDetail: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> Effect<Action> {
     switch action {
     case let .attachments(id: id, action: .attachment(.image(.presentImageFullScreen(true)))),
       let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),

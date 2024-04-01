@@ -37,7 +37,7 @@ public struct Splash: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> Effect<Action> {
     switch action {
     case .startAnimation:
       return .run { send in

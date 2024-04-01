@@ -87,7 +87,7 @@ public struct Root: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> Effect<Action> {
     switch action {
       
     case .appDelegate(.didFinishLaunching):
@@ -229,7 +229,7 @@ public struct Root: ReducerProtocol {
   private func coreData(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> Effect<Action> {
     if case .home = state.featureState {
       switch action {
       case .featureAction(.home(.entries(.onAppear))):
@@ -342,7 +342,7 @@ public struct Root: ReducerProtocol {
   private func userDefaults(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> Effect<Action> {
     switch action {
     case let .featureAction(.home(.settings(.appearance(.layout(.layoutChanged(layout)))))):
       return .fireAndForget { await self.userDefaultsClient.set(layoutType: layout) }

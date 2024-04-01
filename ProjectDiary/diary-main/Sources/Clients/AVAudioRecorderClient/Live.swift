@@ -67,15 +67,15 @@ extension AVAudioRecorderClient {
 struct Dependencies {
   let delegate: AudioRecorderDelegate
   var recorder: AVAudioRecorder!
-  let subscriber: Effect<AVAudioRecorderClient.Action, Never>.Subscriber
+  let subscriber: Effect<AVAudioRecorderClient.Action>.Subscriber
 }
 
 var dependencies: [AnyHashable: Dependencies] = [:]
 
 class AudioRecorderDelegate: NSObject, AVAudioRecorderDelegate {
-  let subscriber: Effect<AVAudioRecorderClient.Action, Never>.Subscriber
+  let subscriber: Effect<AVAudioRecorderClient.Action>.Subscriber
   
-  init(_ subscriber: Effect<AVAudioRecorderClient.Action, Never>.Subscriber) {
+  init(_ subscriber: Effect<AVAudioRecorderClient.Action>.Subscriber) {
     self.subscriber = subscriber
     
   }

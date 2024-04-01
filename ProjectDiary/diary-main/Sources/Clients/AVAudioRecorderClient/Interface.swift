@@ -24,10 +24,10 @@ public struct AVAudioRecorderClient {
     }
 
     public init(
-        create: @escaping (AnyHashable) -> Effect<Action, Never>,
-        destroy: @escaping (AnyHashable) -> Effect<Never, Never>,
-        record: @escaping (AnyHashable, URL) -> Effect<Never, Never>,
-        stop: @escaping (AnyHashable) -> Effect<Never, Never>
+        create: @escaping (AnyHashable) -> Effect<Action>,
+        destroy: @escaping (AnyHashable) -> Effect<Never>,
+        record: @escaping (AnyHashable, URL) -> Effect<Never>,
+        stop: @escaping (AnyHashable) -> Effect<Never>
     ) {
         self.create = create
         self.destroy = destroy
@@ -35,24 +35,24 @@ public struct AVAudioRecorderClient {
         self.stop = stop
     }
 
-    var create: (AnyHashable) -> Effect<Action, Never>
-    var destroy: (AnyHashable) -> Effect<Never, Never>
-    var record: (AnyHashable, URL) -> Effect<Never, Never>
-    var stop: (AnyHashable) -> Effect<Never, Never>
+    var create: (AnyHashable) -> Effect<Action>
+    var destroy: (AnyHashable) -> Effect<Never>
+    var record: (AnyHashable, URL) -> Effect<Never>
+    var stop: (AnyHashable) -> Effect<Never>
 
-    public func create(id: AnyHashable) -> Effect<Action, Never> {
+    public func create(id: AnyHashable) -> Effect<Action> {
         create(id)
       }
 
-    public func destroy(id: AnyHashable) -> Effect<Never, Never> {
+    public func destroy(id: AnyHashable) -> Effect<Never> {
         destroy(id)
     }
 
-    public func record(id: AnyHashable, url: URL) -> Effect<Never, Never> {
+    public func record(id: AnyHashable, url: URL) -> Effect<Never> {
         record(id, url)
     }
 
-    public func stop(id: AnyHashable) -> Effect<Never, Never> {
+    public func stop(id: AnyHashable) -> Effect<Never> {
         stop(id)
     }
 }

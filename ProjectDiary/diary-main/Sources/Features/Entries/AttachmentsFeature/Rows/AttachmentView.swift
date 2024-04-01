@@ -93,24 +93,27 @@ public struct AttachmentView: View {
   let store: StoreOf<Attachment>
   
   public var body: some View {
-    SwitchStore(self.store) {
-      CaseLet(
-        state: /Attachment.State.image,
-        action: Attachment.Action.image,
-        then: AttachmentImageView.init(store:)
-      )
-      
-      CaseLet(
-        state: /Attachment.State.video,
-        action: Attachment.Action.video,
-        then: AttachmentVideoView.init(store:)
-      )
-      
-      CaseLet(
-        state: /Attachment.State.audio,
-        action: Attachment.Action.audio,
-        then: AttachmentAudioView.init(store:)
-      )
-    }
+		SwitchStore(self.store) { state in
+			switch state {
+				case .image:
+					CaseLet(
+						/Attachment.State.image,
+						action: Attachment.Action.image,
+						then: AttachmentImageView.init(store:)
+					)
+				case .video:
+					CaseLet(
+						/Attachment.State.video,
+						action: Attachment.Action.video,
+						then: AttachmentVideoView.init(store:)
+					)
+				case .audio:
+					CaseLet(
+						/Attachment.State.audio,
+						action: Attachment.Action.audio,
+						then: AttachmentAudioView.init(store:)
+					)
+			}
+		}
   }
 }

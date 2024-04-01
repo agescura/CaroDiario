@@ -40,7 +40,7 @@ public struct AttachmentImageDetail: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> Effect<Action> {
     switch action {
     case let .scaleOnChanged(value):
       let maxScale: CGFloat = 3.0

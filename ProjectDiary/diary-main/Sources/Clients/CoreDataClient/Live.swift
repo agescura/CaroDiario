@@ -285,16 +285,16 @@ extension CoreDataClient: DependencyKey {
 
 struct Dependencies {
   let delegate: CoreDataNotifier
-  let subscriber: Effect<CoreDataClient.Action, Never>.Subscriber
+  let subscriber: Effect<CoreDataClient.Action>.Subscriber
 }
 
 var dependencies: [AnyHashable: Dependencies] = [:]
 
 class CoreDataNotifier: NSObject {
   let coreDataStack: CoreDataStack
-  let subscriber: Effect<CoreDataClient.Action, Never>.Subscriber
+  let subscriber: Effect<CoreDataClient.Action>.Subscriber
   
-  init(coreDataStack: CoreDataStack, subscriber: Effect<CoreDataClient.Action, Never>.Subscriber) {
+  init(coreDataStack: CoreDataStack, subscriber: Effect<CoreDataClient.Action>.Subscriber) {
     self.coreDataStack = coreDataStack
     self.subscriber = subscriber
     

@@ -74,7 +74,7 @@ public struct Search: ReducerProtocol {
   private func core(
     state: inout State,
     action: Action
-  ) -> Effect<Action, Never> {
+  ) -> Effect<Action> {
     switch action {
     case let .searching(newText: newText):
       state.searchText = newText

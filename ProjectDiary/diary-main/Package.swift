@@ -79,9 +79,9 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.49.2"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.10.0"),
-        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.1.3"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.59.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.15.4"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.6.0"),
     ],
     targets: [
         // Clients
