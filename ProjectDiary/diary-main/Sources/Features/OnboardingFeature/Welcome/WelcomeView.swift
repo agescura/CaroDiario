@@ -3,10 +3,10 @@ import ComposableArchitecture
 import Views
 
 public struct WelcomeView: View {
-  let store: StoreOf<Welcome>
+  let store: StoreOf<WelcomeFeature>
   
   public init(
-    store: StoreOf<Welcome>
+    store: StoreOf<WelcomeFeature>
   ) {
     self.store = store
   }
@@ -31,7 +31,7 @@ public struct WelcomeView: View {
             ],
             selection: viewStore.binding(
               get: \.selectedPage,
-              send: Welcome.Action.selectedPage
+              send: WelcomeFeature.Action.selectedPage
             ),
             animated: viewStore.tabViewAnimated
           )
@@ -48,8 +48,7 @@ public struct WelcomeView: View {
             .opacity(viewStore.isAppClip ? 0.0 : 1.0)
             .padding(.horizontal, 16)
             .alert(
-              store.scope(state: \.skipAlert),
-              dismiss: .cancelSkipAlert
+							store: self.store.scope(state: \.$alert, action: { .alert($0) })
             )
           
           PrimaryButtonView(
@@ -67,12 +66,12 @@ public struct WelcomeView: View {
         .navigationDestination(
           isPresented: viewStore.binding(
             get: \.navigatePrivacy,
-            send: Welcome.Action.navigationPrivacy),
+            send: WelcomeFeature.Action.navigationPrivacy),
           destination: {
             IfLetStore(
               store.scope(
                 state: \.privacy,
-                action: Welcome.Action.privacy
+                action: WelcomeFeature.Action.privacy
               ),
               then: PrivacyView.init(store:)
             )
@@ -90,9 +89,9 @@ public struct WelcomeView: View {
 struct WelcomeView_Previews: PreviewProvider {
   static var previews: some View {
     WelcomeView(
-      store: .init(
-        initialState: .init(),
-        reducer: Welcome()
+      store: Store(
+				initialState: WelcomeFeature.State(),
+				reducer: { WelcomeFeature() }
       )
     )
   }

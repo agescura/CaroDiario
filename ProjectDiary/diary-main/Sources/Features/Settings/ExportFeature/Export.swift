@@ -5,7 +5,7 @@ import UIApplicationClient
 import PDFKitClient
 import Models
 
-public struct Export: ReducerProtocol {
+public struct Export: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -31,7 +31,7 @@ public struct Export: ReducerProtocol {
   @Dependency(\.applicationClient) private var applicationClient
   @Dependency(\.pdfKitClient) private var pdfKitClient
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
       .ifLet(\.pdfPreview, action: /Action.pdfPreview) {
         PDFPreview()
@@ -65,7 +65,7 @@ public struct Export: ReducerProtocol {
       
     case let .presentPreviewView(file):
       state.pdf = file
-      return Effect(value: .presentPDFPreview(true))
+      return .send(.presentPDFPreview(true))
       
     case let .presentPDFPreview(value):
       state.presentPreview = value
@@ -73,7 +73,7 @@ public struct Export: ReducerProtocol {
       return .none
       
     case .pdfPreview(.dismiss):
-      return Effect(value: .presentPDFPreview(false))
+      return .send(.presentPDFPreview(false))
       
     case .pdfPreview:
       return .none

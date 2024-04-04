@@ -68,7 +68,7 @@ class AppearanceOnboardingViewTests: XCTestCase {
 //                        if key == "hasShownOnboardingKey" && value == true {
 //                            setOnBoardingShownCalled = true
 //                        }
-//                        return .fireAndForget {}
+//                        return .run { _ in}
 //                    },
 //                    stringForKey: { _ in nil },
 //                    setString: { _, _ in .fireAndForget {} },

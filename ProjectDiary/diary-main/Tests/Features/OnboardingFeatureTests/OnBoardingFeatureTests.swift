@@ -33,7 +33,7 @@ class OnBoardingFeatureTests: XCTestCase {
 //                            setOnBoardingShownCalled = true
 //                            XCTAssertTrue(value)
 //                        }
-//                        return .fireAndForget {}
+//                        return .run { _ in}
 //                    },
 //                    stringForKey: { _ in nil },
 //                    setString: { _, _ in .fireAndForget {} },

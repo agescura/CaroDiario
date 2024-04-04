@@ -19,7 +19,7 @@ public struct ThemeView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store) { viewStore in
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
       VStack(alignment: .leading, spacing: 16) {
         
         Picker("",  selection: viewStore.binding(

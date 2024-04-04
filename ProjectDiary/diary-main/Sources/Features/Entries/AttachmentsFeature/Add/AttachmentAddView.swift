@@ -58,7 +58,7 @@ extension AttachmentAdd.State {
   }
 }
 
-public struct AttachmentAdd: ReducerProtocol {
+public struct AttachmentAdd: Reducer {
   public init() {}
   
   public enum State: Equatable {
@@ -73,7 +73,7 @@ public struct AttachmentAdd: ReducerProtocol {
     case audio(AttachmentAddAudio.Action)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Scope(state: /State.image, action: /Action.image) {
       AttachmentAddImage()
     }

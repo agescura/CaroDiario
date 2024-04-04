@@ -4,7 +4,7 @@ import Views
 import Models
 import Localizables
 
-public struct AttachmentVideo: ReducerProtocol {
+public struct AttachmentVideo: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -21,7 +21,7 @@ public struct AttachmentVideo: ReducerProtocol {
     case presentVideoPlayer(Bool)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     EmptyReducer()
   }
 }

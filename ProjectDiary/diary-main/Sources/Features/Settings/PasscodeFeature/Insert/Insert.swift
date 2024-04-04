@@ -2,7 +2,7 @@
 import Foundation
 import ComposableArchitecture
 
-public struct Insert: ReducerProtocol {
+public struct Insert: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -71,7 +71,7 @@ public struct Insert: ReducerProtocol {
     case navigateMenu(Bool)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
       .ifLet(\.menu, action: /Action.menu) {
         Menu()
@@ -95,7 +95,7 @@ public struct Insert: ReducerProtocol {
       if state.step == .secondCode,
          state.code.count == state.maxNumbersCode {
         if state.code == state.firstCode {
-          return Effect(value: .navigateMenu(true))
+          return .send(.navigateMenu(true))
         } else {
           state.step = .firstCode
           state.code = ""

@@ -5,10 +5,10 @@ import Styles
 import EntriesFeature
 
 public struct PrivacyView: View {
-  let store: StoreOf<Privacy>
+  let store: StoreOf<PrivacyFeature>
   
   public init(
-    store: StoreOf<Privacy>
+    store: StoreOf<PrivacyFeature>
   ) {
     self.store = store
   }
@@ -45,10 +45,7 @@ public struct PrivacyView: View {
           }
           .opacity(viewStore.isAppClip ? 0.0 : 1.0)
           .padding(.horizontal, 16)
-          .alert(
-            store.scope(state: \.skipAlert),
-            dismiss: .cancelSkipAlert
-          )
+					.alert(store: self.store.scope(state: \.$alert, action: { .alert($0) }))
         
         PrimaryButtonView(
           label: {
@@ -64,13 +61,13 @@ public struct PrivacyView: View {
       .navigationDestination(
         isPresented: viewStore.binding(
           get: \.navigateStyle,
-          send: Privacy.Action.navigationStyle
+          send: PrivacyFeature.Action.navigationStyle
         ),
         destination: {
           IfLetStore(
             store.scope(
               state: \.style,
-              action: Privacy.Action.style
+              action: PrivacyFeature.Action.style
             ),
             then: StyleView.init(store:)
           )

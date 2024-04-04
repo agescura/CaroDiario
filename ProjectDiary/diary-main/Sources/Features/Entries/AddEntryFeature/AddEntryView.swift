@@ -10,10 +10,10 @@ import AudioRecordFeature
 import SwiftUIHelper
 
 public struct AddEntryView: View {
-  public let store: StoreOf<AddEntry>
+  let store: StoreOf<AddEntryFeature>
   
   public init(
-    store: StoreOf<AddEntry>
+    store: StoreOf<AddEntryFeature>
   ) {
     self.store = store
   }
@@ -42,7 +42,7 @@ public struct AddEntryView: View {
           placeholder: "AddEntry.WriteSomething".localized,
           text: viewStore.binding(
             get: \.text,
-            send: AddEntry.Action.textEditorChange)
+            send: AddEntryFeature.Action.textEditorChange)
         )
         
         if viewStore.attachments.count > 0 {
@@ -51,7 +51,7 @@ public struct AddEntryView: View {
               ForEachStore(
                 store.scope(
                   state: \.attachments,
-                  action: AddEntry.Action.attachments(id:action:)),
+                  action: AddEntryFeature.Action.attachments(id:action:)),
                 content: AttachmentAddRowView.init(store:))
             }
           }
@@ -82,25 +82,19 @@ public struct AddEntryView: View {
             viewStore.send(.plusAttachamentActionSheetButtonTapped)
           }
           .frame(width: 56)
-          .confirmationDialog(
-            store.scope(state: \.plusAttachamentActionSheet),
-            dismiss: .dismissPlusActionSheet
-          )
+					.confirmationDialog(
+						store: self.store.scope(state: \.$confirmationDialog, action: { .confirmationDialog($0) })
+					)
         }
         .frame(height: 56)
       }
       .padding(24)
-      .alert(
-        store.scope(state: \.deniedCameraAlert),
-        dismiss: .dismissDeniedCameraAlert
-      )
-      .alert(
-        store.scope(state: \.dismissAlert),
-        dismiss: .cancelDismissAlert
-      )
+			.alert(
+				store: self.store.scope(state: \.$alert, action: { .alert($0) })
+			)
       .fullScreenCover(isPresented: viewStore.binding(
         get: \.presentImagePicker,
-        send: AddEntry.Action.presentImagePicker
+        send: AddEntryFeature.Action.presentImagePicker
       )) {
         ImagePicker(
           type: viewStore.presentImagePickerSource,
@@ -110,7 +104,7 @@ public struct AddEntryView: View {
         )
         .edgesIgnoringSafeArea(.all)
       }
-      .fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioPicker, send: AddEntry.Action.presentAudioPicker)) {
+      .fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioPicker, send: AddEntryFeature.Action.presentAudioPicker)) {
         AudioPicker { audio in
           switch audio {
           case let .audio(url):
@@ -118,11 +112,11 @@ public struct AddEntryView: View {
           }
         }
       }
-      .fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioRecord, send: AddEntry.Action.presentAudioRecord)) {
+      .fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioRecord, send: AddEntryFeature.Action.presentAudioRecord)) {
         IfLetStore(
           store.scope(
             state: { $0.audioRecordState },
-            action: AddEntry.Action.audioRecordAction),
+            action: AddEntryFeature.Action.audioRecordAction),
           then: AudioRecordView.init(store:)
         )
       }
@@ -131,4 +125,18 @@ public struct AddEntryView: View {
       }
     }
   }
+}
+
+#Preview {
+	NavigationStack {
+		AddEntryView(
+			store: Store(
+				initialState: AddEntryFeature.State(
+					entry: .mock,
+					type: .add
+				),
+				reducer: { AddEntryFeature() }
+			)
+		)
+	}
 }

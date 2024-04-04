@@ -1,11 +1,3 @@
-//
-//  EntryMO+CoreDataProperties.swift
-//  
-//
-//  Created by Albert Gil Escura on 1/8/21.
-//
-//
-
 import Foundation
 import CoreData
 
@@ -26,7 +18,6 @@ extension EntryMO {
 
 }
 
-// MARK: Generated accessors for attachments
 extension EntryMO {
 
     @objc(addAttachmentsObject:)

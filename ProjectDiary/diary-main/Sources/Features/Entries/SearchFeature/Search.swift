@@ -8,7 +8,7 @@ import UserDefaultsClient
 import UIApplicationClient
 import EntryDetailFeature
 
-public struct Search: ReducerProtocol {
+public struct Search: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -18,7 +18,7 @@ public struct Search: ReducerProtocol {
     public var attachmentSearchState: AttachmentSearch.State?
     public var navigateAttachmentSearch = false
     
-    public var entryDetailState: EntryDetail.State?
+    public var entryDetailState: EntryDetailFeature.State?
     public var navigateEntryDetail = false
     public var entryDetailSelected: Entry?
     
@@ -48,7 +48,7 @@ public struct Search: ReducerProtocol {
     case navigateAudioSearch
     case navigateSearch(AttachmentSearchType, [[Entry]])
     
-    case entryDetailAction(EntryDetail.Action)
+    case entryDetailAction(EntryDetailFeature.Action)
     case navigateEntryDetail(Bool)
   }
   
@@ -57,7 +57,7 @@ public struct Search: ReducerProtocol {
   @Dependency(\.mainQueue) private var mainQueue
   @Dependency(\.fileClient) private var fileClient
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
       .forEach(\.entries, action: /Action.entries) {
         DayEntriesRow()
@@ -66,7 +66,7 @@ public struct Search: ReducerProtocol {
         AttachmentSearch()
       }
       .ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
-        EntryDetail()
+        EntryDetailFeature()
       }
 
   }
@@ -93,7 +93,7 @@ public struct Search: ReducerProtocol {
       
     case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
       state.entryDetailSelected = entry
-      return Effect(value: .navigateEntryDetail(true))
+      return .send(.navigateEntryDetail(true))
       
     case .entries:
       return .none
@@ -140,13 +140,13 @@ public struct Search: ReducerProtocol {
       }
       return .none
       
-    case let .entryDetailAction(.remove(entry)):
+			case let .entryDetailAction(.alert(.presented(.remove(entry)))):
       return .merge(
         .run { send in
           _ = await self.fileClient.removeAttachments(entry.attachments.urls)
           await send(.remove(entry))
         },
-        Effect(value: .navigateEntryDetail(false))
+        .send(.navigateEntryDetail(false))
       )
       
     case .entryDetailAction:

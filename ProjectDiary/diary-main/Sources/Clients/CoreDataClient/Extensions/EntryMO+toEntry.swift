@@ -1,10 +1,3 @@
-//
-//  EntryMO+toEntry.swift
-//  
-//
-//  Created by Albert Gil Escura on 31/7/21.
-//
-
 import Models
 import Foundation
 

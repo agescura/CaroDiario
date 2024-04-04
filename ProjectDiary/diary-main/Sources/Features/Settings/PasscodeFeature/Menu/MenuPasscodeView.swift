@@ -26,12 +26,9 @@ public struct MenuPasscodeView: View {
             Text("Passcode.Turnoff".localized)
               .foregroundColor(.chambray)
           }
-          .confirmationDialog(
-            route: viewStore.route,
-            case: /Menu.State.Route.disabled,
-            send: { viewStore.send($0) },
-            onDismiss: { viewStore.send(.actionSheetCancelTapped) }
-          )
+					.confirmationDialog(
+						store: self.store.scope(state: \.$dialog, action: { .dialog($0) })
+					)
         }
         
         Section(header: Text(""), footer: Text("")) {

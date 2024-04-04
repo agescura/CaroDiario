@@ -4,7 +4,7 @@ import Models
 import Styles
 import SwiftUIHelper
 
-public struct DayEntries: ReducerProtocol {
+public struct DayEntries: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -29,7 +29,7 @@ public struct DayEntries: ReducerProtocol {
     case navigateDetail(Entry)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
   }
   

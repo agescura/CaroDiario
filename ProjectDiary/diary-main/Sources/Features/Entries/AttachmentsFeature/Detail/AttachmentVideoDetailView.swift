@@ -3,7 +3,7 @@ import SwiftUI
 import AVKit
 import Models
 
-public struct AttachmentVideoDetail: ReducerProtocol {
+public struct AttachmentVideoDetail: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -18,7 +18,7 @@ public struct AttachmentVideoDetail: ReducerProtocol {
   
   public enum Action: Equatable {}
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     EmptyReducer()
   }
 }

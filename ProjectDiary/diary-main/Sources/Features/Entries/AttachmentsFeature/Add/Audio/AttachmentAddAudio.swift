@@ -5,321 +5,246 @@ import Views
 import Models
 import AVAudioPlayerClient
 
-public struct AttachmentAddAudio: ReducerProtocol {
-  public init() {}
-  
-  public struct State: Equatable {
-    public var entryAudio: EntryAudio
-    public var presentAudioFullScreen: Bool = false
-    
-    public var removeFullScreenAlert: AlertState<Action>?
-    public var removeAlert: AlertState<Action>?
-    
-    var isPlaying: Bool = false
-    var playerDuration: Double = 0
-    var isPlayerDragging: Bool = false
-    var isDragging = false
-    var playerProgress: CGFloat = 0
-    var playerProgressTime: Double = 0
-    
-    public init(
-      entryAudio: EntryAudio
-    ) {
-      self.entryAudio = entryAudio
-    }
-  }
-  
-  public enum Action: Equatable {
-    case onAppear
-    case presentAudioFullScreen(Bool)
-    
-    case remove
-    case removeFullScreenAlertButtonTapped
-    case dismissRemoveFullScreen
-    case cancelRemoveFullScreenAlert
-    
-    case audioPlayer(AVAudioPlayerClient.Action)
-    
-    case playButtonTapped
-    case isPlayingResponse(Bool)
-    case playerProgressAddTimer
-    case playerProgressResponse(Double)
-    case dragOnChanged(CGPoint)
-    case dragOnEnded(CGPoint)
-    case playerGoBackward
-    case playerGoForward
-  }
-  
-  @Dependency(\.fileClient) private var fileClient
-  @Dependency(\.avAudioPlayerClient) private var avAudioPlayerClient
-  @Dependency(\.mainQueue) private var mainQueue
-  
-  private struct PlayerManagerId: Hashable {}
-  private struct PlayerTimerId: Hashable {}
-  
-  public var body: some ReducerProtocolOf<Self> {
-    Reduce(self.core)
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case .onAppear:
-      return self.avAudioPlayerClient.create(id: PlayerManagerId(), url: state.entryAudio.url)
-        .map(Action.audioPlayer)
-      
-    case let .presentAudioFullScreen(value):
-      state.presentAudioFullScreen = value
-      return .none
-      
-    case .removeFullScreenAlertButtonTapped:
-      state.removeFullScreenAlert = .init(
-        title: .init("Audio.Remove.Description".localized),
-        primaryButton: .cancel(.init("Cancel".localized)),
-        secondaryButton: .destructive(.init("Audio.Remove.Title".localized), action: .send(.remove))
-      )
-      return .none
-      
-    case .dismissRemoveFullScreen:
-      state.removeFullScreenAlert = nil
-      state.presentAudioFullScreen = false
-      return .none
-      
-    case .remove:
-      state.presentAudioFullScreen = false
-      state.removeFullScreenAlert = nil
-      return .none
-      
-    case .cancelRemoveFullScreenAlert:
-      state.removeFullScreenAlert = nil
-      return .none
-      
-    case .audioPlayer(.didFinishPlaying):
-      state.playerProgress = 0
-      state.isPlaying = false
-      state.playerProgressTime = 0
-      return .cancel(id: PlayerTimerId())
-      
-    case let .audioPlayer(.duration(duration)):
-      state.playerDuration = duration
-      return .none
-      
-    case .audioPlayer:
-      return .none
-      
-    case .playButtonTapped:
-      return self.avAudioPlayerClient.isPlaying(id: PlayerManagerId())
-        .map(Action.isPlayingResponse)
-      
-    case let .isPlayingResponse(isPlaying):
-      if isPlaying {
-        state.isPlaying = false
-        return .merge(
-          self.avAudioPlayerClient.pause(id: PlayerManagerId())
-            .fireAndForget(),
-          .cancel(id: PlayerTimerId())
-        )
-      } else {
-        state.isPlaying = true
-        return .merge(
-          self.avAudioPlayerClient.play(id: PlayerManagerId())
-            .fireAndForget(),
-          Effect.timer(id: PlayerTimerId(), every: 0.1, on: DispatchQueue.main)
-            .map { _ in .playerProgressAddTimer }
-        )
-      }
-      
-    case .playerProgressAddTimer:
-      if state.isDragging { return .none }
-      
-      return self.avAudioPlayerClient.currentTime(id: PlayerManagerId())
-        .map(Action.playerProgressResponse)
-      
-    case let .playerProgressResponse(progress):
-      state.playerProgressTime = progress
-      
-      let screen = UIScreen.main.bounds.width - 30
-      let value = progress / state.playerDuration
-      state.playerProgress = screen * CGFloat(value)
-      return .none
-      
-    case let .dragOnChanged(position):
-      state.isDragging = true
-      state.playerProgress = position.x
-      return .none
-      
-    case let .dragOnEnded(position):
-      state.isDragging = false
-      let screen = UIScreen.main.bounds.width - 30
-      let percentage = position.x / screen
-      state.playerProgressTime = Double(percentage) * state.playerDuration
-      return self.avAudioPlayerClient.setCurrentTime(id: PlayerManagerId(), currentTime: state.playerProgressTime)
-        .fireAndForget()
-      
-    case .playerGoBackward:
-      var decrease = state.playerProgressTime - 15
-      if decrease < 0 { decrease = 0 }
-      return self.avAudioPlayerClient.setCurrentTime(id: PlayerManagerId(), currentTime: decrease)
-        .fireAndForget()
-      
-    case .playerGoForward:
-      let increase = state.playerProgressTime + 15
-      if increase < state.playerDuration {
-        state.playerProgressTime = increase
-        return self.avAudioPlayerClient.setCurrentTime(id: PlayerManagerId(), currentTime: state.playerProgressTime)
-          .fireAndForget()
-      }
-      return .none
-    }
-  }
+public struct AttachmentAddAudio: Reducer {
+	public init() {}
+	
+	public struct State: Equatable {
+		public var entryAudio: EntryAudio
+		public var presentAudioFullScreen: Bool = false
+		
+//		public var removeFullScreenAlert: AlertState<AttachmentAddAudio.Action>?
+//		public var removeAlert: AlertState<AttachmentAddAudio.Action>?
+		
+		var isPlaying: Bool = false
+		var playerDuration: Double = 0
+		var isPlayerDragging: Bool = false
+		var isDragging = false
+		var playerProgress: CGFloat = 0
+		var playerProgressTime: Double = 0
+		
+		public init(
+			entryAudio: EntryAudio
+		) {
+			self.entryAudio = entryAudio
+		}
+	}
+	
+	public enum Action: Equatable {
+		case audioPlayerDidFinish(TaskResult<Bool>)
+		case audioButtonTapped
+		case playerProgressAddTimer
+		case playerProgressResponse(Double)
+		case presentAudioFullScreen(Bool)
+		
+		case remove
+		case removeFullScreenAlertButtonTapped
+		case dismissRemoveFullScreen
+		case cancelRemoveFullScreenAlert
+		
+		case playButtonTapped
+	}
+	
+	@Dependency(\.fileClient) private var fileClient
+	@Dependency(\.avAudioPlayerClient) private var avAudioPlayerClient
+	@Dependency(\.mainQueue) private var mainQueue
+	private enum CancelID {
+		case timer
+	}
+	
+	public var body: some ReducerOf<Self> {
+		Reduce(self.core)
+	}
+	
+	private func core(
+		state: inout State,
+		action: Action
+	) -> Effect<Action> {
+		switch action {
+			case .audioPlayerDidFinish(.success(true)):
+				state.playerProgress = 0
+				state.isPlaying = false
+				state.playerProgressTime = 0
+				return .cancel(id: CancelID.timer)
+			case .audioPlayerDidFinish:
+				return .cancel(id: CancelID.timer)
+				
+			case .audioButtonTapped:
+				return .none
+			
+			case .playerProgressAddTimer:
+				if state.isDragging { return .none }
+				state.playerProgressTime += 1
+				return .send(.playerProgressResponse(state.playerProgressTime), animation: .default)
+				
+			case let .playerProgressResponse(progress):
+				state.playerProgressTime = progress
+				
+				let screen = UIScreen.main.bounds.width - 30
+				let value = progress / state.playerDuration
+				state.playerProgress = screen * CGFloat(value)
+				return .none
+				
+			case let .presentAudioFullScreen(value):
+				state.presentAudioFullScreen = value
+				return .none
+				
+			case .removeFullScreenAlertButtonTapped:
+//				state.removeFullScreenAlert = .init(
+//					title: .init("Audio.Remove.Description".localized),
+//					primaryButton: .cancel(.init("Cancel".localized)),
+//					secondaryButton: .destructive(.init("Audio.Remove.Title".localized), action: .send(.remove))
+//				)
+				return .none
+				
+			case .dismissRemoveFullScreen:
+//				state.removeFullScreenAlert = nil
+				state.presentAudioFullScreen = false
+				return .none
+				
+			case .remove:
+				state.presentAudioFullScreen = false
+//				state.removeFullScreenAlert = nil
+				return .none
+				
+			case .cancelRemoveFullScreenAlert:
+//				state.removeFullScreenAlert = nil
+				return .none
+				
+			case .playButtonTapped:
+				if state.isPlaying {
+					state.isPlaying = false
+					state.playerProgressTime = 0
+					state.playerProgress = 0
+					state.playerProgressTime = 0
+					return .merge(
+						.run { _ in try await self.avAudioPlayerClient.stop() },
+						.cancel(id: CancelID.timer)
+					)
+				}
+				state.isPlaying = true
+
+				return .run { [url = state.entryAudio.url] send in
+					async let startPlaying: Void = send(
+						.audioPlayerDidFinish(
+							TaskResult { try await self.avAudioPlayerClient.play(url) }
+						)
+					)
+					for await _ in self.mainQueue.timer(interval: .seconds(1)) {
+						await send(.playerProgressAddTimer)
+					}
+					await startPlaying
+				}
+				.cancellable(id: CancelID.timer)
+		}
+	}
 }
 
 struct AttachmentAddAudioView: View {
-  let store: StoreOf<AttachmentAddAudio>
-  
-  init(
-    store: StoreOf<AttachmentAddAudio>
-  ) {
-    self.store = store
-  }
-  
-  var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      Rectangle()
-        .fill(Color.adaptiveGray)
-        .frame(width: 52, height: 52)
-        .overlay(
-          Image(.waveform)
-            .foregroundColor(.adaptiveWhite)
-            .frame(width: 8, height: 8)
-        )
-        .onTapGesture {
-          viewStore.send(.presentAudioFullScreen(true))
-        }
-        .fullScreenCover(
-          isPresented: viewStore.binding(
-            get: \.presentAudioFullScreen,
-            send: AttachmentAddAudio.Action.presentAudioFullScreen
-          )
-        ) {
-          VStack {
-            HStack(spacing: 8) {
-              Spacer()
-              
-              Button(
-                action: {
-                  viewStore.send(.removeFullScreenAlertButtonTapped)
-                }
-              ) {
-                Image(.trash)
-                  .frame(width: 48, height: 48)
-                  .foregroundColor(.chambray)
-              }
-              
-              Button(
-                action: {
-                  viewStore.send(.presentAudioFullScreen(false))
-                }
-              ) {
-                Image(.xmark)
-                  .frame(width: 48, height: 48)
-                  .foregroundColor(.chambray)
-              }
-            }
-            
-            Spacer()
-            
-            Group {
-              ZStack(alignment: .leading) {
-                Capsule()
-                  .fill(Color.black.opacity(0.08))
-                  .frame(height: 8)
-                Capsule()
-                  .fill(Color.red)
-                  .frame(width: viewStore.playerProgress, height: 8)
-                  .animation(nil, value: UUID())
-                  .gesture(
-                    DragGesture()
-                      .onChanged { value in
-                        viewStore.send(.dragOnChanged(value.location))
-                      }
-                      .onEnded { value in
-                        viewStore.send(.dragOnEnded(value.location))
-                      }
-                  )
-              }
-              
-              HStack {
-                Text(viewStore.playerProgressTime.formatter)
-                  .adaptiveFont(.latoRegular, size: 10)
-                  .foregroundColor(.chambray)
-                
-                Spacer()
-                
-                Text(viewStore.playerDuration.formatter)
-                  .adaptiveFont(.latoRegular, size: 10)
-                  .foregroundColor(.chambray)
-              }
-              
-              HStack {
-                Color.clear
-                  .frame(width: 24, height: 24)
-                
-                Spacer()
-                
-                HStack(spacing: 42) {
-                  Button(
-                    action: {
-                      viewStore.send(.playerGoBackward)
-                    },
-                    label: {
-                      Image(.gobackward15)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.chambray)
-                    }
-                  )
-                  
-                  Button(action: {
-                    viewStore.send(.playButtonTapped)
-                  }, label: {
-                    Image(viewStore.isPlaying ? .pauseFill : .playFill)
-                      .resizable()
-                      .aspectRatio(contentMode: .fill)
-                      .frame(width: 32, height: 32)
-                      .foregroundColor(.chambray)
-                  })
-                  
-                  Button(
-                    action: {
-                      viewStore.send(.playerGoForward)
-                    }, label: {
-                      Image(.goforward15)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.chambray)
-                    }
-                  )
-                }
-                Spacer()
-              }
-              Spacer()
-            }
-            .padding()
-            .animation(.default, value: UUID())
-            .onAppear {
-              viewStore.send(.onAppear)
-            }
-          }
-          .alert(
-            store.scope(state: \.removeFullScreenAlert),
-            dismiss: .cancelRemoveFullScreenAlert
-          )
-        }
-    }
-  }
+	private let store: StoreOf<AttachmentAddAudio>
+	
+	init(
+		store: StoreOf<AttachmentAddAudio>
+	) {
+		self.store = store
+	}
+	
+	var body: some View {
+		WithViewStore(self.store, observe: { $0 }) { viewStore in
+			Rectangle()
+				.fill(Color.adaptiveGray)
+				.frame(width: 52, height: 52)
+				.overlay(
+					Image(systemName: "waveform")
+						.foregroundColor(.adaptiveWhite)
+						.frame(width: 8, height: 8)
+				)
+				.onTapGesture {
+					viewStore.send(.audioButtonTapped)
+				}
+				.fullScreenCover(
+					isPresented: viewStore.binding(
+						get: \.presentAudioFullScreen,
+						send: AttachmentAddAudio.Action.presentAudioFullScreen
+					)
+				) {
+					VStack {
+						HStack(spacing: 8) {
+							Spacer()
+							
+							Button(
+								action: {
+									viewStore.send(.removeFullScreenAlertButtonTapped)
+								}
+							) {
+								Image(systemName: "trash")
+									.frame(width: 48, height: 48)
+									.foregroundColor(.chambray)
+							}
+							
+							Button(
+								action: {
+									viewStore.send(.presentAudioFullScreen(false))
+								}
+							) {
+								Image(systemName: "xmark")
+									.frame(width: 48, height: 48)
+									.foregroundColor(.chambray)
+							}
+						}
+						
+						Spacer()
+						
+						Group {
+							ZStack(alignment: .leading) {
+								Capsule()
+									.fill(Color.black.opacity(0.08))
+									.frame(height: 8)
+								Capsule()
+									.fill(Color.red)
+									.frame(width: viewStore.playerProgress, height: 8)
+									.animation(nil, value: UUID())
+							}
+							
+							HStack {
+								Text(viewStore.playerProgressTime.formatter)
+									.adaptiveFont(.latoRegular, size: 10)
+									.foregroundColor(.chambray)
+								
+								Spacer()
+								
+								Text(viewStore.playerDuration.formatter)
+									.adaptiveFont(.latoRegular, size: 10)
+									.foregroundColor(.chambray)
+							}
+							
+							HStack {
+								Color.clear
+									.frame(width: 24, height: 24)
+								
+								Spacer()
+								
+								Button {
+									viewStore.send(.playButtonTapped)
+								} label: {
+									Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")
+										.resizable()
+										.aspectRatio(contentMode: .fill)
+										.frame(width: 32, height: 32)
+										.foregroundColor(.chambray)
+								}
+								
+								Spacer()
+							}
+							Spacer()
+						}
+						.padding()
+						.animation(.default, value: UUID())
+					}
+//					.alert(
+//						store.scope(state: \.removeFullScreenAlert),
+//						dismiss: .cancelRemoveFullScreenAlert
+//					)
+				}
+		}
+	}
 }

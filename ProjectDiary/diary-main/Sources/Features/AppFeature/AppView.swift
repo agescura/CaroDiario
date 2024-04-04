@@ -18,29 +18,29 @@ import StoreKitClient
 import PDFKitClient
 import AVAssetClient
 
-public struct AppReducer: ReducerProtocol {
+public struct AppReducer: Reducer {
   public init() {}
   
   public enum State: Equatable {
-    case splash(Splash.State)
-    case onBoarding(Welcome.State)
+    case splash(SplashFeature.State)
+    case onBoarding(WelcomeFeature.State)
     case lockScreen(LockScreen.State)
     case home(Home.State)
   }
 
   public enum Action: Equatable {
-    case splash(Splash.Action)
-    case onBoarding(Welcome.Action)
+    case splash(SplashFeature.Action)
+    case onBoarding(WelcomeFeature.Action)
     case lockScreen(LockScreen.Action)
     case home(Home.Action)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Scope(state: /State.splash, action: /Action.splash) {
-      Splash()
+      SplashFeature()
     }
     Scope(state: /State.onBoarding, action: /Action.onBoarding) {
-      Welcome()
+      WelcomeFeature()
     }
     Scope(state: /State.lockScreen, action: /Action.lockScreen) {
       LockScreen()

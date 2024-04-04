@@ -30,7 +30,7 @@ public enum AgreementType {
     }
 }
 
-public struct Agreements: ReducerProtocol {
+public struct Agreements: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -43,7 +43,7 @@ public struct Agreements: ReducerProtocol {
   
   @Dependency(\.applicationClient.open) private var open
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
   }
   
@@ -54,7 +54,7 @@ public struct Agreements: ReducerProtocol {
     switch action {
     case let .open(type):
       guard let url = URL(string: type.urlString) else { return .none }
-      return .fireAndForget { await self.open(url, [:]) }
+      return .run { _ in await self.open(url, [:]) }
     }
   }
 }

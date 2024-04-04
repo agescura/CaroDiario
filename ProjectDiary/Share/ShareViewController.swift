@@ -59,15 +59,9 @@ class ShareViewController: SLComposeServiceViewController {
                     )
                     self.entry = entry
                     
-                    self.coreDataClientLive.createDraft(entry)
-                      .flatMap(maxPublishers: .max(1)) { [unowned self] in
-                          return self.coreDataClientLive.publishEntry(self.entry!)
-                              .eraseToEffect()
-                      }
-                      .sink(receiveValue: { [unowned self] _ in
-                          self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-                      })
-                      .store(in: &self.bag)
+                    await self.coreDataClientLive.createDraft(entry)
+										await self.coreDataClientLive.publishEntry(self.entry!)
+										self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
                   }
                 }
             }
@@ -98,15 +92,9 @@ class ShareViewController: SLComposeServiceViewController {
                     )
                     self.entry = entry
                     
-                    self.coreDataClientLive.createDraft(entry)
-                      .flatMap(maxPublishers: .max(1)) { [unowned self] in
-                        return self.coreDataClientLive.publishEntry(self.entry!)
-                          .eraseToEffect()
-                      }
-                      .sink(receiveValue: { [unowned self] _ in
-                        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-                      })
-                      .store(in: &self.bag)
+                    await self.coreDataClientLive.createDraft(entry)
+										await self.coreDataClientLive.publishEntry(self.entry!)
+										self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
                   }
                 }
             }
@@ -133,15 +121,9 @@ class ShareViewController: SLComposeServiceViewController {
                     )
                     self.entry = entry
                     
-                    self.coreDataClientLive.createDraft(entry)
-                      .flatMap(maxPublishers: .max(1)) { [unowned self] in
-                          return self.coreDataClientLive.publishEntry(self.entry!)
-                              .eraseToEffect()
-                      }
-                      .sink(receiveValue: { [unowned self] _ in
-                          self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
-                      })
-                      .store(in: &self.bag)
+                    await self.coreDataClientLive.createDraft(entry)
+                    await self.coreDataClientLive.publishEntry(self.entry!)
+                    self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
                   }
                 }
             }

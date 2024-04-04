@@ -6,10 +6,10 @@ import AttachmentsFeature
 import AddEntryFeature
 
 public struct EntryDetailView: View {
-  public let store: StoreOf<EntryDetail>
+  let store: StoreOf<EntryDetailFeature>
   
   public init(
-    store: StoreOf<EntryDetail>
+    store: StoreOf<EntryDetailFeature>
   ) {
     self.store = store
   }
@@ -26,7 +26,7 @@ public struct EntryDetailView: View {
                 ForEachStore(
                   store.scope(
                     state: \.attachments,
-                    action: EntryDetail.Action.attachments(id:action:)),
+                    action: EntryDetailFeature.Action.attachments(id:action:)),
                   content: AttachmentRowView.init(store:)
                 )
               }
@@ -58,12 +58,12 @@ public struct EntryDetailView: View {
             
             ZStack {
               ScrollView(.init()) {
-                TabView(selection: viewStore.binding(get: \.seletedAttachmentRowState, send: EntryDetail.Action.selectedAttachmentRowAction)) {
+                TabView(selection: viewStore.binding(get: \.seletedAttachmentRowState, send: EntryDetailFeature.Action.selectedAttachmentRowAction)) {
                   ForEach(viewStore.attachments) { attachment in
                     AttachmentDetailView(
                       store: store.scope(
                         state: \.selectedAttachmentDetailState,
-                        action: EntryDetail.Action.attachmentDetail))
+                        action: EntryDetailFeature.Action.attachmentDetail))
                     .tag(attachment)
                   }
                 }
@@ -112,20 +112,22 @@ public struct EntryDetailView: View {
       .fullScreenCover(
         isPresented: viewStore.binding(
           get: { $0.presentAddEntry },
-          send: EntryDetail.Action.presentAddEntry
+          send: EntryDetailFeature.Action.presentAddEntry
         )
       ) {
         IfLetStore(
           store.scope(
             state: { $0.addEntryState },
-            action: EntryDetail.Action.addEntryAction),
+            action: EntryDetailFeature.Action.addEntryAction),
           then: AddEntryView.init(store:)
         )
       }
-      .alert(
-        store.scope(state: \.removeAlert),
-        dismiss: .dismissRemoveAlert
-      )
+			.alert(
+				store: self.store.scope(
+					state: \.$alert,
+					action: { .alert($0) }
+				)
+			)
       .onAppear {
         viewStore.send(.onAppear)
       }
@@ -156,13 +158,26 @@ public struct EntryDetailView: View {
                 .foregroundColor(.chambray)
             }
           )
-          .confirmationDialog(
-            store.scope(state: \.meatballActionSheet),
-            dismiss: .dismissMeatballActionSheet
-          )
+					.confirmationDialog(
+						store: self.store.scope(
+							state: \.$confirmationDialog,
+							action: { .confirmationDialog($0) }
+						)
+					)
         }
       )
       .navigationBarHidden(viewStore.showAttachmentOverlayed)
     }
   }
+}
+
+#Preview {
+	NavigationStack {
+		EntryDetailView(
+			store: Store(
+				initialState: EntryDetailFeature.State(entry: .mock),
+				reducer: { EntryDetailFeature() }
+			)
+		)
+	}
 }

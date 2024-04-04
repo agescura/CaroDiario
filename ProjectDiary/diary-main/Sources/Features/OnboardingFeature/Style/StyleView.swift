@@ -7,7 +7,7 @@ import EntriesFeature
 import Styles
 
 public struct StyleView: View {
-  let store: StoreOf<Style>
+  let store: StoreOf<StyleFeature>
   
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -26,7 +26,7 @@ public struct StyleView: View {
             
             Picker("",  selection: viewStore.binding(
               get: \.styleType,
-              send: Style.Action.styleChanged
+              send: StyleFeature.Action.styleChanged
             )) {
               ForEach(StyleType.allCases, id: \.self) { type in
                 Text(type.rawValue.localized)
@@ -40,7 +40,7 @@ public struct StyleView: View {
               ForEachStore(
                 store.scope(
                   state: \.entries,
-                  action: Style.Action.entries(id:action:)),
+                  action: StyleFeature.Action.entries(id:action:)),
                 content: DayEntriesRowView.init(store:)
               )
             }
@@ -62,8 +62,7 @@ public struct StyleView: View {
           .opacity(viewStore.isAppClip ? 0.0 : 1.0)
           .padding(.horizontal, 16)
           .alert(
-            store.scope(state: \.skipAlert),
-            dismiss: .cancelSkipAlert
+						store: self.store.scope(state: \.$alert, action: { .alert($0) })
           )
         
         PrimaryButtonView(
@@ -80,13 +79,13 @@ public struct StyleView: View {
       .navigationDestination(
         isPresented: viewStore.binding(
           get: \.navigateLayout,
-          send: Style.Action.navigationLayout
+          send: StyleFeature.Action.navigationLayout
         ),
         destination: {
           IfLetStore(
             store.scope(
               state: \.layout,
-              action: Style.Action.layout
+              action: StyleFeature.Action.layout
             ),
             then: LayoutView.init(store:)
           )
@@ -96,19 +95,18 @@ public struct StyleView: View {
   }
 }
 
-struct StyleView_Previews: PreviewProvider {
-  static var previews: some View {
-    StyleView(
-      store: .init(
-        initialState: .init(
-          styleType: .rectangle,
-          layoutType: .horizontal,
-          entries: fakeEntries(
-            with: .rectangle,
-            layout: .horizontal
-          )
-        ),
-        reducer: Style())
-    )
-  }
+#Preview {
+	StyleView(
+		store: .init(
+			initialState: StyleFeature.State(
+				entries: fakeEntries(
+					with: .rectangle,
+					layout: .horizontal
+				),
+				layoutType: .horizontal,
+				styleType: .rectangle
+			),
+			reducer: { StyleFeature() }
+		)
+	)
 }

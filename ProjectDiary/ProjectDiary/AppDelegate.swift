@@ -19,18 +19,13 @@ import AVAssetClient
 class AppDelegate: NSObject, UIApplicationDelegate {
   let store: StoreOf<Root>
   
-  lazy var viewStore = ViewStore(
-    store.scope(state: { _ in () }),
-    removeDuplicates: ==
-  )
-  
   override init() {
     self.store = Store(
       initialState: .init(
         appDelegate: .init(),
         featureState: .splash(.init())
       ),
-      reducer: Root()
+			reducer: { Root() }
     )
   }
   
@@ -55,11 +50,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   }
   
   func process(url: URL) {
-    viewStore.send(.process(url))
+		self.store.send(.process(url))
   }
   
   func update(state: ScenePhase) {
-    viewStore.send(.state(state.value))
+		self.store.send(.state(state.value))
   }
   
   func application(

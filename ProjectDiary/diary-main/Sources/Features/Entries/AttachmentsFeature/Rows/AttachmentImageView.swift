@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Views
 import Models
 
-public struct AttachmentImage: ReducerProtocol {
+public struct AttachmentImage: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -20,7 +20,7 @@ public struct AttachmentImage: ReducerProtocol {
     case presentImageFullScreen(Bool)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     EmptyReducer()
   }
 }

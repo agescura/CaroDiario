@@ -28,20 +28,20 @@ public struct ActivateView: View {
           viewStore.send(.navigateInsert(true))
         }
         
-        NavigationLink(
-          route: viewStore.route,
-          case: /Activate.State.Route.insert,
-          onNavigate: { viewStore.send(.navigateInsert($0)) },
-          destination: { insertState in
-            InsertView(
-              store: self.store.scope(
-                state: { _ in insertState },
-                action: Activate.Action.insert
-              )
-            )
-          },
-          label: EmptyView.init
-        )
+//        NavigationLink(
+//          route: viewStore.route,
+//          case: /Activate.State.Route.insert,
+//          onNavigate: { viewStore.send(.navigateInsert($0)) },
+//          destination: { insertState in
+//            InsertView(
+//              store: self.store.scope(
+//                state: { _ in insertState },
+//                action: Activate.Action.insert
+//              )
+//            )
+//          },
+//          label: EmptyView.init
+//        )
       }
       .padding(.horizontal, 16)
     }

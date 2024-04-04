@@ -8,7 +8,7 @@ import Styles
 import Models
 import SwiftUIHelper
 
-public struct Camera: ReducerProtocol {
+public struct Camera: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -31,7 +31,7 @@ public struct Camera: ReducerProtocol {
   @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
   @Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
   }
   
@@ -43,9 +43,9 @@ public struct Camera: ReducerProtocol {
     case .cameraButtonTapped:
       switch state.cameraStatus {
       case .notDetermined:
-        return .task { @MainActor in
+        return .run { send in
           await self.feedbackGeneratorClient.selectionChanged()
-          return .requestAccessResponse(await self.avCaptureDeviceClient.requestAccess())
+          await send(.requestAccessResponse(await self.avCaptureDeviceClient.requestAccess()))
         }
         
       default:
@@ -59,7 +59,7 @@ public struct Camera: ReducerProtocol {
       
     case .goToSettings:
       guard state.cameraStatus != .notDetermined else { return .none }
-      return .fireAndForget { await self.applicationClient.openSettings() }
+      return .run { _ in await self.applicationClient.openSettings() }
     }
   }
 }

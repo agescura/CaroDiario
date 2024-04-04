@@ -31,9 +31,9 @@ import EntryDetailFeature
 public struct SharedState: Equatable {
     public var isLoading: Bool = true
     public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
-    public var addEntryState: AddEntry.State?
+    public var addEntryState: AddEntryFeature.State?
     public var presentAddEntry = false
-    public var entryDetailState: EntryDetail.State?
+    public var entryDetailState: EntryDetailFeature.State?
     public var navigateEntryDetail = false
     public var entryDetailSelected: Entry?
     
@@ -51,7 +51,6 @@ public struct SharedState: Equatable {
     public var microphoneStatus: AudioRecordPermission
     public var optionTimeForAskPasscode: Int
     public var faceIdEnabled: Bool
-    public var route: Settings.State.Destination? = nil
     
     public init(
         showSplash: Bool,
@@ -80,7 +79,7 @@ public struct SharedState: Equatable {
     }
 }
 
-public struct Home: ReducerProtocol {
+public struct Home: Reducer {
     public init() {}
     
     public struct State: Equatable {
@@ -128,8 +127,7 @@ public struct Home: ReducerProtocol {
                     optionTimeForAskPasscode: self.sharedState.optionTimeForAskPasscode,
                     faceIdEnabled: self.sharedState.faceIdEnabled,
                     language: self.sharedState.language,
-                    microphoneStatus: self.sharedState.microphoneStatus,
-                    route: self.sharedState.route
+                    microphoneStatus: self.sharedState.microphoneStatus
                 )
             }
             set {
@@ -144,7 +142,6 @@ public struct Home: ReducerProtocol {
                 self.sharedState.faceIdEnabled = newValue.faceIdEnabled
                 self.sharedState.language = newValue.language
                 self.sharedState.microphoneStatus = newValue.microphoneStatus
-                self.sharedState.route = newValue.destination
             }
         }
         
@@ -167,7 +164,7 @@ public struct Home: ReducerProtocol {
         case settings(Settings.Action)
     }
     
-    public var body: some ReducerProtocolOf<Self> {
+    public var body: some ReducerOf<Self> {
         Scope(state: \.entries, action: /Action.entries) {
             Entries()
         }
@@ -205,7 +202,7 @@ public struct HomeView: View {
     }
     
     public var body: some View {
-        WithViewStore(self.store) { viewStore in
+			WithViewStore(self.store, observe: { $0 }) { viewStore in
             TabView(
                 selection: viewStore.binding(
                     get: { $0.selectedTabBar },

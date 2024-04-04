@@ -5,7 +5,7 @@ import AVAudioSessionClient
 import FeedbackGeneratorClient
 import UIApplicationClient
 
-public struct Microphone: ReducerProtocol {
+public struct Microphone: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -28,7 +28,7 @@ public struct Microphone: ReducerProtocol {
   @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
   @Dependency(\.avAudioSessionClient) private var avAudioSessionClient
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
   }
   
@@ -40,12 +40,12 @@ public struct Microphone: ReducerProtocol {
     case .microphoneButtonTapped:
       switch state.microphoneStatus {
       case .notDetermined:
-        return .task { @MainActor in
+        return .run { send in
           await self.feedbackGeneratorClient.selectionChanged()
           do {
-            return .requestAccessResponse(try await self.avAudioSessionClient.requestRecordPermission())
+            await send(.requestAccessResponse(try await self.avAudioSessionClient.requestRecordPermission()))
           } catch {
-            return .requestAccessResponse(false)
+            await send(.requestAccessResponse(false))
           }
         }
         
@@ -60,7 +60,7 @@ public struct Microphone: ReducerProtocol {
       
     case .goToSettings:
       guard state.microphoneStatus != .notDetermined else { return .none }
-      return .fireAndForget { await self.applicationClient.openSettings() }
+      return .run { _ in await self.applicationClient.openSettings() }
     }
   }
 }

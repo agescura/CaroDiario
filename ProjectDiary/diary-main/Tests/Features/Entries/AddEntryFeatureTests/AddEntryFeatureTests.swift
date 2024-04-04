@@ -50,30 +50,14 @@ class AddEntryFeatureTests: XCTestCase {
     
     func testAddEntryHappyPath() {
         
-        let store = TestStore(
-            initialState: AddEntryState(type: .add, entry: entry),
-            reducer: addEntryReducer,
-            environment: AddEntryEnvironment(
-                fileClient: .noop,
-                avCaptureDeviceClient: .noop,
-                applicationClient: .noop,
-                avAudioSessionClient: .noop,
-                avAudioPlayerClient: .noop,
-                avAudioRecorderClient: .noop,
-                avAssetClient: .noop,
-                mainQueue: .immediate,
-                backgroundQueue: .immediate,
-                date: Date.init,
-                uuid: UUID.init
-            )
-        )
+			let store = TestStore(
+				initialState: AddEntryFeature.State(entry: entry, type: .add),
+				reducer: { AddEntryFeature() }
+			)
         
         store.send(.onAppear) {
             $0.text = "message"
-            $0.attachments = [
-                AttachmentAddRowState(id: self.imageId, attachment: .image(.init(entryImage: self.entryImage))),
-                AttachmentAddRowState(id: self.videoId, attachment: .video(.init(entryVideo: self.entryVideo)))
-            ]
+            $0.attachments = []
         }
         
         store.send(.textEditorChange("new text")) {

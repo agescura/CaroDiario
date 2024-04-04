@@ -4,7 +4,7 @@ import FeedbackGeneratorClient
 import Models
 import EntriesFeature
 
-public struct Layout: ReducerProtocol {
+public struct Layout: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -30,7 +30,7 @@ public struct Layout: ReducerProtocol {
   
   @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
       .forEach(\.entries, action: /Action.entries) {
         DayEntriesRow()
@@ -47,7 +47,7 @@ public struct Layout: ReducerProtocol {
       state.layoutType = appearanceChanged
       state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
       
-      return .fireAndForget {
+      return .run { _ in
         await self.feedbackGeneratorClient.selectionChanged()
       }
       

@@ -6,25 +6,25 @@ import OnboardingFeature
 import UserDefaultsClient
 import FeedbackGeneratorClient
 
-public struct SwitchClip: ReducerProtocol {
+public struct SwitchClip: Reducer {
     public init() {}
     
     public enum State: Equatable {
-        case splash(Splash.State)
-        case onBoarding(Welcome.State)
+        case splash(SplashFeature.State)
+        case onBoarding(WelcomeFeature.State)
     }
     
     public enum Action: Equatable {
-        case splash(Splash.Action)
-        case onBoarding(Welcome.Action)
+        case splash(SplashFeature.Action)
+        case onBoarding(WelcomeFeature.Action)
     }
     
-    public var body: some ReducerProtocolOf<Self> {
+    public var body: some ReducerOf<Self> {
         Scope(state: /State.splash, action: /Action.splash) {
-            Splash()
+            SplashFeature()
         }
         Scope(state: /State.onBoarding, action: /Action.onBoarding) {
-            Welcome()
+            WelcomeFeature()
         }
     }
 }

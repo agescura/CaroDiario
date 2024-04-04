@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Models
 import EntriesFeature
 
-public struct Appearance: ReducerProtocol {
+public struct Appearance: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -104,7 +104,7 @@ public struct Appearance: ReducerProtocol {
     case navigateTheme(Bool)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
       .ifLet(\.style, action: /Action.style) {
         Style()

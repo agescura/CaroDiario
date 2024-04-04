@@ -13,13 +13,13 @@ import EntryDetailFeature
 import Models
 import AVAssetClient
 
-public struct AttachmentSearch: ReducerProtocol {
+public struct AttachmentSearch: Reducer {
   public init() {}
   
   public struct State: Equatable {
     public var type: AttachmentSearchType
     public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-    public var entryDetailState: EntryDetail.State?
+    public var entryDetailState: EntryDetailFeature.State?
     public var navigateEntryDetail = false
     public var entryDetailSelected: Entry?
     
@@ -31,20 +31,20 @@ public struct AttachmentSearch: ReducerProtocol {
   public enum Action: Equatable {
     case entries(id: UUID, action: DayEntriesRow.Action)
     case remove(Entry)
-    case entryDetailAction(EntryDetail.Action)
+    case entryDetailAction(EntryDetailFeature.Action)
     case navigateEntryDetail(Bool)
   }
   
   @Dependency(\.fileClient) private var fileClient
   @Dependency(\.mainQueue) private var mainQueue
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
       .forEach(\.entries, action: /Action.entries) {
         DayEntriesRow()
       }
       .ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
-        EntryDetail()
+        EntryDetailFeature()
       }
   }
   
@@ -55,7 +55,7 @@ public struct AttachmentSearch: ReducerProtocol {
     switch action {
     case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
       state.entryDetailSelected = entry
-      return Effect(value: .navigateEntryDetail(true))
+      return .send(.navigateEntryDetail(true))
       
     case .entries:
       return .none
@@ -72,7 +72,7 @@ public struct AttachmentSearch: ReducerProtocol {
       }
       return .none
       
-    case let .entryDetailAction(.remove(entry)):
+    case let .entryDetailAction(.alert(.presented(.remove(entry)))):
       return .run { send in
         _ = await self.fileClient.removeAttachments(entry.attachments.urls)
         await send(.remove(entry))

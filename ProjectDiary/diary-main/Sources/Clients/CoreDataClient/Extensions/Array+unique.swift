@@ -1,9 +1,3 @@
-//
-//  Array+unique.swift
-//
-//  Created by Albert Gil Escura on 21/9/21.
-//
-
 import Foundation
 
 extension Array {

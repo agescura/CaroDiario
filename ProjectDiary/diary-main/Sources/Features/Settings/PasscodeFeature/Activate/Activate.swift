@@ -1,7 +1,7 @@
 import Foundation
 import ComposableArchitecture
 
-public struct Activate: ReducerProtocol {
+public struct Activate: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -46,7 +46,7 @@ public struct Activate: ReducerProtocol {
     case navigateInsert(Bool)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
       .ifLet(\.insert, action: /Action.insert) {
         Insert()

@@ -46,20 +46,20 @@ public struct InsertView: View {
           viewStore.send(.popToRoot)
         }
         
-        NavigationLink(
-          route: viewStore.route,
-          case: /Insert.State.Route.menu,
-          onNavigate: { viewStore.send(.navigateMenu($0)) },
-          destination: { menuState in
-            MenuPasscodeView(
-              store: self.store.scope(
-                state: { _ in menuState },
-                action: Insert.Action.menu
-              )
-            )
-          },
-          label: EmptyView.init
-        )
+//        NavigationLink(
+//          route: viewStore.route,
+//          case: /Insert.State.Route.menu,
+//          onNavigate: { viewStore.send(.navigateMenu($0)) },
+//          destination: { menuState in
+//            MenuPasscodeView(
+//              store: self.store.scope(
+//                state: { _ in menuState },
+//                action: Insert.Action.menu
+//              )
+//            )
+//          },
+//          label: EmptyView.init
+//        )
       }
       .padding(16)
       .navigationBarTitle("Passcode.Title".localized, displayMode: .inline)

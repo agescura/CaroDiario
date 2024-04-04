@@ -1,7 +1,7 @@
 import Foundation
 import ComposableArchitecture
 
-public struct PDFPreview: ReducerProtocol {
+public struct PDFPreview: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -18,7 +18,7 @@ public struct PDFPreview: ReducerProtocol {
     case dismiss
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     EmptyReducer()
   }
 }

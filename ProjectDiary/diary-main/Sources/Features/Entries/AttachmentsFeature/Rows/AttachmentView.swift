@@ -2,7 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 
-public struct Attachment: ReducerProtocol {
+public struct Attachment: Reducer {
   public init() {}
   
   public enum State: Equatable {
@@ -17,7 +17,7 @@ public struct Attachment: ReducerProtocol {
     case audio(AttachmentAudio.Action)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Scope(state: /State.image, action: /Action.image) {
       AttachmentImage()
     }

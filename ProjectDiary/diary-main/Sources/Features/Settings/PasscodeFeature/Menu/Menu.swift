@@ -51,12 +51,12 @@ extension TimeForAskPasscode {
   }
 }
 
-public struct Menu: ReducerProtocol {
+public struct Menu: Reducer {
   public init() {}
   
   public struct State: Equatable {
+		@PresentationState public var dialog: ConfirmationDialogState<Action.Dialog>?
     public var authenticationType: LocalAuthenticationType
-    public var route: Route?
     public var faceIdEnabled: Bool
     public var optionTimeForAskPasscode: TimeForAskPasscode
     public let listTimesForAskPasscode: [TimeForAskPasscode] = [
@@ -68,37 +68,34 @@ public struct Menu: ReducerProtocol {
       .after(minutes: 60)
     ]
     
-    public enum Route: Equatable {
-      case disabled(ActionViewModel<Menu.Action>)
-    }
-    
     public init(
       authenticationType: LocalAuthenticationType,
       optionTimeForAskPasscode: Int,
-      faceIdEnabled: Bool,
-      route: Route? = nil
+      faceIdEnabled: Bool
     ) {
       self.authenticationType = authenticationType
       self.optionTimeForAskPasscode = TimeForAskPasscode(optionTimeForAskPasscode)
       self.faceIdEnabled = faceIdEnabled
-      self.route = route
     }
   }
   
   public enum Action: Equatable {
+		case dialog(PresentationAction<Dialog>)
     case popToRoot
     case actionSheetButtonTapped
-    case actionSheetCancelTapped
-    case actionSheetTurnoffTapped
     case toggleFaceId(isOn: Bool)
     case faceId(response: Bool)
     case optionTimeForAskPasscode(changed: TimeForAskPasscode)
+		
+		public enum Dialog: Equatable {
+			case turnOff
+		}
   }
   
   @Dependency(\.mainQueue) private var mainQueue
   @Dependency(\.localAuthenticationClient) private var localAuthenticationClient
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
   }
   
@@ -107,32 +104,24 @@ public struct Menu: ReducerProtocol {
     action: Action
   ) -> Effect<Action> {
     switch action {
+			case .dialog:
+				return .none
+				
     case .popToRoot:
       return .none
       
     case .actionSheetButtonTapped:
-      state.route = .disabled(
-        .init(
-          "Passcode.Turnoff.Message".localized(with: [state.authenticationType.rawValue]),
-          buttons: [
-            .init("Cancel".localized, role: .cancel, action: .actionSheetCancelTapped),
-            .init("Passcode.Turnoff".localized, action: .actionSheetTurnoffTapped)
-          ]
-        )
-      )
-      return .none
-      
-    case .actionSheetCancelTapped:
-      state.route = nil
-      return .none
-      
-    case .actionSheetTurnoffTapped:
-      state.route = nil
+				state.dialog = ConfirmationDialogState {
+					TextState("Passcode.Turnoff.Message".localized(with: [state.authenticationType.rawValue]))
+				} actions: {
+					ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
+					ButtonState(action: .turnOff, label: { TextState("Passcode.Turnoff".localized) })
+				}
       return .none
       
     case let .toggleFaceId(isOn: value):
       if !value {
-        return Effect(value: .faceId(response: value))
+        return .send(.faceId(response: value))
       }
       return .run { [state] send in
         await send(.faceId(response: self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.authenticationType.rawValue]))))

@@ -7,7 +7,7 @@ import Localizables
 import SwiftUIHelper
 import Styles
 
-public struct Language: ReducerProtocol {
+public struct Language: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -24,7 +24,7 @@ public struct Language: ReducerProtocol {
     case updateLanguageTapped(Localizable)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
   }
   

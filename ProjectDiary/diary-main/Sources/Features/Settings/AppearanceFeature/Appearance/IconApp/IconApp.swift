@@ -4,7 +4,7 @@ import Models
 import UIApplicationClient
 import FeedbackGeneratorClient
 
-public struct IconApp: ReducerProtocol {
+public struct IconApp: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -24,7 +24,7 @@ public struct IconApp: ReducerProtocol {
   @Dependency(\.applicationClient) private var applicationClient
   @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
 
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Reduce(self.core)
   }
   
@@ -35,7 +35,7 @@ public struct IconApp: ReducerProtocol {
     switch action {
     case let .iconAppChanged(newIconApp):
       state.iconAppType = newIconApp
-      return .fireAndForget {
+      return .run { _ in
         try await self.applicationClient.setAlternateIconName(newIconApp == .dark ? "AppIcon-2" : nil)
         await self.feedbackGeneratorClient.selectionChanged()
       }

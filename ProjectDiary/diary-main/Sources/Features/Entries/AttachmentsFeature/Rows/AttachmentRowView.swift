@@ -2,7 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 
-public struct AttachmentRow: ReducerProtocol {
+public struct AttachmentRow: Reducer {
   public init() {}
   
   public struct State: Identifiable, Equatable, Hashable {
@@ -22,7 +22,7 @@ public struct AttachmentRow: ReducerProtocol {
     case attachment(Attachment.Action)
   }
   
-  public var body: some ReducerProtocolOf<Self> {
+  public var body: some ReducerOf<Self> {
     Scope(state: \.attachment, action: /Action.attachment) {
       Attachment()
     }

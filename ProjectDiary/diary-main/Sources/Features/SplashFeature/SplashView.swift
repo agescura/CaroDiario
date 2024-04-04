@@ -3,10 +3,10 @@ import ComposableArchitecture
 import Styles
 
 public struct SplashView: View {
-  let store: StoreOf<Splash>
+  let store: StoreOf<SplashFeature>
   
   public init(
-    store: StoreOf<Splash>
+    store: StoreOf<SplashFeature>
   ) {
     self.store = store
   }
@@ -33,7 +33,7 @@ public struct SplashView: View {
   }
 }
 
-extension Splash.State.AnimationState {
+extension SplashFeature.State.AnimationState {
   var lineHeight: CGFloat {
     switch self {
     case .start:
@@ -62,15 +62,13 @@ extension Splash.State.AnimationState {
   }
 }
 
-struct Splash_Previews: PreviewProvider {
-  static var previews: some View {
-    SplashView(
-      store: .init(
-        initialState: Splash.State(
-          animation: .start
-        ),
-        reducer: Splash()
-      )
-    )
-  }
+#Preview {
+	SplashView(
+		store: Store(
+			initialState: SplashFeature.State(
+				animation: .start
+			),
+			reducer: { SplashFeature() }
+		)
+	)
 }

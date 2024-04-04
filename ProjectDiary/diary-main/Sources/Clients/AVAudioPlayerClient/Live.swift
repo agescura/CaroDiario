@@ -1,103 +1,90 @@
-import AVFoundation
+@preconcurrency import AVFoundation
 import Combine
 import ComposableArchitecture
 import Dependencies
 
 extension AVAudioPlayerClient: DependencyKey {
-  public static var liveValue: AVAudioPlayerClient { .live }
+	public static var liveValue: AVAudioPlayerClient { .live }
 }
 
 extension AVAudioPlayerClient {
-    public static var live: Self = {
-        Self(
-            create: { id, url in
-                Effect.run { subscriber in
-                    let delegate = AudioPlayerManagerDelegate(subscriber)
-
-                    let player = try! AVAudioPlayer(contentsOf: url)
-                    player.delegate = delegate
-                    player.prepareToPlay()
-
-                    dependencies[id] = Dependencies(
-                        delegate: delegate,
-                        player: player,
-                        subscriber: subscriber,
-                        queue: OperationQueue.main
-                    )
-                    
-                    subscriber.send(.duration(player.duration))
-
-                    return AnyCancellable {
-                        dependencies[id] = nil
-                    }
-                }
-            },
-            
-            destroy: { id in
-                .fireAndForget {
-                    dependencies[id]?.subscriber.send(completion: .finished)
-                    dependencies[id] = nil
-                }
-            },
-            
-            duration: { id in
-                guard let player = dependencies[id]?.player else { return .none }
-                
-                return Effect(value: player.duration)
-            },
-            
-            play: { id in
-                .fireAndForget {
-                    dependencies[id]?.player.play()
-                }
-            },
-            
-            pause: { id in
-                .fireAndForget { dependencies[id]?.player.pause() }
-            },
-            
-            stop: { id in
-                .fireAndForget { dependencies[id]?.player.stop() }
-            },
-            
-            isPlaying: { id in
-                guard let player = dependencies[id]?.player else { return Effect(value: false) }
-                return Effect(value: player.isPlaying)
-            },
-            
-            currentTime: { id in
-                guard let player = dependencies[id]?.player else { return .none }
-                return Effect(value: player.currentTime)
-            },
-            
-            setCurrentTime: { id, currentTime in
-                .fireAndForget { dependencies[id]?.player.currentTime = currentTime }
-            }
-        )
-    }()
+	public static var live: Self = {
+		let audioPlayer = AudioPlayer()
+		
+		return Self(
+			currentTime: { await audioPlayer.currentTime() },
+			play: { try await audioPlayer.start(url: $0) },
+			stop: { await audioPlayer.stop() }
+		)
+	}()
 }
 
-private struct Dependencies {
-    var delegate: AVAudioPlayerDelegate
-    var player: AVAudioPlayer
-    let subscriber: Effect<AVAudioPlayerClient.Action>.Subscriber
-    let queue: OperationQueue
+private actor AudioPlayer {
+	var delegate: Delegate?
+	var player: AVAudioPlayer?
+	
+	func currentTime() async -> TimeInterval {
+		self.delegate!.player.duration
+	}
+	
+	func stop() {
+		self.delegate?.player.stop()
+		try? AVAudioSession.sharedInstance().setActive(false)
+	}
+	
+	func start(url: URL) async throws -> Bool {
+		self.stop()
+		
+		let stream = AsyncThrowingStream<Bool, Error> { continuation in
+			do {
+				self.delegate = try Delegate(
+					url: url,
+					didFinishPlaying: { successful in
+						continuation.yield(successful)
+						continuation.finish()
+					},
+					decodeErrorDidOccur: { error in
+						continuation.finish(throwing: error)
+					}
+				)
+				self.delegate?.player.play()
+				continuation.onTermination = { [delegate = delegate] _ in
+					delegate?.player.stop()
+				}
+			} catch {
+				continuation.finish(throwing: error)
+			}
+		}
+		
+		for try await didFinish in stream {
+			return didFinish
+		}
+		throw CancellationError()
+	}
 }
 
-private var dependencies: [AnyHashable: Dependencies] = [:]
-
-private class AudioPlayerManagerDelegate: NSObject, AVAudioPlayerDelegate {
-    let subscriber: Effect<AVAudioPlayerClient.Action>.Subscriber
-
-    init(_ subscriber: Effect<AVAudioPlayerClient.Action>.Subscriber) {
-        self.subscriber = subscriber
-    }
-
-    func audioPlayerDecodeErrorDidOccur(_: AVAudioPlayer, error: Error?) {
-        subscriber.send(.decodeErrorDidOccur(AVAudioPlayerClient.Error(error)))
-    }
-
-    func audioPlayerDidFinishPlaying(_: AVAudioPlayer, successfully flag: Bool) {
-        subscriber.send(.didFinishPlaying(successfully: flag))
-    }
+private final class Delegate: NSObject, AVAudioPlayerDelegate, Sendable {
+	let didFinishPlaying: @Sendable (Bool) -> Void
+	let decodeErrorDidOccur: @Sendable (Error?) -> Void
+	let player: AVAudioPlayer
+	
+	init(
+		url: URL,
+		didFinishPlaying: @escaping @Sendable (Bool) -> Void,
+		decodeErrorDidOccur: @escaping @Sendable (Error?) -> Void
+	) throws {
+		self.didFinishPlaying = didFinishPlaying
+		self.decodeErrorDidOccur = decodeErrorDidOccur
+		self.player = try AVAudioPlayer(contentsOf: url)
+		super.init()
+		self.player.delegate = self
+	}
+	
+	func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+		self.didFinishPlaying(flag)
+	}
+	
+	func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+		self.decodeErrorDidOccur(error)
+	}
 }

@@ -67,7 +67,7 @@ There are many variations of passages of Lorem Ipsum available, but the majority
                                         )
                                     )
                                 ]]
-                                return Effect(value: entries)
+                                return .send(entries)
                             },
                             updateMessage: { _, _  in .fireAndForget {}},
                             addAttachmentEntry: { _, _  in .fireAndForget {}},

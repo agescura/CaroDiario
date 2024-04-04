@@ -21,13 +21,13 @@ class CameraSettingsViewTests: XCTestCase {
             environment: CameraEnvironment(
                 avCaptureDeviceClient: .init(
                     authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { Effect(value: true) }
+                    requestAccess: { .send(true) }
                 ),
                 feedbackGeneratorClient: .init(
                     prepare: { .fireAndForget {} },
                     selectionChanged: {
 //                        feedbackGeneratorCalled = true
-                        return .fireAndForget {}
+                        return .run { _ in}
                     }
                 ),
                 applicationClient: .noop,
@@ -53,13 +53,13 @@ class CameraSettingsViewTests: XCTestCase {
             environment: CameraEnvironment(
                 avCaptureDeviceClient: .init(
                     authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { Effect(value: false) }
+                    requestAccess: { .send(false) }
                 ),
                 feedbackGeneratorClient: .init(
                     prepare: { .fireAndForget {} },
                     selectionChanged: {
 //                        feedbackGeneratorCalled = true
-                        return .fireAndForget {}
+                        return .run { _ in}
                     }
                 ),
                 applicationClient: .noop,
@@ -83,7 +83,7 @@ class CameraSettingsViewTests: XCTestCase {
             environment: CameraEnvironment(
                 avCaptureDeviceClient: .init(
                     authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { Effect(value: true) }
+                    requestAccess: { .send(true) }
                 ),
                 feedbackGeneratorClient: .noop,
                 applicationClient: .noop,
@@ -120,7 +120,7 @@ class CameraSettingsViewTests: XCTestCase {
             environment: .init(
                 avCaptureDeviceClient: .init(
                     authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { Effect(value: false) }
+                    requestAccess: { .send(false) }
                 ),
                 feedbackGeneratorClient: .noop,
                 applicationClient: .noop,
@@ -150,7 +150,7 @@ class CameraSettingsViewTests: XCTestCase {
             environment: .init(
                 avCaptureDeviceClient: .init(
                     authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { Effect(value: true) }
+                    requestAccess: { .send(true) }
                 ),
                 feedbackGeneratorClient: .noop,
                 applicationClient: .noop,

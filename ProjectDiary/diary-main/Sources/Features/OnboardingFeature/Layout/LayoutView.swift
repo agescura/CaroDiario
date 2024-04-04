@@ -8,10 +8,10 @@ import FeedbackGeneratorClient
 import Models
 
 public struct LayoutView: View {
-  let store: StoreOf<Layout>
+  let store: StoreOf<LayoutFeature>
   
   public init(
-    store: StoreOf<Layout>
+    store: StoreOf<LayoutFeature>
   ) {
     self.store = store
   }
@@ -33,7 +33,7 @@ public struct LayoutView: View {
             
             Picker("",  selection: viewStore.binding(
               get: \.layoutType,
-              send: Layout.Action.layoutChanged
+              send: LayoutFeature.Action.layoutChanged
             )) {
               ForEach(LayoutType.allCases, id: \.self) { type in
                 Text(type.rawValue.localized)
@@ -45,7 +45,7 @@ public struct LayoutView: View {
               ForEachStore(
                 store.scope(
                   state: \.entries,
-                  action: Layout.Action.entries(id:action:)),
+                  action: LayoutFeature.Action.entries(id:action:)),
                 content: DayEntriesRowView.init(store:)
               )
             }
@@ -66,10 +66,9 @@ public struct LayoutView: View {
           }
           .opacity(viewStore.isAppClip ? 0.0 : 1.0)
           .padding(.horizontal, 16)
-          .alert(
-            store.scope(state: \.skipAlert),
-            dismiss: .cancelSkipAlert
-          )
+					.alert(
+						store: self.store.scope(state: \.$alert, action: { .alert($0) })
+					)
         
         PrimaryButtonView(
           label: {
@@ -85,13 +84,13 @@ public struct LayoutView: View {
       .navigationDestination(
         isPresented: viewStore.binding(
           get: \.navigateTheme,
-          send: Layout.Action.navigateTheme
+          send: LayoutFeature.Action.navigateTheme
         ),
         destination: {
           IfLetStore(
             store.scope(
               state: \.theme,
-              action: Layout.Action.theme
+              action: LayoutFeature.Action.theme
             ),
             then: ThemeView.init(store:)
           )
