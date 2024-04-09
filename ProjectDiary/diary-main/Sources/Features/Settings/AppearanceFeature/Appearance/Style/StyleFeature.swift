@@ -4,43 +4,41 @@ import EntriesFeature
 import FeedbackGeneratorClient
 import Models
 
-public struct StyleFeature: Reducer {
+@Reducer
+public struct StyleFeature {
   public init() {}
   
+	@ObservableState
   public struct State: Equatable {
-    public var styleType: StyleType
-    public var layoutType: LayoutType
     public var entries: IdentifiedArrayOf<DayEntriesRow.State>
+		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
+		
+		public init(
+			entries: IdentifiedArrayOf<DayEntriesRow.State>
+		) {
+			self.entries = entries
+		}
   }
 
   public enum Action: Equatable {
     case styleChanged(StyleType)
-    case entries(id: UUID, action: DayEntriesRow.Action)
+    case entries(IdentifiedActionOf<DayEntriesRow>)
   }
   
-  @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
-  
-  public var body: some ReducerOf<Self> {
-    Reduce(self.core)
-      .forEach(\.entries, action: /Action.entries) {
-        DayEntriesRow()
-      }
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case let .styleChanged(styleChanged):
-      state.styleType = styleChanged
-      state.entries = fakeEntries
-      return .run { _ in
-        await self.feedbackGeneratorClient.selectionChanged()
-      }
-      
-    case .entries:
-      return .none
-    }
-  }
+	public var body: some ReducerOf<Self> {
+		Reduce { state, action in
+			switch action {
+				case let .styleChanged(styleType):
+					state.userSettings.appearance.styleType = styleType
+					state.entries = fakeEntries
+					return .none
+					
+				case .entries:
+					return .none
+			}
+		}
+		.forEach(\.entries, action: \.entries) {
+			DayEntriesRow()
+		}
+	}
 }

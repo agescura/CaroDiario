@@ -6,16 +6,16 @@ import UIApplicationClient
 import Models
 
 public struct IconAppView: View {
-  let store: StoreOf<IconApp>
+  let store: StoreOf<IconAppFeature>
   
   public init(
-    store: StoreOf<IconApp>
+    store: StoreOf<IconAppFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       ZStack {
         Color.adaptiveGray.opacity(0.1)
           .edgesIgnoringSafeArea(.all)
@@ -30,10 +30,10 @@ public struct IconAppView: View {
                   .scaledToFit()
                   .clipShape(RoundedRectangle(cornerRadius: 16))
                   .onTapGesture {
-                    viewStore.send(.iconAppChanged(iconApp))
+										self.store.send(.iconAppChanged(iconApp))
                   }
                   .overlay(
-                    Text(viewStore.iconAppType == iconApp ? "Selected" : "")
+										Text(self.store.userSettings.appearance.iconAppType == iconApp ? "Selected" : "")
                       .foregroundColor(.chambray)
                       .adaptiveFont(.latoRegular, size: 14)
                       .offset(x: 0, y: 32)

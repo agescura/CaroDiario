@@ -7,7 +7,7 @@ import UserDefaultsClient
 import XCTest
 
 @MainActor
-class PrivacyOnboardingViewTests: XCTestCase {
+class PrivacyFeatureTests: XCTestCase {
 	func testHappyPath() async {
 		let store = TestStore(
 			initialState: PrivacyFeature.State(),

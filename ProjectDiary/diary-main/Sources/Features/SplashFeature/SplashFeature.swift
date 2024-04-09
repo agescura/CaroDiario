@@ -1,9 +1,11 @@
 import Foundation
 import ComposableArchitecture
 
-public struct SplashFeature: Reducer {
+@Reducer
+public struct SplashFeature {
   public init() {}
   
+	@ObservableState
   public struct State: Equatable {
     public var animation: AnimationState
     

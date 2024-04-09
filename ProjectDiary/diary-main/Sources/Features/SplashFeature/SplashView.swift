@@ -12,7 +12,7 @@ public struct SplashView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       ZStack {
         Color.chambray
         
@@ -20,15 +20,16 @@ public struct SplashView: View {
           Divider()
             .frame(
               minWidth: 1,
-              maxWidth: viewStore.animation.lineWidth,
+              maxWidth: self.store.animation.lineWidth,
               minHeight: 0,
-              maxHeight: viewStore.animation.lineHeight
+              maxHeight: self.store.animation.lineHeight
             )
             .background(Color.adaptiveWhite)
-            .animation(viewStore.animation.duration, value: UUID())
+            .animation(self.store.animation.duration, value: UUID())
         }
       }
       .ignoresSafeArea()
+			.task { await self.store.send(.startAnimation).finish() }
     }
   }
 }

@@ -6,48 +6,45 @@ import SwiftUIHelper
 import Models
 
 public struct MenuPasscodeView: View {
-  let store: StoreOf<Menu>
+	@Perception.Bindable var store: StoreOf<MenuFeature>
   
   public init(
-    store: StoreOf<Menu>
+    store: StoreOf<MenuFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       Form {
         Section(
           footer: Text("Passcode.Activate.Message".localized)
         ) {
           Button(action: {
-            viewStore.send(.actionSheetButtonTapped)
+						self.store.send(.actionSheetButtonTapped)
           }) {
             Text("Passcode.Turnoff".localized)
               .foregroundColor(.chambray)
           }
 					.confirmationDialog(
-						store: self.store.scope(state: \.$dialog, action: { .dialog($0) })
+						store: self.store.scope(state: \.$dialog, action: \.dialog)
 					)
         }
         
         Section(header: Text(""), footer: Text("")) {
           Toggle(
-            isOn: viewStore.binding(
-              get: \.faceIdEnabled,
-              send: Menu.Action.toggleFaceId
-            )
+						isOn: self.$store.userSettings.faceIdEnabled.sending(\.toggleFaceId)
           ) {
-            Text("Passcode.UnlockFaceId".localized(with: [viewStore.authenticationType.rawValue]))
+						Text("Passcode.UnlockFaceId".localized(with: [self.store.authenticationType.rawValue]))
               .foregroundColor(.chambray)
           }
           .toggleStyle(SwitchToggleStyle(tint: .chambray))
           
-          Picker("",  selection: viewStore.binding(
-            get: \.optionTimeForAskPasscode,
-            send: Menu.Action.optionTimeForAskPasscode
-          )) {
-            ForEach(viewStore.listTimesForAskPasscode, id: \.self) { type in
+					Picker(
+						"",
+						selection: self.$store.userSettings.timeForAskPasscode.sending(\.optionTimeForAskPasscode)
+					) {
+						ForEach(self.store.listTimesForAskPasscode, id: \.self) { type in
               Text(type.rawValue)
                 .adaptiveFont(.latoRegular, size: 12)
             }
@@ -65,7 +62,7 @@ public struct MenuPasscodeView: View {
       .navigationBarItems(
         leading: Button(
           action: {
-            viewStore.send(.popToRoot)
+						self.store.send(.popToRoot)
           }
         ) {
           Image(.chevronRight)
@@ -75,4 +72,16 @@ public struct MenuPasscodeView: View {
     .navigationBarTitle("Passcode.Title".localized)
     .navigationBarBackButtonHidden(true)
   }
+}
+
+#Preview {
+	MenuPasscodeView(
+		store: Store(
+			initialState: MenuFeature.State(
+				authenticationType: .faceId,
+				optionTimeForAskPasscode: 5
+			),
+			reducer: { MenuFeature() }
+		)
+	)
 }

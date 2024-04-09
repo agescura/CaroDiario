@@ -1,55 +1,55 @@
 import Foundation
 import ComposableArchitecture
-import UserDefaultsClient
-import FeedbackGeneratorClient
 import Models
 import EntriesFeature
 
-public struct ThemeFeature: Reducer {
-  public init() {}
-  
-  public struct State: Equatable {
-    public var themeType: ThemeType
-    public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-    
-    public var isAppClip = false
-  }
-
-  public enum Action: Equatable {
-    case themeChanged(ThemeType)
-    case entries(id: UUID, action: DayEntriesRow.Action)
-    
-    case startButtonTapped
-  }
-  
-  @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
-  @Dependency(\.applicationClient.setUserInterfaceStyle) private var setUserInterfaceStyle
-  @Dependency(\.userDefaultsClient) private var userDefaultsClient
-  
-  public var body: some ReducerOf<Self> {
-    Reduce(self.core)
-      .forEach(\.entries, action: /Action.entries) {
-        DayEntriesRow()
-      }
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case let .themeChanged(themeChanged):
-      state.themeType = themeChanged
-      return .run { _ in
-        await self.setUserInterfaceStyle(themeChanged.userInterfaceStyle)
-        await self.feedbackGeneratorClient.selectionChanged()
-      }
-      
-    case .entries:
-      return .none
-      
-    case .startButtonTapped:
-      return .run { _ in await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true) }
-    }
-  }
+@Reducer
+public struct ThemeFeature {
+	public init() {}
+	
+	@ObservableState
+	public struct State: Equatable {
+		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
+		public var isAppClip = false
+		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
+	}
+	
+	public enum Action: Equatable {
+		case delegate(Delegate)
+		case entries(IdentifiedActionOf<DayEntriesRow>)
+		case startButtonTapped
+		case themeChanged(ThemeType)
+		
+		@CasePathable
+		public enum Delegate: Equatable {
+			case navigateToHome
+		}
+	}
+	
+	@Dependency(\.applicationClient.setUserInterfaceStyle) private var setUserInterfaceStyle
+	
+	public var body: some ReducerOf<Self> {
+		Reduce { state, action in
+			switch action {
+				case .delegate:
+					return .none
+					
+				case .entries:
+					return .none
+					
+				case .startButtonTapped:
+					state.userSettings.hasShownOnboarding = true
+					return .send(.delegate(.navigateToHome))
+					
+				case let .themeChanged(themeType):
+					state.userSettings.appearance.themeType = themeType
+					return .run { _ in
+						await self.setUserInterfaceStyle(themeType.userInterfaceStyle)
+					}
+			}
+		}
+		.forEach(\.entries, action: \.entries) {
+			DayEntriesRow()
+		}
+	}
 }

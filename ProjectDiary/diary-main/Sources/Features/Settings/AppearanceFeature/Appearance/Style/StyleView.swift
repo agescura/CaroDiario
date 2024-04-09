@@ -5,16 +5,19 @@ import EntriesFeature
 import Models
 
 public struct StyleView: View {
-  let store: StoreOf<Style>
+	@Perception.Bindable var store: StoreOf<StyleFeature>
   
+	public init(
+		store: StoreOf<StyleFeature>
+	) {
+		self.store = store
+	}
+	
   public var body: some View {
     WithViewStore(self.store, observe: { $0 }) { viewStore in
       VStack(alignment: .leading, spacing: 16) {
         
-        Picker("",  selection: viewStore.binding(
-          get: \.styleType,
-          send: Style.Action.styleChanged
-        )) {
+				Picker("", selection: self.$store.userSettings.appearance.styleType.sending(\.styleChanged)) {
           ForEach(StyleType.allCases, id: \.self) { type in
             Text(type.rawValue.localized)
               .foregroundColor(.berryRed)
@@ -26,11 +29,10 @@ public struct StyleView: View {
         
         ScrollView(showsIndicators: false) {
           LazyVStack(alignment: .leading, spacing: 8) {
-            ForEachStore(
-              store.scope(
-                state: \.entries,
-                action: Style.Action.entries(id:action:)),
-              content: DayEntriesRowView.init(store:)
+            ForEach(
+              store.scope(state: \.entries, action: \.entries),
+							id: \.id,
+              content: DayEntriesRowView.init
             )
           }
           .accentColor(.chambray)

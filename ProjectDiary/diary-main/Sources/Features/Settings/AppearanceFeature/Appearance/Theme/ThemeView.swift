@@ -7,10 +7,10 @@ import FeedbackGeneratorClient
 import Models
 
 public struct ThemeView: View {
-  let store: StoreOf<Theme>
+	@Perception.Bindable var store: StoreOf<ThemeFeature>
   
-  init(
-    store: StoreOf<Theme>
+  public init(
+    store: StoreOf<ThemeFeature>
   ) {
     self.store = store
     
@@ -19,13 +19,10 @@ public struct ThemeView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       VStack(alignment: .leading, spacing: 16) {
         
-        Picker("",  selection: viewStore.binding(
-          get: \.themeType,
-          send: Theme.Action.themeChanged
-        )) {
+				Picker("", selection: self.$store.userSettings.appearance.themeType.sending(\.themeChanged)) {
           ForEach(ThemeType.allCases, id: \.self) { type in
             Text(type.rawValue.localized)
               .foregroundColor(.berryRed)
@@ -37,11 +34,10 @@ public struct ThemeView: View {
         
         ScrollView(showsIndicators: false) {
           LazyVStack(alignment: .leading, spacing: 8) {
-            ForEachStore(
-              store.scope(
-                state: \.entries,
-                action: Theme.Action.entries(id:action:)),
-              content: DayEntriesRowView.init(store:)
+            ForEach(
+							self.store.scope(state: \.entries, action: \.entries),
+							id: \.id,
+              content: DayEntriesRowView.init
             )
           }
           .accentColor(.chambray)

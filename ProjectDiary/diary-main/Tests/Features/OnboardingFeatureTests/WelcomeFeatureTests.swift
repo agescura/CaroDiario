@@ -6,7 +6,7 @@ import TestUtils
 import XCTest
 
 @MainActor
-class WelcomeOnboardingViewTests: XCTestCase {
+class WelcomeFeatureTests: XCTestCase {
 	func testHappyPath() async {
 		let clock = TestClock()
 		let store = TestStore(

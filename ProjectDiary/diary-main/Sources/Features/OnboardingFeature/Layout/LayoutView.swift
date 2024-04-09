@@ -8,7 +8,7 @@ import FeedbackGeneratorClient
 import Models
 
 public struct LayoutView: View {
-  let store: StoreOf<LayoutFeature>
+	@Perception.Bindable var store: StoreOf<LayoutFeature>
   
   public init(
     store: StoreOf<LayoutFeature>
@@ -17,7 +17,7 @@ public struct LayoutView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       VStack {
         ScrollView(showsIndicators: false) {
           VStack(alignment: .leading, spacing: 16) {
@@ -31,10 +31,7 @@ public struct LayoutView: View {
               .foregroundColor(.adaptiveGray)
             
             
-            Picker("",  selection: viewStore.binding(
-              get: \.layoutType,
-              send: LayoutFeature.Action.layoutChanged
-            )) {
+						Picker("", selection: self.$store.userSettings.appearance.layoutType.sending(\.layoutChanged)) {
               ForEach(LayoutType.allCases, id: \.self) { type in
                 Text(type.rawValue.localized)
               }
@@ -42,10 +39,9 @@ public struct LayoutView: View {
             .pickerStyle(SegmentedPickerStyle())
             
             LazyVStack(alignment: .leading, spacing: 8) {
-              ForEachStore(
-                store.scope(
-                  state: \.entries,
-                  action: LayoutFeature.Action.entries(id:action:)),
+              ForEach(
+								self.store.scope(state: \.entries, action: \.entries),
+								id: \.id,
                 content: DayEntriesRowView.init(store:)
               )
             }
@@ -62,12 +58,12 @@ public struct LayoutView: View {
               .adaptiveFont(.latoRegular, size: 16)
             
           }) {
-            viewStore.send(.skipAlertButtonTapped)
+						self.store.send(.skipAlertButtonTapped)
           }
-          .opacity(viewStore.isAppClip ? 0.0 : 1.0)
+          .opacity(self.store.isAppClip ? 0.0 : 1.0)
           .padding(.horizontal, 16)
 					.alert(
-						store: self.store.scope(state: \.$alert, action: { .alert($0) })
+						store: self.store.scope(state: \.$alert, action: \.alert)
 					)
         
         PrimaryButtonView(
@@ -75,27 +71,23 @@ public struct LayoutView: View {
             Text("OnBoarding.Continue".localized)
               .adaptiveFont(.latoRegular, size: 16)
           }) {
-            viewStore.send(.navigateTheme(true))
+						self.store.send(.themeButtonTapped)
           }
           .padding(.horizontal, 16)
       }
       .padding()
       .navigationBarBackButtonHidden(true)
-      .navigationDestination(
-        isPresented: viewStore.binding(
-          get: \.navigateTheme,
-          send: LayoutFeature.Action.navigateTheme
-        ),
-        destination: {
-          IfLetStore(
-            store.scope(
-              state: \.theme,
-              action: LayoutFeature.Action.theme
-            ),
-            then: ThemeView.init(store:)
-          )
-        }
-      )
     }
   }
+}
+
+#Preview {
+	LayoutView(
+		store: Store(
+			initialState: LayoutFeature.State(
+				entries: fakeEntries
+			),
+			reducer: { LayoutFeature() }
+		)
+	)
 }

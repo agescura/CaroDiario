@@ -1,52 +1,46 @@
-import Foundation
 import ComposableArchitecture
-import UserDefaultsClient
-import FeedbackGeneratorClient
 import EntriesFeature
+import Foundation
 import Models
 
-public struct StyleFeature: Reducer {
+@Reducer
+public struct StyleFeature {
   public init() {}
   
+	@ObservableState
   public struct State: Equatable {
-		@PresentationState public var alert: AlertState<Action.Alert>?
+		@Presents public var alert: AlertState<OnboardingAlert>?
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
 		public var isAppClip = false
-		public var navigateLayout: Bool = false
-		public var layout: LayoutFeature.State? = nil
-		public var layoutType: LayoutType
-		public var styleType: StyleType
+		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
   }
 
   public enum Action: Equatable {
-		case alert(PresentationAction<Alert>)
-		case entries(id: UUID, action: DayEntriesRow.Action)
+		case alert(PresentationAction<OnboardingAlert>)
 		case delegate(Delegate)
-		case navigationLayout(Bool)
-		case layout(LayoutFeature.Action)
+		case entries(IdentifiedActionOf<DayEntriesRow>)
+		case layoutButtonTapped
 		case skipAlertButtonTapped
-    case styleChanged(StyleType)
-		
-		public enum Alert: Equatable {
-			case skip
-		}
+		case styleChanged(StyleType)
+    
+		@CasePathable
 		public enum Delegate: Equatable {
-			case goToHome
+			case navigateToHome
+			case navigateToLayout
 		}
   }
   
-	@Dependency(\.feedbackGeneratorClient) var feedbackGeneratorClient
-	@Dependency(\.userDefaultsClient) var userDefaultsClient
-	
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alert(.presented(.skip)):
+					state.alert = nil
+					state.userSettings.hasShownOnboarding = true
 					return .run { send in
-						await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
-						await send(.delegate(.goToHome))
+						await send(.delegate(.navigateToHome))
 					}
-				case .alert:
+				case .alert(.dismiss):
+					state.alert = nil
 					return .none
 					
 				case .delegate:
@@ -55,44 +49,21 @@ public struct StyleFeature: Reducer {
 				case .entries:
 					return .none
 					
-				case let .navigationLayout(value):
-					state.navigateLayout = value
-						state.layout = value ? LayoutFeature.State(
-						entries: fakeEntries(
-							with: state.styleType,
-							layout: state.layoutType),
-						isAppClip: state.isAppClip,
-						layoutType: state.layoutType,
-						styleType: state.styleType) : nil
-					return .none
-					
-				case .layout:
-					return .none
+				case .layoutButtonTapped:
+					return .send(.delegate(.navigateToLayout))
 
 				case .skipAlertButtonTapped:
-					state.alert = AlertState {
-						TextState("OnBoarding.Skip.Title".localized)
-					} actions: {
-						ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
-						ButtonState(role: .destructive, action: .skip, label: { TextState("OnBoarding.Skip".localized) })
-					} message: {
-						TextState("OnBoarding.Skip.Alert".localized)
-					}
+					state.alert = .skip
 					return .none
 					
-				case let .styleChanged(styleChanged):
-					state.styleType = styleChanged
-					state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-					return .run { _ in
-						await self.feedbackGeneratorClient.selectionChanged()
-					}
+				case let .styleChanged(styleType):
+					state.userSettings.appearance.styleType = styleType
+					state.entries = fakeEntries
+					return .none
 			}
 		}
-		.forEach(\.entries, action: /Action.entries) {
+		.forEach(\.entries, action: \.entries) {
 			DayEntriesRow()
-		}
-		.ifLet(\.layout, action: /Action.layout) {
-			LayoutFeature()
 		}
 		.ifLet(\.$alert, action: /Action.alert)
 	}

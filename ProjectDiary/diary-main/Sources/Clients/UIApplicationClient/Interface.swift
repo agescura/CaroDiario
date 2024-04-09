@@ -9,7 +9,7 @@ extension DependencyValues {
 }
 
 public struct UIApplicationClient {
-  public let alternateIconName: String?
+  public let alternateIconName: () -> String?
   public var setAlternateIconName: (String?) async throws -> Void
   public let supportsAlternateIcons: () -> Bool
   public let openSettings: @Sendable () async -> Void
@@ -26,7 +26,7 @@ public struct UIApplicationClient {
   }
   
   public init(
-    alternateIconName: String?,
+    alternateIconName: @escaping () -> String?,
     setAlternateIconName: @escaping (String?) async throws -> Void,
     supportsAlternateIcons: @escaping () -> Bool,
     openSettings: @escaping @Sendable () async -> Void,

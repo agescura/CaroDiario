@@ -7,7 +7,7 @@ extension UIApplicationClient: DependencyKey {
 
 extension UIApplicationClient {
   public static let live = Self(
-    alternateIconName: UIApplication.shared.alternateIconName,
+		alternateIconName: { UIApplication.shared.alternateIconName },
     setAlternateIconName: { iconName in
       try await UIApplication.shared.setAlternateIconName(iconName)
     },

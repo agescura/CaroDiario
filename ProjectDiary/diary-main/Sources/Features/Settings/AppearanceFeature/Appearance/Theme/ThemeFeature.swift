@@ -10,39 +10,41 @@ import EntriesFeature
 public struct ThemeFeature {
   public init() {}
   
-  public struct State: Equatable {
-    public var themeType: ThemeType = .system
-    public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-  }
-
-  public enum Action: Equatable {
-    case themeChanged(ThemeType)
-    case entries(id: UUID, action: DayEntriesRow.Action)
-  }
-  
-  @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
-  @Dependency(\.applicationClient.setUserInterfaceStyle) private var setUserInterfaceStyle
-  
-  public var body: some ReducerOf<Self> {
-    Reduce(self.core)
-      .forEach(\.entries, action: /Action.entries) {
-        DayEntriesRow()
-      }
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case let .themeChanged(newTheme):
-      state.themeType = newTheme
-      return .run { _ in
-        await self.setUserInterfaceStyle(newTheme.userInterfaceStyle)
-        await self.feedbackGeneratorClient.selectionChanged()
-      }
-    case .entries:
-      return .none
-    }
-  }
+	@ObservableState
+	public struct State: Equatable {
+		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
+		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
+		
+		public init(
+			entries: IdentifiedArrayOf<DayEntriesRow.State>
+		) {
+			self.entries = entries
+		}
+	}
+	
+	public enum Action: Equatable {
+		case themeChanged(ThemeType)
+		case entries(IdentifiedActionOf<DayEntriesRow>)
+	}
+	
+	@Dependency(\.feedbackGeneratorClient) var feedbackGeneratorClient
+	@Dependency(\.applicationClient.setUserInterfaceStyle) var setUserInterfaceStyle
+	
+	public var body: some ReducerOf<Self> {
+		Reduce { state, action in
+			switch action {
+				case let .themeChanged(newTheme):
+					state.userSettings.appearance.themeType = newTheme
+					return .run { _ in
+						await self.setUserInterfaceStyle(newTheme.userInterfaceStyle)
+						await self.feedbackGeneratorClient.selectionChanged()
+					}
+				case .entries:
+					return .none
+			}
+		}
+		.forEach(\.entries, action: \.entries) {
+			DayEntriesRow()
+		}
+	}
 }

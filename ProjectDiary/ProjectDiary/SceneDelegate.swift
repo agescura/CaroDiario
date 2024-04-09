@@ -1,9 +1,9 @@
 import SwiftUI
 import ComposableArchitecture
-import RootFeature
+import AppFeature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     func scene(
         _ scene: UIScene,
@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 extension ScenePhase {
-  var value: Root.State.State {
+  var value: AppFeature.State.State {
         switch self {
         case .active:
             return .active

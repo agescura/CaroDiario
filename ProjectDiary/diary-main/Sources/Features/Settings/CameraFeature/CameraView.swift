@@ -8,81 +8,25 @@ import Styles
 import Models
 import SwiftUIHelper
 
-public struct Camera: Reducer {
-  public init() {}
-  
-  public struct State: Equatable {
-    public var cameraStatus: AuthorizedVideoStatus
-    
-    public init(
-      cameraStatus: AuthorizedVideoStatus
-    ) {
-      self.cameraStatus = cameraStatus
-    }
-  }
-  
-  public enum Action: Equatable {
-    case cameraButtonTapped
-    case requestAccessResponse(Bool)
-    case goToSettings
-  }
-  
-  @Dependency(\.applicationClient) private var applicationClient
-  @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
-  @Dependency(\.avCaptureDeviceClient) private var avCaptureDeviceClient
-  
-  public var body: some ReducerOf<Self> {
-    Reduce(self.core)
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case .cameraButtonTapped:
-      switch state.cameraStatus {
-      case .notDetermined:
-        return .run { send in
-          await self.feedbackGeneratorClient.selectionChanged()
-          await send(.requestAccessResponse(await self.avCaptureDeviceClient.requestAccess()))
-        }
-        
-      default:
-        break
-      }
-      return .none
-      
-    case let .requestAccessResponse(authorized):
-      state.cameraStatus = authorized ? .authorized : .denied
-      return .none
-      
-    case .goToSettings:
-      guard state.cameraStatus != .notDetermined else { return .none }
-      return .run { _ in await self.applicationClient.openSettings() }
-    }
-  }
-}
-
 public struct CameraView: View {
-  let store: StoreOf<Camera>
+  let store: StoreOf<CameraFeature>
   
   public init(
-    store: StoreOf<Camera>
+    store: StoreOf<CameraFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       Form {
         Section(
           footer:
             Group {
-              if viewStore.cameraStatus != .denied {
-                Text(viewStore.cameraStatus.description)
+							if self.store.cameraStatus != .denied {
+                Text(self.store.cameraStatus.description)
               } else {
-                Text(viewStore.cameraStatus.description)
+                Text(self.store.cameraStatus.description)
                 + Text(" ") +
                 Text("Settings.GoToSettings".localized)
                   .underline()
@@ -90,16 +34,16 @@ public struct CameraView: View {
               }
             }
             .onTapGesture {
-              viewStore.send(.goToSettings)
+							self.store.send(.goToSettings)
             }
         ) {
           HStack {
-            Text(viewStore.cameraStatus.rawValue.localized)
+            Text(self.store.cameraStatus.rawValue.localized)
               .foregroundColor(.chambray)
               .adaptiveFont(.latoRegular, size: 10)
             Spacer()
-            if viewStore.cameraStatus == .notDetermined {
-              Text(viewStore.cameraStatus.permission)
+            if self.store.cameraStatus == .notDetermined {
+              Text(self.store.cameraStatus.permission)
                 .foregroundColor(.adaptiveGray)
                 .adaptiveFont(.latoRegular, size: 12)
               Image(.chevronRight)
@@ -108,7 +52,7 @@ public struct CameraView: View {
           }
           .contentShape(Rectangle())
           .onTapGesture {
-            viewStore.send(.cameraButtonTapped)
+						self.store.send(.cameraButtonTapped)
           }
         }
       }

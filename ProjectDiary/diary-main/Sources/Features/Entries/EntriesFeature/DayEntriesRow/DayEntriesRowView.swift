@@ -4,7 +4,8 @@ import Localizables
 import Styles
 import Models
 
-public struct DayEntriesRow: Reducer {
+@Reducer
+public struct DayEntriesRow {
   public init() {}
   
   public struct State: Identifiable, Equatable {
@@ -25,7 +26,7 @@ public struct DayEntriesRow: Reducer {
   }
   
   public var body: some ReducerOf<Self> {
-    Scope(state: \.dayEntries, action: /Action.dayEntry) {
+    Scope(state: \.dayEntries, action: \.dayEntry) {
       DayEntries()
     }
   }
@@ -42,25 +43,24 @@ public struct DayEntriesRowView: View {
   
   public var body: some View {
     DayEntriesView(
-      store: store.scope(
-        state: \.dayEntries,
-        action: DayEntriesRow.Action.dayEntry
-      )
+			store: self.store.scope(state: \.dayEntries, action: \.dayEntry)
     )
     .padding(.horizontal)
   }
 }
 
-private let id1 = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
-private let id2 = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
-private let id3 = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
-private let date = Date(timeIntervalSince1970: 1629486993)
-
-public func fakeEntries(with style: StyleType, layout: LayoutType) -> IdentifiedArrayOf<DayEntriesRow.State> {
-  [
+public var fakeEntries: IdentifiedArrayOf<DayEntriesRow.State> {
+	@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+	
+	let id1 = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
+	let id2 = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
+	let id3 = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
+	let date = Date(timeIntervalSince1970: 1629486993)
+	
+  return [
     .init(dayEntry: .init(entry: [
       .init(id: id1, date: date, startDay: date, text: .init(id: id1, message: "Entries.FakeEntry.FirstMessage".localized, lastUpdated: date)),
       .init(id: id2, date: date, startDay: date, text: .init(id: id2, message: "Entries.FakeEntry.SecondMessage".localized, lastUpdated: date))
-    ], style: style, layout: layout), id: id3)
+		], style: userSettings.appearance.styleType, layout: userSettings.appearance.layoutType), id: id3)
   ]
 }

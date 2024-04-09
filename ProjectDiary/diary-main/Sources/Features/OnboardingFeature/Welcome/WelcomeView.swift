@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Views
 
 public struct WelcomeView: View {
-  let store: StoreOf<WelcomeFeature>
+	@Perception.Bindable var store: StoreOf<WelcomeFeature>
   
   public init(
     store: StoreOf<WelcomeFeature>
@@ -12,8 +12,8 @@ public struct WelcomeView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      NavigationStack {
+		WithPerceptionTracking {
+			NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
         VStack(alignment: .leading, spacing: 16) {
           Text("OnBoarding.Diary".localized)
             .adaptiveFont(.latoBold, size: 24)
@@ -22,18 +22,14 @@ public struct WelcomeView: View {
             .adaptiveFont(.latoItalic, size: 12)
             .foregroundColor(.adaptiveGray)
           
-          
           OnBoardingTabView(
             items: [
               .init(id: 0, title: "OnBoarding.Description.1".localized),
               .init(id: 1, title: "OnBoarding.Description.2".localized),
               .init(id: 2, title: "OnBoarding.Description.3".localized)
             ],
-            selection: viewStore.binding(
-              get: \.selectedPage,
-              send: WelcomeFeature.Action.selectedPage
-            ),
-            animated: viewStore.tabViewAnimated
+						selection: self.$store.selectedPage.sending(\.selectedPage),
+						animated: self.store.tabViewAnimated
           )
           .frame(minHeight: 150)
           
@@ -43,12 +39,12 @@ public struct WelcomeView: View {
                 .adaptiveFont(.latoRegular, size: 16)
               
             }) {
-              viewStore.send(.skipAlertButtonTapped)
+							self.store.send(.skipAlertButtonTapped)
             }
-            .opacity(viewStore.isAppClip ? 0.0 : 1.0)
+						.opacity(self.store.isAppClip ? 0.0 : 1.0)
             .padding(.horizontal, 16)
             .alert(
-							store: self.store.scope(state: \.$alert, action: { .alert($0) })
+							store: self.store.scope(state: \.$alert, action: \.alert)
             )
           
           PrimaryButtonView(
@@ -57,32 +53,29 @@ public struct WelcomeView: View {
                 .adaptiveFont(.latoRegular, size: 16)
               
             }) {
-              viewStore.send(.navigationPrivacy(true))
+							self.store.send(.privacyButtonTapped)
             }
             .padding(.horizontal, 16)
         }
         .padding()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(
-          isPresented: viewStore.binding(
-            get: \.navigatePrivacy,
-            send: WelcomeFeature.Action.navigationPrivacy),
-          destination: {
-            IfLetStore(
-              store.scope(
-                state: \.privacy,
-                action: WelcomeFeature.Action.privacy
-              ),
-              then: PrivacyView.init(store:)
-            )
-          }
-        )
-      }
+			} destination: { store in
+				switch store.case {
+					case let .layout(store):
+						LayoutView(store: store)
+					case let .privacy(store):
+						PrivacyView(store: store)
+					case let .style(store):
+						StyleView(store: store)
+					case let .theme(store):
+						ThemeView(store: store)
+				}
+			}
       .navigationViewStyle(StackNavigationViewStyle())
-      .onAppear {
-        viewStore.send(.startTimer)
+      .task {
+				await self.store.send(.task).finish()
       }
-    }
+		}
   }
 }
 

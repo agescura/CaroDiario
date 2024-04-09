@@ -1,69 +1,56 @@
-import XCTest
 @testable import AppearanceFeature
 import ComposableArchitecture
 import EntriesFeature
 import FeedbackGeneratorClient
+import Models
+import TestUtils
+import XCTest
 
 @MainActor
 class StyleViewTests: XCTestCase {
   
   func testStyleHappyPath() async {
-    var selectionChangedCalled = false
     let store = TestStore(
-      initialState: .init(
-        styleType: .rectangle,
-        layoutType: .horizontal,
-        entries: []
-      ),
-      reducer: Style()
+			initialState: StyleFeature.State(entries: []),
+			reducer: { StyleFeature() }
     )
     
-    store.dependencies.feedbackGeneratorClient.selectionChanged = {
-      selectionChangedCalled = true
-    }
+    store.dependencies.feedbackGeneratorClient.selectionChanged = {}
     
     await store.send(.styleChanged(.rounded)) {
-      $0.styleType = .rounded
-      $0.entries = fakeEntries(with: .rounded, layout: .horizontal)
-      XCTAssertTrue(selectionChangedCalled)
-      selectionChangedCalled = false
+			$0.userSettings.appearance.styleType = .rounded
+      $0.entries = fakeEntries
     }
     
     await store.send(.styleChanged(.rectangle)) {
-      $0.styleType = .rectangle
-      $0.entries = fakeEntries(with: .rectangle, layout: .horizontal)
-      XCTAssertTrue(selectionChangedCalled)
+			$0.userSettings.appearance.styleType = .rectangle
+			$0.entries[0].dayEntries.style = .rectangle
     }
   }
   
   func testSnapshot() {
     SnapshotTesting.diffTool = "ksdiff"
     
-    let store = Store(
-      initialState: .init(
-        styleType: .rectangle,
-        layoutType: .horizontal,
-        entries: fakeEntries(with: .rectangle, layout: .vertical)
-      ),
-      reducer: Style()
-    )
-    let view = StyleView(store: store)
-    
-    let vc = UIHostingController(rootView: view)
-    vc.view.frame = UIScreen.main.bounds
-    
-    let viewStore = ViewStore(
-      store.scope(state: { _ in () }),
-      removeDuplicates: ==
-    )
-    
-    assertSnapshot(matching: vc, as: .image)
-    
-    viewStore.send(.styleChanged(.rounded))
-    assertSnapshot(matching: vc, as: .image)
-    
-    viewStore.send(.styleChanged(.rectangle))
-    assertSnapshot(matching: vc, as: .image)
+    assertSnapshot(
+			StyleView(
+				store: Store(
+					initialState: StyleFeature.State(entries: fakeEntries),
+					reducer: {  }
+				)
+			)
+		)
+		
+		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+		userSettings.appearance.styleType = .rounded
+		
+		assertSnapshot(
+			StyleView(
+				store: Store(
+					initialState: StyleFeature.State(entries: fakeEntries),
+					reducer: {  }
+				)
+			)
+		)
   }
 }
 

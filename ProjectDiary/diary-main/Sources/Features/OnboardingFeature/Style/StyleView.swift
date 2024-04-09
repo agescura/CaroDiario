@@ -7,12 +7,11 @@ import EntriesFeature
 import Styles
 
 public struct StyleView: View {
-  let store: StoreOf<StyleFeature>
+	@Perception.Bindable var store: StoreOf<StyleFeature>
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       VStack {
-        
         ScrollView(showsIndicators: false) {
           VStack(alignment: .leading, spacing: 16) {
             
@@ -24,10 +23,8 @@ public struct StyleView: View {
               .foregroundColor(.adaptiveGray)
               .adaptiveFont(.latoRegular, size: 10)
             
-            Picker("",  selection: viewStore.binding(
-              get: \.styleType,
-              send: StyleFeature.Action.styleChanged
-            )) {
+						Picker("", selection: self.$store.userSettings.appearance.styleType.sending(\.styleChanged)
+            ) {
               ForEach(StyleType.allCases, id: \.self) { type in
                 Text(type.rawValue.localized)
                   .foregroundColor(.berryRed)
@@ -37,12 +34,12 @@ public struct StyleView: View {
             .pickerStyle(SegmentedPickerStyle())
             
             LazyVStack(alignment: .leading, spacing: 8) {
-              ForEachStore(
-                store.scope(
-                  state: \.entries,
-                  action: StyleFeature.Action.entries(id:action:)),
-                content: DayEntriesRowView.init(store:)
-              )
+							ForEach(
+								self.store.scope(state: \.entries, action: \.entries),
+								id: \.id
+							) { store in
+								DayEntriesRowView(store: store)
+							}
             }
             .accentColor(.chambray)
             .animation(.default, value: UUID())
@@ -57,12 +54,12 @@ public struct StyleView: View {
               .adaptiveFont(.latoRegular, size: 16)
             
           }) {
-            viewStore.send(.skipAlertButtonTapped)
+						self.store.send(.skipAlertButtonTapped)
           }
-          .opacity(viewStore.isAppClip ? 0.0 : 1.0)
+          .opacity(self.store.isAppClip ? 0.0 : 1.0)
           .padding(.horizontal, 16)
           .alert(
-						store: self.store.scope(state: \.$alert, action: { .alert($0) })
+						store: self.store.scope(state: \.$alert, action: \.alert)
           )
         
         PrimaryButtonView(
@@ -70,27 +67,12 @@ public struct StyleView: View {
             Text("OnBoarding.Continue".localized)
               .adaptiveFont(.latoRegular, size: 16)
           }) {
-            viewStore.send(.navigationLayout(true))
+						self.store.send(.layoutButtonTapped)
           }
           .padding(.horizontal, 16)
       }
       .padding()
       .navigationBarBackButtonHidden(true)
-      .navigationDestination(
-        isPresented: viewStore.binding(
-          get: \.navigateLayout,
-          send: StyleFeature.Action.navigationLayout
-        ),
-        destination: {
-          IfLetStore(
-            store.scope(
-              state: \.layout,
-              action: StyleFeature.Action.layout
-            ),
-            then: LayoutView.init(store:)
-          )
-        }
-      )
     }
   }
 }
@@ -99,12 +81,7 @@ public struct StyleView: View {
 	StyleView(
 		store: .init(
 			initialState: StyleFeature.State(
-				entries: fakeEntries(
-					with: .rectangle,
-					layout: .horizontal
-				),
-				layoutType: .horizontal,
-				styleType: .rectangle
+				entries: fakeEntries
 			),
 			reducer: { StyleFeature() }
 		)

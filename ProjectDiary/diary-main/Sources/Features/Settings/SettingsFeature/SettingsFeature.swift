@@ -1,5 +1,6 @@
 import Foundation
 import ComposableArchitecture
+import EntriesFeature
 import MicrophoneFeature
 import AboutFeature
 import AgreementsFeature
@@ -16,161 +17,53 @@ import LocalAuthenticationClient
 public struct SettingsFeature {
 	public init() {}
 	
+	@Reducer(state: .equatable, action: .equatable)
+	public enum Path {
+		case activate(ActivateFeature)
+		case appearance(AppearanceFeature)
+		case camera(CameraFeature)
+		case iconApp(IconAppFeature)
+		case insert(InsertFeature)
+		case language(LanguageFeature)
+		case layout(LayoutFeature)
+		case menu(MenuFeature)
+		case style(StyleFeature)
+		case theme(ThemeFeature)
+	}
+	
 	@ObservableState
 	public struct State: Equatable {
+		public var localAuthenticationType: LocalAuthenticationType = .none
+		public var path: StackState<Path.State>
 		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
 		
-//		public var destination: Destination? = nil {
-//			didSet {
-//				if case let .appearance(state) = self.destination {
-//					self.styleType = state.styleType
-//					self.layoutType = state.layoutType
-//					self.themeType = state.themeType
-//					self.iconAppType = state.iconAppType
-//				}
-//				if case let .language(state) = self.destination {
-//					self.language = state.language
-//				}
-//				if case let .menu(state) = self.destination {
-//					self.faceIdEnabled = state.faceIdEnabled
-//				}
-//				if case let .activate(state) = self.destination {
-//					self.faceIdEnabled = state.faceIdEnabled
-//					self.hasPasscode = state.hasPasscode
-//				}
-//				if case let .camera(state) = self.destination {
-//					self.cameraStatus = state.cameraStatus
-//				}
-//				if case let .microphone(state) = self.destination {
-//					self.microphoneStatus = state.microphoneStatus
-//				}
-//			}
-//		}
-//		public enum Destination: Equatable {
-//			case appearance(Appearance.State)
-//			case language(Language.State)
-//			case activate(Activate.State)
-//			case menu(Menu.State)
-//			case camera(Camera.State)
-//			case microphone(Microphone.State)
-//			case export(Export.State)
-//			case agreements(Agreements.State)
-//			case about(AboutFeature.State)
-//		}
-//		
-//		var appearance: Appearance.State? {
-//			get {
-//				guard case let .appearance(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .appearance(newValue)
-//			}
-//		}
-//		var languageState: Language.State? {
-//			get {
-//				guard case let .language(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .language(newValue)
-//			}
-//		}
-//		var activate: Activate.State? {
-//			get {
-//				guard case let .activate(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .activate(newValue)
-//			}
-//		}
-//		var menu: Menu.State? {
-//			get {
-//				guard case let .menu(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .menu(newValue)
-//			}
-//		}
-//		var camera: Camera.State? {
-//			get {
-//				guard case let .camera(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .camera(newValue)
-//			}
-//		}
-//		var microphone: Microphone.State? {
-//			get {
-//				guard case let .microphone(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .microphone(newValue)
-//			}
-//		}
-//		var export: Export.State? {
-//			get {
-//				guard case let .export(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .export(newValue)
-//			}
-//		}
-//		var agreements: Agreements.State? {
-//			get {
-//				guard case let .agreements(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .agreements(newValue)
-//			}
-//		}
-//		var about: AboutFeature.State? {
-//			get {
-//				guard case let .about(state) = self.destination else { return nil }
-//				return state
-//			}
-//			set {
-//				guard let newValue = newValue else { return }
-//				self.destination = .about(newValue)
-//			}
-//		}
-		
-		public init() {}
+		public init(
+			path: StackState<Path.State> = StackState<Path.State>()
+		) {
+			self.path = path
+		}
 	}
 	
 	public enum Action: Equatable {
-		case onAppear
-		
-		case toggleShowSplash(isOn: Bool)
 		case biometricResult(LocalAuthenticationType)
+		case navigateToPasscode
+		case path(StackAction<Path.State, Path.Action>)
+		case task
+		case toggleShowSplash(isOn: Bool)
 		
-		case appearance(Appearance.Action)
+		case appearance(AppearanceFeature.Action)
 		case navigateAppearance(Bool)
 		
-		case language(Language.Action)
+		case language(LanguageFeature.Action)
 		case navigateLanguage(Bool)
 		
-		case activate(Activate.Action)
+		case activate(ActivateFeature.Action)
 		case navigateActivate(Bool)
 		
-		case menu(Menu.Action)
+		case menu(MenuFeature.Action)
 		case navigateMenu(Bool)
 		
-		case camera(Camera.Action)
+		case camera(CameraFeature.Action)
 		case navigateCamera(Bool)
 		
 		case microphone(Microphone.Action)
@@ -193,162 +86,161 @@ public struct SettingsFeature {
 	@Dependency(\.storeKitClient) private var storeKitClient
 	
 	public var body: some ReducerOf<Self> {
-		Reduce(self.core)
-//			.ifLet(\.appearance, action: /Action.appearance) {
-//				Appearance()
-//			}
-//			.ifLet(\.agreements, action: /Action.agreements) {
-//				Agreements()
-//			}
-//			.ifLet(\.camera, action: /Action.camera) {
-//				Camera()
-//			}
-//			.ifLet(\.about, action: /Action.about) {
-//				AboutFeature()
-//			}
-//			.ifLet(\.export, action: /Action.export) {
-//				Export()
-//			}
-//			.ifLet(\.languageState, action: /Action.language) {
-//				Language()
-//			}
-//			.ifLet(\.microphone, action: /Action.microphone) {
-//				Microphone()
-//			}
-//			.ifLet(\.activate, action: /Action.activate) {
-//				Activate()
-//			}
-//			.ifLet(\.menu, action: /Action.menu) {
-//				Menu()
-//			}
-	}
-	
-	private func core(
-		state: inout State,
-		action: Action
-	) -> Effect<Action> {
-		switch action {
-				
-			case .onAppear:
-				return .run { send in
-					await send(.biometricResult(self.localAuthenticationClient.determineType()))
-				}
-				
-			case let .navigateAppearance(value):
-//				state.destination = value ? .appearance(
-//					.init(
-//						styleType: state.styleType,
-//						layoutType: state.layoutType,
-//						themeType: state.themeType,
-//						iconAppType: state.iconAppType
-//					)
-//				) : nil
-				return .none
-				
-			case .appearance:
-				return .none
-				
-			case let .navigateLanguage(value):
-//				state.destination = value ? .language(
-//					.init(language: state.language)
-//				) : nil
-				return .none
-				
-			case .language:
-				return .none
-				
-			case let .toggleShowSplash(showSplash):
-				state.userSettings.showSplash = showSplash
-				return .none
-				
-			case let .biometricResult(result):
-//				state.authenticationType = result
-				return .none
-				
-			case .activate(.insert(.navigateMenu(true))):
-//				state.hasPasscode = true
-				return .none
-				
-			case .menu(.dialog(.presented(.turnOff))),
-					.activate(.insert(.menu(.dialog(.presented(.turnOff))))):
-//				state.hasPasscode = false
-				return .run { send in
-					try await self.mainQueue.sleep(for: .seconds(0.1))
-					await send(.navigateActivate(false))
-				}
-				
-			case .activate(.insert(.menu(.popToRoot))),
-					.activate(.insert(.popToRoot)),
-					.menu(.popToRoot),
-					.activate(.insert(.success)):
-				return .send(.navigateActivate(false))
-				
-			case .activate:
-				return .none
-				
-			case let .navigateActivate(value):
-//				state.destination = value ? .activate(
-//					.init(
-//						faceIdEnabled: state.faceIdEnabled,
-//						hasPasscode: state.hasPasscode
-//					)
-//				) : nil
-				return .none
-				
-			case .menu:
-				return .none
-				
-			case let .navigateMenu(value):
-//				state.destination = value ? .menu(
-//					.init(
-//						authenticationType: state.authenticationType,
-//						optionTimeForAskPasscode: state.optionTimeForAskPasscode,
-//						faceIdEnabled: state.faceIdEnabled
-//					)
-//				) : nil
-				return .none
-				
-			case .microphone:
-				return .none
-				
-			case let .navigateMicrophone(value):
-//				state.destination = value ? .microphone(
-//					.init(microphoneStatus: state.microphoneStatus)
-//				) : nil
-				return .none
-				
-			case .camera:
-				return .none
-				
-			case let .navigateCamera(value):
-//				state.destination = value ? .camera(
-//					.init(cameraStatus: state.cameraStatus)
-//				) : nil
-				return .none
-				
-			case let .navigateAgreements(value):
-//				state.destination = value ? .agreements(.init()) : nil
-				return .none
-				
-			case .agreements:
-				return .none
-				
-			case .reviewStoreKit:
-				return .run { _ in await self.storeKitClient.requestReview() }
-				
-			case let .navigateExport(value):
-//				state.destination = value ? .export(.init()) : nil
-				return .none
-				
-			case .export:
-				return .none
-				
-			case let .navigateAbout(value):
-//				state.destination = value ? .about(.init()) : nil
-				return .none
-				
-			case .about:
-				return .none
+		Reduce { state, action in
+			switch action {
+				case let .biometricResult(localAuthenticationType):
+					state.localAuthenticationType = localAuthenticationType
+					return .none
+					
+				case .navigateToPasscode:
+					if state.userSettings.hasPasscode {
+						state.path.append(.menu(MenuFeature.State(authenticationType: state.localAuthenticationType, optionTimeForAskPasscode: 5)))
+					} else {
+						state.path.append(.activate(ActivateFeature.State()))
+					}
+					return .none
+					
+				case let .path(.element(id: _, action: pathAction)):
+					switch pathAction {
+						case .appearance(.delegate(.navigateToIconApp)):
+							state.path.append(.iconApp(IconAppFeature.State()))
+							return .none
+						case .appearance(.delegate(.navigateToLayout)):
+							state.path.append(.layout(LayoutFeature.State(entries: fakeEntries)))
+							return .none
+						case .appearance(.delegate(.navigateToStyle)):
+							state.path.append(.style(StyleFeature.State(entries: fakeEntries)))
+							return .none
+						case .appearance(.delegate(.navigateToTheme)):
+							state.path.append(.theme(ThemeFeature.State(entries: fakeEntries)))
+							return .none
+						default:
+							return .none
+					}
+				case .path:
+					return .none
+					
+				case .task:
+					return .run { send in
+						await send(.biometricResult(self.localAuthenticationClient.determineType()))
+					}
+					
+				case let .navigateAppearance(value):
+					//				state.destination = value ? .appearance(
+					//					.init(
+					//						styleType: state.styleType,
+					//						layoutType: state.layoutType,
+					//						themeType: state.themeType,
+					//						iconAppType: state.iconAppType
+					//					)
+					//				) : nil
+					return .none
+					
+				case .appearance:
+					return .none
+					
+				case let .navigateLanguage(value):
+					//				state.destination = value ? .language(
+					//					.init(language: state.language)
+					//				) : nil
+					return .none
+					
+				case .language:
+					return .none
+					
+				case let .toggleShowSplash(showSplash):
+					state.userSettings.showSplash = showSplash
+					return .none
+					
+//				case .activate(.insert(.navigateMenu(true))):
+//					//				state.hasPasscode = true
+//					return .none
+					
+//				case .menu(.dialog(.presented(.turnOff))),
+//						.activate(.insert(.menu(.dialog(.presented(.turnOff))))):
+//					//				state.hasPasscode = false
+//					return .run { send in
+//						try await self.mainQueue.sleep(for: .seconds(0.1))
+//						await send(.navigateActivate(false))
+//					}
+					
+//				case .activate(.insert(.menu(.popToRoot))),
+//						.activate(.insert(.popToRoot)),
+//						.menu(.popToRoot),
+//						.activate(.insert(.success)):
+//					return .send(.navigateActivate(false))
+					
+				case .activate:
+					return .none
+					
+				case let .navigateActivate(value):
+					//				state.destination = value ? .activate(
+					//					.init(
+					//						faceIdEnabled: state.faceIdEnabled,
+					//						hasPasscode: state.hasPasscode
+					//					)
+					//				) : nil
+					return .none
+					
+				case .menu:
+					return .none
+					
+				case let .navigateMenu(value):
+					//				state.destination = value ? .menu(
+					//					.init(
+					//						authenticationType: state.authenticationType,
+					//						optionTimeForAskPasscode: state.optionTimeForAskPasscode,
+					//						faceIdEnabled: state.faceIdEnabled
+					//					)
+					//				) : nil
+					return .none
+					
+				case .microphone:
+					return .none
+					
+				case let .navigateMicrophone(value):
+					//				state.destination = value ? .microphone(
+					//					.init(microphoneStatus: state.microphoneStatus)
+					//				) : nil
+					return .none
+					
+				case .camera:
+					return .none
+					
+				case let .navigateCamera(value):
+					//				state.destination = value ? .camera(
+					//					.init(cameraStatus: state.cameraStatus)
+					//				) : nil
+					return .none
+					
+				case let .navigateAgreements(value):
+					//				state.destination = value ? .agreements(.init()) : nil
+					return .none
+					
+				case .agreements:
+					return .none
+					
+				case .reviewStoreKit:
+					return .run { _ in await self.storeKitClient.requestReview() }
+					
+				case let .navigateExport(value):
+					//				state.destination = value ? .export(.init()) : nil
+					return .none
+					
+				case .export:
+					return .none
+					
+				case let .navigateAbout(value):
+					//				state.destination = value ? .about(.init()) : nil
+					return .none
+					
+				case .about:
+					return .none
+					
+				default:
+					return .none
+			}
 		}
+		.forEach(\.path, action: \.path)
 	}
 }

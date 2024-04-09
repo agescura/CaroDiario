@@ -1,4 +1,5 @@
 import SnapshotTesting
+import SwiftUI
 
 public func assertSnapshot<Value: View>(
 	_ value: @autoclosure () throws -> Value,

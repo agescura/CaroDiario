@@ -6,7 +6,7 @@ extension UIApplicationClient: TestDependencyKey {
   public static let previewValue = Self.noop
 
   public static let testValue = Self(
-    alternateIconName: nil,
+    alternateIconName: XCTUnimplemented("\(Self.self).alternateIconName"),
     setAlternateIconName: XCTUnimplemented("\(Self.self).setAlternateIconName"),
     supportsAlternateIcons: XCTUnimplemented("\(Self.self).supportsAlternateIcons"),
     openSettings: XCTUnimplemented("\(Self.self).openSettings"),
@@ -20,7 +20,7 @@ extension UIApplicationClient: TestDependencyKey {
 
 extension UIApplicationClient {
   public static let noop = Self(
-    alternateIconName: nil,
+    alternateIconName: { nil },
     setAlternateIconName: { _ in () },
     supportsAlternateIcons: { true },
     openSettings: { },

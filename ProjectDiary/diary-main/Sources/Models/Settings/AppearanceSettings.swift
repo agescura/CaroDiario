@@ -1,6 +1,6 @@
 import Foundation
 
-public struct AppearanceSettings: Equatable {
+public struct AppearanceSettings: Equatable, Codable {
 	public var styleType: StyleType
 	public var layoutType: LayoutType
 	public var themeType: ThemeType

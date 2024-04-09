@@ -1,98 +1,68 @@
-import Foundation
 import ComposableArchitecture
+import Foundation
+import Models
 import UserDefaultsClient
-import EntriesFeature
 
-public struct PrivacyFeature: Reducer {
+@Reducer
+public struct PrivacyFeature {
   public init() {}
   
+	@ObservableState
   public struct State: Equatable {
-		@PresentationState public var alert: AlertState<Action.Alert>?
-		public var isAppClip = false
-		public var navigateStyle: Bool = false
-		public var skipAlert: AlertState<PrivacyFeature.Action>?
-    public var style: StyleFeature.State? = nil
-    
+		@Presents public var alert: AlertState<OnboardingAlert>?
+		public var isAppClip: Bool
+		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
+		
     public init(
-			isAppClip: Bool = false,
-			navigateStyle: Bool = false,
-      style: StyleFeature.State? = nil
+			alert: AlertState<OnboardingAlert>? = nil,
+			isAppClip: Bool = false
     ) {
+			self.alert = alert
 			self.isAppClip = isAppClip
-			self.navigateStyle = navigateStyle
-      self.style = style
     }
   }
   
   public enum Action: Equatable {
-		case alert(PresentationAction<Alert>)
-		case cancelSkipAlert
+		case alert(PresentationAction<OnboardingAlert>)
 		case delegate(Delegate)
-		case navigationStyle(Bool)
 		case skipAlertButtonTapped
-    case style(StyleFeature.Action)
+		case styleButtonTapped
 		
+		@CasePathable
 		public enum Alert: Equatable {
 			case skip
 		}
+		@CasePathable
 		public enum Delegate: Equatable {
-			case goToHome
+			case navigateToHome
+			case navigateToStyle
 		}
   }
-  
-  @Dependency(\.userDefaultsClient) var userDefaultsClient
   
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alert(.presented(.skip)):
-					state.skipAlert = nil
+					state.userSettings.hasShownOnboarding = true
 					return .run { send in
-						await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
-						await send(.delegate(.goToHome))
+						await send(.delegate(.navigateToHome))
 					}
 					
-				case .alert:
-					return .none
-					
-				case .cancelSkipAlert:
-					state.skipAlert = nil
+				case .alert(.dismiss):
+					state.alert = nil
 					return .none
 					
 				case .delegate:
 					return .none
 					
-				case let .navigationStyle(value):
-					let styleType = self.userDefaultsClient.styleType
-					let layoutType = self.userDefaultsClient.layoutType
-					
-					state.navigateStyle = value
-					state.style = value ? StyleFeature.State(
-						entries: fakeEntries(with: styleType,
-																 layout: layoutType),
-						isAppClip: state.isAppClip,
-						layoutType: layoutType,
-						styleType: styleType) : nil
-					return .none
-					
 				case .skipAlertButtonTapped:
-					state.alert = AlertState {
-						TextState("OnBoarding.Skip.Title".localized)
-					} actions: {
-						ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
-						ButtonState(role: .destructive, action: .skip, label: { TextState("OnBoarding.Skip".localized) })
-					} message: {
-						TextState("OnBoarding.Skip.Alert".localized)
-					}
+					state.alert = .skip
 					return .none
 					
-				case .style:
-					return .none
+				case .styleButtonTapped:
+					return .send(.delegate(.navigateToStyle))
 			}
 		}
-		.ifLet(\.style, action: /Action.style) {
-			StyleFeature()
-		}
-		.ifLet(\.$alert, action: /Action.alert)
+		.ifLet(\.$alert, action: \.alert)
 	}
 }

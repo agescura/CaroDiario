@@ -14,7 +14,7 @@ public struct PrivacyView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       VStack(alignment: .leading, spacing: 16) {
         Text("OnBoarding.Important".localized)
           .adaptiveFont(.latoRegular, size: 24)
@@ -41,38 +41,23 @@ public struct PrivacyView: View {
               .adaptiveFont(.latoRegular, size: 16)
             
           }) {
-            viewStore.send(.skipAlertButtonTapped)
+						self.store.send(.skipAlertButtonTapped)
           }
-          .opacity(viewStore.isAppClip ? 0.0 : 1.0)
+          .opacity(self.store.isAppClip ? 0.0 : 1.0)
           .padding(.horizontal, 16)
-					.alert(store: self.store.scope(state: \.$alert, action: { .alert($0) }))
+					.alert(store: self.store.scope(state: \.$alert, action: \.alert))
         
         PrimaryButtonView(
           label: {
             Text("OnBoarding.Continue".localized)
               .adaptiveFont(.latoRegular, size: 16)
           }) {
-            viewStore.send(.navigationStyle(true))
+						self.store.send(.styleButtonTapped)
           }
           .padding(.horizontal, 16)
       }
       .padding()
       .navigationBarBackButtonHidden(true)
-      .navigationDestination(
-        isPresented: viewStore.binding(
-          get: \.navigateStyle,
-          send: PrivacyFeature.Action.navigationStyle
-        ),
-        destination: {
-          IfLetStore(
-            store.scope(
-              state: \.style,
-              action: PrivacyFeature.Action.style
-            ),
-            then: StyleView.init(store:)
-          )
-        }
-      )
     }
   }
 }

@@ -4,36 +4,33 @@ import Views
 import SwiftUIHelper
 
 public struct InsertView: View {
-  let store: StoreOf<Insert>
+	@Perception.Bindable var store: StoreOf<InsertFeature>
   
   public init(
-    store: StoreOf<Insert>
+    store: StoreOf<InsertFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       VStack(spacing: 8) {
         Spacer()
         VStack(spacing: 32) {
-          Text(viewStore.step.title)
+					Text(self.store.step.title)
           HStack {
-            ForEach(0..<viewStore.maxNumbersCode, id: \.self) { iterator in
-              Image(viewStore.code.count > iterator ? .circleFill : .circle)
+            ForEach(0..<self.store.maxNumbersCode, id: \.self) { iterator in
+              Image(self.store.code.count > iterator ? .circleFill : .circle)
             }
           }
-          if viewStore.codeNotMatched {
+          if self.store.codeNotMatched {
             Text("Passcode.Different".localized)
               .foregroundColor(.berryRed)
           }
           Spacer()
         }
         CustomTextField(
-          text: viewStore.binding(
-            get: \.code,
-            send: Insert.Action.update
-          ),
+					text: self.$store.code.sending(\.update),
           isFirstResponder: true
         )
         .frame(width: 300, height: 50)
@@ -43,7 +40,7 @@ public struct InsertView: View {
         SecondaryButtonView(
           label: { Text("Passcode.Dismiss".localized) }
         ) {
-          viewStore.send(.popToRoot)
+					self.store.send(.popToRoot)
         }
         
 //        NavigationLink(
@@ -66,7 +63,7 @@ public struct InsertView: View {
       .navigationBarBackButtonHidden(true)
       .navigationBarItems(
         leading: Button(
-          action: { viewStore.send(.popToRoot) }
+					action: { self.store.send(.popToRoot) }
         ) {
           HStack { Image(.chevronRight) }
         }

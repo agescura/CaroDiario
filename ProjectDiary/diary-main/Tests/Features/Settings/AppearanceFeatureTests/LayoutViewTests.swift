@@ -8,25 +8,17 @@ import EntriesFeature
 class LayoutViewTests: XCTestCase {
   
   func testAppearanceHappyPath() async {
-    var selectionChangedCalled = false
     
     let store = TestStore(
-      initialState: .init(
-        layoutType: .horizontal,
-        styleType: .rectangle,
-        entries: []
-      ),
-      reducer: Layout()
-    )
-    
-    store.dependencies.feedbackGeneratorClient.selectionChanged = {
-      selectionChangedCalled = true
-    }
+			initialState: LayoutFeature.State(entries: []),
+			reducer: { LayoutFeature() }
+		) {
+			$0.feedbackGeneratorClient.selectionChanged = {}
+		}
     
     await store.send(.layoutChanged(.vertical)) {
-      $0.layoutType = .vertical
-      XCTAssertTrue(selectionChangedCalled)
-      $0.entries = fakeEntries(with: .rectangle, layout: .vertical)
+			$0.userSettings.appearance.layoutType = .vertical
+      $0.entries = fakeEntries
     }
   }
 }

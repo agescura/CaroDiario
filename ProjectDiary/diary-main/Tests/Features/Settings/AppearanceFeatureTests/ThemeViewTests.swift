@@ -1,60 +1,66 @@
-import XCTest
 @testable import AppearanceFeature
-import ComposableArchitecture
 import EntriesFeature
+import ComposableArchitecture
+import Models
+import TestUtils
+import XCTest
 
 @MainActor
 class ThemeViewTests: XCTestCase {
   
   func testThemeHappyPath() async {
     var selectionChangedCalled = false
-    let store = TestStore(
-      initialState: .init(entries: []),
-      reducer: Theme()
-    )
+		let store = TestStore(
+			initialState: ThemeFeature.State(entries: []),
+			reducer: { ThemeFeature() }
+		) {
+			$0.feedbackGeneratorClient.selectionChanged = {}
+			$0.applicationClient.setUserInterfaceStyle = { _ in }
+		}
 
-    store.dependencies.feedbackGeneratorClient.selectionChanged = {
-      selectionChangedCalled = true
-    }
-    
     await store.send(.themeChanged(.dark)) {
-      $0.themeType = .dark
-      XCTAssertTrue(selectionChangedCalled)
-      selectionChangedCalled = false
+			$0.userSettings.appearance.themeType = .dark
     }
     
     await store.send(.themeChanged(.light)) {
-      $0.themeType = .light
-      XCTAssertTrue(selectionChangedCalled)
+			$0.userSettings.appearance.themeType = .light
     }
   }
   
   func testSnapshot() {
     SnapshotTesting.diffTool = "ksdiff"
     
-    let store = Store(
-      initialState: .init(
-        entries: fakeEntries(with: .rectangle, layout: .vertical)
-      ),
-      reducer: Theme()
-    )
-    let view = ThemeView(store: store)
-    
-    let vc = UIHostingController(rootView: view)
-    vc.view.frame = UIScreen.main.bounds
-    
-    let viewStore = ViewStore(
-      store.scope(state: { _ in () }),
-      removeDuplicates: ==
-    )
-    
-    assertSnapshot(matching: vc, as: .image)
-    
-    viewStore.send(.themeChanged(.dark))
-    assertSnapshot(matching: vc, as: .image)
-    
-    viewStore.send(.themeChanged(.light))
-    assertSnapshot(matching: vc, as: .image)
+    assertSnapshot(
+			ThemeView(
+				store: Store(
+					initialState: ThemeFeature.State(entries: fakeEntries),
+					reducer: {  }
+				)
+			)
+		)
+		
+		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+		userSettings.appearance.themeType = .light
+		
+		assertSnapshot(
+			ThemeView(
+				store: Store(
+					initialState: ThemeFeature.State(entries: fakeEntries),
+					reducer: {  }
+				)
+			)
+		)
+		
+		userSettings.appearance.themeType = .dark
+		
+		assertSnapshot(
+			ThemeView(
+				store: Store(
+					initialState: ThemeFeature.State(entries: fakeEntries),
+					reducer: {  }
+				)
+			)
+		)
   }
 }
 

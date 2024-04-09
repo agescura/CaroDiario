@@ -8,7 +8,7 @@ import TestUtils
 import XCTest
 
 @MainActor
-class StyleOnboardingViewTests: XCTestCase {
+class StyleFeatureTests: XCTestCase {
 	func testHappyPath() async {
 		let store = TestStore(
 			initialState: StyleFeature.State(entries: fakeEntries),

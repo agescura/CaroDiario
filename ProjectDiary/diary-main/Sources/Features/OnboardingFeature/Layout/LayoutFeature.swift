@@ -6,45 +6,44 @@ import FeedbackGeneratorClient
 import UIApplicationClient
 import UserDefaultsClient
 
-public struct LayoutFeature: Reducer {
+@Reducer
+public struct LayoutFeature {
+	@ObservableState
   public struct State: Equatable {
-		@PresentationState public var alert: AlertState<Action.Alert>?
+		@Presents public var alert: AlertState<OnboardingAlert>?
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
 		public var isAppClip = false
-		public var layoutType: LayoutType
-		public var navigateTheme: Bool = false
-		 public var styleType: StyleType
-    public var theme: Theme.State? = nil
+		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
   }
 
   public enum Action: Equatable {
-		case alert(PresentationAction<Alert>)
+		case alert(PresentationAction<OnboardingAlert>)
+		case entries(IdentifiedActionOf<DayEntriesRow>)
 		case delegate(Delegate)
-		case entries(id: UUID, action: DayEntriesRow.Action)
     case layoutChanged(LayoutType)
-		case navigateTheme(Bool)
 		case skipAlertButtonTapped
-    case theme(Theme.Action)
+		case themeButtonTapped
 		
+		@CasePathable
 		public enum Alert: Equatable {
 			case skip
 		}
+		@CasePathable
 		public enum Delegate: Equatable {
-			case goToHome
+			case navigateToHome
+			case navigateToTheme
 		}
   }
   
-	@Dependency(\.feedbackGeneratorClient) var feedbackGeneratorClient
 	@Dependency(\.applicationClient.setUserInterfaceStyle) var setUserInterfaceStyle
-	@Dependency(\.userDefaultsClient) var userDefaultsClient
 	
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
 				case .alert(.presented(.skip)):
+					state.userSettings.hasShownOnboarding = true
 					return .run { send in
-						await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true)
-						await send(.delegate(.goToHome))
+						await send(.delegate(.navigateToHome))
 					}
 					
 				case .alert:
@@ -57,43 +56,21 @@ public struct LayoutFeature: Reducer {
 					return .none
 					
 				case let .layoutChanged(layoutChanged):
-					state.layoutType = layoutChanged
-					state.entries = fakeEntries(with: state.styleType, layout: state.layoutType)
-					return .run { _ in
-						await self.feedbackGeneratorClient.selectionChanged()
-					}
-					
-				case let .navigateTheme(value):
-					state.navigateTheme = value
-					let themeType = self.userDefaultsClient.themeType
-					state.theme = value ? .init(
-						themeType: themeType,
-						entries: fakeEntries(with: self.userDefaultsClient.styleType,
-																 layout: self.userDefaultsClient.layoutType),
-						isAppClip: state.isAppClip) : nil
-					return .run { _ in
-						await self.setUserInterfaceStyle(themeType.userInterfaceStyle)
-					}
+					state.userSettings.appearance.layoutType = layoutChanged
+					state.entries = fakeEntries
+					return .none
 					
 				case .skipAlertButtonTapped:
-					state.alert = AlertState {
-						TextState("OnBoarding.Skip.Title".localized)
-					} actions: {
-						ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
-						ButtonState(role: .destructive, action: .skip, label: { TextState("OnBoarding.Skip".localized) })
-					}
+					state.alert = .skip
 					return .none
 					
-				case .theme:
-					return .none
+				case .themeButtonTapped:
+					return .send(.delegate(.navigateToTheme))
 			}
 		}
-		.forEach(\.entries, action: /Action.entries) {
+		.ifLet(\.$alert, action: \.alert)
+		.forEach(\.entries, action: \.entries) {
 			DayEntriesRow()
-		}
-		.ifLet(\.$alert, action: /Action.alert)
-		.ifLet(\.theme, action: /Action.theme) {
-			Theme()
 		}
 	}
 }

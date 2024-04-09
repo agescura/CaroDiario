@@ -7,69 +7,62 @@ import Localizables
 import SwiftUIHelper
 import Styles
 
-public struct Language: Reducer {
-  public init() {}
-  
-  public struct State: Equatable {
-    public var language: Localizable
-    
-    public init(
-      language: Localizable
-    ) {
-      self.language = language
-    }
-  }
-  
-  public enum Action: Equatable {
-    case updateLanguageTapped(Localizable)
-  }
-  
-  public var body: some ReducerOf<Self> {
-    Reduce(self.core)
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case let .updateLanguageTapped(language):
-      state.language = language
-      return .none
-    }
-  }
+@Reducer
+public struct LanguageFeature {
+	public init() {}
+	
+	@ObservableState
+	public struct State: Equatable {
+		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
+		
+		public init() {}
+	}
+	
+	public enum Action: Equatable {
+		case updateLanguageTapped(Localizable)
+	}
+	
+	public var body: some ReducerOf<Self> {
+		Reduce { state, action in
+			switch action {
+				case let .updateLanguageTapped(language):
+					state.userSettings.language = language
+					return .none
+			}
+		}
+	}
 }
 
 public struct LanguageView: View {
-  let store: StoreOf<Language>
-  
-  public init(
-    store: StoreOf<Language>
-  ) {
-    self.store = store
-  }
-  
-  public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      List {
-        ForEach(Localizable.allCases) { language in
-          HStack {
-            Text(language.localizable.localized)
-              .foregroundColor(.chambray)
-              .adaptiveFont(.latoRegular, size: 12)
-            Spacer()
-            if viewStore.language == language {
-              Image(.checkmark)
-                .foregroundColor(.adaptiveGray)
-            }
-          }
-          .contentShape(Rectangle())
-          .onTapGesture {
-            viewStore.send(.updateLanguageTapped(language))
-          }
-        }
-      }
-      .navigationBarTitle("Settings.Language".localized)
-    }
-  }
+	let store: StoreOf<LanguageFeature>
+	
+	public init(
+		store: StoreOf<LanguageFeature>
+	) {
+		self.store = store
+	}
+	
+	public var body: some View {
+		WithPerceptionTracking {
+			List {
+				ForEach(Localizable.allCases) { language in
+					HStack {
+						Text(language.localizable.localized)
+							.foregroundColor(.chambray)
+							.adaptiveFont(.latoRegular, size: 12)
+						Spacer()
+						if self.store.userSettings.language == language {
+							Image(.checkmark)
+								.foregroundColor(.adaptiveGray)
+						}
+					}
+					.contentShape(Rectangle())
+					.onTapGesture {
+						self.store.send(.updateLanguageTapped(language))
+					}
+				}
+			}
+			.navigationBarTitle("Settings.Language".localized)
+		}
+	}
 }

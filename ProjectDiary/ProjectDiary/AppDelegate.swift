@@ -1,31 +1,19 @@
 import SwiftUI
 import ComposableArchitecture
-import RootFeature
+import AppFeature
 import Styles
-import UserDefaultsClient
-import CoreDataClient
-import FileClient
-import LocalAuthenticationClient
-import UIApplicationClient
-import AVCaptureDeviceClient
-import FeedbackGeneratorClient
-import AVAudioSessionClient
-import AVAudioPlayerClient
-import AVAudioRecorderClient
-import StoreKitClient
-import PDFKitClient
-import AVAssetClient
+import SplashFeature
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-  let store: StoreOf<Root>
+  let store: StoreOf<AppFeature>
   
   override init() {
     self.store = Store(
-      initialState: .init(
-        appDelegate: .init(),
-        featureState: .splash(.init())
+			initialState: AppFeature.State(
+        appDelegate: AppDelegateState(),
+				scene: .splash(SplashFeature.State())
       ),
-			reducer: { Root() }
+			reducer: { AppFeature()._printChanges() }
     )
   }
   

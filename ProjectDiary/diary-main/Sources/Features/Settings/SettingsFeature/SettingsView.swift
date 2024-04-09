@@ -14,80 +14,53 @@ import LanguageFeature
 import SwiftUIHelper
 
 public struct SettingsView: View {
-  let store: StoreOf<Settings>
+	@Perception.Bindable var store: StoreOf<SettingsFeature>
   
   public init(
-    store: StoreOf<Settings>
+    store: StoreOf<SettingsFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      NavigationStack {
+		WithPerceptionTracking {
+			NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
         VStack {
           Form {
             Section {
               Toggle(
-                isOn: viewStore.binding(
-                  get: \.showSplash,
-                  send: Settings.Action.toggleShowSplash
-                ),
+								isOn: self.$store.userSettings.showSplash.sending(\.toggleShowSplash),
                 label: SplashRowView.init
               )
               .toggleStyle(SwitchToggleStyle(tint: .chambray))
               
-//              NavigationLink(
-//                route: viewStore.destination,
-//                case: /Settings.State.Destination.appearance,
-//                onNavigate: { viewStore.send(.navigateAppearance($0)) },
-//                destination: { appearanceState in
-//                  AppearanceView(
-//                    store: self.store.scope(
-//                      state: { _ in appearanceState },
-//                      action: Settings.Action.appearance
-//                    )
-//                  )
-//                },
-//                label: AppearanceRowView.init
-//              )
+							NavigationLink(
+								state: SettingsFeature.Path.State.appearance(AppearanceFeature.State())
+							) {
+								AppearanceRowView()
+							}
             }
             
             Section {
-//              NavigationLink(
-//                route: viewStore.destination,
-//                case: /Settings.State.Destination.language,
-//                onNavigate: { viewStore.send(.navigateLanguage($0)) },
-//                destination: { languageState in
-//                  LanguageView(
-//                    store: self.store.scope(
-//                      state: { _ in languageState },
-//                      action: Settings.Action.language
-//                    )
-//                  )
-//                },
-//                label: {
-//                  LanguageRowView(
-//                    title: "Settings.Language".localized(with: [viewStore.authenticationType.rawValue]),
-//                    status: viewStore.language.localizable.localized
-//                  )
-//                }
-//              )
+							NavigationLink(
+								state: SettingsFeature.Path.State.language(LanguageFeature.State())
+							) {
+								LanguageRowView(
+									title: "Settings.Language".localized,
+									status: self.store.userSettings.language.localizable.localized
+								)
+							}
             }
             
             Section {
-              PasscodeRowView(
-                title: "Settings.Code".localized(with: [viewStore.authenticationType.rawValue]),
-                status: viewStore.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
-              )
-              .contentShape(Rectangle())
-              .onTapGesture {
-                if viewStore.hasPasscode {
-                  viewStore.send(.navigateMenu(true))
-                } else {
-                  viewStore.send(.navigateActivate(true))
-                }
-              }
+							Button {
+								self.store.send(.navigateToPasscode)
+							} label: {
+								PasscodeRowView(
+									title: "Settings.Code".localized(with: [self.store.localAuthenticationType.rawValue]),
+									status: self.store.userSettings.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
+								)
+							}
             }
             
             Section {
@@ -146,7 +119,7 @@ public struct SettingsView: View {
               ReviewRowView()
                 .contentShape(Rectangle())
                 .onTapGesture {
-                  viewStore.send(.reviewStoreKit)
+									self.store.send(.reviewStoreKit)
                 }
             }
             
@@ -215,11 +188,41 @@ public struct SettingsView: View {
           .frame(height: 0)
         }
         .navigationTitle("Settings.Title".localized)
-      }
+			} destination: { store in
+				switch store.case {
+					case let .activate(store):
+						ActivateView(store: store)
+					case let .appearance(store):
+						AppearanceView(store: store)
+					case let .camera(store):
+						CameraView(store: store)
+					case let .iconApp(store):
+						IconAppView(store: store)
+					case let .insert(store):
+						InsertView(store: store)
+					case let .language(store):
+						LanguageView(store: store)
+					case let .layout(store: store):
+						LayoutView(store: store)
+					case let .menu(store):
+						MenuPasscodeView(store: store)
+					case let .style(store):
+						StyleView(store: store)
+					case let .theme(store):
+						ThemeView(store: store)
+				}
+			}
       .navigationViewStyle(StackNavigationViewStyle())
-      .onAppear {
-        viewStore.send(.onAppear)
-      }
+			.task { await self.store.send(.task).finish() }
     }
   }
+}
+
+#Preview {
+	SettingsView(
+		store: Store(
+			initialState: SettingsFeature.State(),
+			reducer: { SettingsFeature() }
+		)
+	)
 }

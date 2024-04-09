@@ -1,6 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
-import RootFeature
+import AppFeature
 
 @main
 struct ProjectDiaryApp: App {
@@ -9,7 +9,7 @@ struct ProjectDiaryApp: App {
   
   var body: some Scene {
     WindowGroup {
-      RootView(store: self.appDelegate.store)
+      AppView(store: self.appDelegate.store)
         .onOpenURL(perform: self.appDelegate.process(url:))
         .onChange(
           of: self.scenePhase,

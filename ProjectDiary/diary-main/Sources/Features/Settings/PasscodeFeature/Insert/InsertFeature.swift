@@ -2,9 +2,11 @@ import ComposableArchitecture
 import Foundation
 import Models
 
-public struct InsertFeature: Reducer {
+@Reducer
+public struct InsertFeature {
   public init() {}
   
+	@ObservableState
   public struct State: Equatable {
     public var step: Step = .firstCode
     public var code: String = ""
@@ -13,40 +15,11 @@ public struct InsertFeature: Reducer {
     public var codeActivated: Bool = false
     public var codeNotMatched: Bool = false
     
-    public var faceIdEnabled: Bool
     public var hasPasscode: Bool {
       self.code == self.firstCode && self.code.count == self.maxNumbersCode
     }
-    public var route: Route? {
-      didSet {
-        if case let .menu(state) = self.route {
-          self.faceIdEnabled = state.faceIdEnabled
-        }
-      }
-    }
     
-    public enum Route: Equatable {
-      case menu(MenuFeature.State)
-    }
-    
-    public var menu: MenuFeature.State? {
-      get {
-        guard case let .menu(state) = self.route else { return nil }
-        return state
-      }
-      set {
-        guard let newValue = newValue else { return }
-        self.route = .menu(newValue)
-      }
-    }
-    
-    public init(
-      faceIdEnabled: Bool,
-      route: Route? = nil
-    ) {
-      self.faceIdEnabled = faceIdEnabled
-      self.route = route
-    }
+    public init() {}
     
     public enum Step: Int {
       case firstCode
@@ -67,15 +40,10 @@ public struct InsertFeature: Reducer {
     case update(code: String)
     case success
     case popToRoot
-    case menu(MenuFeature.Action)
-    case navigateMenu(Bool)
   }
   
   public var body: some ReducerOf<Self> {
     Reduce(self.core)
-      .ifLet(\.menu, action: /Action.menu) {
-        MenuFeature()
-      }
   }
   
   private func core(
@@ -95,7 +63,7 @@ public struct InsertFeature: Reducer {
       if state.step == .secondCode,
          state.code.count == state.maxNumbersCode {
         if state.code == state.firstCode {
-          return .send(.navigateMenu(true))
+//          return .send(.navigateMenu(true))
         } else {
           state.step = .firstCode
           state.code = ""
@@ -109,19 +77,6 @@ public struct InsertFeature: Reducer {
       return .none
       
     case .popToRoot:
-      return .none
-      
-    case .menu:
-      return .none
-      
-    case let .navigateMenu(value):
-      state.route = value ? .menu(
-        .init(
-          authenticationType: .none,
-          optionTimeForAskPasscode: TimeForAskPasscode.never.value,
-          faceIdEnabled: state.faceIdEnabled
-        )
-      ) : nil
       return .none
     }
   }

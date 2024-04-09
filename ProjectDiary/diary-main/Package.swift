@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:5.10
 
 import PackageDescription
 
@@ -54,8 +54,6 @@ let package = Package(
         .library(name: "LockScreenFeature", targets: ["LockScreenFeature"]),
         // Onboarding
         .library(name: "OnboardingFeature", targets: ["OnboardingFeature"]),
-        // Root
-        .library(name: "RootFeature", targets: ["RootFeature"]),
         // Settings
         .library(name: "AboutFeature", targets: ["AboutFeature"]),
         .library(name: "AgreementsFeature", targets: ["AgreementsFeature"]),
@@ -79,22 +77,22 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.2.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.15.4"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", branch: "shared-state-beta"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.16.0"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.2.2"),
     ],
     targets: [
         // Clients
         .target(name: "AVAssetClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/AVAssetClient"),
         .target(name: "AVAudioPlayerClient", dependencies: [composableArchitecture], path: "Sources/Clients/AVAudioPlayerClient"),
-        .target(name: "AVAudioRecorderClient", dependencies: [composableArchitecture], path: "Sources/Clients/AVAudioRecorderClient"),
+        .target(name: "AVAudioRecorderClient", dependencies: [composableArchitecture, "Models"], path: "Sources/Clients/AVAudioRecorderClient"),
         .target(name: "AVAudioSessionClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/AVAudioSessionClient"),
         .target(name: "AVCaptureDeviceClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/AVCaptureDeviceClient"),
         .target(name: "CoreDataClient", dependencies: [composableArchitecture, "Models"], path: "Sources/Clients/CoreDataClient"),
         .target(name: "FeedbackGeneratorClient", dependencies: [dependencies], path: "Sources/Clients/FeedbackGeneratorClient"),
         .target(name: "FileClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/FileClient"),
         .target(name: "LocalAuthenticationClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/LocalAuthenticationClient"),
-        .target(name: "PDFKitClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/PDFKitClient"),
+        .target(name: "PDFKitClient", dependencies: [dependencies, "Models", "Localizables"], path: "Sources/Clients/PDFKitClient"),
         .target(name: "StoreKitClient", dependencies: [dependencies], path: "Sources/Clients/StoreKitClient"),
         .target(name: "UIApplicationClient", dependencies: [dependencies], path: "Sources/Clients/UIApplicationClient"),
         .target(name: "UserDefaultsClient", dependencies: [dependencies, "Models"], path: "Sources/Clients/UserDefaultsClient"),
@@ -102,22 +100,22 @@ let package = Package(
         .target(
             name: "AppFeature",
             dependencies: [
-                composableArchitecture,
-                "SplashFeature",
-                "OnboardingFeature",
-                "HomeFeature",
-                "LockScreenFeature",
-                "AVCaptureDeviceClient",
-                "FeedbackGeneratorClient",
-                "SearchFeature",
-                "AVAudioSessionClient",
-                "UserDefaultsClient",
-                "CoreDataClient",
-                "FileClient",
-                "LocalAuthenticationClient",
-                "UIApplicationClient",
-                "StoreKitClient",
-                "PDFKitClient"
+							composableArchitecture,
+							"AVCaptureDeviceClient",
+							"AVAudioSessionClient",
+							"UserDefaultsClient",
+							"CoreDataClient",
+							"FileClient",
+							"LocalAuthenticationClient",
+							"HomeFeature",
+							"Styles",
+							"UIApplicationClient",
+							"FeedbackGeneratorClient",
+							"StoreKitClient",
+							"PDFKitClient",
+							"SplashFeature",
+							"OnboardingFeature",
+							"LockScreenFeature"
             ],
             path: "Sources/Features/AppFeature"
         ),
@@ -284,27 +282,6 @@ let package = Package(
                 "FeedbackGeneratorClient"
             ],
             path: "Sources/Features/OnboardingFeature"
-        ),
-        // Root
-        .target(
-            name: "RootFeature",
-            dependencies: [
-                composableArchitecture,
-                "AppFeature",
-                "AVCaptureDeviceClient",
-                "AVAudioSessionClient",
-                "UserDefaultsClient",
-                "CoreDataClient",
-                "FileClient",
-                "LocalAuthenticationClient",
-                "HomeFeature",
-                "Styles",
-                "UIApplicationClient",
-                "FeedbackGeneratorClient",
-                "StoreKitClient",
-                "PDFKitClient"
-            ],
-            path: "Sources/Features/RootFeature"
         ),
         // Settings
         .target(
@@ -491,7 +468,7 @@ let package = Package(
         // Models
         .target(
             name: "Models",
-            dependencies: [],
+            dependencies: [composableArchitecture],
             path: "Sources/Models"
         ),
         // Tests
@@ -543,14 +520,12 @@ let package = Package(
         // Onboarding
         .testTarget(
             name: "OnboardingFeatureTests",
-            dependencies: ["OnboardingFeature"],
+            dependencies: [
+							"OnboardingFeature",
+							snapshotTesting,
+							"TestUtils"
+						],
             path: "Tests/Features/OnboardingFeatureTests"
-        ),
-        // Root
-        .testTarget(
-            name: "RootFeatureTests",
-            dependencies: ["RootFeature"],
-            path: "Tests/Features/RootFeatureTests"
         ),
         // Settings
         .testTarget(
@@ -576,7 +551,8 @@ let package = Package(
             dependencies: [
                 "AppearanceFeature",
                 "EntriesFeature",
-                snapshotTesting
+                snapshotTesting,
+								"TestUtils"
             ],
             path: "Tests/Features/Settings/AppearanceFeatureTests",
             exclude: ["__Snapshots__"]
@@ -603,8 +579,19 @@ let package = Package(
         // Splash
         .testTarget(
             name: "SplashFeatureTests",
-            dependencies: ["SplashFeature"],
+            dependencies: [
+							"SplashFeature",
+							snapshotTesting,
+							"TestUtils"
+						],
             path: "Tests/Features/SplashFeatureTests"
         ),
+				
+				// Utils
+				.target(
+					name: "TestUtils",
+					dependencies: [snapshotTesting],
+					path: "Tests/TestUtils"
+				)
     ]
 )
