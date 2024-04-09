@@ -1,8 +1,8 @@
-//
-import Foundation
 import ComposableArchitecture
+import Foundation
+import Models
 
-public struct Insert: Reducer {
+public struct InsertFeature: Reducer {
   public init() {}
   
   public struct State: Equatable {
@@ -26,10 +26,10 @@ public struct Insert: Reducer {
     }
     
     public enum Route: Equatable {
-      case menu(Menu.State)
+      case menu(MenuFeature.State)
     }
     
-    public var menu: Menu.State? {
+    public var menu: MenuFeature.State? {
       get {
         guard case let .menu(state) = self.route else { return nil }
         return state
@@ -67,14 +67,14 @@ public struct Insert: Reducer {
     case update(code: String)
     case success
     case popToRoot
-    case menu(Menu.Action)
+    case menu(MenuFeature.Action)
     case navigateMenu(Bool)
   }
   
   public var body: some ReducerOf<Self> {
     Reduce(self.core)
       .ifLet(\.menu, action: /Action.menu) {
-        Menu()
+        MenuFeature()
       }
   }
   

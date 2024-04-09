@@ -12,25 +12,13 @@ import Models
 import StoreKitClient
 import LocalAuthenticationClient
 
-public struct Settings: Reducer {
+@Reducer
+public struct SettingsFeature {
 	public init() {}
 	
+	@ObservableState
 	public struct State: Equatable {
-		public var showSplash: Bool
-		
-		public var styleType: StyleType
-		public var layoutType: LayoutType
-		public var themeType: ThemeType
-		public var iconAppType: IconAppType
-		public var language: Localizable
-		
-		public var authenticationType: LocalAuthenticationType = .none
-		public var hasPasscode: Bool
-		
-		public var cameraStatus: AuthorizedVideoStatus
-		public var microphoneStatus: AudioRecordPermission
-		public var optionTimeForAskPasscode: Int
-		public var faceIdEnabled: Bool
+		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
 		
 //		public var destination: Destination? = nil {
 //			didSet {
@@ -161,31 +149,7 @@ public struct Settings: Reducer {
 //			}
 //		}
 		
-		public init(
-			showSplash: Bool = false,
-			styleType: StyleType,
-			layoutType: LayoutType,
-			themeType: ThemeType,
-			iconType: IconAppType,
-			hasPasscode: Bool,
-			cameraStatus: AuthorizedVideoStatus,
-			optionTimeForAskPasscode: Int,
-			faceIdEnabled: Bool,
-			language: Localizable,
-			microphoneStatus: AudioRecordPermission
-		) {
-			self.showSplash = showSplash
-			self.styleType = styleType
-			self.layoutType = layoutType
-			self.themeType = themeType
-			self.hasPasscode = hasPasscode
-			self.iconAppType = iconType
-			self.cameraStatus = cameraStatus
-			self.optionTimeForAskPasscode = optionTimeForAskPasscode
-			self.faceIdEnabled = faceIdEnabled
-			self.language = language
-			self.microphoneStatus = microphoneStatus
-		}
+		public init() {}
 	}
 	
 	public enum Action: Equatable {
@@ -293,21 +257,21 @@ public struct Settings: Reducer {
 			case .language:
 				return .none
 				
-			case let .toggleShowSplash(isOn):
-				state.showSplash = isOn
+			case let .toggleShowSplash(showSplash):
+				state.userSettings.showSplash = showSplash
 				return .none
 				
 			case let .biometricResult(result):
-				state.authenticationType = result
+//				state.authenticationType = result
 				return .none
 				
 			case .activate(.insert(.navigateMenu(true))):
-				state.hasPasscode = true
+//				state.hasPasscode = true
 				return .none
 				
 			case .menu(.dialog(.presented(.turnOff))),
 					.activate(.insert(.menu(.dialog(.presented(.turnOff))))):
-				state.hasPasscode = false
+//				state.hasPasscode = false
 				return .run { send in
 					try await self.mainQueue.sleep(for: .seconds(0.1))
 					await send(.navigateActivate(false))

@@ -51,7 +51,7 @@ extension TimeForAskPasscode {
   }
 }
 
-public struct Menu: Reducer {
+public struct MenuFeature: Reducer {
   public init() {}
   
   public struct State: Equatable {

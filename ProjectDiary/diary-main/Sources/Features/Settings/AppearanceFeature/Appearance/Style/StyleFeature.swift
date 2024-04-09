@@ -1,30 +1,24 @@
 import Foundation
 import ComposableArchitecture
-import UserDefaultsClient
+import EntriesFeature
 import FeedbackGeneratorClient
 import Models
-import EntriesFeature
 
-public struct Theme: Reducer {
+public struct StyleFeature: Reducer {
   public init() {}
   
   public struct State: Equatable {
-    public var themeType: ThemeType
+    public var styleType: StyleType
+    public var layoutType: LayoutType
     public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-    
-    public var isAppClip = false
   }
 
   public enum Action: Equatable {
-    case themeChanged(ThemeType)
+    case styleChanged(StyleType)
     case entries(id: UUID, action: DayEntriesRow.Action)
-    
-    case startButtonTapped
   }
   
   @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
-  @Dependency(\.applicationClient.setUserInterfaceStyle) private var setUserInterfaceStyle
-  @Dependency(\.userDefaultsClient) private var userDefaultsClient
   
   public var body: some ReducerOf<Self> {
     Reduce(self.core)
@@ -38,18 +32,15 @@ public struct Theme: Reducer {
     action: Action
   ) -> Effect<Action> {
     switch action {
-    case let .themeChanged(themeChanged):
-      state.themeType = themeChanged
+    case let .styleChanged(styleChanged):
+      state.styleType = styleChanged
+      state.entries = fakeEntries
       return .run { _ in
-        await self.setUserInterfaceStyle(themeChanged.userInterfaceStyle)
         await self.feedbackGeneratorClient.selectionChanged()
       }
       
     case .entries:
       return .none
-      
-    case .startButtonTapped:
-      return .run { _ in await self.userDefaultsClient.setHasShownFirstLaunchOnboarding(true) }
     }
   }
 }

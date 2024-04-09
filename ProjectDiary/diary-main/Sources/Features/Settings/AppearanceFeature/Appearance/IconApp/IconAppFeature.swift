@@ -4,9 +4,11 @@ import Models
 import UIApplicationClient
 import FeedbackGeneratorClient
 
-public struct IconApp: Reducer {
+@Reducer
+public struct IconAppFeature {
   public init() {}
   
+	@ObservableState
   public struct State: Equatable {
     public var iconAppType: IconAppType
     
@@ -25,20 +27,15 @@ public struct IconApp: Reducer {
   @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
 
   public var body: some ReducerOf<Self> {
-    Reduce(self.core)
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case let .iconAppChanged(newIconApp):
-      state.iconAppType = newIconApp
-      return .run { _ in
-        try await self.applicationClient.setAlternateIconName(newIconApp == .dark ? "AppIcon-2" : nil)
-        await self.feedbackGeneratorClient.selectionChanged()
-      }
-    }
+		Reduce { state, action in
+			switch action {
+			case let .iconAppChanged(newIconApp):
+				state.iconAppType = newIconApp
+				return .run { _ in
+					try await self.applicationClient.setAlternateIconName(newIconApp == .dark ? "AppIcon-2" : nil)
+					await self.feedbackGeneratorClient.selectionChanged()
+				}
+			}
+		}
   }
 }
