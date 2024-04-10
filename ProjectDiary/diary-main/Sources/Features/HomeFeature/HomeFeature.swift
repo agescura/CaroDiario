@@ -21,97 +21,44 @@ import AVAssetClient
 import Styles
 import EntryDetailFeature
 
-//public struct SharedState: Equatable {
-//	public var isLoading: Bool = true
-//	public var entries: IdentifiedArrayOf<DayEntriesRow.State> = []
-//	public var addEntryState: AddEntryFeature.State?
-//	public var presentAddEntry = false
-//	public var entryDetailState: EntryDetailFeature.State?
-//	public var navigateEntryDetail = false
-//	public var entryDetailSelected: Entry?
-//	
-//	public var search: Search.State = Search.State()
-//	
-//	public var showSplash: Bool
-//	public var styleType: StyleType
-//	public var layoutType: LayoutType
-//	public var themeType: ThemeType
-//	public var iconAppType: IconAppType
-//	public var language: Localizable
-//	public var authenticationType: LocalAuthenticationType = .none
-//	public var hasPasscode: Bool
-//	public var cameraStatus: AuthorizedVideoStatus
-//	public var microphoneStatus: AudioRecordPermission
-//	public var optionTimeForAskPasscode: Int
-//	public var faceIdEnabled: Bool
-//	
-//	public init(
-//		showSplash: Bool,
-//		styleType: StyleType,
-//		layoutType: LayoutType,
-//		themeType: ThemeType,
-//		iconAppType: IconAppType,
-//		language: Localizable,
-//		hasPasscode: Bool,
-//		cameraStatus: AuthorizedVideoStatus,
-//		microphoneStatus: AudioRecordPermission,
-//		optionTimeForAskPasscode: Int,
-//		faceIdEnabled: Bool
-//	) {
-//		self.showSplash = showSplash
-//		self.styleType = styleType
-//		self.layoutType = layoutType
-//		self.themeType = themeType
-//		self.iconAppType = iconAppType
-//		self.language = language
-//		self.hasPasscode = hasPasscode
-//		self.cameraStatus = cameraStatus
-//		self.microphoneStatus = microphoneStatus
-//		self.optionTimeForAskPasscode = optionTimeForAskPasscode
-//		self.faceIdEnabled = faceIdEnabled
-//	}
-//}
-
 @Reducer
-public struct Home {
+public struct HomeFeature {
 	public init() {}
 	
 	@ObservableState
 	public struct State: Equatable {
-		public var tabBars: [TabViewType]
-		public var selectedTabBar: TabViewType
-//		public var sharedState: SharedState
-		
-		public var entries: Entries.State
+		public var entries: EntriesFeature.State
 		public var search: Search.State
+		public var selectedTabBar: TabViewType
 		public var settings: SettingsFeature.State
+		public var tabBars: [TabViewType]
 		
 		public init(
-			entries: Entries.State = Entries.State(),
-			tabBars: [TabViewType],
+			entries: EntriesFeature.State = EntriesFeature.State(),
 			search: Search.State = Search.State(),
+			selectedTabBar: TabViewType = .entries,
 			settings: SettingsFeature.State = SettingsFeature.State(),
-			selectedTabBar: TabViewType = .entries
+			tabBars: [TabViewType]
 		) {
 			self.entries = entries
-			self.tabBars = tabBars
 			self.search = search
-			self.settings = settings
 			self.selectedTabBar = selectedTabBar
+			self.settings = settings
+			self.tabBars = tabBars
 		}
 	}
 	
 	public enum Action: Equatable {
-		case entries(Entries.Action)
-		case tabBarSelected(TabViewType)
-		case task
+		case entries(EntriesFeature.Action)
 		case search(Search.Action)
 		case settings(SettingsFeature.Action)
+		case tabBarSelected(TabViewType)
+		case task
 	}
 	
 	public var body: some ReducerOf<Self> {
 		Scope(state: \.entries, action: \.entries) {
-			Entries()
+			EntriesFeature()
 		}
 		Scope(state: \.search, action: \.search) {
 			Search()

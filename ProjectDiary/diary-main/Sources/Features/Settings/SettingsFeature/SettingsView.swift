@@ -64,55 +64,24 @@ public struct SettingsView: View {
             }
             
             Section {
-//              NavigationLink(
-//                route: viewStore.destination,
-//                case: /Settings.State.Destination.camera,
-//                onNavigate: { viewStore.send(.navigateCamera($0)) },
-//                destination: { cameraState in
-//                  CameraView(
-//                    store: self.store.scope(
-//                      state: { _ in cameraState },
-//                      action: Settings.Action.camera
-//                    )
-//                  )
-//                },
-//                label: {
-//                  CameraRowView(title: viewStore.cameraStatus.rawValue.localized)
-//                }
-//              )
-//              NavigationLink(
-//                route: viewStore.destination,
-//                case: /Settings.State.Destination.microphone,
-//                onNavigate: { viewStore.send(.navigateMicrophone($0)) },
-//                destination: { microphoneState in
-//                  MicrophoneView(
-//                    store: self.store.scope(
-//                      state: { _ in microphoneState },
-//                      action: Settings.Action.microphone
-//                    )
-//                  )
-//                },
-//                label: {
-//                  MicrophoneRowView(title: viewStore.microphoneStatus.title.localized)
-//                }
-//              )
+							NavigationLink(
+								state: SettingsFeature.Path.State.camera(CameraFeature.State())
+							) {
+								CameraRowView(title: self.store.userSettings.authorizedVideoStatus.rawValue.localized)
+							}
+							NavigationLink(
+								state: SettingsFeature.Path.State.microphone(MicrophoneFeature.State())
+							) {
+								MicrophoneRowView(title: self.store.userSettings.audioRecordPermission.title.localized)
+							}
             }
             
             Section {
-//              NavigationLink(
-//                route: viewStore.destination,
-//                case: /Settings.State.Destination.export,
-//                onNavigate: { viewStore.send(.navigateExport($0)) },
-//                destination: { exportState in
-//                  ExportView(
-//                    store: self.store.scope(
-//                      state: { _ in exportState },
-//                      action: Settings.Action.export
-//                    )
-//                  )
-//                },
-//                label: ExportRowView.init
-//              )
+							NavigationLink(
+								state: SettingsFeature.Path.State.export(ExportFeature.State())
+							) {
+								ExportRowView()
+							}
             }
             
             Section {
@@ -123,79 +92,35 @@ public struct SettingsView: View {
                 }
             }
             
-            Section {
-//              NavigationLink(
-//                route: viewStore.destination,
-//                case: /Settings.State.Destination.agreements,
-//                onNavigate: { viewStore.send(.navigateAgreements($0)) },
-//                destination: { agreementsState in
-//                  AgreementsView(
-//                    store: self.store.scope(
-//                      state: { _ in agreementsState },
-//                      action: Settings.Action.agreements
-//                    )
-//                  )
-//                },
-//                label: AgreementsRowView.init
-//              )
-//              NavigationLink(
-//                route: viewStore.destination,
-//                case: /Settings.State.Destination.about,
-//                onNavigate: { viewStore.send(.navigateAbout($0)) },
-//                destination: { aboutState in
-//                  AboutView(
-//                    store: self.store.scope(
-//                      state: { _ in aboutState },
-//                      action: Settings.Action.about
-//                    )
-//                  )
-//                },
-//                label: AboutRowView.init
-//              )
+						Section {
+							NavigationLink(
+								state: SettingsFeature.Path.State.agreements(AgreementsFeature.State())
+							) {
+								AgreementsRowView()
+							}
+							NavigationLink(
+								state: SettingsFeature.Path.State.about(AboutFeature.State())
+							) {
+								AboutRowView()
+							}
             }
           }
-          
-          VStack {
-//            NavigationLink(
-//              route: viewStore.destination,
-//              case: /Settings.State.Destination.activate,
-//              onNavigate: { viewStore.send(.navigateActivate($0)) },
-//              destination: { activateState in
-//                ActivateView(
-//                  store: self.store.scope(
-//                    state: { _ in activateState },
-//                    action: Settings.Action.activate
-//                  )
-//                )
-//              },
-//              label: EmptyView.init
-//            )
-//            NavigationLink(
-//              route: viewStore.destination,
-//              case: /Settings.State.Destination.menu,
-//              onNavigate: { viewStore.send(.navigateMenu($0)) },
-//              destination: { menuState in
-//                MenuPasscodeView(
-//                  store: self.store.scope(
-//                    state: { _ in menuState },
-//                    action: Settings.Action.menu
-//                  )
-//                )
-//              },
-//              label: EmptyView.init
-//            )
-          }
-          .frame(height: 0)
         }
         .navigationTitle("Settings.Title".localized)
 			} destination: { store in
 				switch store.case {
+					case let .about(store):
+						AboutView(store: store)
 					case let .activate(store):
 						ActivateView(store: store)
+					case let .agreements(store):
+						AgreementsView(store: store)
 					case let .appearance(store):
 						AppearanceView(store: store)
 					case let .camera(store):
 						CameraView(store: store)
+					case let .export(store):
+						ExportView(store: store)
 					case let .iconApp(store):
 						IconAppView(store: store)
 					case let .insert(store):
@@ -206,6 +131,8 @@ public struct SettingsView: View {
 						LayoutView(store: store)
 					case let .menu(store):
 						MenuPasscodeView(store: store)
+					case let .microphone(store):
+						MicrophoneView(store: store)
 					case let .style(store):
 						StyleView(store: store)
 					case let .theme(store):
@@ -218,10 +145,19 @@ public struct SettingsView: View {
   }
 }
 
+import EntriesFeature
+
 #Preview {
 	SettingsView(
 		store: Store(
-			initialState: SettingsFeature.State(),
+			initialState: SettingsFeature.State(
+				path: StackState(
+					[
+//						.appearance(AppearanceFeature.State()),
+//						.style(StyleFeature.State(entries: fakeEntries))
+					]
+				)
+			),
 			reducer: { SettingsFeature() }
 		)
 	)

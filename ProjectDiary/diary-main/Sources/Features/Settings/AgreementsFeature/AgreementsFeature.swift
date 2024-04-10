@@ -30,31 +30,28 @@ public enum AgreementType {
     }
 }
 
-public struct Agreements: Reducer {
-  public init() {}
-  
-  public struct State: Equatable {
-    public init() {}
-  }
-  
-  public enum Action: Equatable {
-      case open(AgreementType)
-  }
-  
-  @Dependency(\.applicationClient.open) private var open
-  
-  public var body: some ReducerOf<Self> {
-    Reduce(self.core)
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case let .open(type):
-      guard let url = URL(string: type.urlString) else { return .none }
-      return .run { _ in await self.open(url, [:]) }
-    }
-  }
+@Reducer
+public struct AgreementsFeature {
+	public init() {}
+	
+	@ObservableState
+	public struct State: Equatable {
+		public init() {}
+	}
+	
+	public enum Action: Equatable {
+		case open(AgreementType)
+	}
+	
+	@Dependency(\.applicationClient.open) private var open
+	
+	public var body: some ReducerOf<Self> {
+		Reduce { state, action in
+			switch action {
+				case let .open(type):
+					guard let url = URL(string: type.urlString) else { return .none }
+					return .run { _ in await self.open(url, [:]) }
+			}
+		}
+	}
 }

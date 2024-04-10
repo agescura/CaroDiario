@@ -22,10 +22,10 @@ import Styles
 import EntryDetailFeature
 
 public struct HomeView: View {
-	@Perception.Bindable var store: StoreOf<Home>
+	@Perception.Bindable var store: StoreOf<HomeFeature>
 	
 	public init(
-		store: StoreOf<Home>
+		store: StoreOf<HomeFeature>
 	) {
 		self.store = store
 	}
@@ -55,7 +55,7 @@ public struct HomeView: View {
 extension TabViewType {
 	
 	@ViewBuilder
-	func view(for store: StoreOf<Home>) -> some View {
+	func view(for store: StoreOf<HomeFeature>) -> some View {
 		switch self {
 			case .entries:
 				EntriesView(store: store.scope(state: \.entries, action: \.entries))
@@ -65,4 +65,15 @@ extension TabViewType {
 				SettingsView(store: store.scope(state: \.settings, action: \.settings))
 		}
 	}
+}
+
+#Preview {
+	HomeView(
+		store: Store(
+			initialState: HomeFeature.State(
+				tabBars: [.entries, .search, .settings]
+			),
+			reducer: { HomeFeature() }
+		)
+	)
 }

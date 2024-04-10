@@ -5,21 +5,21 @@ import AddEntryFeature
 import EntryDetailFeature
 
 public struct EntriesView: View {
-  let store: StoreOf<Entries>
+	@Perception.Bindable var store: StoreOf<EntriesFeature>
   
   public init(
-    store: StoreOf<Entries>
+    store: StoreOf<EntriesFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       NavigationStack {
         ScrollView(.vertical) {
-          if viewStore.isLoading {
+					if self.store.isLoading {
             ProgressView()
-          } else if viewStore.entries.isEmpty {
+          } else if self.store.entries.isEmpty {
             VStack(spacing: 16) {
               Spacer()
               Image(.pencil)
@@ -36,11 +36,10 @@ public struct EntriesView: View {
           } else {
             ZStack {
               LazyVStack(alignment: .leading, spacing: 8) {
-                ForEachStore(
-                  store.scope(
-                    state: \.entries,
-                    action: Entries.Action.entries(id:action:)),
-                  content: DayEntriesRowView.init(store:)
+                ForEach(
+									self.store.scope(state: \.entries, action: \.entries),
+									id: \.id,
+                  content: DayEntriesRowView.init
                 )
               }
             }
@@ -50,44 +49,34 @@ public struct EntriesView: View {
         .navigationBarItems(
           trailing:
             Button(action: {
-              viewStore.send(.presentAddEntry(true))
+							self.store.send(.addEntryButtonTapped)
             }) {
               Image(.plus)
                 .foregroundColor(.chambray)
             }
         )
-        .fullScreenCover(
-          isPresented: viewStore.binding(
-            get: { $0.presentAddEntry },
-            send: Entries.Action.presentAddEntry
-          )
-        ) {
-          IfLetStore(
-            store.scope(
-              state: { $0.addEntryState },
-              action: Entries.Action.addEntryAction),
-            then: AddEntryView.init(store:)
-          )
-        }
-        .navigationDestination(
-          isPresented: viewStore.binding(
-            get: \.navigateEntryDetail,
-            send: Entries.Action.navigateEntryDetail
-          ),
-          destination: {
-            IfLetStore(
-              store.scope(
-                state: \.entryDetailState,
-                action: Entries.Action.entryDetailAction
-              ),
-              then: EntryDetailView.init(store:)
-            )
-          }
-        )
+				.fullScreenCover(
+					item: self.$store.scope(
+						state: \.addEntryState,
+						action: \.addEntryAction
+					)
+				) { store in
+					AddEntryView(store: store)
+				}
+				#if os(tvOS)
+				.navigationDestination(
+					item: self.$store.scope(
+						state: \.entryDetailState,
+						action: \.entryDetailAction
+					)
+				) { store in
+					EntryDetailView(store: store)
+				}
+				#endif
       }
       .navigationViewStyle(StackNavigationViewStyle())
       .onAppear {
-        viewStore.send(.onAppear)
+				self.store.send(.onAppear)
       }
     }
   }

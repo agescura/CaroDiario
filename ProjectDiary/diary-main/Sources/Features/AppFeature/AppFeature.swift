@@ -12,7 +12,7 @@ public struct AppFeature {
 	
 	@Reducer(state: .equatable, action: .equatable)
 	public enum Scene {
-		case home(Home)
+		case home(HomeFeature)
 		case lockScreen(LockScreen)
 		case onboarding(WelcomeFeature)
 		case splash(SplashFeature)
@@ -180,18 +180,18 @@ public struct AppFeature {
 					await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
 				}
 				
-			case .scene(.home(.settings(.menu(.toggleFaceId(true))))),
-					.scene(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
-					.scene(.lockScreen(.checkFaceId)):
-				return .send(.biometricAlertPresent(true))
-				
-			case .scene(.home(.settings(.menu(.faceId(response:))))),
-					.scene(.home(.settings(.activate(.insert(.menu(.faceId(response:))))))),
-					.scene(.lockScreen(.faceIdResponse)):
-				return .run { send in
-					try await self.mainQueue.sleep(for: 10)
-					await send(.biometricAlertPresent(false))
-				}
+//			case .scene(.home(.settings(.menu(.toggleFaceId(true))))),
+//					.scene(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
+//					.scene(.lockScreen(.checkFaceId)):
+//				return .send(.biometricAlertPresent(true))
+//				
+//			case .scene(.home(.settings(.menu(.faceId(response:))))),
+//					.scene(.home(.settings(.activate(.insert(.menu(.faceId(response:))))))),
+//					.scene(.lockScreen(.faceIdResponse)):
+//				return .run { send in
+//					try await self.mainQueue.sleep(for: 10)
+//					await send(.biometricAlertPresent(false))
+//				}
 				
 			case .scene:
 				return .none

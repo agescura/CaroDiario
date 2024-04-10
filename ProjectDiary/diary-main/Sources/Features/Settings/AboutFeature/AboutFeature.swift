@@ -8,7 +8,8 @@ enum MailType: String {
 	case outlook = "ms-outlook"
 }
 
-public struct AboutFeature: Reducer {
+@Reducer
+public struct AboutFeature {
 	public init() {}
 	
 	public struct State: Equatable {
@@ -69,7 +70,7 @@ public struct AboutFeature: Reducer {
 					return .none
 			}
 		}
-		.ifLet(\.$dialog, action: /Action.dialog)
+		.ifLet(\.$dialog, action: \.dialog)
 	}
 }
 

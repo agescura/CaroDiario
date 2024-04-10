@@ -1,9 +1,11 @@
 import Foundation
 import ComposableArchitecture
 
-public struct PDFPreview: Reducer {
+@Reducer
+public struct PDFPreviewFeature {
   public init() {}
   
+	@ObservableState
   public struct State: Equatable {
     let pdfData: Data
     

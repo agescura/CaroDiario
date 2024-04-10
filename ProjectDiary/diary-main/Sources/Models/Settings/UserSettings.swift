@@ -31,30 +31,36 @@ extension TimeForAskPasscode {
 }
 
 public struct UserSettings: Equatable, Codable {
-	public var showSplash: Bool
-	public var hasShownOnboarding: Bool
 	public var appearance: AppearanceSettings
-	public var language: Localizable
-	public var passcode: String?
-	public var optionTimeForAskPasscode: Int
+	public var audioRecordPermission: AudioRecordPermission
+	public var authorizedVideoStatus: AuthorizedVideoStatus
 	public var faceIdEnabled: Bool
+	public var hasShownOnboarding: Bool
+	public var language: Localizable
+	public var optionTimeForAskPasscode: Int
+	public var passcode: String?
+	public var showSplash: Bool
 	
 	public init(
-		showSplash: Bool,
-		hasShownOnboarding: Bool,
 		appearance: AppearanceSettings,
+		audioRecordPermission: AudioRecordPermission,
+		authorizedVideoStatus: AuthorizedVideoStatus,
+		faceIdEnabled: Bool,
+		hasShownOnboarding: Bool,
 		language: Localizable,
-		passcode: String?,
 		optionTimeForAskPasscode: Int,
-		faceIdEnabled: Bool
+		passcode: String?,
+		showSplash: Bool
 	) {
-		self.showSplash = showSplash
-		self.hasShownOnboarding = hasShownOnboarding
 		self.appearance = appearance
-		self.language = language
-		self.passcode = passcode
-		self.optionTimeForAskPasscode = optionTimeForAskPasscode
+		self.audioRecordPermission = audioRecordPermission
+		self.authorizedVideoStatus = authorizedVideoStatus
 		self.faceIdEnabled = faceIdEnabled
+		self.hasShownOnboarding = hasShownOnboarding
+		self.language = language
+		self.optionTimeForAskPasscode = optionTimeForAskPasscode
+		self.passcode = passcode
+		self.showSplash = showSplash
 	}
 }
 
@@ -75,18 +81,20 @@ extension UserSettings {
 extension UserSettings {
 	public static var defaultValue: Self {
 		UserSettings(
-			showSplash: true,
-			hasShownOnboarding: false,
 			appearance: AppearanceSettings(
 				styleType: .rectangle,
 				layoutType: .horizontal,
 				themeType: .system,
 				iconAppType: .light
 			),
+			audioRecordPermission: .notDetermined,
+			authorizedVideoStatus: .notDetermined,
+			faceIdEnabled: false,
+			hasShownOnboarding: false,
 			language: .english,
-			passcode: nil,
 			optionTimeForAskPasscode: 0,
-			faceIdEnabled: false
+			passcode: nil,
+			showSplash: true
 		)
 	}
 }

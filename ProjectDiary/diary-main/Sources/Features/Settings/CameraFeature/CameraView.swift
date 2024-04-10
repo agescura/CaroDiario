@@ -23,10 +23,10 @@ public struct CameraView: View {
         Section(
           footer:
             Group {
-							if self.store.cameraStatus != .denied {
-                Text(self.store.cameraStatus.description)
+							if self.store.userSettings.authorizedVideoStatus != .denied {
+                Text(self.store.userSettings.authorizedVideoStatus.description)
               } else {
-                Text(self.store.cameraStatus.description)
+                Text(self.store.userSettings.authorizedVideoStatus.description)
                 + Text(" ") +
                 Text("Settings.GoToSettings".localized)
                   .underline()
@@ -38,12 +38,12 @@ public struct CameraView: View {
             }
         ) {
           HStack {
-            Text(self.store.cameraStatus.rawValue.localized)
+            Text(self.store.userSettings.authorizedVideoStatus.rawValue.localized)
               .foregroundColor(.chambray)
               .adaptiveFont(.latoRegular, size: 10)
             Spacer()
-            if self.store.cameraStatus == .notDetermined {
-              Text(self.store.cameraStatus.permission)
+            if self.store.userSettings.authorizedVideoStatus == .notDetermined {
+              Text(self.store.userSettings.authorizedVideoStatus.permission)
                 .foregroundColor(.adaptiveGray)
                 .adaptiveFont(.latoRegular, size: 12)
               Image(.chevronRight)
@@ -57,6 +57,7 @@ public struct CameraView: View {
         }
       }
       .navigationBarTitle("Settings.Camera.Privacy".localized, displayMode: .inline)
+			.task { await self.store.send(.task).finish() }
     }
   }
 }
@@ -84,4 +85,13 @@ extension AuthorizedVideoStatus {
       return ""
     }
   }
+}
+
+#Preview {
+	CameraView(
+		store: Store(
+			initialState: CameraFeature.State(),
+			reducer: { CameraFeature() }
+		)
+	)
 }

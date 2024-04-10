@@ -5,16 +5,16 @@ import Localizables
 import SwiftUIHelper
 
 public struct AgreementsView: View {
-  let store: StoreOf<Agreements>
+  let store: StoreOf<AgreementsFeature>
   
   public init(
-    store: StoreOf<Agreements>
+    store: StoreOf<AgreementsFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       Form {
         Section {
           HStack(spacing: 16) {
@@ -33,7 +33,7 @@ public struct AgreementsView: View {
           }
           .contentShape(Rectangle())
           .onTapGesture {
-            viewStore.send(.open(.composableArchitecture))
+						self.store.send(.open(.composableArchitecture))
           }
         }
         Section {
@@ -53,7 +53,7 @@ public struct AgreementsView: View {
           }
           .contentShape(Rectangle())
           .onTapGesture {
-            viewStore.send(.open(.pointfree))
+						self.store.send(.open(.pointfree))
           }
           HStack(spacing: 16) {
             IconImageView(
@@ -69,7 +69,7 @@ public struct AgreementsView: View {
           }
           .contentShape(Rectangle())
           .onTapGesture {
-            viewStore.send(.open(.raywenderlich))
+						self.store.send(.open(.raywenderlich))
           }
         }
       }

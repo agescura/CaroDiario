@@ -8,33 +8,29 @@ import AddEntryFeature
 import EntryDetailFeature
 import CoreDataClient
 
-public struct Entries: Reducer {
+@Reducer
+public struct EntriesFeature {
 	public init() {}
 	
+	@ObservableState
 	public struct State: Equatable {
 		public var isLoading: Bool
 		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		public var addEntryState: AddEntryFeature.State?
-		public var presentAddEntry = false
-		public var entryDetailState: EntryDetailFeature.State?
-		public var navigateEntryDetail = false
+		@Presents public var addEntryState: AddEntryFeature.State?
+		@Presents public var entryDetailState: EntryDetailFeature.State?
 		public var entryDetailSelected: Entry?
 		
 		public init(
 			isLoading: Bool = true,
 			entries: IdentifiedArrayOf<DayEntriesRow.State> = [],
 			addEntryState: AddEntryFeature.State? = nil,
-			presentAddEntry: Bool = false,
 			entryDetailState: EntryDetailFeature.State? = nil,
-			navigateEntryDetail: Bool = false,
 			entryDetailSelected: Entry? = nil
 		) {
 			self.isLoading = isLoading
 			self.entries = entries
 			self.addEntryState = addEntryState
-			self.presentAddEntry = presentAddEntry
 			self.entryDetailState = entryDetailState
-			self.navigateEntryDetail = navigateEntryDetail
 			self.entryDetailSelected = entryDetailSelected
 		}
 	}
@@ -43,13 +39,13 @@ public struct Entries: Reducer {
 		case onAppear
 		case coreDataClientAction(CoreDataClient.Action)
 		case fetchEntriesResponse([[Entry]])
-		case addEntryAction(AddEntryFeature.Action)
-		case presentAddEntry(Bool)
+		case addEntryButtonTapped
+		case addEntryAction(PresentationAction<AddEntryFeature.Action>)
 		case presentAddEntryCompleted
-		case entries(id: UUID, action: DayEntriesRow.Action)
+		case entries(IdentifiedActionOf<DayEntriesRow>)
 		case remove(Entry)
-		case entryDetailAction(EntryDetailFeature.Action)
-		case navigateEntryDetail(Bool)
+		case entryDetailButtonTapped
+		case entryDetailAction(PresentationAction<EntryDetailFeature.Action>)
 	}
 	
 	@Dependency(\.mainQueue) private var mainQueue
@@ -62,13 +58,13 @@ public struct Entries: Reducer {
 	
 	public var body: some ReducerOf<Self> {
 		Reduce(self.core)
-			.forEach(\.entries, action: /Action.entries) {
+			.forEach(\.entries, action: \.entries) {
 				DayEntriesRow()
 			}
-			.ifLet(\.addEntryState, action: /Action.addEntryAction) {
+			.ifLet(\.$addEntryState, action: \.addEntryAction) {
 				AddEntryFeature()
 			}
-			.ifLet(\.entryDetailState, action: /Action.entryDetailAction) {
+			.ifLet(\.$entryDetailState, action: \.entryDetailAction) {
 				EntryDetailFeature()
 			}
 	}
@@ -101,19 +97,10 @@ public struct Entries: Reducer {
 				state.isLoading = false
 				return .none
 				
-			case .addEntryAction(.addButtonTapped):
-				state.presentAddEntry = false
-				return .none
-				
-			case .addEntryAction(.finishAddEntry):
-				state.presentAddEntry = false
-				return .none
-				
 			case .addEntryAction:
 				return .none
 				
-			case .presentAddEntry(true):
-				state.presentAddEntry = true
+			case .addEntryButtonTapped:
 				let newEntry = Entry(
 					id: self.uuid(),
 					date: self.now,
@@ -125,22 +112,22 @@ public struct Entries: Reducer {
 					)
 				)
 				state.addEntryState = AddEntryFeature.State(entry: newEntry, type: .add)
-				return .send(.addEntryAction(.createDraftEntry))
+				return .send(.addEntryAction(.presented(.createDraftEntry)))
 				
-			case .presentAddEntry(false):
-				state.presentAddEntry = false
-				return .run { send in
-					try await self.mainQueue.sleep(for: .seconds(0.3))
-					await send(.presentAddEntryCompleted)
-				}
+//			case .presentAddEntry(false):
+//				state.presentAddEntry = false
+//				return .run { send in
+//					try await self.mainQueue.sleep(for: .seconds(0.3))
+//					await send(.presentAddEntryCompleted)
+//				}
 				
 			case .presentAddEntryCompleted:
 				state.addEntryState = nil
 				return .none
 				
-			case let .entries(id: _, action: .dayEntry(.navigateDetail(entry))):
+			case let .entries(.element(id: _, action: .dayEntry(.navigateDetail(entry)))):
 				state.entryDetailSelected = entry
-				return .send(.navigateEntryDetail(true))
+				return .send(.entryDetailButtonTapped)
 				
 			case .entries:
 				return .none
@@ -148,23 +135,19 @@ public struct Entries: Reducer {
 			case .remove:
 				return .none
 				
-			case let .navigateEntryDetail(value):
+			case .entryDetailButtonTapped:
 				guard let entry = state.entryDetailSelected else { return .none }
-				state.navigateEntryDetail = value
-				state.entryDetailState = value ? .init(entry: entry) : nil
-				if value == false {
-					state.entryDetailSelected = nil
-				}
+				state.entryDetailState = EntryDetailFeature.State(entry: entry)
 				return .none
 				
-			case let .entryDetailAction(.alert(.presented(.remove(entry)))):
-				return .merge(
-					.run { send in
-						_ = await self.fileClient.removeAttachments(entry.attachments.urls)
-						await send(.remove(entry))
-					},
-					.send(.navigateEntryDetail(false))
-				)
+//			case let .entryDetailAction(.alert(.presented(.remove(entry)))):
+//				return .merge(
+//					.run { send in
+//						_ = await self.fileClient.removeAttachments(entry.attachments.urls)
+//						await send(.remove(entry))
+//					},
+//					.send(.navigateEntryDetail(false))
+//				)
 				
 			case .entryDetailAction:
 				return .none
