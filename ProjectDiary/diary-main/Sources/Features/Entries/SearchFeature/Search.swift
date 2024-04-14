@@ -85,7 +85,7 @@ public struct Search: Reducer {
       
       for entries in response {
         let day = DayEntriesRow.State(dayEntry: .init(
-          entry: .init(uniqueElements: entries), style: self.userDefaultsClient.styleType, layout: self.userDefaultsClient.layoutType), id: self.uuid())
+          entry: .init(uniqueElements: entries)), id: self.uuid())
         dayResult.append(day)
       }
       state.entries = dayResult
@@ -120,7 +120,7 @@ public struct Search: Reducer {
       
       for entries in response {
         let day = DayEntriesRow.State(dayEntry: .init(
-          entry: .init(uniqueElements: entries), style: self.userDefaultsClient.styleType, layout: self.userDefaultsClient.layoutType), id: self.uuid())
+          entry: .init(uniqueElements: entries)), id: self.uuid())
         dayResult.append(day)
       }
       

@@ -4,23 +4,20 @@ import Models
 import Styles
 import SwiftUIHelper
 
-public struct DayEntries: Reducer {
+@Reducer
+public struct DayEntries {
   public init() {}
   
+	@ObservableState
   public struct State: Equatable {
     public var entries: IdentifiedArrayOf<Entry>
     public var showLongDate: Bool = false
-    public var style: StyleType
-    public var layout: LayoutType
-    
+    @Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
+		
     public init(
-      entry: IdentifiedArrayOf<Entry>,
-      style: StyleType,
-      layout: LayoutType
+      entry: IdentifiedArrayOf<Entry>
     ) {
       self.entries = entry
-      self.style = style
-      self.layout = layout
     }
   }
   
@@ -30,21 +27,15 @@ public struct DayEntries: Reducer {
   }
   
   public var body: some ReducerOf<Self> {
-    Reduce(self.core)
-  }
-  
-  private func core(
-    state: inout State,
-    action: Action
-  ) -> Effect<Action> {
-    switch action {
-    case .toggleLongDate:
-      state.showLongDate = !state.showLongDate
-      return .none
-      
-    case .navigateDetail:
-      return .none
-    }
+		Reduce { state, action in
+			switch action {
+			case .toggleLongDate:
+				state.showLongDate = !state.showLongDate
+				return .none
+			case .navigateDetail:
+				return .none
+			}
+		}
   }
 }
 
@@ -58,46 +49,45 @@ public struct DayEntriesView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      AppearanceMainStack(layout: viewStore.layout, spacing: 4) {
+		WithPerceptionTracking {
+			AppearanceMainStack(layout: self.store.userSettings.appearance.layoutType, spacing: 4) {
         Group {
-          AppearanceDayStack(layout: viewStore.layout, spacing: 4) {
+          AppearanceDayStack(layout: self.store.userSettings.appearance.layoutType, spacing: 4) {
             Group {
-              Text(viewStore.entries.first?.numberDay ?? "")
+							Text(self.store.entries.first?.numberDay ?? "")
                 .adaptiveFont(.latoRegular, size: 10)
                 .foregroundColor(.adaptiveGray)
                 .frame(width: 48, height: 48)
-                .modifier(StyleModifier(style: viewStore.style))
+                .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
               
-              Text(viewStore.entries.first?.stringDay ?? "")
+							Text(self.store.entries.first?.stringDay ?? "")
                 .adaptiveFont(.latoRegular, size: 10)
                 .foregroundColor(.adaptiveGray)
                 .frame(width: 48, height: 48)
-                .modifier(StyleModifier(style: viewStore.style))
+                .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
               
-              if viewStore.showLongDate {
-                Text(viewStore.entries.first?.stringMonth ?? "")
+							if self.store.showLongDate {
+								Text(self.store.entries.first?.stringMonth ?? "")
                   .adaptiveFont(.latoRegular, size: 10)
                   .foregroundColor(.adaptiveGray)
                   .minimumScaleFactor(0.01)
                   .frame(width: 48, height: 48)
-                  .modifier(StyleModifier(style: viewStore.style))
+                  .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
                 
-                Text(viewStore.entries.first?.stringYear ?? "")
+								Text(self.store.entries.first?.stringYear ?? "")
                   .adaptiveFont(.latoRegular, size: 10)
                   .foregroundColor(.adaptiveGray)
                   .minimumScaleFactor(0.01)
                   .frame(width: 48, height: 48)
-                  .modifier(StyleModifier(style: viewStore.style))
+                  .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
               }
             }
           }
           .onTapGesture {
-            viewStore.send(.toggleLongDate, animation: .default)
+						self.store.send(.toggleLongDate, animation: .default)
           }
-          
           VStack(spacing: 4) {
-            ForEach(viewStore.entries) { entry in
+						ForEach(self.store.entries) { entry in
               VStack(alignment: .leading, spacing: 8) {
                 Text(entry.stringHour)
                   .adaptiveFont(.latoRegular, size: 6)
@@ -142,10 +132,10 @@ public struct DayEntriesView: View {
               }
               .frame(maxWidth: .infinity)
               .padding(8)
-              .modifier(StyleModifier(style: viewStore.style))
+              .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
               .contentShape(Rectangle())
               .onTapGesture {
-                viewStore.send(.navigateDetail(entry))
+								self.store.send(.navigateDetail(entry))
               }
             }
           }

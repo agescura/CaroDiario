@@ -15,7 +15,7 @@ public struct EntriesView: View {
   
   public var body: some View {
 		WithPerceptionTracking {
-      NavigationStack {
+			NavigationStack(path: self.$store.scope(state: \.path, action: \.path)) {
         ScrollView(.vertical) {
 					if self.store.isLoading {
             ProgressView()
@@ -56,28 +56,46 @@ public struct EntriesView: View {
             }
         )
 				.fullScreenCover(
-					item: self.$store.scope(
-						state: \.addEntryState,
-						action: \.addEntryAction
-					)
+					item: self.$store.scope(state: \.add, action: \.add)
 				) { store in
-					AddEntryView(store: store)
+					NavigationStack {
+						AddEntryView(store: store)
+							.toolbar {
+								ToolbarItem(placement: .cancellationAction) {
+									Text("AddEntry.Title".localized)
+										.adaptiveFont(.latoBold, size: 16)
+										.foregroundColor(.adaptiveBlack)
+								}
+								ToolbarItem(placement: .confirmationAction) {
+									Button {
+										self.store.send(.add(.dismiss))
+									} label: {
+										Image(.xmark)
+											.foregroundColor(.adaptiveBlack)
+									}
+								}
+							}
+					}
 				}
-				#if os(tvOS)
-				.navigationDestination(
-					item: self.$store.scope(
-						state: \.entryDetailState,
-						action: \.entryDetailAction
-					)
-				) { store in
-					EntryDetailView(store: store)
+			} destination: { store in
+				switch store.case {
+					case let .detail(store):
+						EntryDetailView(store: store)
 				}
-				#endif
-      }
+			}
       .navigationViewStyle(StackNavigationViewStyle())
-      .onAppear {
-				self.store.send(.onAppear)
+      .task {
+				await self.store.send(.task).finish()
       }
     }
   }
+}
+
+#Preview {
+	EntriesView(
+		store: Store(
+			initialState: EntriesFeature.State(),
+			reducer: { EntriesFeature() }
+		)
+	)
 }

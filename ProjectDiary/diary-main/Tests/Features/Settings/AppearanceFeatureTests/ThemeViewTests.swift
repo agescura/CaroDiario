@@ -5,10 +5,9 @@ import Models
 import TestUtils
 import XCTest
 
-@MainActor
 class ThemeViewTests: XCTestCase {
-  
-  func testThemeHappyPath() async {
+	@MainActor
+  func testHappyPath() async {
     var selectionChangedCalled = false
 		let store = TestStore(
 			initialState: ThemeFeature.State(entries: []),

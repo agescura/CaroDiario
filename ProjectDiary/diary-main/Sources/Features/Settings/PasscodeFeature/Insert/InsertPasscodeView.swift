@@ -20,7 +20,9 @@ public struct InsertView: View {
 					Text(self.store.step.title)
           HStack {
             ForEach(0..<self.store.maxNumbersCode, id: \.self) { iterator in
-              Image(self.store.code.count > iterator ? .circleFill : .circle)
+							WithPerceptionTracking {
+								Image(self.store.code.count > iterator ? .circleFill : .circle)
+							}
             }
           }
           if self.store.codeNotMatched {
@@ -40,32 +42,17 @@ public struct InsertView: View {
         SecondaryButtonView(
           label: { Text("Passcode.Dismiss".localized) }
         ) {
-					self.store.send(.popToRoot)
+					self.store.send(.popButtonTapped)
         }
-        
-//        NavigationLink(
-//          route: viewStore.route,
-//          case: /Insert.State.Route.menu,
-//          onNavigate: { viewStore.send(.navigateMenu($0)) },
-//          destination: { menuState in
-//            MenuPasscodeView(
-//              store: self.store.scope(
-//                state: { _ in menuState },
-//                action: Insert.Action.menu
-//              )
-//            )
-//          },
-//          label: EmptyView.init
-//        )
       }
       .padding(16)
       .navigationBarTitle("Passcode.Title".localized, displayMode: .inline)
       .navigationBarBackButtonHidden(true)
       .navigationBarItems(
         leading: Button(
-					action: { self.store.send(.popToRoot) }
+					action: { self.store.send(.popButtonTapped) }
         ) {
-          HStack { Image(.chevronRight) }
+          HStack { Image(.chevronLeft) }
         }
       )
     }

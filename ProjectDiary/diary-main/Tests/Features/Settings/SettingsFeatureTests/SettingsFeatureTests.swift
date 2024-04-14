@@ -1,19 +1,43 @@
-////
-////  SettingsFeatureTests.swift
-////  
-////
-////  Created by Albert Gil Escura on 11/7/21.
-////
-//
-//import XCTest
-//@testable import SettingsFeature
-//import ComposableArchitecture
-//import SwiftUI
-//import UserDefaultsClient
-//import Styles
-//
-//class SettingsFeatureTests: XCTestCase {
-//    
+import XCTest
+@testable import SettingsFeature
+import ComposableArchitecture
+import SwiftUI
+import UserDefaultsClient
+import Styles
+import PasscodeFeature
+
+@MainActor
+class SettingsFeatureTests: XCTestCase {
+	
+	func testInsertPasscode() async {
+		let store = TestStore(
+			initialState: SettingsFeature.State(),
+			reducer: { SettingsFeature() }
+		)
+		
+		await store.send(\.navigateToPasscode) {
+			$0.path = StackState([
+				.activate(ActivateFeature.State())
+			])
+		}
+		await store.send(\.path[id: 0].activate.insertButtonTapped)
+		await store.receive(\.path[id: 0].activate.delegate.navigateToInsert) {
+			$0.path[id: 1] = .insert(InsertFeature.State())
+		}
+		await store.send(\.path[id: 1].insert.update, "1234") {
+			$0.path[id: 1]?.insert?.code = ""
+			$0.path[id: 1]?.insert?.firstCode = "1234"
+			$0.path[id: 1]?.insert?.step = .secondCode
+		}
+		await store.send(\.path[id: 1].insert.update, "1234") {
+			$0.path[id: 1]?.insert?.code = "1234"
+		}
+		await store.receive(\.path[id: 1].insert.delegate.navigateToMenu) {
+			$0.path[id: 2] = .menu(MenuFeature.State())
+			$0.userSettings.passcode = "1234"
+		}
+	}
+}
 //    func testSettingsHappyPath() {
 //        let store = TestStore(
 //            initialState: SettingsState(

@@ -13,7 +13,7 @@ public struct AppFeature {
 	@Reducer(state: .equatable, action: .equatable)
 	public enum Scene {
 		case home(HomeFeature)
-		case lockScreen(LockScreen)
+		case lockScreen(LockScreenFeature)
 		case onboarding(WelcomeFeature)
 		case splash(SplashFeature)
 	}
@@ -32,10 +32,10 @@ public struct AppFeature {
 			case inactive
 			case unknown
 		}
-		
+
 		public init(
-			appDelegate: AppDelegateState,
-			scene: Scene.State
+			appDelegate: AppDelegateState = AppDelegateState(),
+			scene: Scene.State = .splash(SplashFeature.State())
 		) {
 			self.appDelegate = appDelegate
 			self.scene = scene
@@ -50,6 +50,7 @@ public struct AppFeature {
 		case scene(Scene.Action)
 		case setUserInterfaceStyle
 		case shortcuts
+		case splashFinished
 		case startHome(cameraStatus: AuthorizedVideoStatus)
 		case state(AppFeature.State.State)
 	}
@@ -77,45 +78,38 @@ public struct AppFeature {
 			switch action {
 				case .appDelegate(.didFinishLaunching):
 					return .merge(
-						.run { [userInterfaceStyle = state.userSettings.appearance.themeType.userInterfaceStyle] send in
+						.run { [userInterfaceStyle = state.userSettings.appearance.themeType.userInterfaceStyle] _ in
 							await self.applicationClient.setUserInterfaceStyle(userInterfaceStyle)
 						},
 						.run { [showSplash = state.userSettings.showSplash] send in
 							if !showSplash {
-								await send(.scene(.splash(.finishAnimation)))
+								await send(.splashFinished)
 							}
 						}
 					)
-//					if state.userSettings.hasShownOnboarding {
-//						if state.userSettings.hasPasscode {
-//							state.scene = .lockScreen(LockScreen.State(code: state.userSettings.passcode))
-//							return .none
-//						} else {
-//							return .run { send in
-//								await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
-//							}
-//						}
-//					}
+					
+				case .splashFinished:
+					if state.userSettings.hasPasscode {
+						state.scene = .lockScreen(LockScreenFeature.State())
+						return .none
+					}
+					if !state.userSettings.hasShownOnboarding {
+						state.scene = .onboarding(WelcomeFeature.State())
+						return .none
+					}
+					state.scene = .home(HomeFeature.State())
+					return .none
 					
 				case let .scene(sceneAction):
 					switch sceneAction {
-						case .splash(.finishAnimation):
-							if state.userSettings.hasShownOnboarding {
-								if let code = state.userSettings.passcode {
-									state.scene = .lockScreen(LockScreen.State(code: code))
-									return .none
-								} else {
-									return .run { send in
-										await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
-									}
-								}
-							}
-							state.scene = .onboarding(WelcomeFeature.State())
+						case .lockScreen(.delegate(.matchedCode)):
+							state.scene = .home(HomeFeature.State())
 							return .none
 						case .onboarding(.delegate(.navigateToHome)):
-							return .run { send in
-								await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
-							}
+							state.scene = .home(HomeFeature.State())
+							return .none
+						case .splash(.delegate(.animationFinished)):
+							return .send(.splashFinished)
 						default:
 							return .none
 					}
@@ -151,7 +145,7 @@ public struct AppFeature {
 			case .scene(.splash(.finishAnimation)):
 				if state.userSettings.hasShownOnboarding {
 					if let code = self.userDefaultsClient.passcodeCode {
-						state.scene = .lockScreen(LockScreen.State(code: code))
+						state.scene = .lockScreen(LockScreenFeature.State())
 						return .none
 					} else {
 						return .run { send in
@@ -175,10 +169,10 @@ public struct AppFeature {
 //					await send(.requestCameraStatus)
 //				}
 				
-			case .scene(.lockScreen(.matchedCode)):
-				return .run { send in
-					await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
-				}
+//			case .scene(.lockScreen(.matchedCode)):
+//				return .run { send in
+//					await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+//				}
 				
 //			case .scene(.home(.settings(.menu(.toggleFaceId(true))))),
 //					.scene(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
@@ -219,7 +213,7 @@ public struct AppFeature {
 					return .none
 				}
 				if let code = self.userDefaultsClient.passcodeCode {
-					state.scene = .lockScreen(.init(code: code))
+					state.scene = .lockScreen(LockScreenFeature.State())
 					return .none
 				}
 				return .none
@@ -242,6 +236,9 @@ public struct AppFeature {
 				
 			case let .biometricAlertPresent(value):
 				state.isBiometricAlertPresent = value
+				return .none
+				
+			default:
 				return .none
 		}
 	}

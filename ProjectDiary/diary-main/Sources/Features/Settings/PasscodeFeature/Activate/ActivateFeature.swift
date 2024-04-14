@@ -17,6 +17,7 @@ public struct ActivateFeature {
 		case delegate(Delegate)
 		case insertButtonTapped
 		
+		@CasePathable
 		public enum Delegate: Equatable {
 			case navigateToInsert
 		}

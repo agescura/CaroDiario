@@ -5,6 +5,7 @@ public enum SystemImage: String, CaseIterable {
   case appFill = "app.fill"
   case book = "book"
   case checkmark = "checkmark"
+	case chevronLeft = "chevron.left"
   case chevronRight = "chevron.right"
   case camera = "camera"
   case circle = "circle"

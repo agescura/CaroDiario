@@ -61,6 +61,6 @@ public var fakeEntries: IdentifiedArrayOf<DayEntriesRow.State> {
     .init(dayEntry: .init(entry: [
       .init(id: id1, date: date, startDay: date, text: .init(id: id1, message: "Entries.FakeEntry.FirstMessage".localized, lastUpdated: date)),
       .init(id: id2, date: date, startDay: date, text: .init(id: id2, message: "Entries.FakeEntry.SecondMessage".localized, lastUpdated: date))
-		], style: userSettings.appearance.styleType, layout: userSettings.appearance.layoutType), id: id3)
+		]), id: id3)
   ]
 }

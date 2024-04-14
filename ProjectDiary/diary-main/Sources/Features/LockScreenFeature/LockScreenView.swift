@@ -6,7 +6,7 @@ import Localizables
 import Models
 
 public struct LockScreenView: View {
-  let store: StoreOf<LockScreen>
+  let store: StoreOf<LockScreenFeature>
   private let columns = [
     GridItem(.flexible()),
     GridItem(.flexible()),
@@ -14,40 +14,44 @@ public struct LockScreenView: View {
   ]
   
   public init(
-    store: StoreOf<LockScreen>
+    store: StoreOf<LockScreenFeature>
   ) {
     self.store = store
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       VStack(spacing: 16) {
         Spacer()
         Text("LockScreen.Title".localized)
         HStack {
-          ForEach(0..<viewStore.code.count, id: \.self) { iterator in
-            Image(systemName: viewStore.codeToMatch.count > iterator ? "circle.fill" : "circle")
+					ForEach(0..<(self.store.userSettings.passcode?.count ?? 0), id: \.self) { iterator in
+						WithPerceptionTracking {
+							Image(systemName: self.store.codeToMatch.count > iterator ? "circle.fill" : "circle")
+						}
           }
         }
-        .modifier(ShakeGeometryEffect(animatableData: CGFloat(viewStore.wrongAttempts)))
+        .modifier(ShakeGeometryEffect(animatableData: CGFloat(self.store.wrongAttempts)))
         Spacer()
         LazyVGrid(columns: columns) {
-          ForEach(viewStore.buttons) { item in
-            Button(
-              action: {
-                viewStore.send(.numberButtonTapped(item), animation: .default)
-              },
-              label: {
-                LockScreenButton(number: item)
-              }
-            )
+          ForEach(self.store.buttons) { item in
+						WithPerceptionTracking {
+							Button(
+								action: {
+									self.store.send(.numberButtonTapped(item), animation: .default)
+								},
+								label: {
+									LockScreenButton(number: item)
+								}
+							)
+						}
           }
         }
         .padding(.horizontal)
         Spacer()
       }
       .onAppear {
-        viewStore.send(.onAppear)
+				self.store.send(.onAppear)
       }
     }
   }

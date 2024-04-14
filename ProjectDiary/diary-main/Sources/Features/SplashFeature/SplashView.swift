@@ -29,7 +29,7 @@ public struct SplashView: View {
         }
       }
       .ignoresSafeArea()
-			.task { await self.store.send(.startAnimation).finish() }
+			.task { await self.store.send(.task).finish() }
     }
   }
 }

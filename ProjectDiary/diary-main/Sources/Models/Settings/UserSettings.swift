@@ -37,6 +37,7 @@ public struct UserSettings: Equatable, Codable {
 	public var faceIdEnabled: Bool
 	public var hasShownOnboarding: Bool
 	public var language: Localizable
+	public var localAuthenticationType: LocalAuthenticationType
 	public var optionTimeForAskPasscode: Int
 	public var passcode: String?
 	public var showSplash: Bool
@@ -48,6 +49,7 @@ public struct UserSettings: Equatable, Codable {
 		faceIdEnabled: Bool,
 		hasShownOnboarding: Bool,
 		language: Localizable,
+		localAuthenticationType: LocalAuthenticationType,
 		optionTimeForAskPasscode: Int,
 		passcode: String?,
 		showSplash: Bool
@@ -58,6 +60,7 @@ public struct UserSettings: Equatable, Codable {
 		self.faceIdEnabled = faceIdEnabled
 		self.hasShownOnboarding = hasShownOnboarding
 		self.language = language
+		self.localAuthenticationType = localAuthenticationType
 		self.optionTimeForAskPasscode = optionTimeForAskPasscode
 		self.passcode = passcode
 		self.showSplash = showSplash
@@ -79,6 +82,19 @@ extension UserSettings {
 }
 
 extension UserSettings {
+	public var listTimesForAskPasscode: [TimeForAskPasscode] {
+		[
+			.never,
+			.always,
+			.after(minutes: 1),
+			.after(minutes: 5),
+			.after(minutes: 30),
+			.after(minutes: 60)
+		]
+	}
+}
+
+extension UserSettings {
 	public static var defaultValue: Self {
 		UserSettings(
 			appearance: AppearanceSettings(
@@ -92,6 +108,7 @@ extension UserSettings {
 			faceIdEnabled: false,
 			hasShownOnboarding: false,
 			language: .english,
+			localAuthenticationType: .none,
 			optionTimeForAskPasscode: 0,
 			passcode: nil,
 			showSplash: true

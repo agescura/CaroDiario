@@ -6,9 +6,8 @@ import Models
 import TestUtils
 import XCTest
 
-@MainActor
 class StyleViewTests: XCTestCase {
-  
+	@MainActor
   func testStyleHappyPath() async {
     let store = TestStore(
 			initialState: StyleFeature.State(entries: []),

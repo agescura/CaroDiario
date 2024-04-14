@@ -10,7 +10,7 @@ import AudioRecordFeature
 import SwiftUIHelper
 
 public struct AddEntryView: View {
-  let store: StoreOf<AddEntryFeature>
+	@Perception.Bindable var store: StoreOf<AddEntryFeature>
   
   public init(
     store: StoreOf<AddEntryFeature>
@@ -19,55 +19,39 @@ public struct AddEntryView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      
+		WithPerceptionTracking {
       VStack(alignment: .leading, spacing: 24) {
-        HStack {
-          Text(viewStore.type.title)
-            .adaptiveFont(.latoBold, size: 16)
-            .foregroundColor(.adaptiveBlack)
-          Spacer()
-          
-          if viewStore.type == .add {
-            Button(action: {
-              viewStore.send(.dismissAlertButtonTapped)
-            }, label: {
-              Image(.xmark)
-                .foregroundColor(.adaptiveBlack)
-            })
-          }
-        }
-        
         TextEditorView(
           placeholder: "AddEntry.WriteSomething".localized,
-          text: viewStore.binding(
-            get: \.text,
-            send: AddEntryFeature.Action.textEditorChange)
+					text: self.$store.text.sending(\.textEditorChange)
         )
         
-        if viewStore.attachments.count > 0 {
-          ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 8) {
-              ForEachStore(
-                store.scope(
-                  state: \.attachments,
-                  action: AddEntryFeature.Action.attachments(id:action:)),
-                content: AttachmentAddRowView.init(store:))
-            }
-          }
+				if self.store.attachments.count > 0 {
+					ScrollView(.horizontal, showsIndicators: false) {
+						LazyHStack(spacing: 8) {
+							ForEach(
+								store.scope(
+									state: \.attachments,
+									action: \.attachments
+								),
+								id: \.id,
+								content: AttachmentAddRowView.init
+							)
+						}
+					}
           .frame(height: 52)
         }
         
         HStack(spacing: 8) {
           SecondaryButtonView(
             label: {
-              Text(viewStore.type.finishTitle)
+              Text("self.store.type.finishTitle")
                 .adaptiveFont(.latoRegular, size: 10)
                 .foregroundColor(.chambray)
             },
-            disabled: viewStore.text.isEmpty
+            disabled: self.store.text.isEmpty
           ) {
-            viewStore.send(.addButtonTapped)
+						self.store.send(.addButtonTapped)
           }
           
           SecondaryButtonView(
@@ -77,54 +61,52 @@ public struct AddEntryView: View {
                 .foregroundColor(.chambray)
                 .frame(width: 16, height: 16)
             },
-            inFlight: viewStore.addAttachmentInFlight
+            inFlight: self.store.addAttachmentInFlight
           ) {
-            viewStore.send(.plusAttachamentActionSheetButtonTapped)
+						self.store.send(.confirmationDialogButtonTapped)
           }
           .frame(width: 56)
-					.confirmationDialog(
-						store: self.store.scope(state: \.$confirmationDialog, action: { .confirmationDialog($0) })
-					)
         }
         .frame(height: 56)
       }
       .padding(24)
 			.alert(
-				store: self.store.scope(state: \.$alert, action: { .alert($0) })
+				store: self.store.scope(state: \.$alert, action: \.alert)
 			)
-      .fullScreenCover(isPresented: viewStore.binding(
-        get: \.presentImagePicker,
-        send: AddEntryFeature.Action.presentImagePicker
-      )) {
-        ImagePicker(
-          type: viewStore.presentImagePickerSource,
-          onImport: { response in
-            viewStore.send(.loadAttachment(response))
-          }
-        )
-        .edgesIgnoringSafeArea(.all)
-      }
-      .fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioPicker, send: AddEntryFeature.Action.presentAudioPicker)) {
+			.confirmationDialog(
+				store: self.store.scope(state: \.$dialog, action: \.dialog)
+			)
+			.fullScreenCover(
+				isPresented: self.$store.presentImagePicker.sending(\.presentImagePicker)
+			) {
+				ImagePicker(
+					type: self.store.presentImagePickerSource,
+					onImport: { response in
+						self.store.send(.loadAttachment(response))
+					}
+				)
+				.edgesIgnoringSafeArea(.all)
+			}
+      .fullScreenCover(
+				isPresented: self.$store.presentAudioPicker.sending(\.presentAudioPicker)
+			) {
         AudioPicker { audio in
           switch audio {
           case let .audio(url):
-            viewStore.send(.loadAudio(url))
+							self.store.send(.loadAudio(url))
           }
         }
       }
-      .fullScreenCover(isPresented: viewStore.binding(get: \.presentAudioRecord, send: AddEntryFeature.Action.presentAudioRecord)) {
-        IfLetStore(
-          store.scope(
-            state: { $0.audioRecordState },
-            action: AddEntryFeature.Action.audioRecordAction),
-          then: AudioRecordView.init(store:)
-        )
-      }
-      .onAppear {
-        viewStore.send(.onAppear)
-      }
-    }
-  }
+			.fullScreenCover(
+				store: self.store.scope(state: \.$audioRecord, action: \.audioRecord)
+			) { store in
+				AudioRecordView(store: store)
+			}
+			.onAppear {
+				self.store.send(.onAppear)
+			}
+		}
+	}
 }
 
 #Preview {
@@ -132,8 +114,7 @@ public struct AddEntryView: View {
 		AddEntryView(
 			store: Store(
 				initialState: AddEntryFeature.State(
-					entry: .mock,
-					type: .add
+					entry: .mock
 				),
 				reducer: { AddEntryFeature() }
 			)

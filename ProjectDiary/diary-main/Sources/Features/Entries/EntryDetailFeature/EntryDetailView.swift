@@ -115,12 +115,29 @@ public struct EntryDetailView: View {
           send: EntryDetailFeature.Action.presentAddEntry
         )
       ) {
-        IfLetStore(
-          store.scope(
-            state: { $0.addEntryState },
-            action: EntryDetailFeature.Action.addEntryAction),
-          then: AddEntryView.init(store:)
-        )
+				NavigationStack {
+					IfLetStore(
+						store.scope(
+							state: { $0.addEntryState },
+							action: EntryDetailFeature.Action.addEntryAction),
+						then: AddEntryView.init(store:)
+					)
+					.toolbar {
+						ToolbarItem(placement: .cancellationAction) {
+							Text("AddEntry.Edit".localized)
+								.adaptiveFont(.latoBold, size: 16)
+								.foregroundColor(.adaptiveBlack)
+						}
+						ToolbarItem(placement: .confirmationAction) {
+							Button {
+//								self.store.send(.add(.dismiss))
+							} label: {
+								Image(.xmark)
+									.foregroundColor(.adaptiveBlack)
+							}
+						}
+					}
+				}
       }
 			.alert(
 				store: self.store.scope(

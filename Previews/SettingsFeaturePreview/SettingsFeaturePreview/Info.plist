@@ -20,6 +20,12 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>La cámara se usa para añadir fotos o videos en las entradas de tu diarío.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>NSFaceIDUsageDescription</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>El micròfon se usa para añadir nottas de voz a las entradas de tu diario.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -46,9 +52,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>La cámara se usa para añadir fotos o videos en las entradas de tu diarío.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>El micròfon se usa para añadir nottas de voz a las entradas de tu diario.</string>
 </dict>
 </plist>

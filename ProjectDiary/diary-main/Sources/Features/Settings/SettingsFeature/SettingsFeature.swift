@@ -37,7 +37,6 @@ public struct SettingsFeature {
 	
 	@ObservableState
 	public struct State: Equatable {
-		public var localAuthenticationType: LocalAuthenticationType = .none
 		public var path: StackState<Path.State>
 		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
 		
@@ -51,7 +50,7 @@ public struct SettingsFeature {
 	public enum Action: Equatable {
 		case biometricResult(LocalAuthenticationType)
 		case navigateToPasscode
-		case path(StackAction<Path.State, Path.Action>)
+		case path(StackActionOf<Path>)
 		case reviewStoreKit
 		case task
 		case toggleShowSplash(isOn: Bool)
@@ -64,12 +63,12 @@ public struct SettingsFeature {
 		Reduce { state, action in
 			switch action {
 				case let .biometricResult(localAuthenticationType):
-					state.localAuthenticationType = localAuthenticationType
+					state.userSettings.localAuthenticationType = localAuthenticationType
 					return .none
 					
 				case .navigateToPasscode:
 					if state.userSettings.hasPasscode {
-						state.path.append(.menu(MenuFeature.State(authenticationType: state.localAuthenticationType, optionTimeForAskPasscode: 5)))
+						state.path.append(.menu(MenuFeature.State()))
 					} else {
 						state.path.append(.activate(ActivateFeature.State()))
 					}
@@ -77,6 +76,9 @@ public struct SettingsFeature {
 					
 				case let .path(.element(id: _, action: pathAction)):
 					switch pathAction {
+						case .activate(.delegate(.navigateToInsert)):
+							state.path.append(.insert(InsertFeature.State()))
+							return .none
 						case .appearance(.delegate(.navigateToIconApp)):
 							state.path.append(.iconApp(IconAppFeature.State()))
 							return .none
@@ -88,6 +90,15 @@ public struct SettingsFeature {
 							return .none
 						case .appearance(.delegate(.navigateToTheme)):
 							state.path.append(.theme(ThemeFeature.State(entries: fakeEntries)))
+							return .none
+						case .insert(.delegate(.navigateToMenu)):
+							state.path.append(.menu(MenuFeature.State()))
+							return .none
+						case .insert(.delegate(.popToRoot)):
+							state.path.removeAll()
+							return .none
+						case .menu(.delegate(.popToRoot)):
+							state.path.removeAll()
 							return .none
 						default:
 							return .none
@@ -109,6 +120,5 @@ public struct SettingsFeature {
 			}
 		}
 		.forEach(\.path, action: \.path)
-		._printChanges()
 	}
 }

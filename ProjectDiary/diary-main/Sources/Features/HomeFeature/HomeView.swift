@@ -53,7 +53,6 @@ public struct HomeView: View {
 }
 
 extension TabViewType {
-	
 	@ViewBuilder
 	func view(for store: StoreOf<HomeFeature>) -> some View {
 		switch self {

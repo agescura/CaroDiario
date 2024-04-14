@@ -57,7 +57,7 @@ public struct SettingsView: View {
 								self.store.send(.navigateToPasscode)
 							} label: {
 								PasscodeRowView(
-									title: "Settings.Code".localized(with: [self.store.localAuthenticationType.rawValue]),
+									title: "Settings.Code".localized(with: [self.store.userSettings.localAuthenticationType.rawValue]),
 									status: self.store.userSettings.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
 								)
 							}

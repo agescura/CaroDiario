@@ -29,82 +29,78 @@ public struct MenuFeature {
 	@ObservableState
 	public struct State: Equatable {
 		@Presents public var dialog: ConfirmationDialogState<Action.Dialog>?
-		public var authenticationType: LocalAuthenticationType
-		public var optionTimeForAskPasscode: TimeForAskPasscode
-		public let listTimesForAskPasscode: [TimeForAskPasscode] = [
-			.never,
-			.always,
-			.after(minutes: 1),
-			.after(minutes: 5),
-			.after(minutes: 30),
-			.after(minutes: 60)
-		]
 		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
 		
-		public init(
-			authenticationType: LocalAuthenticationType,
-			optionTimeForAskPasscode: Int
-		) {
-			self.authenticationType = authenticationType
-			self.optionTimeForAskPasscode = TimeForAskPasscode(optionTimeForAskPasscode)
-		}
+		public init() {}
 	}
 	
 	public enum Action: Equatable {
+		case delegate(Delegate)
 		case dialog(PresentationAction<Dialog>)
-		case popToRoot
-		case actionSheetButtonTapped
-		case toggleFaceId(isOn: Bool)
 		case faceId(response: Bool)
 		case optionTimeForAskPasscode(TimeForAskPasscode)
+		case popButtonTapped
+		case toggleFaceId(isOn: Bool)
+		case turnOffButtonTapped
 		
+		@CasePathable
+		public enum Delegate: Equatable {
+			case popToRoot
+		}
+		@CasePathable
 		public enum Dialog: Equatable {
 			case turnOff
 		}
 	}
 	
-	@Dependency(\.mainQueue) private var mainQueue
-	@Dependency(\.localAuthenticationClient) private var localAuthenticationClient
+	@Dependency(\.localAuthenticationClient) var localAuthenticationClient
 	
 	public var body: some ReducerOf<Self> {
-		Reduce(self.core)
+		Reduce { state, action in
+			switch action {
+				case .delegate:
+					return .none
+				case .dialog(.presented(.turnOff)):
+					state.userSettings.passcode = nil
+					state.userSettings.localAuthenticationType = .none
+					state.userSettings.timeForAskPasscode = .never
+					state.userSettings.faceIdEnabled = false
+					state.dialog = nil
+					return .run { send in
+						await send(.delegate(.popToRoot))
+					}
+				case .dialog:
+					return .none
+				case let .faceId(response: response):
+					state.userSettings.faceIdEnabled = response
+					return .none
+				case let .optionTimeForAskPasscode(newOption):
+					state.userSettings.optionTimeForAskPasscode = newOption.value
+					return .none
+				case .popButtonTapped:
+					return .send(.delegate(.popToRoot))
+				case let .toggleFaceId(isOn: value):
+					if !value {
+						return .send(.faceId(response: value))
+					}
+					return .run { [state] send in
+						await send(.faceId(response: self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.userSettings.localAuthenticationType.rawValue]))))
+					}
+				case .turnOffButtonTapped:
+					state.dialog = .turnOff(state.userSettings.localAuthenticationType)
+					return .none
+			}
+		}
 	}
-	
-	private func core(
-		state: inout State,
-		action: Action
-	) -> Effect<Action> {
-		switch action {
-			case .dialog:
-				return .none
-				
-			case .popToRoot:
-				return .none
-				
-			case .actionSheetButtonTapped:
-				state.dialog = ConfirmationDialogState {
-					TextState("Passcode.Turnoff.Message".localized(with: [state.authenticationType.rawValue]))
-				} actions: {
-					ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
-					ButtonState(action: .turnOff, label: { TextState("Passcode.Turnoff".localized) })
-				}
-				return .none
-				
-			case let .toggleFaceId(isOn: value):
-				if !value {
-					return .send(.faceId(response: value))
-				}
-				return .run { [state] send in
-					await send(.faceId(response: self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.authenticationType.rawValue]))))
-				}
-				
-			case let .faceId(response: response):
-				state.userSettings.faceIdEnabled = response
-				return .none
-				
-			case let .optionTimeForAskPasscode(newOption):
-				state.optionTimeForAskPasscode = newOption
-				return .none
+}
+
+extension ConfirmationDialogState where Action == MenuFeature.Action.Dialog {
+	public static func turnOff(_ type: LocalAuthenticationType) -> Self {
+		ConfirmationDialogState {
+			TextState("Passcode.Turnoff.Message".localized(with: [type.rawValue]))
+		} actions: {
+			ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
+			ButtonState(action: .turnOff, label: { TextState("Passcode.Turnoff".localized) })
 		}
 	}
 }

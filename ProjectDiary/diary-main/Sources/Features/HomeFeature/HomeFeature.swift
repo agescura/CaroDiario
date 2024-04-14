@@ -1,25 +1,8 @@
-import SwiftUI
 import ComposableArchitecture
-import UserDefaultsClient
-import CoreDataClient
-import FileClient
-import EntriesFeature
-import SettingsFeature
-import AddEntryFeature
 import Models
-import LocalAuthenticationClient
-import UIApplicationClient
-import AVCaptureDeviceClient
-import FeedbackGeneratorClient
+import EntriesFeature
 import SearchFeature
-import AVAudioSessionClient
-import AVAudioPlayerClient
-import AVAudioRecorderClient
-import StoreKitClient
-import PDFKitClient
-import AVAssetClient
-import Styles
-import EntryDetailFeature
+import SettingsFeature
 
 @Reducer
 public struct HomeFeature {
@@ -38,7 +21,7 @@ public struct HomeFeature {
 			search: Search.State = Search.State(),
 			selectedTabBar: TabViewType = .entries,
 			settings: SettingsFeature.State = SettingsFeature.State(),
-			tabBars: [TabViewType]
+			tabBars: [TabViewType] = [.entries, .search, .settings]
 		) {
 			self.entries = entries
 			self.search = search

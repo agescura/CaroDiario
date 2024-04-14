@@ -4,8 +4,8 @@ import Models
 import TestUtils
 import XCTest
 
-@MainActor
 class IconAppViewTests: XCTestCase {
+	@MainActor
 	func testIconAppHappyPath() async {
 		let store = TestStore(
 			initialState: IconAppFeature.State(),

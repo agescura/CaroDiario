@@ -7,14 +7,10 @@ import PasscodeFeature
 struct SettingsFeaturePreviewApp: App {
 	var body: some Scene {
 		WindowGroup {
-			MenuPasscodeView(
+			SettingsView(
 				store: Store(
-					initialState: MenuFeature.State(
-						authenticationType: .faceId,
-						optionTimeForAskPasscode: 5,
-						faceIdEnabled: true
-					),
-					reducer: { MenuFeature() }
+					initialState: SettingsFeature.State(),
+					reducer: { SettingsFeature() }
 				)
 			)
 		}

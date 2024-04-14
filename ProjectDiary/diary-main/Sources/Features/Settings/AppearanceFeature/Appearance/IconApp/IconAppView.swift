@@ -52,3 +52,12 @@ public struct IconAppView: View {
     }
   }
 }
+
+#Preview {
+	IconAppView(
+		store: Store(
+			initialState: IconAppFeature.State(),
+			reducer: { IconAppFeature() }
+		)
+	)
+}

@@ -11,10 +11,6 @@ extension DependencyValues {
 }
 
 public struct CoreDataClient {
-	public enum Action: Equatable {
-		case entries([[Entry]])
-	}
-	
 	public var subscriber: () async -> AsyncStream<[[Entry]]>
 
 	public var createDraft: (Entry) async -> Void

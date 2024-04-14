@@ -1,14 +1,14 @@
-import XCTest
 @testable import AppearanceFeature
+import EntriesFeature
 import ComposableArchitecture
 import FeedbackGeneratorClient
-import EntriesFeature
+import Models
+import TestUtils
+import XCTest
 
-@MainActor
 class LayoutViewTests: XCTestCase {
-  
+	@MainActor
   func testAppearanceHappyPath() async {
-    
     let store = TestStore(
 			initialState: LayoutFeature.State(entries: []),
 			reducer: { LayoutFeature() }
@@ -21,4 +21,27 @@ class LayoutViewTests: XCTestCase {
       $0.entries = fakeEntries
     }
   }
+	
+	func testSnapshot() {
+		assertSnapshot(
+			LayoutView(
+				store: Store(
+					initialState: LayoutFeature.State(entries: fakeEntries),
+					reducer: { }
+				)
+			)
+		)
+		
+		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+		userSettings.appearance.layoutType = .vertical
+		
+		assertSnapshot(
+			LayoutView(
+				store: Store(
+					initialState: LayoutFeature.State(entries: fakeEntries),
+					reducer: { }
+				)
+			)
+		)
+	}
 }

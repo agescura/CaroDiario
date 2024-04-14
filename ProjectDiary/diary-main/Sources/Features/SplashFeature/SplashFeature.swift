@@ -25,9 +25,15 @@ public struct SplashFeature {
   
   public enum Action: Equatable {
 		case areaAnimation
+		case delegate(Delegate)
 		case finishAnimation
-    case startAnimation
+    case task
     case verticalLineAnimation
+		
+		@CasePathable
+		public enum Delegate: Equatable {
+			case animationFinished
+		}
   }
   
   @Dependency(\.continuousClock) var clock
@@ -41,17 +47,16 @@ public struct SplashFeature {
 						try await self.clock.sleep(for: .seconds(1))
 						await send(.finishAnimation)
 					}
-					
+				case .delegate:
+					return .none
 				case .finishAnimation:
 					state.animation = .finish
-					return .none
-					
-				case .startAnimation:
+					return .send(.delegate(.animationFinished))
+				case .task:
 					return .run { send in
 						try await self.clock.sleep(for: .seconds(1))
 						await send(.verticalLineAnimation)
 					}
-					
 				case .verticalLineAnimation:
 					state.animation = .verticalLine
 					return .run { send in

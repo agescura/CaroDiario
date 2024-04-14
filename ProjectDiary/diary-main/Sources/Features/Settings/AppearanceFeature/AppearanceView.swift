@@ -15,7 +15,7 @@ public struct AppearanceView: View {
   }
   
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       Form {
         Section {
 					Button {

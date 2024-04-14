@@ -14,15 +14,17 @@ import Models
 import UIApplicationClient
 import UIKit
 
-public struct AddEntryFeature: Reducer {
+@Reducer
+public struct AddEntryFeature {
 	public init() {}
 	
+	@ObservableState
 	public struct State: Equatable {
 		public var addAttachmentInFlight: Bool = false
-		@PresentationState public var alert: AlertState<Action.Alert>?
+		@Presents public var alert: AlertState<Action.Alert>?
 		public var attachments: IdentifiedArrayOf<AttachmentAddRow.State> = []
-		public var audioRecordState: AudioRecordFeature.State?
-		@PresentationState public var confirmationDialog: ConfirmationDialogState<Action.Dialog>?
+		@Presents public var audioRecord: AudioRecordFeature.State?
+		@Presents public var dialog: ConfirmationDialogState<Action.Dialog>?
 		public var deniedCameraAlert: AlertState<Action>?
 		public var dismissAlert: AlertState<Action>?
 		public var entry: Entry
@@ -31,28 +33,20 @@ public struct AddEntryFeature: Reducer {
 		public var presentImagePickerSource: PickerSourceType = .photoAlbum
 		public var presentAudioRecord: Bool = false
 		public var text: String = ""
-		public var type: AccessType
-		
-		public enum AccessType {
-			case add
-			case edit
-		}
 		
 		public init(
-			entry: Entry,
-			type: AccessType
+			entry: Entry
 		) {
 			self.entry = entry
-			self.type = type
 		}
 	}
 	
 	public enum Action: Equatable {
 		case addButtonTapped
 		case alert(PresentationAction<Alert>)
-		case attachments(id: UUID, action: AttachmentAddRow.Action)
-		case audioRecordAction(AudioRecordFeature.Action)
-		case confirmationDialog(PresentationAction<Dialog>)
+		case attachments(IdentifiedActionOf<AttachmentAddRow>)
+		case audioRecord(PresentationAction<AudioRecordFeature.Action>)
+		case dialog(PresentationAction<Dialog>)
 		case cancelDismissAlert
 		case createDraftEntry
 		case deniedCameraAlertButtonTapped
@@ -68,7 +62,7 @@ public struct AddEntryFeature: Reducer {
 		case loadImageResponse(EntryImage)
 		case loadVideo(URL)
 		case loadVideoResponse(EntryVideo)
-		case plusAttachamentActionSheetButtonTapped
+		case confirmationDialogButtonTapped
 		case presentAudioRecord(Bool)
 		case presentAudioPicker(Bool)
 		case presentCameraPicker(Bool)
@@ -108,9 +102,9 @@ public struct AddEntryFeature: Reducer {
 				case .alert:
 					return .none
 					
-				case let .attachments(id: id, action: .attachment(.video(.alert(.presented(.remove))))),
-					let .attachments(id: id, action: .attachment(.image(.alert(.presented(.remove))))),
-					let .attachments(id: id, action: .attachment(.audio(.remove))):
+				case let .attachments(.element(id: id, action: .attachment(.video(.alert(.presented(.remove)))))),
+					let .attachments(.element(id: id, action: .attachment(.image(.alert(.presented(.remove)))))),
+					let .attachments(.element(id: id, action: .attachment(.audio(.remove)))):
 					guard let attachmentState = state.attachments[id: id]?.attachment else {
 						return .none
 					}
@@ -122,8 +116,8 @@ public struct AddEntryFeature: Reducer {
 				case .attachments:
 					return .none
 					
-				case .audioRecordAction(.addAudio):
-					guard let audioPath = state.audioRecordState?.audioPath else { return .none }
+				case .audioRecord(.presented(.addAudio)):
+					guard let audioPath = state.audioRecord?.audioPath else { return .none }
 					
 					let id = self.uuid()
 					
@@ -142,10 +136,10 @@ public struct AddEntryFeature: Reducer {
 					//      state.audioRecordState = nil
 					//      return .none
 					
-				case .audioRecordAction:
+				case .audioRecord:
 					return .none
 					
-				case let .confirmationDialog(.presented(confirmationDialogAction)):
+				case let .dialog(.presented(confirmationDialogAction)):
 					switch confirmationDialogAction {
 						case .presentImagePicker:
 							return .send(.presentAudioPicker(true))
@@ -156,7 +150,7 @@ public struct AddEntryFeature: Reducer {
 						case .presentAudioRecord:
 							return .send(.presentAudioRecord(true))
 					}
-				case .confirmationDialog:
+				case .dialog:
 					return .none
 					
 				case .cancelDismissAlert:
@@ -293,20 +287,13 @@ public struct AddEntryFeature: Reducer {
 					)
 					return .none
 					
-				case .plusAttachamentActionSheetButtonTapped:
-					state.confirmationDialog = ConfirmationDialogState {
-						TextState("AddEntry.ChooseOption".localized)
-					} actions: {
-						ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
-						ButtonState(action: .requestAuthorizationCamera, label: { TextState("AddEntry.Camera".localized) })
-						ButtonState(action: .presentImagePicker, label: { TextState("AddEntry.Photos".localized) })
-						ButtonState(action: .presentAudioRecord, label: { TextState("Crear un audio") })
-					}
+				case .confirmationDialogButtonTapped:
+					state.dialog = .attachments
 					return .none
 					
 				case let .presentAudioRecord(value):
 					state.presentAudioRecord = value
-					state.audioRecordState = value ? .init() : nil
+					state.audioRecord = value ? .init() : nil
 					return .none
 					
 				case let .presentAudioPicker(value):
@@ -364,18 +351,23 @@ public struct AddEntryFeature: Reducer {
 					return .none
 			}
 		}
-		.forEach(\.attachments, action: /Action.attachments) {
+		.forEach(\.attachments, action: \.attachments) {
 			AttachmentAddRow()
 		}
-		.ifLet(\.$alert, action: 	/Action.alert)
-		.ifLet(\.audioRecordState, action: /Action.audioRecordAction) {
+		.ifLet(\.$alert, action: \.alert)
+		.ifLet(\.$audioRecord, action:\.audioRecord) {
 			AudioRecordFeature()
 		}
-		.ifLet(\.$confirmationDialog, action: /Action.confirmationDialog)
+		.ifLet(\.$dialog, action: \.dialog)
 	}
 }
 
-extension AddEntryFeature.State.AccessType {
+public enum AccessType {
+	case add
+	case edit
+}
+
+extension AccessType {
 	var title: String {
 		switch self {
 			case .add:
@@ -391,6 +383,19 @@ extension AddEntryFeature.State.AccessType {
 				return "AddEntry.Add".localized
 			case .edit:
 				return "AddEntry.Update".localized
+		}
+	}
+}
+
+extension ConfirmationDialogState where Action == AddEntryFeature.Action.Dialog {
+	public static var attachments: Self {
+		ConfirmationDialogState {
+			TextState("AddEntry.ChooseOption".localized)
+		} actions: {
+			ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
+			ButtonState(action: .requestAuthorizationCamera, label: { TextState("AddEntry.Camera".localized) })
+			ButtonState(action: .presentImagePicker, label: { TextState("AddEntry.Photos".localized) })
+			ButtonState(action: .presentAudioRecord, label: { TextState("Crear un audio") })
 		}
 	}
 }

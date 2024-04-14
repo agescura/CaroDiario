@@ -163,7 +163,7 @@ public struct EntryDetailFeature: Reducer {
 					
 				case .presentAddEntry(true):
 					state.presentAddEntry = true
-					state.addEntryState = AddEntryFeature.State(entry: state.entry, type: .edit)
+					state.addEntryState = AddEntryFeature.State(entry: state.entry)
 					return .none
 					
 				case .presentAddEntry(false):

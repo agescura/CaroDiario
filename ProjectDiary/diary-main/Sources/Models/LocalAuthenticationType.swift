@@ -1,6 +1,6 @@
 import Foundation
 
-public enum LocalAuthenticationType {
+public enum LocalAuthenticationType: Equatable, Codable {
   case faceId
   case touchId
   case none
