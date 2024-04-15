@@ -8,6 +8,7 @@ import Models
 public struct DayEntriesRow {
   public init() {}
   
+	@ObservableState
   public struct State: Identifiable, Equatable {
     public var dayEntries: DayEntries.State
     public let id: UUID
@@ -42,10 +43,12 @@ public struct DayEntriesRowView: View {
   }
   
   public var body: some View {
-    DayEntriesView(
-			store: self.store.scope(state: \.dayEntries, action: \.dayEntry)
-    )
-    .padding(.horizontal)
+		WithPerceptionTracking {
+			DayEntriesView(
+				store: self.store.scope(state: \.dayEntries, action: \.dayEntry)
+			)
+			.padding(.horizontal)
+		}
   }
 }
 

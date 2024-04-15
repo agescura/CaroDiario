@@ -25,7 +25,7 @@ public struct LayoutFeature {
     case entries(IdentifiedActionOf<DayEntriesRow>)
   }
   
-  @Dependency(\.feedbackGeneratorClient) private var feedbackGeneratorClient
+  @Dependency(\.feedbackGeneratorClient) var feedbackGeneratorClient
   
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in

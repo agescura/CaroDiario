@@ -36,14 +36,16 @@ public struct HomeView: View {
 				selection: self.$store.selectedTabBar.sending(\.tabBarSelected)
 			) {
 				ForEach(self.store.tabBars, id: \.self) { type in
-					type.view(for: self.store)
-						.tabItem {
-							VStack {
-								Image(systemName: type.icon)
-								Text(type.rawValue)
+					WithPerceptionTracking {
+						type.view(for: self.store)
+							.tabItem {
+								VStack {
+									Image(systemName: type.icon)
+									Text(type.rawValue)
+								}
 							}
-						}
-						.tag(type)
+							.tag(type)
+					}
 				}
 			}
 			.accentColor(.chambray)

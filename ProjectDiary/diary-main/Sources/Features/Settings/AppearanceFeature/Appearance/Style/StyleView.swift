@@ -14,7 +14,7 @@ public struct StyleView: View {
 	}
 	
   public var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
       VStack(alignment: .leading, spacing: 16) {
         
 				Picker("", selection: self.$store.userSettings.appearance.styleType.sending(\.styleChanged)) {
@@ -29,11 +29,14 @@ public struct StyleView: View {
         
         ScrollView(showsIndicators: false) {
           LazyVStack(alignment: .leading, spacing: 8) {
-            ForEach(
-              store.scope(state: \.entries, action: \.entries),
-							id: \.id,
-              content: DayEntriesRowView.init
-            )
+						ForEach(
+							Array(self.store.scope(state: \.entries, action: \.entries)),
+							id: \.id
+						) { store in
+							WithPerceptionTracking {
+								DayEntriesRowView(store: store)
+							}
+						}
           }
           .accentColor(.chambray)
           .animation(.default, value: UUID())

@@ -34,11 +34,14 @@ public struct ThemeView: View {
         
         ScrollView(showsIndicators: false) {
           LazyVStack(alignment: .leading, spacing: 8) {
-            ForEach(
-							self.store.scope(state: \.entries, action: \.entries),
-							id: \.id,
-              content: DayEntriesRowView.init
-            )
+						ForEach(
+							Array(self.store.scope(state: \.entries, action: \.entries)),
+							id: \.id
+						) { store in
+							WithPerceptionTracking {
+								DayEntriesRowView(store: store)
+							}
+						}
           }
           .accentColor(.chambray)
           .animation(.default, value: UUID())

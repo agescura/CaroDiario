@@ -51,95 +51,101 @@ public struct DayEntriesView: View {
   public var body: some View {
 		WithPerceptionTracking {
 			AppearanceMainStack(layout: self.store.userSettings.appearance.layoutType, spacing: 4) {
-        Group {
-          AppearanceDayStack(layout: self.store.userSettings.appearance.layoutType, spacing: 4) {
-            Group {
-							Text(self.store.entries.first?.numberDay ?? "")
-                .adaptiveFont(.latoRegular, size: 10)
-                .foregroundColor(.adaptiveGray)
-                .frame(width: 48, height: 48)
-                .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
-              
-							Text(self.store.entries.first?.stringDay ?? "")
-                .adaptiveFont(.latoRegular, size: 10)
-                .foregroundColor(.adaptiveGray)
-                .frame(width: 48, height: 48)
-                .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
-              
-							if self.store.showLongDate {
-								Text(self.store.entries.first?.stringMonth ?? "")
-                  .adaptiveFont(.latoRegular, size: 10)
-                  .foregroundColor(.adaptiveGray)
-                  .minimumScaleFactor(0.01)
-                  .frame(width: 48, height: 48)
-                  .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
-                
-								Text(self.store.entries.first?.stringYear ?? "")
-                  .adaptiveFont(.latoRegular, size: 10)
-                  .foregroundColor(.adaptiveGray)
-                  .minimumScaleFactor(0.01)
-                  .frame(width: 48, height: 48)
-                  .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
-              }
-            }
-          }
-          .onTapGesture {
-						self.store.send(.toggleLongDate, animation: .default)
-          }
-          VStack(spacing: 4) {
-						ForEach(self.store.entries) { entry in
-              VStack(alignment: .leading, spacing: 8) {
-                Text(entry.stringHour)
-                  .adaptiveFont(.latoRegular, size: 6)
-                  .foregroundColor(.chambray)
-                Text(entry.text.message.removingAllExtraNewLines)
-                  .adaptiveFont(.latoRegular, size: 10)
-                  .foregroundColor(.chambray)
-                  .lineLimit(3)
-                HStack(spacing: 8) {
-                  HStack(spacing: 4) {
-                    Text("\(entry.images.count)")
-                      .adaptiveFont(.latoRegular, size: 6)
-                      .foregroundColor(.adaptiveGray)
-                    Image(.photo)
-                      .resizable()
-                      .foregroundColor(.adaptiveGray)
-                      .frame(width: 10, height: 10)
-                  }
-                  HStack(spacing: 4) {
-                    Text("\(entry.videos.count)")
-                      .adaptiveFont(.latoRegular, size: 6)
-                      .foregroundColor(.adaptiveGray)
-                    Image(.video)
-                      .resizable()
-                      .foregroundColor(.adaptiveGray)
-                      .frame(width: 14, height: 10)
-                  }
-                  HStack(spacing: 4) {
-                    Text("\(entry.audios.count)")
-                      .adaptiveFont(.latoRegular, size: 6)
-                      .foregroundColor(.adaptiveGray)
-                    Image(.waveform)
-                      .resizable()
-                      .foregroundColor(.adaptiveGray)
-                      .frame(width: 14, height: 10)
-                  }
-                  Spacer()
-                  Text("Entries.ReadMore".localized)
-                    .adaptiveFont(.latoRegular, size: 6)
-                    .foregroundColor(.adaptiveGray)
-                }
-              }
-              .frame(maxWidth: .infinity)
-              .padding(8)
-              .modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
-              .contentShape(Rectangle())
-              .onTapGesture {
-								self.store.send(.navigateDetail(entry))
-              }
-            }
-          }
-        }
+				WithPerceptionTracking {
+					Group {
+						AppearanceDayStack(layout: self.store.userSettings.appearance.layoutType, spacing: 4) {
+							WithPerceptionTracking {
+								Group {
+									Text(self.store.entries.first?.numberDay ?? "")
+										.adaptiveFont(.latoRegular, size: 10)
+										.foregroundColor(.adaptiveGray)
+										.frame(width: 48, height: 48)
+										.modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
+									
+									Text(self.store.entries.first?.stringDay ?? "")
+										.adaptiveFont(.latoRegular, size: 10)
+										.foregroundColor(.adaptiveGray)
+										.frame(width: 48, height: 48)
+										.modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
+									
+									if self.store.showLongDate {
+										Text(self.store.entries.first?.stringMonth ?? "")
+											.adaptiveFont(.latoRegular, size: 10)
+											.foregroundColor(.adaptiveGray)
+											.minimumScaleFactor(0.01)
+											.frame(width: 48, height: 48)
+											.modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
+										
+										Text(self.store.entries.first?.stringYear ?? "")
+											.adaptiveFont(.latoRegular, size: 10)
+											.foregroundColor(.adaptiveGray)
+											.minimumScaleFactor(0.01)
+											.frame(width: 48, height: 48)
+											.modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
+									}
+								}
+								.onTapGesture {
+									self.store.send(.toggleLongDate, animation: .default)
+								}
+							}
+						}
+						VStack(spacing: 4) {
+							ForEach(self.store.entries) { entry in
+								WithPerceptionTracking {
+									VStack(alignment: .leading, spacing: 8) {
+										Text(entry.stringHour)
+											.adaptiveFont(.latoRegular, size: 6)
+											.foregroundColor(.chambray)
+										Text(entry.text.message.removingAllExtraNewLines)
+											.adaptiveFont(.latoRegular, size: 10)
+											.foregroundColor(.chambray)
+											.lineLimit(3)
+										HStack(spacing: 8) {
+											HStack(spacing: 4) {
+												Text("\(entry.images.count)")
+													.adaptiveFont(.latoRegular, size: 6)
+													.foregroundColor(.adaptiveGray)
+												Image(.photo)
+													.resizable()
+													.foregroundColor(.adaptiveGray)
+													.frame(width: 10, height: 10)
+											}
+											HStack(spacing: 4) {
+												Text("\(entry.videos.count)")
+													.adaptiveFont(.latoRegular, size: 6)
+													.foregroundColor(.adaptiveGray)
+												Image(.video)
+													.resizable()
+													.foregroundColor(.adaptiveGray)
+													.frame(width: 14, height: 10)
+											}
+											HStack(spacing: 4) {
+												Text("\(entry.audios.count)")
+													.adaptiveFont(.latoRegular, size: 6)
+													.foregroundColor(.adaptiveGray)
+												Image(.waveform)
+													.resizable()
+													.foregroundColor(.adaptiveGray)
+													.frame(width: 14, height: 10)
+											}
+											Spacer()
+											Text("Entries.ReadMore".localized)
+												.adaptiveFont(.latoRegular, size: 6)
+												.foregroundColor(.adaptiveGray)
+										}
+									}
+									.frame(maxWidth: .infinity)
+									.padding(8)
+									.modifier(StyleModifier(style: self.store.userSettings.appearance.styleType))
+									.contentShape(Rectangle())
+									.onTapGesture {
+										self.store.send(.navigateDetail(entry))
+									}
+								}
+							}
+						}
+					}
+				}
       }
     }
   }
@@ -170,10 +176,8 @@ struct AppearanceDayStack<Content: View>: View {
     Group {
       if layout == .horizontal {
         VStack(alignment: .leading, spacing: spacing, content: content)
-          .offset(x: 0, y: -4)
       } else {
         HStack(alignment: .top, spacing: spacing, content: content)
-          .offset(x: -4, y: 0)
       }
     }
   }

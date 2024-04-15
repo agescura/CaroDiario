@@ -114,13 +114,6 @@ public struct AppFeature {
 							return .none
 					}
 					
-					
-				case let .startHome(cameraStatus: status):
-//					state.isFirstStarted = false
-//					state.scene = .home(Home.State(tabBars: [.entries, .search, .settings]))
-					return .none
-//					return .send(.scene(.home(.starting)))
-					
 				default:
 					return .none
 			}
