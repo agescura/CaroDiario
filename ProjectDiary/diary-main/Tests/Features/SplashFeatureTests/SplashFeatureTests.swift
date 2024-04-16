@@ -15,7 +15,7 @@ class SplashFeatureTests: XCTestCase {
 		let clock = TestClock()
 		store.dependencies.continuousClock = clock
 		
-		await store.send(.startAnimation)
+		await store.send(.task)
 		
 		await clock.advance(by: .seconds(1))
 		
@@ -34,6 +34,7 @@ class SplashFeatureTests: XCTestCase {
 		await store.receive(.finishAnimation) {
 			$0.animation = .finish
 		}
+		await store.receive(\.delegate.animationFinished)
 	}
 	
 	func testSnapshot() async {

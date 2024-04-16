@@ -31,10 +31,10 @@ class SettingsFeatureTests: XCTestCase {
 		}
 		await store.send(\.path[id: 1].insert.update, "1234") {
 			$0.path[id: 1]?.insert?.code = "1234"
+			$0.userSettings.passcode = "1234"
 		}
 		await store.receive(\.path[id: 1].insert.delegate.navigateToMenu) {
 			$0.path[id: 2] = .menu(MenuFeature.State())
-			$0.userSettings.passcode = "1234"
 		}
 	}
 }

@@ -3,6 +3,7 @@ import EntriesFeature
 import ComposableArchitecture
 import FeedbackGeneratorClient
 import Models
+import SnapshotTesting
 import TestUtils
 import XCTest
 

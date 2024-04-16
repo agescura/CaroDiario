@@ -1,8 +1,8 @@
-import SwiftUI
-import ComposableArchitecture
-import Models
 import AddEntryFeature
+import ComposableArchitecture
 import EntryDetailFeature
+import Models
+import SwiftUI
 
 public struct EntriesView: View {
 	@Perception.Bindable var store: StoreOf<EntriesFeature>
@@ -37,10 +37,11 @@ public struct EntriesView: View {
             ZStack {
               LazyVStack(alignment: .leading, spacing: 8) {
                 ForEach(
-									self.store.scope(state: \.entries, action: \.entries),
-									id: \.id,
-                  content: DayEntriesRowView.init
-                )
+									Array(self.store.scope(state: \.entries, action: \.entries)),
+									id: \.id
+								) { store in
+									DayEntriesRowView(store: store)
+								}
               }
             }
           }

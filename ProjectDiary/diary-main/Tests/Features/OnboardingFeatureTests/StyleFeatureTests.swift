@@ -7,8 +7,8 @@ import SwiftUI
 import TestUtils
 import XCTest
 
-@MainActor
 class StyleFeatureTests: XCTestCase {
+	@MainActor
 	func testHappyPath() async {
 		let store = TestStore(
 			initialState: StyleFeature.State(entries: fakeEntries),
@@ -16,7 +16,6 @@ class StyleFeatureTests: XCTestCase {
 		)
 		
 		await store.send(.styleChanged(.rounded)) {
-			$0.entries[0].dayEntries.style = .rounded
 			$0.userSettings.appearance.styleType = .rounded
 		}
 		
@@ -24,6 +23,7 @@ class StyleFeatureTests: XCTestCase {
 		await store.receive(\.delegate.navigateToLayout)
 	}
 	
+	@MainActor
 	func testAlertSkipOnboarding() async {
 		let store = TestStore(
 			initialState: StyleFeature.State(entries: fakeEntries),
@@ -40,6 +40,7 @@ class StyleFeatureTests: XCTestCase {
 		await store.receive(\.delegate.navigateToHome)
 	}
 	
+	@MainActor
 	func testAlertSkipCancel() async {
 		let store = TestStore(
 			initialState: StyleFeature.State(entries: fakeEntries),

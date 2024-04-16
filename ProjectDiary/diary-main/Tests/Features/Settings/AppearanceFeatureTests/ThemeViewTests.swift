@@ -8,8 +8,7 @@ import XCTest
 class ThemeViewTests: XCTestCase {
 	@MainActor
   func testHappyPath() async {
-    var selectionChangedCalled = false
-		let store = TestStore(
+    let store = TestStore(
 			initialState: ThemeFeature.State(entries: []),
 			reducer: { ThemeFeature() }
 		) {
@@ -27,7 +26,7 @@ class ThemeViewTests: XCTestCase {
   }
   
   func testSnapshot() {
-    SnapshotTesting.diffTool = "ksdiff"
+		SnapshotTesting.diffTool = "ksdiff"
     
     assertSnapshot(
 			ThemeView(

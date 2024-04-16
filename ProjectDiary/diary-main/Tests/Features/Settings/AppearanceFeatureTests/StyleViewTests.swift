@@ -23,7 +23,6 @@ class StyleViewTests: XCTestCase {
     
     await store.send(.styleChanged(.rectangle)) {
 			$0.userSettings.appearance.styleType = .rectangle
-			$0.entries[0].dayEntries.style = .rectangle
     }
   }
   

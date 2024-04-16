@@ -3,12 +3,12 @@ import XCTest
 import ComposableArchitecture
 import SwiftUI
 
-@MainActor
 class AgreementsFeatureTests: XCTestCase {
+	@MainActor
   func testOpenComposableArchitecture() async {
     let store = TestStore(
-      initialState: .init(),
-      reducer: AgreementsFeature()
+			initialState: AgreementsFeature.State(),
+			reducer: { AgreementsFeature() }
     )
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "https://github.com/pointfreeco/swift-composable-architecture")
@@ -17,11 +17,12 @@ class AgreementsFeatureTests: XCTestCase {
     await store.send(.open(.composableArchitecture))
   }
   
+	@MainActor
   func testOpenRayWenderlich() async {
-    let store = TestStore(
-      initialState: .init(),
-      reducer: AgreementsFeature()
-    )
+		let store = TestStore(
+			initialState: AgreementsFeature.State(),
+			reducer: { AgreementsFeature() }
+		)
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "https://www.raywenderlich.com/")
     }
@@ -29,11 +30,12 @@ class AgreementsFeatureTests: XCTestCase {
     await store.send(.open(.raywenderlich))
   }
   
+	@MainActor
   func testOpenPointfree() async {
-    let store = TestStore(
-      initialState: .init(),
-      reducer: AgreementsFeature()
-    )
+		let store = TestStore(
+			initialState: AgreementsFeature.State(),
+			reducer: { AgreementsFeature() }
+		)
     store.dependencies.applicationClient.open = { url, _ in
       XCTAssertEqual(url.absoluteString, "https://www.pointfree.co/")
     }
@@ -44,10 +46,10 @@ class AgreementsFeatureTests: XCTestCase {
   func testSnapshot() {
     SnapshotTesting.diffTool = "ksdiff"
     
-    let view = AgreementsView(
-      store: .init(
-        initialState: .init(),
-        reducer: AgreementsFeature()
+		let view = AgreementsView(
+      store: Store(
+				initialState: AgreementsFeature.State(),
+				reducer: { AgreementsFeature() }
       )
     )
     

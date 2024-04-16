@@ -1,0 +1,97 @@
+{
+  "configurations" : [
+    {
+      "id" : "D9C6E443-36F9-4433-8EDB-8FB522A640E6",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "AboutFeatureTests",
+        "name" : "AboutFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "AgreementsFeatureTests",
+        "name" : "AgreementsFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "AppFeatureTests",
+        "name" : "AppFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "AppearanceFeatureTests",
+        "name" : "AppearanceFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "HomeFeatureTests",
+        "name" : "HomeFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "LockScreenFeatureTests",
+        "name" : "LockScreenFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "OnboardingFeatureTests",
+        "name" : "OnboardingFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "PasscodeFeatureTests",
+        "name" : "PasscodeFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "SettingsFeatureTests",
+        "name" : "SettingsFeatureTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:diary-main",
+        "identifier" : "SplashFeatureTests",
+        "name" : "SplashFeatureTests"
+      }
+    }
+  ],
+  "version" : 1
+}

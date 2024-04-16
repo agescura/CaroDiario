@@ -12,8 +12,9 @@ enum MailType: String {
 public struct AboutFeature {
 	public init() {}
 	
+	@ObservableState
 	public struct State: Equatable {
-		@PresentationState public var dialog: ConfirmationDialogState<Action.Dialog>?
+		@Presents public var dialog: ConfirmationDialogState<Action.Dialog>?
 		
 		public init() {}
 	}
@@ -22,6 +23,7 @@ public struct AboutFeature {
 		case confirmationDialogButtonTapped
 		case dialog(PresentationAction<Dialog>)
 		
+		@CasePathable
 		public enum Dialog: Equatable {
 			case mail
 			case gmail

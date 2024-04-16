@@ -36,6 +36,7 @@
 		95EC5F0A292B813500D27AC0 /* PDFKitClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95EC5F09292B813500D27AC0 /* PDFKitClient */; };
 		95EC5F0C292B8B1A00D27AC0 /* AVAudioSessionClient in Frameworks */ = {isa = PBXBuildFile; productRef = 95EC5F0B292B8B1A00D27AC0 /* AVAudioSessionClient */; };
 		95EFDB4826D7F02500C2B12F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 95EFDB4A26D7F02500C2B12F /* InfoPlist.strings */; };
+		9A887C942BCE8EB400061F09 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 9A887C932BCE8EB400061F09 /* SnapshotTesting */; };
 		9ABE1AE02BC03933009591F9 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9ABE1ADF2BC03933009591F9 /* AppFeature */; };
 		B86555E7B0250F1C8F3C7CDD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D710050662204AD38B1B6B3 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -125,6 +126,7 @@
 		95EFDB4926D7F02500C2B12F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		95EFDB4B26D7F02900C2B12F /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		95EFDB4C26D7F02D00C2B12F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9A887C912BCE8C0100061F09 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 		BD2A3298447210A07EE095A2 /* ProjectDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB841C347FD8D298EFFE0DFA /* ProjectDiaryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDiaryApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A887C942BCE8EB400061F09 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +207,7 @@
 		9537BBB526D5419A00650CF5 /* ProjectDiaryTests */ = {
 			isa = PBXGroup;
 			children = (
+				9A887C912BCE8C0100061F09 /* TestPlan.xctestplan */,
 				9537BBB626D5419A00650CF5 /* ProjectDiaryTests.swift */,
 				9537BBB826D5419A00650CF5 /* Info.plist */,
 			);
@@ -357,6 +361,7 @@
 			);
 			name = ProjectDiaryTests;
 			packageProductDependencies = (
+				9A887C932BCE8EB400061F09 /* SnapshotTesting */,
 			);
 			productName = ProjectDiaryTests;
 			productReference = 9537BBB426D5419A00650CF5 /* ProjectDiaryTests.xctest */;
@@ -417,6 +422,7 @@
 			);
 			mainGroup = 1291435AFB7E83FBC428F4F6;
 			packageReferences = (
+				9A887C922BCE8E9B00061F09 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -626,7 +632,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = ProjectDiaryTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -647,7 +653,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CCGZFCU763;
 				INFOPLIST_FILE = ProjectDiaryTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -848,6 +854,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		9A887C922BCE8E9B00061F09 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.16.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		95171CED2928E1A700098B06 /* UIApplicationClient */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -912,6 +929,11 @@
 		95EC5F0B292B8B1A00D27AC0 /* AVAudioSessionClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AVAudioSessionClient;
+		};
+		9A887C932BCE8EB400061F09 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A887C922BCE8E9B00061F09 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
 		};
 		9ABE1ADF2BC03933009591F9 /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
