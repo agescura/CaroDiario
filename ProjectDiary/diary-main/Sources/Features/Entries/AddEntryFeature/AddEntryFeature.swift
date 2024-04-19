@@ -48,7 +48,6 @@ public struct AddEntryFeature {
 		case audioRecord(PresentationAction<AudioRecordFeature.Action>)
 		case dialog(PresentationAction<Dialog>)
 		case cancelDismissAlert
-		case createDraftEntry
 		case deniedCameraAlertButtonTapped
 		case dismissAlertButtonTapped
 		case dismissDeniedCameraAlert
@@ -155,9 +154,6 @@ public struct AddEntryFeature {
 					
 				case .cancelDismissAlert:
 					state.dismissAlert = nil
-					return .none
-					
-				case .createDraftEntry:
 					return .none
 					
 				case .deniedCameraAlertButtonTapped:

@@ -1,66 +1,12 @@
-//
-//  File.swift
-//  
-//
-//  Created by Albert Gil Escura on 6/10/21.
-//
-
-import SwiftUI
 import ComposableArchitecture
 import Models
-import AVAudioPlayerClient
-import UIApplicationClient
-import FileClient
+import SwiftUI
 
-extension AttachmentAdd.State {
-  public var url: URL {
-    switch self {
-    case let .image(state):
-      return state.entryImage.url
-    case let .video(state):
-      return state.entryVideo.url
-    case let .audio(state):
-      return state.entryAudio.url
-    }
-  }
-  
-  public var thumbnail: URL? {
-    switch self {
-    case let .image(state):
-      return state.entryImage.thumbnail
-    case let .video(state):
-      return state.entryVideo.thumbnail
-    case .audio:
-      return nil
-    }
-  }
-  
-  public var attachment: EntryAttachment {
-    switch self {
-    case let .image(value):
-      return value.entryImage
-    case let .video(value):
-      return value.entryVideo
-    case let .audio(value):
-      return value.entryAudio
-    }
-  }
-  
-  public var date: Date {
-    switch self {
-    case let .image(value):
-      return value.entryImage.lastUpdated
-    case let .video(value):
-      return value.entryVideo.lastUpdated
-    case let .audio(value):
-      return value.entryAudio.lastUpdated
-    }
-  }
-}
-
-public struct AttachmentAdd: Reducer {
+@Reducer
+public struct AttachmentAdd {
   public init() {}
   
+	@ObservableState
   public enum State: Equatable {
     case image(AttachmentAddImage.State)
     case video(AttachmentAddVideo.State)
@@ -86,44 +32,23 @@ public struct AttachmentAdd: Reducer {
   }
 }
 
-extension AttachmentAdd.State: Hashable {
-  public func hash(into hasher: inout Hasher) {
-    switch self {
-    case let .image(state):
-      hasher.combine(state.entryImage.id)
-    case let .video(state):
-      hasher.combine(state.entryVideo.id)
-    case let .audio(state):
-      hasher.combine(state.entryAudio.id)
-    }
-  }
-}
-
 public struct AttachmentAddView: View {
   let store: StoreOf<AttachmentAdd>
   
   public var body: some View {
-    SwitchStore(self.store) { state in
-			switch state {
-				case .image:
-					CaseLet(
-						/AttachmentAdd.State.image,
-						action: AttachmentAdd.Action.image,
-						then: AttachmentAddImageView.init(store:)
-					)
-				case .video:
-					CaseLet(
-						/AttachmentAdd.State.video,
-						action: AttachmentAdd.Action.video,
-						then: AttachmentAddVideoView.init(store:)
-					)
-				case .audio:
-					CaseLet(
-						/AttachmentAdd.State.audio,
-						action: AttachmentAdd.Action.audio,
-						then: AttachmentAddAudioView.init(store:)
-					)
-			}
-    }
+		switch self.store.state {
+			case .image:
+				if let store = self.store.scope(state: \.image, action: \.image) {
+					AttachmentAddImageView(store: store)
+				}
+			case .video:
+				if let store = self.store.scope(state: \.video, action: \.video) {
+					AttachmentAddVideoView(store: store)
+				}
+			case .audio:
+				if let store = self.store.scope(state: \.audio, action: \.audio) {
+					AttachmentAddAudioView(store: store)
+				}
+		}
   }
 }

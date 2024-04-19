@@ -1,26 +1,25 @@
-import SwiftUI
 import ComposableArchitecture
-import CoreDataClient
-import FileClient
-import Views
 import Models
-import UIApplicationClient
+import Views
+import SwiftUI
 
-public struct AttachmentAddImage: Reducer {
+
+@Reducer
+public struct AttachmentAddImage {
 	public init() {}
 	
+	@ObservableState
 	public struct State: Equatable {
-		@PresentationState public var alert: AlertState<Action.Alert>?
-		public var entryImage: EntryImage
-		public var presentImageFullScreen: Bool = false
-		
-		public var imageScale: CGFloat = 1
-		public var lastValue: CGFloat = 1
-		public var dragged: CGSize = .zero
-		public var previousDragged: CGSize = .zero
-		public var pointTapped: CGPoint = .zero
-		public var isTapped: Bool = false
+		@Presents public var alert: AlertState<Action.Alert>?
 		public var currentPosition: CGSize = .zero
+		public var dragged: CGSize = .zero
+		public var entryImage: EntryImage
+		public var imageScale: CGFloat = 1
+		public var isTapped: Bool = false
+		public var lastValue: CGFloat = 1
+		public var pointTapped: CGPoint = .zero
+		public var presentImageFullScreen: Bool = false
+		public var previousDragged: CGSize = .zero
 		
 		public init(
 			entryImage: EntryImage
@@ -31,14 +30,13 @@ public struct AttachmentAddImage: Reducer {
 	
 	public enum Action: Equatable {
 		case alert(PresentationAction<Alert>)
+		case dragGesture(DragGesture.Value)
 		case presentImageFullScreen(Bool)
-		
 		case removeFullScreenAlertButtonTapped
-		
 		case scaleOnChanged(CGFloat)
 		case scaleTapGestureCount
-		case dragGesture(DragGesture.Value)
 		
+		@CasePathable
 		public enum Alert: Equatable {
 			case remove
 		}
@@ -87,12 +85,12 @@ public struct AttachmentAddImage: Reducer {
 					return .none
 			}
 		}
-		.ifLet(\.$alert, action: /Action.alert)
+		.ifLet(\.$alert, action: \.alert)
 	}
 }
 
 struct AttachmentAddImageView: View {
-	let store: StoreOf<AttachmentAddImage>
+	@Perception.Bindable var store: StoreOf<AttachmentAddImage>
 	@State private var presented = false
 	
 	init(
@@ -102,39 +100,37 @@ struct AttachmentAddImageView: View {
 	}
 	
 	var body: some View {
-		WithViewStore(self.store, observe: { $0 }) { viewStore in
-			ImageView(url: viewStore.entryImage.thumbnail)
+		WithPerceptionTracking {
+			ImageView(url: self.store.entryImage.thumbnail)
 				.frame(width: 52, height: 52)
 				.onTapGesture {
-					viewStore.send(.presentImageFullScreen(true))
+					self.store.send(.presentImageFullScreen(true))
 				}
-				.fullScreenCover(isPresented: viewStore.binding(
-					get: \.presentImageFullScreen,
-					send: AttachmentAddImage.Action.presentImageFullScreen)
+				.fullScreenCover(isPresented: self.$store.presentImageFullScreen.sending(\.presentImageFullScreen)
 				) {
 					ZStack(alignment: .topTrailing) {
-						ImageView(url: viewStore.entryImage.url)
+						ImageView(url: self.store.entryImage.url)
 							.frame(maxWidth: .infinity, maxHeight: .infinity)
 							.animation(.easeIn(duration: 1.0), value: UUID())
-							.scaleEffect(viewStore.imageScale)
-							.offset(viewStore.currentPosition)
+							.scaleEffect(self.store.imageScale)
+							.offset(self.store.currentPosition)
 							.gesture(
 								
 								MagnificationGesture(minimumScaleDelta: 0.1)
 									.onChanged({ value in
-										viewStore.send(.scaleOnChanged(value))
+										self.store.send(.scaleOnChanged(value))
 									})
 									.simultaneously(with: TapGesture(count: 2).onEnded({
-										viewStore.send(.scaleTapGestureCount, animation: .spring())
+										self.store.send(.scaleTapGestureCount, animation: .spring())
 									}))
 									.simultaneously(with: DragGesture().onChanged({ value in
-										viewStore.send(.dragGesture(value), animation: .spring())
+										self.store.send(.dragGesture(value), animation: .spring())
 									}))
 								
 							)
 						HStack(spacing: 32) {
 							Button(action: {
-								viewStore.send(.removeFullScreenAlertButtonTapped)
+								self.store.send(.removeFullScreenAlertButtonTapped)
 							}) {
 								Image(.trash)
 									.resizable()
@@ -144,7 +140,7 @@ struct AttachmentAddImageView: View {
 							}
 							
 							Button(action: {
-								viewStore.send(.presentImageFullScreen(false))
+								self.store.send(.presentImageFullScreen(false))
 							}) {
 								Image(.xmark)
 									.resizable()
@@ -156,10 +152,10 @@ struct AttachmentAddImageView: View {
 						.padding()
 					}
 					.alert(
-						store: self.store.scope(state: \.$alert, action: { .alert($0) })
+						store: self.store.scope(state: \.$alert, action: \.alert)
 					)
 					.sheet(isPresented: self.$presented) {
-						ActivityView(activityItems: [UIImage(contentsOfFile: viewStore.entryImage.url.absoluteString) ?? Data()])
+						ActivityView(activityItems: [UIImage(contentsOfFile: self.store.entryImage.url.absoluteString) ?? Data()])
 					}
 				}
 		}

@@ -39,14 +39,14 @@ public struct EntriesFeature {
 	}
 	
 	public enum Action: Equatable {
-		case task
-		case fetchEntriesResponse([[Entry]])
-		case addEntryButtonTapped
 		case add(PresentationAction<AddEntryFeature.Action>)
-		case presentAddEntryCompleted
+		case addEntryButtonTapped
 		case entries(IdentifiedActionOf<DayEntriesRow>)
-		case remove(Entry)
+		case fetchEntriesResponse([[Entry]])
 		case path(StackActionOf<Path>)
+		case presentAddEntryCompleted
+		case remove(Entry)
+		case task
 	}
 	
 	@Dependency(\.applicationClient) var applicationClient
@@ -99,7 +99,9 @@ public struct EntriesFeature {
 						)
 					)
 					state.add = AddEntryFeature.State(entry: newEntry)
-					return .send(.add(.presented(.createDraftEntry)))
+					return .run { _ in
+						await self.coreDataClient.createDraft(newEntry)
+					}
 					
 	//			case .presentAddEntry(false):
 	//				state.presentAddEntry = false

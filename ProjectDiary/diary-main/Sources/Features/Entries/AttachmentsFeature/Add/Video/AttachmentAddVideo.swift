@@ -7,11 +7,13 @@ import Localizables
 import UIApplicationClient
 import AVKit
 
-public struct AttachmentAddVideo: Reducer {
+@Reducer
+public struct AttachmentAddVideo {
 	public init() {}
 	
+	@ObservableState
 	public struct State: Equatable {
-		@PresentationState public var alert: AlertState<Action.Alert>?
+		@Presents public var alert: AlertState<Action.Alert>?
 		public var entryVideo: EntryVideo
 		public var presentVideoPlayer: Bool = false
 		
@@ -27,6 +29,7 @@ public struct AttachmentAddVideo: Reducer {
 		case presentVideoPlayer(Bool)
 		case videoAlertButtonTapped
 		
+		@CasePathable
 		public enum Alert: Equatable {
 			case remove
 		}
@@ -59,25 +62,22 @@ public struct AttachmentAddVideo: Reducer {
 }
 
 struct AttachmentAddVideoView: View {
-	let store: StoreOf<AttachmentAddVideo>
+	@Perception.Bindable var store: StoreOf<AttachmentAddVideo>
 	
 	var body: some View {
-		WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
 			ZStack {
-				ImageView(url: viewStore.entryVideo.thumbnail)
+				ImageView(url: self.store.entryVideo.thumbnail)
 					.frame(width: 52, height: 52)
 				Image(.playFill)
 					.foregroundColor(.adaptiveWhite)
 					.frame(width: 8, height: 8)
 			}
 			.onTapGesture {
-				viewStore.send(.presentVideoPlayer(true))
+				self.store.send(.presentVideoPlayer(true))
 			}
 			.fullScreenCover(
-				isPresented: viewStore.binding(
-					get: \.presentVideoPlayer,
-					send: AttachmentAddVideo.Action.presentVideoPlayer
-				)
+				isPresented: self.$store.presentVideoPlayer.sending(\.presentVideoPlayer)
 			) {
 				ZStack {
 					Color.black
@@ -87,7 +87,7 @@ struct AttachmentAddVideoView: View {
 						HStack(spacing: 8) {
 							Spacer()
 							Button(action: {
-								viewStore.send(.videoAlertButtonTapped)
+								self.store.send(.videoAlertButtonTapped)
 							}) {
 								Image(.trash)
 									.frame(width: 48, height: 48)
@@ -95,7 +95,7 @@ struct AttachmentAddVideoView: View {
 							}
 							
 							Button(action: {
-								viewStore.send(.presentVideoPlayer(false))
+								self.store.send(.presentVideoPlayer(false))
 							}) {
 								Image(.xmark)
 									.frame(width: 48, height: 48)
@@ -103,11 +103,11 @@ struct AttachmentAddVideoView: View {
 							}
 						}
 						
-						VideoPlayer(player: AVPlayer(url: viewStore.entryVideo.url))
+						VideoPlayer(player: AVPlayer(url: self.store.entryVideo.url))
 							.edgesIgnoringSafeArea([.bottom, .horizontal])
 					}
 					.alert(
-						store: self.store.scope(state: \.$alert, action: { .alert($0) })
+						store: self.store.scope(state: \.$alert, action: \.alert)
 					)
 				}
 			}

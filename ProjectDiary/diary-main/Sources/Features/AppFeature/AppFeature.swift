@@ -122,119 +122,119 @@ public struct AppFeature {
 //		Reduce(self.userDefaults)
 	}
 	
-	private func core(
-		state: inout State,
-		action: Action
-	) -> Effect<Action> {
-		switch action {
-			case .appDelegate(.didFinishLaunching):
-				return .send(.setUserInterfaceStyle)
-				
-			case .setUserInterfaceStyle:
-				return .run { send in
-					await self.applicationClient.setUserInterfaceStyle(self.userDefaultsClient.themeType.userInterfaceStyle)
-				}
-				
-			case .scene(.splash(.finishAnimation)):
-				if state.userSettings.hasShownOnboarding {
-					if let code = self.userDefaultsClient.passcodeCode {
-						state.scene = .lockScreen(LockScreenFeature.State())
-						return .none
-					} else {
-						return .run { send in
-							await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
-						}
-					}
-				}
-				
-				state.scene = .onboarding(WelcomeFeature.State())
-				return .none
-				
-//			case .scene(.onboarding(.delegate(.goToHome))),
-//					.scene(.onboarding(.privacy(.delegate(.goToHome)))),
-//					.scene(.onboarding(.privacy(.style(.delegate(.goToHome))))),
-//					.scene(.onboarding(.privacy(.style(.layout(.delegate(.goToHome)))))):
-//				return .send(RootFeature.Action.requestCameraStatus)
-//
-//			case .scene(.onboarding(.privacy(.style(.layout(.theme(.startButtonTapped)))))):
-//				return .run { send in
-//					try await self.mainQueue.sleep(for: 0.001)
-//					await send(.requestCameraStatus)
-//				}
-				
-//			case .scene(.lockScreen(.matchedCode)):
-//				return .run { send in
-//					await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
-//				}
-				
-//			case .scene(.home(.settings(.menu(.toggleFaceId(true))))),
-//					.scene(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
-//					.scene(.lockScreen(.checkFaceId)):
-//				return .send(.biometricAlertPresent(true))
+//	private func core(
+//		state: inout State,
+//		action: Action
+//	) -> Effect<Action> {
+//		switch action {
+//			case .appDelegate(.didFinishLaunching):
+//				return .send(.setUserInterfaceStyle)
 //				
-//			case .scene(.home(.settings(.menu(.faceId(response:))))),
-//					.scene(.home(.settings(.activate(.insert(.menu(.faceId(response:))))))),
-//					.scene(.lockScreen(.faceIdResponse)):
+//			case .setUserInterfaceStyle:
 //				return .run { send in
-//					try await self.mainQueue.sleep(for: 10)
-//					await send(.biometricAlertPresent(false))
+//					await self.applicationClient.setUserInterfaceStyle(self.userDefaultsClient.themeType.userInterfaceStyle)
 //				}
-				
-			case .scene:
-				return .none
-				
-//			case .requestCameraStatus:
-//				return .run { send in
-//					await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+//				
+//			case .scene(.splash(.finishAnimation)):
+//				if state.userSettings.hasShownOnboarding {
+//					if let code = self.userDefaultsClient.passcodeCode {
+//						state.scene = .lockScreen(LockScreenFeature.State())
+//						return .none
+//					} else {
+//						return .run { send in
+//							await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+//						}
+//					}
 //				}
-				
-			case let .startHome(cameraStatus: status):
-				return .none
-				
-			case .process:
-				return .none
-				
-			case .state(.active):
-				if state.isFirstStarted {
-					return .none
-				}
-				if state.isBiometricAlertPresent {
-					return .none
-				}
-				if let timeForAskPasscode = self.userDefaultsClient.timeForAskPasscode,
-					 timeForAskPasscode > self.now {
-					return .none
-				}
-				if let code = self.userDefaultsClient.passcodeCode {
-					state.scene = .lockScreen(LockScreenFeature.State())
-					return .none
-				}
-				return .none
-				
-			case .state(.background):
-				if let timeForAskPasscode = Calendar.current.date(
-					byAdding: .minute,
-					value: self.userDefaultsClient.optionTimeForAskPasscode,
-					to: self.now
-				) {
-					return .run { _ in await self.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode) }
-				}
-				return .run { _ in await self.userDefaultsClient.removeOptionTimeForAskPasscode() }
-				
-			case .state:
-				return .none
-				
-			case .shortcuts:
-				return .none
-				
-			case let .biometricAlertPresent(value):
-				state.isBiometricAlertPresent = value
-				return .none
-				
-			default:
-				return .none
-		}
-	}
+//				
+//				state.scene = .onboarding(WelcomeFeature.State())
+//				return .none
+//				
+////			case .scene(.onboarding(.delegate(.goToHome))),
+////					.scene(.onboarding(.privacy(.delegate(.goToHome)))),
+////					.scene(.onboarding(.privacy(.style(.delegate(.goToHome))))),
+////					.scene(.onboarding(.privacy(.style(.layout(.delegate(.goToHome)))))):
+////				return .send(RootFeature.Action.requestCameraStatus)
+////
+////			case .scene(.onboarding(.privacy(.style(.layout(.theme(.startButtonTapped)))))):
+////				return .run { send in
+////					try await self.mainQueue.sleep(for: 0.001)
+////					await send(.requestCameraStatus)
+////				}
+//				
+////			case .scene(.lockScreen(.matchedCode)):
+////				return .run { send in
+////					await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+////				}
+//				
+////			case .scene(.home(.settings(.menu(.toggleFaceId(true))))),
+////					.scene(.home(.settings(.activate(.insert(.menu(.toggleFaceId(isOn: true))))))),
+////					.scene(.lockScreen(.checkFaceId)):
+////				return .send(.biometricAlertPresent(true))
+////				
+////			case .scene(.home(.settings(.menu(.faceId(response:))))),
+////					.scene(.home(.settings(.activate(.insert(.menu(.faceId(response:))))))),
+////					.scene(.lockScreen(.faceIdResponse)):
+////				return .run { send in
+////					try await self.mainQueue.sleep(for: 10)
+////					await send(.biometricAlertPresent(false))
+////				}
+//				
+//			case .scene:
+//				return .none
+//				
+////			case .requestCameraStatus:
+////				return .run { send in
+////					await send(.startHome(cameraStatus: self.avCaptureDeviceClient.authorizationStatus()))
+////				}
+//				
+//			case let .startHome(cameraStatus: status):
+//				return .none
+//				
+//			case .process:
+//				return .none
+//				
+//			case .state(.active):
+//				if state.isFirstStarted {
+//					return .none
+//				}
+//				if state.isBiometricAlertPresent {
+//					return .none
+//				}
+//				if let timeForAskPasscode = self.userDefaultsClient.timeForAskPasscode,
+//					 timeForAskPasscode > self.now {
+//					return .none
+//				}
+//				if let code = self.userDefaultsClient.passcodeCode {
+//					state.scene = .lockScreen(LockScreenFeature.State())
+//					return .none
+//				}
+//				return .none
+//				
+//			case .state(.background):
+//				if let timeForAskPasscode = Calendar.current.date(
+//					byAdding: .minute,
+//					value: self.userDefaultsClient.optionTimeForAskPasscode,
+//					to: self.now
+//				) {
+//					return .run { _ in await self.userDefaultsClient.setTimeForAskPasscode(timeForAskPasscode) }
+//				}
+//				return .run { _ in await self.userDefaultsClient.removeOptionTimeForAskPasscode() }
+//				
+//			case .state:
+//				return .none
+//				
+//			case .shortcuts:
+//				return .none
+//				
+//			case let .biometricAlertPresent(value):
+//				state.isBiometricAlertPresent = value
+//				return .none
+//				
+//			default:
+//				return .none
+//		}
+//	}
 	
 //	private func coreData(
 //		state: inout State,

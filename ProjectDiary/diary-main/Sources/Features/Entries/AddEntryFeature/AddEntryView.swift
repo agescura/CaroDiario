@@ -30,13 +30,13 @@ public struct AddEntryView: View {
 					ScrollView(.horizontal, showsIndicators: false) {
 						LazyHStack(spacing: 8) {
 							ForEach(
-								store.scope(
-									state: \.attachments,
-									action: \.attachments
-								),
-								id: \.id,
-								content: AttachmentAddRowView.init
-							)
+								self.store.scope(state: \.attachments, action: \.attachments),
+								id: \.id
+							) { store in
+								WithPerceptionTracking {
+									AttachmentAddRowView(store: store)
+								}
+							}
 						}
 					}
           .frame(height: 52)
@@ -45,7 +45,7 @@ public struct AddEntryView: View {
         HStack(spacing: 8) {
           SecondaryButtonView(
             label: {
-              Text("self.store.type.finishTitle")
+              Text("AddEntry.Add".localized)
                 .adaptiveFont(.latoRegular, size: 10)
                 .foregroundColor(.chambray)
             },

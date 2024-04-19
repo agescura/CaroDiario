@@ -1,13 +1,13 @@
-import SwiftUI
 import ComposableArchitecture
-import FileClient
-import Views
 import Models
-import AVAudioPlayerClient
+import Views
+import SwiftUI
 
-public struct AttachmentAddAudio: Reducer {
+@Reducer
+public struct AttachmentAddAudio {
 	public init() {}
 	
+	@ObservableState
 	public struct State: Equatable {
 		public var entryAudio: EntryAudio
 		public var presentAudioFullScreen: Bool = false
@@ -140,7 +140,7 @@ public struct AttachmentAddAudio: Reducer {
 }
 
 struct AttachmentAddAudioView: View {
-	private let store: StoreOf<AttachmentAddAudio>
+	@Perception.Bindable var store: StoreOf<AttachmentAddAudio>
 	
 	init(
 		store: StoreOf<AttachmentAddAudio>
@@ -149,7 +149,7 @@ struct AttachmentAddAudioView: View {
 	}
 	
 	var body: some View {
-		WithViewStore(self.store, observe: { $0 }) { viewStore in
+		WithPerceptionTracking {
 			Rectangle()
 				.fill(Color.adaptiveGray)
 				.frame(width: 52, height: 52)
@@ -159,13 +159,10 @@ struct AttachmentAddAudioView: View {
 						.frame(width: 8, height: 8)
 				)
 				.onTapGesture {
-					viewStore.send(.audioButtonTapped)
+					self.store.send(.audioButtonTapped)
 				}
 				.fullScreenCover(
-					isPresented: viewStore.binding(
-						get: \.presentAudioFullScreen,
-						send: AttachmentAddAudio.Action.presentAudioFullScreen
-					)
+					isPresented: self.$store.presentAudioFullScreen.sending(\.presentAudioFullScreen)
 				) {
 					VStack {
 						HStack(spacing: 8) {
@@ -173,7 +170,7 @@ struct AttachmentAddAudioView: View {
 							
 							Button(
 								action: {
-									viewStore.send(.removeFullScreenAlertButtonTapped)
+									self.store.send(.removeFullScreenAlertButtonTapped)
 								}
 							) {
 								Image(systemName: "trash")
@@ -183,7 +180,7 @@ struct AttachmentAddAudioView: View {
 							
 							Button(
 								action: {
-									viewStore.send(.presentAudioFullScreen(false))
+									self.store.send(.presentAudioFullScreen(false))
 								}
 							) {
 								Image(systemName: "xmark")
@@ -201,18 +198,18 @@ struct AttachmentAddAudioView: View {
 									.frame(height: 8)
 								Capsule()
 									.fill(Color.red)
-									.frame(width: viewStore.playerProgress, height: 8)
+									.frame(width: self.store.playerProgress, height: 8)
 									.animation(nil, value: UUID())
 							}
 							
 							HStack {
-								Text(viewStore.playerProgressTime.formatter)
+								Text(self.store.playerProgressTime.formatter)
 									.adaptiveFont(.latoRegular, size: 10)
 									.foregroundColor(.chambray)
 								
 								Spacer()
 								
-								Text(viewStore.playerDuration.formatter)
+								Text(self.store.playerDuration.formatter)
 									.adaptiveFont(.latoRegular, size: 10)
 									.foregroundColor(.chambray)
 							}
@@ -224,9 +221,9 @@ struct AttachmentAddAudioView: View {
 								Spacer()
 								
 								Button {
-									viewStore.send(.playButtonTapped)
+									self.store.send(.playButtonTapped)
 								} label: {
-									Image(systemName: viewStore.isPlaying ? "pause.fill" : "play.fill")
+									Image(systemName: self.store.isPlaying ? "pause.fill" : "play.fill")
 										.resizable()
 										.aspectRatio(contentMode: .fill)
 										.frame(width: 32, height: 32)
