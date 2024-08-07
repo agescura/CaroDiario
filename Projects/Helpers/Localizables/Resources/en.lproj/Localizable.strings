@@ -1,0 +1,213 @@
+/* 
+  Localizable.strings
+  ProjectDiary
+
+  Created by Albert Gil Escura on 27/6/21.
+  
+*/
+
+"Cancel" = "Cancel";
+"Continue" = "Yes, sure";
+
+// Styles
+
+"Style.Rectangle" = "Rectangle";
+"Style.Rounded" = "Rounded";
+"Style.Horizontal" = "Horizontal";
+"Style.Vertical" = "Vertical";
+"Style.Dark" = "Dark";
+"Style.Light" = "Light";
+"Style.System" = "System";
+
+// OnboardingFeature
+
+"OnBoarding.Diary" = "Caro Diario!";
+"OnBoarding.Welcome" = "Thank you for downloading this application";
+"OnBoarding.Description.1" = "Caro Diario is an app that simulates your personal diary.";
+"OnBoarding.Description.2" = "You can write your thoughts or wherever you want.";
+"OnBoarding.Description.3" = "You can also retrieve your images, videos or audios.";
+"OnBoarding.Important" = "Your privacy is important.";
+"OnBoarding.Privacy" = "This application does not collect any personal data.";
+"OnBoarding.Continue" = "Continue";
+"OnBoarding.Start" = "Start";
+"OnBoarding.Skip" = "Skip";
+"OnBoarding.Skip.Title" = "Go to diary";
+"OnBoarding.Skip.Alert" = "This action cannot be undone.";
+"OnBoarding.Appearance.Title" = "Appearance";
+"OnBoarding.Layout.Title" = "Layout";
+"OnBoarding.Style.Title" = "Style";
+"OnBoarding.Theme.Title" = "Theme";
+"OnBoarding.Appearance.Description" = "You could set the appearance that you prefer";
+"OnBoarding.Appearance.Overview" = "Overview";
+"OnBoarding.Style.Message" = "You can set the style. Remember that you can change the style in settings";
+"OnBoarding.Appearance.Message" = "You can set the layout. Remember that you can change the style in settings";
+
+// HomeFeature
+
+"Home.TabView.Entries" = "Diary";
+"Home.TabView.Search" = "Search";
+"Home.TabView.Settings" = "Settings";
+
+// EntriesFeature
+
+"Entries.Diary" = "Diary";
+"Entries.ReadMore" = "Read more";
+"Entries.Empty" = "To add the first entry, tap on + button.";
+"Entries.Remove.Title" = "Are you sure you want to remove this entry?";
+"Entries.Remove.Cancel" = "Cancel";
+"Entries.Remove.Action" = "Remove";
+"Entries.ChooseOption" = "Choose an option";
+"Entries.Camera" = "Camera";
+"Entries.Photos" = "Photo Library";
+"Entries.Edit" = "Edit";
+"Entries.FakeEntry.FirstMessage" = "Today I went to the cinema";
+"Entries.FakeEntry.SecondMessage" = "I started to read a book";
+"Entries.Share" = "Share";
+
+// AddEntryFeature
+
+"AddEntry.Title" = "Write a new entry to the diary";
+"AddEntry.Finish" = "Add";
+"AddEntry.ChooseOption" = "Choose an option";
+"AddEntry.Camera" = "Camera";
+"AddEntry.Photos" = "Photo Library";
+"AddEntry.WriteSomething" = "Write something ...";
+"AddEntry.Add" = "Add";
+"AddEntry.PlayVideo" = "Play video";
+"AddEntry.RemoveVideo" = "Remove video";
+"AddEntry.ShowImage" = "Show image";
+"AddEntry.RemoveImage" = "Remove image";
+"AddEntry.Audio" = "Pick an audio";
+"AddEntry.Exit" = "Exiting";
+"AddEntry.Exit.Message" = "Are you sure you want to lose the data?";
+"AddEntry.Exit.Yes" = "Yes, sure.";
+"AddEntry.Edit" = "You are editing the entry";
+"AddEntry.Update" = "Finishing";
+"Settings.ReviewAppStore" = "Rate on App Store";
+"Settings.ExportPDF" = "Export PDF";
+
+// Image
+
+"Image.Remove.Description" = "Are you sure that you want to remove the image?";
+"Image.Remove.Title" = "Remove";
+
+// Video
+
+"Video.Remove.Description" = "Are you sure that you want to remove the video?";
+"Video.Remove.Title" = "Remove";
+
+// Audio
+
+"Audio.Remove.Description" = "Are you sure that you want to remove the audio?";
+"Audio.Remove.Title" = "Remove";
+
+// Camera
+
+"Camera.Denied" = "Camera Denied";
+"Camera.Denied.Message" = "If you want to use the camera, go to settings";
+"Camera.Denied.GoSettings" = "Go to settings";
+
+// Settings
+
+"Settings.Behaviour" = "Behaviour";
+"Settings.Splash" = "Show splash screen";
+"Settings.Layout" = "Layout";
+"Settings.Style" = "Style";
+"Settings.Appearance" = "Appearance";
+"Settings.Security" = "Security";
+"Settings.Code" = "Passcode %@";
+"Settings.Title" = "Settings";
+"Settings.On" = "On";
+"Settings.Off" = "Off";
+"Settings.Theme" = "Theme";
+"Settings.Icon" = "Icon";
+"Settings.Camera" = "Camera";
+"Settings.GoToSettings" = "Go to settings";
+"Settings.Camera.Privacy" = "Camera privacy";
+"Settings.GivePermission" = "Give permission";
+"Settings.Microphone" = "Microphone";
+"Settings.Agreements" = "Agreements";
+"Settings.Attachment.Image" = "Entries with images";
+"Settings.Attachment.Video" = "Entries with videos";
+"Settings.Attachment.Audio" = "Entries with audios";
+"Settings.Results" = "Results:";
+"Settings.About" = "About Caro Diario";
+"Settings.Version" = "Version";
+"Settings.ReportBug" = "Report a bug";
+"Settings.Biometric.Test" = "To activate %@, we need to check it works perfectly.";
+"Settings.Language" = "Language";
+"Settings.Spanish" = "Spanish";
+"Settings.Catalan" = "Catalan";
+"Settings.English" = "English";
+"Settings.Galician" = "Galician";
+
+// PasscodeFeature
+
+"Passcode.Title" = "Passcode";
+"Passcode.Activate.Title" = "Activate";
+"Passcode.Activate.Message" = "Warning: if you forgot the passcode, you must remove this app and reinstall it. You will lost all the information.";
+"Passcode.Insert" = "Insert a passcode";
+"Passcode.Reinsert" = "Reinsert the passcode";
+"Passcode.Dismiss" = "Dismiss";
+"Passcode.Turnoff" = "Turn Passcode Off";
+"Passcode.Different" = "The codes don't match";
+"Passcode.Turnoff.Message" = "Do you want to turn off the %@?";
+"Passcode.UnlockFaceId" = "Unlock with %@";
+"Passcode.Autolock" = "Auto-Lock";
+"Passcode.Always" = "Always";
+"Passcode.Disabled" = "Only when starts";
+"Passcode.IfAway" = "If away for ";
+
+// LockScreenFeature
+
+"LockScreen.Title" = "Insert for unlock";
+
+// Shortcuts
+
+"Shortcuts.Add" = "Add Entry";
+"Shortcuts.Settings" = "Settings";
+
+// AuthorizedVideoStatus
+
+"notDetermined" = "Not determined";
+"denied" = "Denied";
+"authorized" = "Authorized";
+"restricted" = "Restricted";
+"notDetermined.description" = "Not determined means that you cannot authorized yet the camera in this application";
+"denied.description" = "Denied means you will not give permission to the camera. You will not be able to use it until you activate it. To activate it, you must go to the settings";
+"authorized.description" = "You authorized the camera, it should work normally for you";
+"restricted.description" = "It appears that the device you are using does not have a camera; you will not be able to use the camera with this application";
+
+// Microphone
+
+"microphone.notDetermined" = "Not determined";
+"microphone.denied" = "Denied";
+"microphone.authorized" = "Authorized";
+"microphone.notDetermined.description" = "Not determined means that you cannot authorized yet the microphone in this application";
+"microphone.denied.description" = "Denied means you will not give permission to the microphone. You will not able to use it until you activate it. To activate it, you must go to the settings";
+"microphone.authorized.description" = "You authorized the microphone, it should work normally for you";
+
+// Search
+
+"Search.Title" = "Search";
+"Search.Empty" = "There isn't results";
+"Search.Results" = "Results: ";
+
+// PDF
+
+"PDF.Page" = "Page ";
+"PDF.Date" = "Entry with date ";
+"PDF.Preview" = "Preview PDF";
+"PDF.Share" = "Share PDF";
+
+// AudioRecord
+
+"AudioRecord.Authorized" = "You authorized the microphone permission";
+"AudioRecord.Denied" = "You denied the microphone permission";
+"AudioRecord.NotDetermined" = "You don't authorized the microphone permission yet";
+"AudioRecord.Alert" = "Be careful";
+"AudioRecord.Alert.Message" = "If you continue, you remove the actual recording";
+"AudioRecord.AllowMicrophone" = "Allow microphone permission";
+"AudioRecord.GoToSettings" = "Go to the settings";
+"AudioRecord.StartRecording" = "Tap the record button to start";
+"AudioRecord.Add" = "Add";

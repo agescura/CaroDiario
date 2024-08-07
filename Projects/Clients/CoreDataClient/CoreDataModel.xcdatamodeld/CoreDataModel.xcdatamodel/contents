@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19206" systemVersion="20G165" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AttachmentMO" representedClassName="AttachmentMO" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="entry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EntryMO" inverseName="attachments" inverseEntity="EntryMO"/>
+    </entity>
+    <entity name="AudioMO" representedClassName="AudioMO" parentEntity="AttachmentMO" syncable="YES">
+        <attribute name="url" optional="YES" attributeType="URI"/>
+    </entity>
+    <entity name="EntryMO" representedClassName="EntryMO" syncable="YES">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isDraft" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="startDay" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="attachments" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AttachmentMO" inverseName="entry" inverseEntity="AttachmentMO"/>
+        <relationship name="text" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TextMO" inverseName="entry" inverseEntity="TextMO"/>
+    </entity>
+    <entity name="ImageMO" representedClassName="ImageMO" parentEntity="AttachmentMO" syncable="YES">
+        <attribute name="thumbnail" optional="YES" attributeType="URI"/>
+        <attribute name="url" optional="YES" attributeType="URI"/>
+    </entity>
+    <entity name="TextMO" representedClassName="TextMO" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="message" optional="YES" attributeType="String"/>
+        <relationship name="entry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EntryMO" inverseName="text" inverseEntity="EntryMO"/>
+    </entity>
+    <entity name="VideoMO" representedClassName="VideoMO" parentEntity="AttachmentMO" syncable="YES">
+        <attribute name="thumbnail" optional="YES" attributeType="URI"/>
+        <attribute name="url" optional="YES" attributeType="URI"/>
+    </entity>
+    <elements>
+        <element name="AttachmentMO" positionX="-440.8782348632812" positionY="-238.2423095703125" width="128" height="88"/>
+        <element name="AudioMO" positionX="-744.8763427734375" positionY="-212.3059692382812" width="128" height="58"/>
+        <element name="EntryMO" positionX="-169.1026611328125" positionY="-289.6338500976562" width="126.8512573242188" height="148"/>
+        <element name="ImageMO" positionX="-737.5307006835938" positionY="-110.336181640625" width="128" height="73"/>
+        <element name="TextMO" positionX="89.0809326171875" positionY="-153.44921875" width="128" height="103"/>
+        <element name="VideoMO" positionX="-737.4084071358666" positionY="-312.4467709559904" width="128" height="73"/>
+    </elements>
+</model>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:Projects"
+      name = "Projects">
+      <FileRef
+         location = "group:App/App.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Models/Models.xcodeproj">
+      </FileRef>
+      <Group
+         location = "group:Clients"
+         name = "Clients">
+         <FileRef
+            location = "group:AVAssetClient/AVAssetClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:AVAudioPlayerClient/AVAudioPlayerClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:AVAudioRecorderClient/AVAudioRecorderClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:AVAudioSessionClient/AVAudioSessionClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:AVCaptureDeviceClient/AVCaptureDeviceClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:CoreDataClient/CoreDataClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:FileClient/FileClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:LocalAuthenticationClient/LocalAuthenticationClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:PDFKitClient/PDFKitClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:StoreKitClient/StoreKitClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:UIApplicationClient/UIApplicationClient.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:UserDefaultsClient/UserDefaultsClient.xcodeproj">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Features"
+         name = "Features">
+         <FileRef
+            location = "group:AppFeature/AppFeature.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:HomeFeature/HomeFeature.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:LockScreenFeature/LockScreenFeature.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:OnboardingFeature/OnboardingFeature.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:SplashFeature/SplashFeature.xcodeproj">
+         </FileRef>
+         <Group
+            location = "group:Entries"
+            name = "Entries">
+            <FileRef
+               location = "group:AddEntryFeature/AddEntryFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:AttachmentsFeature/AttachmentsFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:AudioPickerFeature/AudioPickerFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:AudioRecordFeature/AudioRecordFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:EntriesFeature/EntriesFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:EntryDetailFeature/EntryDetailFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:ImagePickerFeature/ImagePickerFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:SearchFeature/SearchFeature.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Settings"
+            name = "Settings">
+            <FileRef
+               location = "group:AboutFeature/AboutFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:AgreementsFeature/AgreementsFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:AppearanceFeature/AppearanceFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:CameraFeature/CameraFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:ExportFeature/ExportFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:LanguageFeature/LanguageFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:MicrophoneFeature/MicrophoneFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:PDFPreviewFeature/PDFPreviewFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:PasscodeFeature/PasscodeFeature.xcodeproj">
+            </FileRef>
+            <FileRef
+               location = "group:SettingsFeature/SettingsFeature.xcodeproj">
+            </FileRef>
+         </Group>
+      </Group>
+      <Group
+         location = "group:Helpers"
+         name = "Helpers">
+         <FileRef
+            location = "group:Localizables/Localizables.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:Styles/Styles.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:SwiftHelper/SwiftHelper.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:SwiftUIHelper/SwiftUIHelper.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:TestUtils/TestUtils.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:Views/Views.xcodeproj">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Packages"
+         name = "Packages">
+         <FileRef
+            location = "group:ComposableArchitecturePackage/ComposableArchitecturePackage.xcodeproj">
+         </FileRef>
+      </Group>
+   </Group>
+   <Group
+      location = "container:"
+      name = "Dependencies">
+      <FileRef
+         location = "group:Tuist/.build/tuist-derived/swift-snapshot-testing/swift-snapshot-testing.xcodeproj">
+      </FileRef>
+   </Group>
+</Workspace>

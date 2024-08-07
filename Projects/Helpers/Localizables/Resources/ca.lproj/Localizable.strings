@@ -1,0 +1,214 @@
+/* 
+  Localizable.strings
+  ProjectDiary
+
+  Created by Albert Gil Escura on 27/6/21.
+  
+*/
+
+"Cancel" = "Cancel.lar";
+"Continue" = "Si, continuar";
+
+// Styles
+
+"Style.Rectangle" = "Rectangle";
+"Style.Rounded" = "Vorejat";
+"Style.Horizontal" = "Horitzontal";
+"Style.Vertical" = "Vertical";
+"Style.Dark" = "Fosc";
+"Style.Light" = "Diurn";
+"Style.System" = "Sistema";
+
+// OnboardingFeature
+
+"OnBoarding.Diary" = "Caro Diario!";
+"OnBoarding.Welcome" = "Gràcies por descarregar aquesta aplicació.";
+"OnBoarding.Description.1" = "Caro Diario és una aplicació que simula el teu diari personal.";
+"OnBoarding.Description.2" = "Pots escriure els teus pensaments o el que vullguis.";
+"OnBoarding.Description.3" = "També pots recuperar les teves imatges, videos o audios.";
+"OnBoarding.Important" = "La teva privacitat és important.";
+"OnBoarding.Privacy" = "Aquesta aplicació no recopila cap dada personal.";
+"OnBoarding.Continue" = "Continuar";
+"OnBoarding.Start" = "Començar";
+"OnBoarding.Skip" = "Saltar";
+"OnBoarding.Skip.Title" = "Anar al diari";
+"OnBoarding.Skip.Alert" = "Atenció, aquesta acció no es pot desfer.";
+"OnBoarding.Appearance.Title" = "Aparença";
+"OnBoarding.Layout.Title" = "Layout";
+"OnBoarding.Style.Title" = "Estil";
+"OnBoarding.Theme.Title" = "Theme";
+"OnBoarding.Appearance.Description" = "Pots seleccionar l'aparença que preferisques";
+"OnBoarding.Appearance.Overview" = "Previsualització del diari";
+"OnBoarding.Style.Message" = "Pots seleccionar l'estil que vulguis. Recorda que en la configuració pots canviar-lo.";
+"OnBoarding.Appearance.Message" = "Pots seleccionar l'estructura que vulguis. Recorda que en la configuració pots canviar-lo.";
+
+// HomeFeature
+
+"Home.TabView.Entries" = "Diari";
+"Home.TabView.Search" = "Cercar";
+"Home.TabView.Settings" = "Configuració";
+
+// EntriesFeature
+
+"Entries.Diary" = "Diari";
+"Entries.ReadMore" = "Llegir més";
+"Entries.Empty" = "Per afegir una entrada, prem el + del cantó superior dret.";
+"Entries.Remove.Title" = "Estás a punto de eliminar esta entrada";
+"Entries.Remove.Cancel" = "Cancel.lar";
+"Entries.Remove.Action" = "Eliminar";
+"Entries.ChooseOption" = "Selecciona una opció";
+"Entries.Camera" = "Càmera";
+"Entries.Photos" = "Llibreria de fotos";
+"Entries.Edit" = "Editar";
+"Entries.FakeEntry.FirstMessage" = "Avuí he anat al cinema";
+"Entries.FakeEntry.SecondMessage" = "He començat a llegir un llibre";
+"Entries.Share" = "Compartir";
+
+// AddEntryFeature
+
+"AddEntry.Title" = "Escriu una nova entrada al diari";
+"AddEntry.Finish" = "Afegeix";
+"AddEntry.ChooseOption" = "Selecciona una opció";
+"AddEntry.Camera" = "Càmera";
+"AddEntry.Photos" = "Llibreria de fotos";
+"AddEntry.WriteSomething" = "Escriu alguna cosa ...";
+"AddEntry.Add" = "Afegir";
+"AddEntry.PlayVideo" = "Reproduïr video";
+"AddEntry.RemoveVideo" = "Esborrar el video";
+"AddEntry.ShowImage" = "Veure la imatge";
+"AddEntry.RemoveImage" = "Esborrar la imatge";
+"AddEntry.Audio" = "Selecciona un audio";
+"AddEntry.Exit" = "Sortint";
+"AddEntry.Exit.Message" = "Estás a punt de perdre les dades introduïdes.";
+"AddEntry.Exit.Yes" = "Si, entesos";
+"AddEntry.Edit" = "Estàs editant l'entrada";
+"AddEntry.Update" = "Finalitzar";
+
+// Image
+
+"Image.Remove.Description" = "Estàs segur que vols esborrar la imatge?";
+"Image.Remove.Title" = "Esborrar";
+
+// Video
+
+"Video.Remove.Description" = "Estàs segur que vols esborrar el video?";
+"Video.Remove.Title" = "Esborrar";
+
+// Audio
+
+"Audio.Remove.Description" = "Estàs segur que vols esborrar la nota de veu?";
+"Audio.Remove.Title" = "Esborrar";
+
+// Camera
+
+"Camera.Denied" = "Càmera Denegada";
+"Camera.Denied.Message" = "Si vols utilitzar la càmera, ves a la configuració.";
+"Camera.Denied.GoSettings" = "Anar a la configuració";
+
+// Settings
+
+"Settings.Behaviour" = "";
+"Settings.Splash" = "Mostra l'animació a l'inici";
+"Settings.Layout" = "Layout";
+"Settings.Style" = "Estil";
+"Settings.Appearance" = "Apariència";
+"Settings.Security" = "Seguretat";
+"Settings.Code" = "Codi d'accés %@";
+"Settings.Title" = "Configuració";
+"Settings.On" = "Activat";
+"Settings.Off" = "Desactivat";
+"Settings.Theme" = "Theme";
+"Settings.Icon" = "Icona";
+"Settings.Camera" = "Càmera";
+"Settings.GoToSettings" = "Anar a la configuració";
+"Settings.Camera.Privacy" = "Privacitat de la càmera";
+"Settings.GivePermission" = "Donar permís";
+"Settings.Microphone" = "Micròfon";
+"Settings.Agreements" = "Agraïments";
+"Settings.ReviewAppStore" = "Valorar a l'App Store";
+"Settings.ExportPDF" = "Exportar PDF";
+"Settings.Attachment.Image" = "Entrades amb imatges";
+"Settings.Attachment.Video" = "Entrades amb videos";
+"Settings.Attachment.Audio" = "Entrades amb audios";
+"Settings.Results" = "Nombre de resultats:";
+"Settings.About" = "Quant a Caro Diario";
+"Settings.Version" = "Versió";
+"Settings.ReportBug" = "Reportar un error";
+"Settings.Biometric.Test" = "Per a poder activar el %@, primer hem de comprovar que funciona correctament";
+"Settings.Language" = "Idioma";
+"Settings.Spanish" = "Castellà";
+"Settings.Catalan" = "Català";
+"Settings.English" = "Anglés";
+"Settings.Galician" = "Gallec";
+
+// PasscodeFeature
+
+"Passcode.Title" = "Codi d'accés";
+"Passcode.Activate.Title" = "Activa'l ara";
+"Passcode.Activate.Message" = "Nota: si oblideu el codi d'accés, haureu d'eliminar la app i reinstalar l'aplicació. Es perdrà tota la informació.";
+"Passcode.Insert" = "Introduïu un codi d'accés";
+"Passcode.Reinsert" = "Repeteix el codi d'accés";
+"Passcode.Dismiss" = "Cancel.lar";
+"Passcode.Turnoff" = "Desactivar el codi";
+"Passcode.Different" = "Els codis no coincideixen";
+"Passcode.Turnoff.Message" = "Vols desactivar el %@?";
+"Passcode.UnlockFaceId" = "Desbloquejar amb %@";
+"Passcode.Autolock" = "Bloqueig automàtic";
+"Passcode.Always" = "Sempre";
+"Passcode.Disabled" = "Sols a l'inici";
+"Passcode.IfAway" = "Inactivitat en ";
+
+
+// LockScreenFeature
+
+"LockScreen.Title" = "Introduïu un codi d'accés";
+
+// Shortcuts
+
+"Shortcuts.Add" = "Afegir entrada";
+"Shortcuts.Settings" = "Configuració";
+
+// AuthorizedVideoStatus
+
+"notDetermined" = "Sense determinar";
+"denied" = "Denegat";
+"authorized" = "Autoritzat";
+"restricted" = "Restringit";
+"notDetermined.description" = "Sense determinar significa que encara no has autoritzat a aquesta aplicació l'us de la càmera.";
+"denied.description" = "Denegat significa que no li donares permís a la càmera. No la podrás utilitzar fins que l'actives. Per a activar-la, has d'anar a la configuració.";
+"authorized.description" = "Has autoritzat la càmera, t'hauria de funcionar amb normalitat";
+"restricted.description" = "Pareix que el dispositiu que estás utilitzant no té una càmera. No podrás utilitzar la càmara amb aquesta aplicació.";
+
+// Microphone
+
+"microphone.notDetermined" = "Sense determinar";
+"microphone.denied" = "Denegat";
+"microphone.authorized" = "Autoritzat";
+"microphone.notDetermined.description" = "Sense determinar significa que encara no has autoritzat a aquest aplicació l'ús del micròfon";
+"microphone.denied.description" = "Denegat significa que no li donares permís al micròfon. No el podrás utilitzar fins que l'actives. Per a activar-la, has d'anar a la configuració.";
+"microphone.authorized.description" = "Has autoritzat el micròfon, t'hauria de funcionar amb normalitat";
+
+// Search
+
+"Search.Title" = "Cercar";
+"Search.Empty" = "No hi ha cap resultat";
+"Search.Results" = "Nombre de resultats: ";
+
+// PDF
+
+"PDF.Page" = "Pàgina ";
+"PDF.Date" = "Entrada amb data ";
+"PDF.Preview" = "Previsualitzar PDF";
+"PDF.Share" = "Compartir PDF";
+
+// AudioRecord
+
+"AudioRecord.Authorized" = "Has autoritzat el permís del micròfon";
+"AudioRecord.Denied" = "Has denegat el permís del micròfon";
+"AudioRecord.NotDetermined" = "Encara no has autoritzat el permís del micròfon";
+"AudioRecord.Alert" = "Atenció";
+"AudioRecord.Alert.Message" = "Si continues, borraràs la gravació anterior";
+"AudioRecord.AllowMicrophone" = "Permetre micròfon";
+"AudioRecord.GoToSettings" = "Anar a la configuració";
+"AudioRecord.StartRecording" = "Toca el botó de gravar per començar una nota de veu";
+"AudioRecord.Add" = "Afegir";
