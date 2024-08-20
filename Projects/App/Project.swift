@@ -18,6 +18,18 @@ let project = Project(
 					"NSCameraUsageDescription": "Camera Usage Description",
 					"NSMicrophoneUsageDescription": "Microphone Usage Description",
 					"CFBundleDisplayName": "Caro Diario",
+					"CFBundleIcons": [
+						"CFBundleAlternateIcons": [
+							"AppIcon-2": [
+								"CFBundleIconFiles": ["Icon-2"],
+								"UIPrerenderedIcon": false
+							]
+						],
+						"CFBundlePrimaryIcon": [
+							"CFBundleIconFiles": ["Icon-1"],
+							"UIPrerenderedIcon": false
+						]
+					]
 				]
 			),
 			sources: ["Sources/**"],

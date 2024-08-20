@@ -6,7 +6,7 @@ extension AVAudioSessionClient: TestDependencyKey {
   public static let previewValue = Self.noop
 
   public static let testValue = Self(
-		recordPermission: unimplemented("\(Self.self).recordPermission"),
+		recordPermission: unimplemented("\(Self.self).recordPermission", placeholder: .notDetermined),
 		requestRecordPermission: unimplemented("\(Self.self).requestRecordPermission")
   )
 }

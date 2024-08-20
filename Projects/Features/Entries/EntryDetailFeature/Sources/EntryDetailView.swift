@@ -26,7 +26,7 @@ public struct EntryDetailView: View {
                 ForEachStore(
                   store.scope(
                     state: \.attachments,
-                    action: EntryDetailFeature.Action.attachments(id:action:)),
+                    action: EntryDetailFeature.Action.attachments),
                   content: AttachmentRowView.init(store:)
                 )
               }
@@ -63,7 +63,7 @@ public struct EntryDetailView: View {
                     AttachmentDetailView(
                       store: store.scope(
                         state: \.selectedAttachmentDetailState,
-                        action: EntryDetailFeature.Action.attachmentDetail))
+                        action: \.attachmentDetail))
                     .tag(attachment)
                   }
                 }
@@ -118,8 +118,8 @@ public struct EntryDetailView: View {
 				NavigationStack {
 					IfLetStore(
 						store.scope(
-							state: { $0.addEntryState },
-							action: EntryDetailFeature.Action.addEntryAction),
+							state: \.addEntryState,
+							action: \.addEntryAction),
 						then: AddEntryView.init(store:)
 					)
 					.toolbar {
@@ -142,7 +142,7 @@ public struct EntryDetailView: View {
 			.alert(
 				store: self.store.scope(
 					state: \.$alert,
-					action: { .alert($0) }
+					action: \.alert
 				)
 			)
       .onAppear {
@@ -178,7 +178,7 @@ public struct EntryDetailView: View {
 					.confirmationDialog(
 						store: self.store.scope(
 							state: \.$confirmationDialog,
-							action: { .confirmationDialog($0) }
+							action: \.confirmationDialog
 						)
 					)
         }

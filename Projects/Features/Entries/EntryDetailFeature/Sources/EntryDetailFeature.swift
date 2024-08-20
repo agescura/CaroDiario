@@ -36,6 +36,7 @@ public struct EntryDetailFeature: Reducer {
 		}
 	}
 	
+	@CasePathable
 	public enum Action: Equatable {
 		case addEntryAction(AddEntryFeature.Action)
 		case alert(PresentationAction<Alert>)
@@ -70,7 +71,7 @@ public struct EntryDetailFeature: Reducer {
 	@Dependency(\.mainQueue) var mainQueue
 	
 	public var body: some ReducerOf<Self> {
-		Scope(state: \.selectedAttachmentDetailState, action: /Action.attachmentDetail) {
+		Scope(state: \.selectedAttachmentDetailState, action: \.attachmentDetail) {
 			AttachmentDetail()
 		}
 		Reduce { state, action in
@@ -206,8 +207,8 @@ public struct EntryDetailFeature: Reducer {
 		.forEach(\.attachments, action: /Action.attachments) {
 			AttachmentRow()
 		}
-		.ifLet(\.$alert, action: /Action.alert)
-		.ifLet(\.addEntryState, action: /EntryDetailFeature.Action.addEntryAction) {
+		.ifLet(\.$alert, action: \.alert)
+		.ifLet(\.addEntryState, action: \.addEntryAction) {
 			AddEntryFeature()
 		}
 	}

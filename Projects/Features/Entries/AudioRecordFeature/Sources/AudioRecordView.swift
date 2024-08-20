@@ -160,7 +160,7 @@ public struct AudioRecordView: View {
 			.alert(
 				store: self.store.scope(
 					state: \.$alert,
-					action: AudioRecordFeature.Action.alert
+					action: \.alert
 				)
 			)
 		}

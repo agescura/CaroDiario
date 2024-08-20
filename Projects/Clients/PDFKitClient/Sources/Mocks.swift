@@ -6,7 +6,7 @@ extension PDFKitClient: TestDependencyKey {
   public static let previewValue = Self.noop
 
   public static let testValue = Self(
-    generatePDF: XCTUnimplemented("\(Self.self).generatePDF")
+		generatePDF: unimplemented("\(Self.self).generatePDF", placeholder: Data())
   )
 }
 

@@ -6,7 +6,7 @@ extension StoreKitClient: TestDependencyKey {
   public static let previewValue = Self.noop
   
   public static let testValue = Self(
-    requestReview: XCTUnimplemented("\(Self.self).requestReview")
+		requestReview: unimplemented("\(Self.self).requestReview", placeholder: ())
   )
 }
 

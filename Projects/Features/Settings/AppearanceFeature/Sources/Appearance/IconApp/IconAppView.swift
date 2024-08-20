@@ -22,6 +22,7 @@ public struct IconAppView: View {
 				HStack(spacing: 32) {
 					ForEach(IconAppType.allCases, id: \.self) { iconApp in
 						VStack {
+							Text(iconApp.icon)
 							Image(iconApp.icon)
 								.resizable()
 								.frame(maxWidth: .infinity)

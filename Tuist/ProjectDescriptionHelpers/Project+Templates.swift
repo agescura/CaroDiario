@@ -113,6 +113,7 @@ extension Project {
 extension Project {
 	static public func feature(
 		name: String,
+		resources: ProjectDescription.ResourceFileElements? = nil,
 		dependencies: [ProjectDescription.TargetDependency] = [],
 		environment: ProjectEnvironment = .caroDiario
 	) -> Self {
@@ -126,6 +127,7 @@ extension Project {
 					bundleId: "\(environment.organizationName)\(name)",
 					deploymentTargets: ProjectEnvironment.caroDiario.deploymentTarget,
 					sources: ["Sources/**"],
+					resources: resources,
 					dependencies: dependencies
 				),
 				.target(

@@ -6,8 +6,8 @@ extension LocalAuthenticationClient: TestDependencyKey {
   public static let previewValue = Self.noop
   
   public static let testValue = Self(
-    determineType: XCTUnimplemented("\(Self.self).determineType"),
-    evaluate: XCTUnimplemented("\(Self.self).evaluate")
+		determineType: unimplemented("\(Self.self).determineType", placeholder: .none),
+		evaluate: unimplemented("\(Self.self).evaluate", placeholder: false)
   )
 }
 

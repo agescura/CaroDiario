@@ -6,13 +6,13 @@ extension UserDefaultsClient: TestDependencyKey {
   public static let previewValue = Self.noop
   
   public static let testValue = Self(
-		boolForKey: unimplemented("\(Self.self).boolForKey"),
+		boolForKey: unimplemented("\(Self.self).boolForKey", placeholder: false),
 		setBool: unimplemented("\(Self.self).setBool"),
-		stringForKey: unimplemented("\(Self.self).stringForKey"),
+		stringForKey: unimplemented("\(Self.self).stringForKey", placeholder: ""),
 		setString: unimplemented("\(Self.self).setString"),
-		intForKey: unimplemented("\(Self.self).intForKey"),
+		intForKey: unimplemented("\(Self.self).intForKey", placeholder: 0),
 		setInt: unimplemented("\(Self.self).setInt"),
-		dateForKey: unimplemented("\(Self.self).dateForKey"),
+		dateForKey: unimplemented("\(Self.self).dateForKey", placeholder: Date()),
 		setDate: unimplemented("\(Self.self).setDate"),
 		remove: unimplemented("\(Self.self).remove")
   )

@@ -29,6 +29,7 @@ public struct AudioRecordFeature: Reducer {
 		public init() {}
 	}
 	
+	@CasePathable
 	public enum Action: Equatable {
 		case alert(PresentationAction<Alert>)
 		case audioPlayerDidFinish(TaskResult<Bool>)
@@ -289,6 +290,6 @@ public struct AudioRecordFeature: Reducer {
 					return .none
 			}
 		}
-		.ifLet(\.$alert, action: /Action.alert)
+		.ifLet(\.$alert, action: \.alert)
 	}
 }

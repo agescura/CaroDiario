@@ -28,7 +28,7 @@ public struct SettingsView: View {
 				Form {
 					Section {
 						Toggle(
-							isOn: self.$store.userSettings.showSplash.sending(\.toggleShowSplash),
+							isOn: $store.userSettings.showSplash.sending(\.toggleShowSplash),
 							label: SplashRowView.init
 						)
 						.toggleStyle(SwitchToggleStyle(tint: .chambray))
@@ -46,18 +46,18 @@ public struct SettingsView: View {
 						) {
 							LanguageRowView(
 								title: "Settings.Language".localized,
-								status: self.store.userSettings.language.localizable.localized
+								status: store.userSettings.language.localizable.localized
 							)
 						}
 					}
 					
 					Section {
 						Button {
-							self.store.send(.navigateToPasscode)
+							store.send(.navigateToPasscode)
 						} label: {
 							PasscodeRowView(
-								title: "Settings.Code".localized(with: [self.store.userSettings.localAuthenticationType.rawValue]),
-								status: self.store.userSettings.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
+								title: "Settings.Code".localized(with: [store.userSettings.localAuthenticationType.rawValue]),
+								status: store.userSettings.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
 							)
 						}
 					}
@@ -66,12 +66,12 @@ public struct SettingsView: View {
 						NavigationLink(
 							state: SettingsFeature.Path.State.camera(CameraFeature.State())
 						) {
-							CameraRowView(title: self.store.userSettings.authorizedVideoStatus.rawValue.localized)
+							CameraRowView(title: store.userSettings.authorizedVideoStatus.rawValue.localized)
 						}
 						NavigationLink(
 							state: SettingsFeature.Path.State.microphone(MicrophoneFeature.State())
 						) {
-							MicrophoneRowView(title: self.store.userSettings.audioRecordPermission.title.localized)
+							MicrophoneRowView(title: store.userSettings.audioRecordPermission.title.localized)
 						}
 					}
 					
@@ -87,7 +87,7 @@ public struct SettingsView: View {
 						ReviewRowView()
 							.contentShape(Rectangle())
 							.onTapGesture {
-								self.store.send(.reviewStoreKit)
+								store.send(.reviewStoreKit)
 							}
 					}
 					
@@ -139,7 +139,7 @@ public struct SettingsView: View {
 			}
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
-		.task { await self.store.send(.task).finish() }
+		.task { await store.send(.task).finish() }
 	}
 }
 

@@ -59,8 +59,6 @@ public struct EntriesFeature {
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
 			switch action {
-				case let .path(.element(id: _, action: pathAction)):
-					return .none
 				case .path:
 					return .none
 				case .task:
@@ -132,9 +130,6 @@ public struct EntriesFeature {
 	//					},
 	//					.send(.navigateEntryDetail(false))
 	//				)
-					
-				default:
-					return .none
 			}
 		}
 		.ifLet(\.$add, action: \.add) {
