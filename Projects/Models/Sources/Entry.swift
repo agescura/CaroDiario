@@ -80,7 +80,6 @@ extension Entry {
 }
 
 extension Entry {
-    
     public var images: [EntryImage] {
         attachments.filter { $0 is EntryImage }.compactMap { $0 as? EntryImage }
     }

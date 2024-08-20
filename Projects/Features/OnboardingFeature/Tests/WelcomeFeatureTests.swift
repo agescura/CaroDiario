@@ -70,33 +70,33 @@ class WelcomeFeatureTests: XCTestCase {
 	}
 	
 	func testSnapshot() {
-		SnapshotTesting.diffTool = "ksdiff"
-		
-		assertSnapshot(
-			WelcomeView(
-				store: Store(
-					initialState: WelcomeFeature.State(),
-					reducer: {}
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			assertSnapshot(
+				WelcomeView(
+					store: Store(
+						initialState: WelcomeFeature.State(),
+						reducer: {}
+					)
 				)
 			)
-		)
-		
-		assertSnapshot(
-			WelcomeView(
-				store: Store(
-					initialState: WelcomeFeature.State(selectedPage: 1),
-					reducer: {}
+			
+			assertSnapshot(
+				WelcomeView(
+					store: Store(
+						initialState: WelcomeFeature.State(selectedPage: 1),
+						reducer: {}
+					)
 				)
 			)
-		)
-		
-		assertSnapshot(
-			WelcomeView(
-				store: Store(
-					initialState: WelcomeFeature.State(selectedPage: 2),
-					reducer: {}
+			
+			assertSnapshot(
+				WelcomeView(
+					store: Store(
+						initialState: WelcomeFeature.State(selectedPage: 2),
+						reducer: {}
+					)
 				)
 			)
-		)
+		}
 	}
 }

@@ -20,7 +20,9 @@ let packageSettings = PackageSettings(
 		"Perception": .framework,
 		"CasePaths": .framework,
 		"CustomDump": .framework,
-		"XCTestDynamicOverlay": .framework
+		"XCTestDynamicOverlay": .framework,
+		"IssueReporting": .framework,
+		"InternalCollectionsUtilities": .framework
 	]
 )
 #endif

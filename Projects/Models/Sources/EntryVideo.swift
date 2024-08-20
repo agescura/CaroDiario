@@ -1,10 +1,3 @@
-//
-//  EntryVideo.swift
-//  
-//
-//  Created by Albert Gil Escura on 31/7/21.
-//
-
 import Foundation
 
 public struct EntryVideo: EntryAttachment, Equatable, Identifiable, Hashable {
@@ -31,4 +24,15 @@ extension EntryVideo {
     var urls: [URL] {
         [thumbnail, url]
     }
+}
+
+extension EntryVideo {
+	public static var mock: Self {
+		Self(
+			id: UUID(),
+			lastUpdated: Date(),
+			thumbnail: .empty,
+			url: .empty
+		)
+	}
 }

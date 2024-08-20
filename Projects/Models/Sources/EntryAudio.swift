@@ -1,10 +1,3 @@
-//
-//  EntryAudio.swift
-//  
-//
-//  Created by Albert Gil Escura on 24/8/21.
-//
-
 import Foundation
 
 public struct EntryAudio: EntryAttachment, Equatable, Identifiable, Hashable {
@@ -28,4 +21,14 @@ extension EntryAudio {
     var urls: [URL] {
         [url]
     }
+}
+
+extension EntryAudio {
+	public static var mock: Self {
+		Self(
+			id: UUID(),
+			lastUpdated: Date(),
+			url: .empty
+		)
+	}
 }

@@ -6,9 +6,9 @@ extension AVAudioPlayerClient: TestDependencyKey {
 	public static let previewValue = Self.noop
 	
 	public static let testValue = Self(
-		currentTime: XCTUnimplemented("\(Self.self).currentTime"),
-		play: XCTUnimplemented("\(Self.self).play"),
-		stop: XCTUnimplemented("\(Self.self).stop")
+		currentTime: unimplemented("\(Self.self).currentTime"),
+		play: unimplemented("\(Self.self).play"),
+		stop: unimplemented("\(Self.self).stop")
 	)
 }
 

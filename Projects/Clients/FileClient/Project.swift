@@ -5,6 +5,7 @@ let project: Project = .framework(
 	name: "FileClient",
 	dependencies: [
 		.package("ComposableArchitecturePackage"),
-		.models
+		.models,
+		.helper("SwiftHelper")
 	]
 )

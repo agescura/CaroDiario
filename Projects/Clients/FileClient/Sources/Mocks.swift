@@ -1,17 +1,18 @@
 import Foundation
 import Models
 import Dependencies
+import SwiftHelper
 import XCTestDynamicOverlay
 
 extension FileClient: TestDependencyKey {
   public static let previewValue = Self.noop
 
   public static let testValue = Self(
-    path: XCTUnimplemented("\(Self.self).path"),
-    removeAttachments: XCTUnimplemented("\(Self.self).removeAttachments"),
-    addImage: XCTUnimplemented("\(Self.self).addImage"),
-    addVideo: XCTUnimplemented("\(Self.self).addVideo"),
-    addAudio: XCTUnimplemented("\(Self.self).addAudio")
+		path: unimplemented("\(Self.self).path", placeholder: .empty),
+		removeAttachments: unimplemented("\(Self.self).removeAttachments"),
+		addImage: unimplemented("\(Self.self).addImage", placeholder: .mock),
+		addVideo: unimplemented("\(Self.self).addVideo", placeholder: .mock),
+		addAudio: unimplemented("\(Self.self).addAudio", placeholder: .mock)
   )
 }
 

@@ -1,14 +1,39 @@
-import XCTest
-@testable import SettingsFeature
+import AppearanceFeature
 import ComposableArchitecture
+import Models
+import PasscodeFeature
+@testable import SettingsFeature
+import Styles
 import SwiftUI
 import UserDefaultsClient
-import Styles
-import PasscodeFeature
+import XCTest
 
 @MainActor
 class SettingsFeatureTests: XCTestCase {
+	@MainActor
+	func testShowHideSplash() async {
+		let store = TestStore(
+			initialState: SettingsFeature.State(),
+			reducer: { SettingsFeature() }
+		)
+		
+		await store.send(.toggleShowSplash(isOn: false)) {
+			$0.userSettings.showSplash = false
+		}
+	}
 	
+	@MainActor
+	func testNavigateToAppearance() async {
+		let store = TestStore(
+			initialState: SettingsFeature.State(),
+			reducer: { SettingsFeature() }
+		)
+		await store.send(.path(.push(id: 0, state: .appearance(AppearanceFeature.State())))) {
+			$0.path.append(.appearance(AppearanceFeature.State()))
+		}
+	}
+	
+	@MainActor
 	func testInsertPasscode() async {
 		let store = TestStore(
 			initialState: SettingsFeature.State(),

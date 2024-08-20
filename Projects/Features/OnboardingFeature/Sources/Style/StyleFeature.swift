@@ -65,6 +65,6 @@ public struct StyleFeature {
 		.forEach(\.entries, action: \.entries) {
 			DayEntriesRow()
 		}
-		.ifLet(\.$alert, action: /Action.alert)
+		.ifLet(\.$alert, action: \.alert)
 	}
 }

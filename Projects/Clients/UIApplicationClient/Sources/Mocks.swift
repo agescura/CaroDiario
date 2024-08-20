@@ -6,15 +6,15 @@ extension UIApplicationClient: TestDependencyKey {
   public static let previewValue = Self.noop
 
   public static let testValue = Self(
-    alternateIconName: XCTUnimplemented("\(Self.self).alternateIconName"),
-    setAlternateIconName: XCTUnimplemented("\(Self.self).setAlternateIconName"),
-    supportsAlternateIcons: XCTUnimplemented("\(Self.self).supportsAlternateIcons"),
-    openSettings: XCTUnimplemented("\(Self.self).openSettings"),
-    open: XCTUnimplemented("\(Self.self).open"),
-    canOpen: XCTUnimplemented("\(Self.self).canOpen"),
-    share: XCTUnimplemented("\(Self.self).share"),
-    showTabView: XCTUnimplemented("\(Self.self).showTabView"),
-    setUserInterfaceStyle: XCTUnimplemented("\(Self.self).setUserInterfaceStyle")
+		alternateIconName: unimplemented("\(Self.self).alternateIconName"),
+		setAlternateIconName: unimplemented("\(Self.self).setAlternateIconName"),
+		supportsAlternateIcons: unimplemented("\(Self.self).supportsAlternateIcons"),
+		openSettings: unimplemented("\(Self.self).openSettings"),
+		open: unimplemented("\(Self.self).open"),
+		canOpen: unimplemented("\(Self.self).canOpen"),
+		share: unimplemented("\(Self.self).share"),
+		showTabView: unimplemented("\(Self.self).showTabView"),
+		setUserInterfaceStyle: unimplemented("\(Self.self).setUserInterfaceStyle")
   )
 }
 

@@ -1,16 +1,17 @@
 import ComposableArchitecture
 import Dependencies
+import Foundation
 import XCTestDynamicOverlay
 
 extension AVAudioRecorderClient: TestDependencyKey {
 	public static let previewValue = Self.noop
 	
 	public static let testValue = Self(
-		currentTime: XCTUnimplemented("\(Self.self).currentTime"),
-		recordPermission: XCTUnimplemented("\(Self.self).recordPermission"),
-		requestRecordPermission: XCTUnimplemented("\(Self.self).requestRecordPermission"),
-		startRecording: XCTUnimplemented("\(Self.self).startRecording"),
-		stopRecording: XCTUnimplemented("\(Self.self).stopRecording")
+		currentTime: unimplemented("\(Self.self).currentTime", placeholder: TimeInterval()),
+		recordPermission: unimplemented("\(Self.self).recordPermission", placeholder: .undetermined),
+		requestRecordPermission: unimplemented("\(Self.self).requestRecordPermission", placeholder: .undetermined),
+		startRecording: unimplemented("\(Self.self).startRecording"),
+		stopRecording: unimplemented("\(Self.self).stopRecording")
 	)
 }
 

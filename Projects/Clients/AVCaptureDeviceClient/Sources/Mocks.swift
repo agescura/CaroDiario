@@ -6,8 +6,8 @@ extension AVCaptureDeviceClient: TestDependencyKey {
   public static let previewValue = Self.noop
   
   public static let testValue = Self(
-    authorizationStatus: XCTUnimplemented("\(Self.self).authorizationStatus"),
-    requestAccess: XCTUnimplemented("\(Self.self).requestAccess")
+		authorizationStatus: unimplemented("\(Self.self).authorizationStatus"),
+		requestAccess: unimplemented("\(Self.self).requestAccess")
   )
 }
 

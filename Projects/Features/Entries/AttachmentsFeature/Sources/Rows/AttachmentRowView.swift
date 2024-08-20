@@ -2,7 +2,8 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 
-public struct AttachmentRow: Reducer {
+@Reducer
+public struct AttachmentRow {
   public init() {}
   
   public struct State: Identifiable, Equatable, Hashable {
@@ -23,12 +24,11 @@ public struct AttachmentRow: Reducer {
   }
   
   public var body: some ReducerOf<Self> {
-    Scope(state: \.attachment, action: /Action.attachment) {
+    Scope(state: \.attachment, action: \.attachment) {
       Attachment()
     }
   }
 }
-
 
 public struct AttachmentRowView: View {
     let store: StoreOf<AttachmentRow>
@@ -43,7 +43,7 @@ public struct AttachmentRowView: View {
         AttachmentView(
             store: store.scope(
                 state: \.attachment,
-                action: AttachmentRow.Action.attachment
+                action: \.attachment
             )
         )
     }

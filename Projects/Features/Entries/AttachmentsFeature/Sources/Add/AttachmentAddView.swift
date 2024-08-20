@@ -20,13 +20,13 @@ public struct AttachmentAdd {
   }
   
   public var body: some ReducerOf<Self> {
-    Scope(state: /State.image, action: /Action.image) {
+    Scope(state: \.image, action: \.image) {
       AttachmentAddImage()
     }
-    Scope(state: /State.video, action: /Action.video) {
+    Scope(state: \.video, action: \.video) {
       AttachmentAddVideo()
     }
-    Scope(state: /State.audio, action: /Action.audio) {
+    Scope(state: \.audio, action: \.audio) {
       AttachmentAddAudio()
     }
   }

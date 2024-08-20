@@ -1,9 +1,11 @@
 import ComposableArchitecture
 import SwiftUI
 
-public struct AttachmentDetail: Reducer {
+@Reducer
+public struct AttachmentDetail {
   public init() {}
   
+	@ObservableState
   public enum State: Equatable {
     case image(AttachmentImageDetail.State)
     case video(AttachmentVideoDetail.State)
@@ -28,13 +30,13 @@ public struct AttachmentDetail: Reducer {
   }
   
   public var body: some ReducerOf<Self> {
-    Scope(state: /State.image, action: /Action.image) {
+    Scope(state: \.image, action: \.image) {
       AttachmentImageDetail()
     }
-    Scope(state: /State.video, action: /Action.video) {
+    Scope(state: \.video, action: \.video) {
       AttachmentVideoDetail()
     }
-    Scope(state: /State.audio, action: /Action.audio) {
+    Scope(state: \.audio, action: \.audio) {
       AttachmentAudioDetail()
     }
   }
@@ -50,27 +52,19 @@ public struct AttachmentDetailView: View {
   }
   
   public var body: some View {
-		SwitchStore(self.store) { state in
-			switch state {
-				case .image:
-					CaseLet(
-						/AttachmentDetail.State.image,
-						action: AttachmentDetail.Action.image,
-						then: AttachmentImageDetailView.init(store:)
-					)
-				case .video:
-					CaseLet(
-						/AttachmentDetail.State.video,
-						action: AttachmentDetail.Action.video,
-						then: AttachmentVideoDetailView.init(store:)
-					)
-				case .audio:
-					CaseLet(
-						/AttachmentDetail.State.audio,
-						action: AttachmentDetail.Action.audio,
-						then: AttachmentAudioDetailView.init(store:)
-					)
-			}
+		switch store.state {
+			case .image:
+				if let store = store.scope(state: \.image, action: \.image) {
+					AttachmentImageDetailView(store: store)
+				}
+			case .video:
+				if let store = store.scope(state: \.video, action: \.video) {
+					AttachmentVideoDetailView(store: store)
+				}
+			case .audio:
+				if let store = store.scope(state: \.audio, action: \.audio) {
+					AttachmentAudioDetailView(store: store)
+				}
 		}
   }
 }

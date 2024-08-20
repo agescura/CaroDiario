@@ -6,8 +6,8 @@ extension AVAssetClient: TestDependencyKey {
   public static let previewValue = Self.noop
   
   public static let testValue = Self(
-    commonMetadata: XCTUnimplemented("\(Self.self).commonMetadata"),
-    generateThumbnail: XCTUnimplemented("\(Self.self).generateThumbnail")
+		commonMetadata: unimplemented("\(Self.self).commonMetadata"),
+		generateThumbnail: unimplemented("\(Self.self).generateThumbnail")
   )
 }
 
