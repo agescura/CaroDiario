@@ -2,8 +2,11 @@
 import ComposableArchitecture
 import Models
 import TestUtils
+import SnapshotTesting
+import SwiftUI
 import XCTest
 
+@MainActor
 class IconAppViewTests: XCTestCase {
 	@MainActor
 	func testIconAppHappyPath() async {
@@ -24,28 +27,34 @@ class IconAppViewTests: XCTestCase {
 	}
 	
 	func testSnapshot() {
-		assertSnapshot(
-			IconAppView(
-				store: Store(
-					initialState: IconAppFeature.State(),
-					reducer: { }
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					IconAppView(
+						store: Store(
+							initialState: IconAppFeature.State(),
+							reducer: { }
+						)
+					)
 				)
-			)
-		)
-		
-		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
-		userSettings.appearance.iconAppType = .dark
-		
-		assertSnapshot(
-			IconAppView(
-				store: Store(
-					initialState: IconAppFeature.State(),
-					reducer: { }
+				
+				userSettings.appearance.iconAppType = .dark
+				
+				assertSnapshot(
+					IconAppView(
+						store: Store(
+							initialState: IconAppFeature.State(),
+							reducer: { }
+						)
+					)
 				)
-			)
-		)
+				
+				userSettings.appearance.iconAppType = .light
+			}
+		}
 	}
 }
-
-import SwiftUI
-import SnapshotTesting

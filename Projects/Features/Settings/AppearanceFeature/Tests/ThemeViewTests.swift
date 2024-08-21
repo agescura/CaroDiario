@@ -5,6 +5,7 @@ import Models
 import TestUtils
 import XCTest
 
+@MainActor
 class ThemeViewTests: XCTestCase {
 	@MainActor
   func testHappyPath() async {
@@ -25,39 +26,46 @@ class ThemeViewTests: XCTestCase {
   }
   
   func testSnapshot() {
-		SnapshotTesting.diffTool = "ksdiff"
-    
-    assertSnapshot(
-			ThemeView(
-				store: Store(
-					initialState: ThemeFeature.State(entries: fakeEntries),
-					reducer: {  }
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					ThemeView(
+						store: Store(
+							initialState: ThemeFeature.State(entries: fakeEntries),
+							reducer: {  }
+						)
+					)
 				)
-			)
-		)
-		
-		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
-		userSettings.appearance.themeType = .light
-		
-		assertSnapshot(
-			ThemeView(
-				store: Store(
-					initialState: ThemeFeature.State(entries: fakeEntries),
-					reducer: {  }
+				
+				userSettings.appearance.themeType = .light
+				
+				assertSnapshot(
+					ThemeView(
+						store: Store(
+							initialState: ThemeFeature.State(entries: fakeEntries),
+							reducer: {  }
+						)
+					)
 				)
-			)
-		)
-		
-		userSettings.appearance.themeType = .dark
-		
-		assertSnapshot(
-			ThemeView(
-				store: Store(
-					initialState: ThemeFeature.State(entries: fakeEntries),
-					reducer: {  }
+				
+				userSettings.appearance.themeType = .dark
+				
+				assertSnapshot(
+					ThemeView(
+						store: Store(
+							initialState: ThemeFeature.State(entries: fakeEntries),
+							reducer: {  }
+						)
+					)
 				)
-			)
-		)
+				
+				userSettings.appearance.themeType = .system
+			}
+		}
   }
 }
 

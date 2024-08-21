@@ -16,7 +16,7 @@ let packageSettings = PackageSettings(
 		"OrderedCollections": .framework,
 		"_CollectionsUtilities": .framework,
 		"DependenciesMacros": .framework,
-		"SwiftUINavigationCore": .framework,
+		"SwiftNavigation": .framework,
 		"Perception": .framework,
 		"CasePaths": .framework,
 		"CustomDump": .framework,
@@ -30,7 +30,7 @@ let packageSettings = PackageSettings(
 let package = Package(
 	name: "CaroDiario",
 	dependencies: [
-		.package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.12.1"),
-		.package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.17.3"),
+		.package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.13.0"),
+		.package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.17.4"),
 	]
 )

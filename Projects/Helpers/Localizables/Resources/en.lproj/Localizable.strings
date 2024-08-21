@@ -1,13 +1,6 @@
-/* 
-  Localizable.strings
-  ProjectDiary
-
-  Created by Albert Gil Escura on 27/6/21.
-  
-*/
-
 "Cancel" = "Cancel";
 "Continue" = "Yes, sure";
+"Selected" = "Selected";
 
 // Styles
 

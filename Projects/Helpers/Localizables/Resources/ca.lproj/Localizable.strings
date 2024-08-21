@@ -1,13 +1,6 @@
-/* 
-  Localizable.strings
-  ProjectDiary
-
-  Created by Albert Gil Escura on 27/6/21.
-  
-*/
-
 "Cancel" = "Cancel.lar";
 "Continue" = "Si, continuar";
+"Selected" = "Seleccionat";
 
 // Styles
 
@@ -109,7 +102,7 @@
 
 "Settings.Behaviour" = "";
 "Settings.Splash" = "Mostra l'animació a l'inici";
-"Settings.Layout" = "Layout";
+"Settings.Layout" = "Disposició";
 "Settings.Style" = "Estil";
 "Settings.Appearance" = "Apariència";
 "Settings.Security" = "Seguretat";
@@ -117,7 +110,7 @@
 "Settings.Title" = "Configuració";
 "Settings.On" = "Activat";
 "Settings.Off" = "Desactivat";
-"Settings.Theme" = "Theme";
+"Settings.Theme" = "Tema";
 "Settings.Icon" = "Icona";
 "Settings.Camera" = "Càmera";
 "Settings.GoToSettings" = "Anar a la configuració";

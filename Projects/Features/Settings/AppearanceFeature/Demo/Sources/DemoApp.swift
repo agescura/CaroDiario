@@ -1,16 +1,16 @@
 import SwiftUI
 import ComposableArchitecture
-import SplashFeature
+import AppearanceFeature
 
 @main
 struct DemoApp: App {
 	var body: some Scene {
 		WindowGroup {
-			SplashView(
+			AppearanceView(
 				store: Store(
-					initialState: SplashFeature.State(),
+					initialState: AppearanceFeature.State(),
 					reducer: {
-						SplashFeature()
+						AppearanceFeature()
 					}
 				)
 			)

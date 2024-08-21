@@ -120,6 +120,5 @@ public struct SettingsFeature {
 			}
 		}
 		.forEach(\.path, action: \.path)
-		._printChanges()
 	}
 }

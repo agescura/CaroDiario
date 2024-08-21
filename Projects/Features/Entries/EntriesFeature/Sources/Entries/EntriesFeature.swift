@@ -139,6 +139,5 @@ public struct EntriesFeature {
 			DayEntriesRow()
 		}
 		.forEach(\.path, action: \.path)
-		._printChanges()
 	}
 }

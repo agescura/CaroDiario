@@ -1,10 +1,12 @@
 @testable import AppearanceFeature
-import EntriesFeature
 import ComposableArchitecture
+import EntriesFeature
 import Models
+import SnapshotTesting
 import TestUtils
 import XCTest
 
+@MainActor
 class AppearanceViewTests: XCTestCase {
 	@MainActor
 	func testHappyPath() async {
@@ -24,5 +26,24 @@ class AppearanceViewTests: XCTestCase {
 		
 		await store.send(.themeButtonTapped)
 		await store.receive(.delegate(.navigateToTheme))
+	}
+	
+	func testSnapshot() {
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					AppearanceView(
+						store: Store(
+							initialState: AppearanceFeature.State(),
+							reducer: {}
+						)
+					)
+				)
+			}
+		}
 	}
 }

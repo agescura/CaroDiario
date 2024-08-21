@@ -32,7 +32,7 @@ public struct IconAppView: View {
 									self.store.send(.iconAppChanged(iconApp))
 								}
 								.overlay(
-									Text(self.store.userSettings.appearance.iconAppType == iconApp ? "Selected" : "")
+									Text(self.store.userSettings.appearance.iconAppType == iconApp ? "Selected".localized : "")
 										.foregroundColor(.chambray)
 										.adaptiveFont(.latoRegular, size: 14)
 										.offset(x: 0, y: 32)

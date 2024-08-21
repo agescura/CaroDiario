@@ -1,11 +1,12 @@
 @testable import AppearanceFeature
-import EntriesFeature
 import ComposableArchitecture
+import EntriesFeature
 import Models
 import SnapshotTesting
 import TestUtils
 import XCTest
 
+@MainActor
 class LayoutViewTests: XCTestCase {
 	@MainActor
   func testAppearanceHappyPath() async {
@@ -21,25 +22,34 @@ class LayoutViewTests: XCTestCase {
   }
 	
 	func testSnapshot() {
-		assertSnapshot(
-			LayoutView(
-				store: Store(
-					initialState: LayoutFeature.State(entries: fakeEntries),
-					reducer: { }
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					LayoutView(
+						store: Store(
+							initialState: LayoutFeature.State(entries: fakeEntries),
+							reducer: { }
+						)
+					)
 				)
-			)
-		)
-		
-		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
-		userSettings.appearance.layoutType = .vertical
-		
-		assertSnapshot(
-			LayoutView(
-				store: Store(
-					initialState: LayoutFeature.State(entries: fakeEntries),
-					reducer: { }
+				
+				userSettings.appearance.layoutType = .vertical
+				
+				assertSnapshot(
+					LayoutView(
+						store: Store(
+							initialState: LayoutFeature.State(entries: fakeEntries),
+							reducer: { }
+						)
+					)
 				)
-			)
-		)
+				
+				userSettings.appearance.layoutType = .horizontal
+			}
+		}
 	}
 }
