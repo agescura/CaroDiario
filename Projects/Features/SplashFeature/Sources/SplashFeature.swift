@@ -23,16 +23,20 @@ public struct SplashFeature {
     }
   }
   
-  public enum Action: Equatable {
+  public enum Action: ViewAction, Equatable {
 		case areaAnimation
 		case delegate(Delegate)
 		case finishAnimation
-    case task
     case verticalLineAnimation
+		case view(View)
 		
 		@CasePathable
 		public enum Delegate: Equatable {
 			case animationFinished
+		}
+		@CasePathable
+		public enum View: Equatable {
+			case task
 		}
   }
   
@@ -52,10 +56,13 @@ public struct SplashFeature {
 				case .finishAnimation:
 					state.animation = .finish
 					return .send(.delegate(.animationFinished))
-				case .task:
-					return .run { send in
-						try await self.clock.sleep(for: .seconds(1))
-						await send(.verticalLineAnimation)
+				case let .view(viewAction):
+					switch viewAction {
+						case .task:
+							return .run { send in
+								try await self.clock.sleep(for: .seconds(1))
+								await send(.verticalLineAnimation)
+							}
 					}
 				case .verticalLineAnimation:
 					state.animation = .verticalLine

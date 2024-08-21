@@ -2,8 +2,9 @@ import SwiftUI
 import ComposableArchitecture
 import Styles
 
+@ViewAction(for: SplashFeature.self)
 public struct SplashView: View {
-	let store: StoreOf<SplashFeature>
+	public let store: StoreOf<SplashFeature>
 	
 	public init(
 		store: StoreOf<SplashFeature>
@@ -28,7 +29,7 @@ public struct SplashView: View {
 			}
 		}
 		.ignoresSafeArea()
-		.task { await self.store.send(.task).finish() }
+		.task { await send(.task).finish() }
 	}
 }
 

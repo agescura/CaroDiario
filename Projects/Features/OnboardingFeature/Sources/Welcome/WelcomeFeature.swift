@@ -37,15 +37,13 @@ public struct WelcomeFeature {
 		}
 	}
 	
-	public enum Action: Equatable {
+	public enum Action: ViewAction, Equatable {
 		case alert(PresentationAction<OnboardingAlert>)
 		case delegate(Delegate)
 		case nextPage
 		case path(StackAction<Path.State, Path.Action>)
-		case privacyButtonTapped
-		case skipAlertButtonTapped
 		case selectedPage(Int)
-		case task
+		case view(View)
 		
 		@CasePathable
 		public enum Alert: Equatable {
@@ -54,6 +52,12 @@ public struct WelcomeFeature {
 		@CasePathable
 		public enum Delegate: Equatable {
 			case navigateToHome
+		}
+		@CasePathable
+		public enum View: Equatable {
+			case skipAlertButtonTapped
+			case privacyButtonTapped
+			case task
 		}
 	}
 	
@@ -99,28 +103,15 @@ public struct WelcomeFeature {
 						case .layout(.delegate(.navigateToTheme)):
 							state.path.append(.theme(ThemeFeature.State(entries: fakeEntries)))
 							return .none
+						case .privacy(.delegate(.navigateToHome)),
+								.style(.delegate(.navigateToHome)),
+								.layout(.delegate(.navigateToHome)):
+							return .send(.delegate(.navigateToHome))
 						default:
 							return .none
 					}
 				case .path:
 					return .none
-					
-				case .privacyButtonTapped:
-					state.path.append(.privacy(PrivacyFeature.State()))
-					return .cancel(id: CancelID.timer)
-					
-				case .skipAlertButtonTapped:
-					state.alert = .skip
-					return .none
-					
-				case .task:
-					return .run { send in
-						while true {
-							try await self.clock.sleep(for: .seconds(5))
-							await send(.nextPage)
-						}
-					}
-					.cancellable(id: CancelID.timer)
 					
 				case let .selectedPage(value):
 					state.selectedPage = value
@@ -134,6 +125,24 @@ public struct WelcomeFeature {
 						}
 							.cancellable(id: CancelID.timer)
 					)
+					
+				case let .view(viewAction):
+					switch viewAction {
+						case .skipAlertButtonTapped:
+							state.alert = .skip
+							return .none
+						case .privacyButtonTapped:
+							state.path.append(.privacy(PrivacyFeature.State()))
+							return .cancel(id: CancelID.timer)
+						case .task:
+							return .run { send in
+								while true {
+									try await self.clock.sleep(for: .seconds(5))
+									await send(.nextPage)
+								}
+							}
+							.cancellable(id: CancelID.timer)
+					}
 			}
 		}
 		.forEach(\.path, action: \.path)

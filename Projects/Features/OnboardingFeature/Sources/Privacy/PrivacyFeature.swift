@@ -22,11 +22,10 @@ public struct PrivacyFeature {
     }
   }
   
-  public enum Action: Equatable {
+  public enum Action: ViewAction, Equatable {
 		case alert(PresentationAction<OnboardingAlert>)
 		case delegate(Delegate)
-		case skipAlertButtonTapped
-		case styleButtonTapped
+		case view(View)
 		
 		@CasePathable
 		public enum Alert: Equatable {
@@ -36,6 +35,11 @@ public struct PrivacyFeature {
 		public enum Delegate: Equatable {
 			case navigateToHome
 			case navigateToStyle
+		}
+		@CasePathable
+		public enum View: Equatable {
+			case skipAlertButtonTapped
+			case styleButtonTapped
 		}
   }
   
@@ -55,12 +59,15 @@ public struct PrivacyFeature {
 				case .delegate:
 					return .none
 					
-				case .skipAlertButtonTapped:
-					state.alert = .skip
-					return .none
-					
-				case .styleButtonTapped:
-					return .send(.delegate(.navigateToStyle))
+				case let .view(viewAction):
+					switch viewAction {
+						case .skipAlertButtonTapped:
+							state.alert = .skip
+							return .none
+							
+						case .styleButtonTapped:
+							return .send(.delegate(.navigateToStyle))
+					}
 			}
 		}
 		.ifLet(\.$alert, action: \.alert)

@@ -4,8 +4,9 @@ import Views
 import Styles
 import EntriesFeature
 
+@ViewAction(for: PrivacyFeature.self)
 public struct PrivacyView: View {
-	let store: StoreOf<PrivacyFeature>
+	public let store: StoreOf<PrivacyFeature>
 	
 	public init(
 		store: StoreOf<PrivacyFeature>
@@ -40,18 +41,18 @@ public struct PrivacyView: View {
 						.adaptiveFont(.latoRegular, size: 16)
 					
 				}) {
-					self.store.send(.skipAlertButtonTapped)
+					send(.skipAlertButtonTapped)
 				}
-				.opacity(self.store.isAppClip ? 0.0 : 1.0)
+				.opacity(store.isAppClip ? 0.0 : 1.0)
 				.padding(.horizontal, 16)
-				.alert(store: self.store.scope(state: \.$alert, action: \.alert))
+				.alert(store: store.scope(state: \.$alert, action: \.alert))
 			
 			PrimaryButtonView(
 				label: {
 					Text("OnBoarding.Continue".localized)
 						.adaptiveFont(.latoRegular, size: 16)
 				}) {
-					self.store.send(.styleButtonTapped)
+					send(.styleButtonTapped)
 				}
 				.padding(.horizontal, 16)
 		}

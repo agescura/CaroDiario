@@ -2,8 +2,9 @@ import SwiftUI
 import ComposableArchitecture
 import Views
 
+@ViewAction(for: WelcomeFeature.self)
 public struct WelcomeView: View {
-	@Bindable var store: StoreOf<WelcomeFeature>
+	@Bindable public var store: StoreOf<WelcomeFeature>
 	
 	public init(
 		store: StoreOf<WelcomeFeature>
@@ -25,27 +26,27 @@ public struct WelcomeView: View {
 						.init(id: 1, title: "OnBoarding.Description.2".localized),
 						.init(id: 2, title: "OnBoarding.Description.3".localized)
 					],
-					selection: self.$store.selectedPage.sending(\.selectedPage),
-					animated: self.store.tabViewAnimated
+					selection: $store.selectedPage.sending(\.selectedPage),
+					animated: store.tabViewAnimated
 				)
 				.frame(minHeight: 150)
 				
 				
 				Button("OnBoarding.Skip".localized) {
-					self.store.send(.skipAlertButtonTapped)
+					send(.skipAlertButtonTapped)
 				}
 				.buttonStyle(.secondary)
-				.opacity(self.store.isAppClip ? 0.0 : 1.0)
+				.opacity(store.isAppClip ? 0.0 : 1.0)
 				
 				Button("OnBoarding.Continue".localized) {
-					self.store.send(.privacyButtonTapped)
+					send(.privacyButtonTapped)
 				}
 				.buttonStyle(.primary)
 			}
 			.padding()
 			.navigationBarTitleDisplayMode(.inline)
 			.alert(
-				store: self.store.scope(state: \.$alert, action: \.alert)
+				store: store.scope(state: \.$alert, action: \.alert)
 			)
 		} destination: { store in
 			switch store.case {
@@ -61,7 +62,7 @@ public struct WelcomeView: View {
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
 		.task {
-			await self.store.send(.task).finish()
+			await send(.task).finish()
 		}
 	}
 }
