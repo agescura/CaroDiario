@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Models
 @testable import OnboardingFeature
 import SnapshotTesting
 import SwiftUI
@@ -8,6 +9,7 @@ import XCTest
 
 @MainActor
 class PrivacyFeatureTests: XCTestCase {
+	@MainActor
 	func testHappyPath() async {
 		let store = TestStore(
 			initialState: PrivacyFeature.State(),
@@ -18,6 +20,7 @@ class PrivacyFeatureTests: XCTestCase {
 		await store.receive(\.delegate.navigateToStyle)
 	}
 	
+	@MainActor
 	func testAlertSkipOnboarding() async {
 		let store = TestStore(
 			initialState: PrivacyFeature.State(),
@@ -34,6 +37,7 @@ class PrivacyFeatureTests: XCTestCase {
 		await store.receive(\.delegate.navigateToHome)
 	}
 	
+	@MainActor
 	func testAlertSkipCancel() async {
 		let store = TestStore(
 			initialState: PrivacyFeature.State(),
@@ -49,14 +53,22 @@ class PrivacyFeatureTests: XCTestCase {
 	}
 	
 	func testSnapshot() {
-		assertSnapshot(
-			PrivacyView(
-				store: Store(
-					initialState: PrivacyFeature.State(),
-					reducer: {}
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					PrivacyView(
+						store: Store(
+							initialState: PrivacyFeature.State(),
+							reducer: {}
+						)
+					)
 				)
-			)
-		)
+			}
+		}
 	}
 }
 

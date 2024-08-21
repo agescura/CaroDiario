@@ -7,6 +7,7 @@ import SwiftUI
 import TestUtils
 import XCTest
 
+@MainActor
 class StyleFeatureTests: XCTestCase {
 	@MainActor
 	func testHappyPath() async {
@@ -56,25 +57,33 @@ class StyleFeatureTests: XCTestCase {
 	}
 	
 	func testSnapshot() {
-		assertSnapshot(
-			StyleView(
-				store: Store(
-					initialState: StyleFeature.State(entries: fakeEntries),
-					reducer: {}
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					StyleView(
+						store: Store(
+							initialState: StyleFeature.State(entries: fakeEntries),
+							reducer: {}
+						)
+					)
 				)
-			)
-		)
-		
-		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
-		userSettings.appearance.styleType = .rounded
-		
-		assertSnapshot(
-			StyleView(
-				store: Store(
-					initialState: StyleFeature.State(entries: fakeEntries),
-					reducer: {}
+				
+				@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+				userSettings.appearance.styleType = .rounded
+				
+				assertSnapshot(
+					StyleView(
+						store: Store(
+							initialState: StyleFeature.State(entries: fakeEntries),
+							reducer: {}
+						)
+					)
 				)
-			)
-		)
+			}
+		}
 	}
 }

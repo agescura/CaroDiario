@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import Dependencies
+import Models
 @testable import OnboardingFeature
 import SnapshotTesting
 import SwiftUI
@@ -71,32 +72,38 @@ class WelcomeFeatureTests: XCTestCase {
 	
 	func testSnapshot() {
 		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
-			assertSnapshot(
-				WelcomeView(
-					store: Store(
-						initialState: WelcomeFeature.State(),
-						reducer: {}
-					)
-				)
-			)
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
 			
-			assertSnapshot(
-				WelcomeView(
-					store: Store(
-						initialState: WelcomeFeature.State(selectedPage: 1),
-						reducer: {}
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					WelcomeView(
+						store: Store(
+							initialState: WelcomeFeature.State(),
+							reducer: {}
+						)
 					)
 				)
-			)
-			
-			assertSnapshot(
-				WelcomeView(
-					store: Store(
-						initialState: WelcomeFeature.State(selectedPage: 2),
-						reducer: {}
+				
+				assertSnapshot(
+					WelcomeView(
+						store: Store(
+							initialState: WelcomeFeature.State(selectedPage: 1),
+							reducer: {}
+						)
 					)
 				)
-			)
+				
+				assertSnapshot(
+					WelcomeView(
+						store: Store(
+							initialState: WelcomeFeature.State(selectedPage: 2),
+							reducer: {}
+						)
+					)
+				)
+			}
 		}
 	}
 }

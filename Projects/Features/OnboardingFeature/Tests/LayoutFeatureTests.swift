@@ -50,25 +50,32 @@ class LayoutFeatureTests: XCTestCase {
 	}
 	
 	func testSnapshot() {
-		assertSnapshot(
-			LayoutView(
-				store: Store(
-					initialState: LayoutFeature.State(entries: fakeEntries),
-					reducer: {}
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					LayoutView(
+						store: Store(
+							initialState: LayoutFeature.State(entries: fakeEntries),
+							reducer: {}
+						)
+					)
 				)
-			)
-		)
-		
-		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
-		userSettings.appearance.layoutType = .vertical
-		
-		assertSnapshot(
-			LayoutView(
-				store: Store(
-					initialState: LayoutFeature.State(entries: fakeEntries),
-					reducer: {}
+				
+				userSettings.appearance.layoutType = .vertical
+				
+				assertSnapshot(
+					LayoutView(
+						store: Store(
+							initialState: LayoutFeature.State(entries: fakeEntries),
+							reducer: {}
+						)
+					)
 				)
-			)
-		)
+			}
+		}
 	}
 }
