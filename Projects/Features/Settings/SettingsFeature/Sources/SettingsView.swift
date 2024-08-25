@@ -66,6 +66,7 @@ public struct SettingsView: View {
 						NavigationLink(
 							state: SettingsFeature.Path.State.camera(CameraFeature.State())
 						) {
+							let _ = print("agil settings", store.userSettings.authorizedVideoStatus.rawValue.localized)
 							CameraRowView(title: store.userSettings.authorizedVideoStatus.rawValue.localized)
 						}
 						NavigationLink(

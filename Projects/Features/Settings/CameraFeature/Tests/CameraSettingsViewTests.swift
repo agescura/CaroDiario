@@ -1,178 +1,116 @@
-//
-//  CameraSettingsViewTests.swift
-//  
-//
-//  Created by Albert Gil Escura on 22/8/21.
-//
-
-import XCTest
+import AVCaptureDeviceClient
 @testable import CameraFeature
 import ComposableArchitecture
-import AVCaptureDeviceClient
-
-class CameraSettingsViewTests: XCTestCase {
-    
-    func testAppearanceAuthorizingCamera() {
-//        var feedbackGeneratorCalled = false
-        
-        let store = TestStore(
-            initialState: CameraState(cameraStatus: .notDetermined),
-            reducer: cameraReducer,
-            environment: CameraEnvironment(
-                avCaptureDeviceClient: .init(
-                    authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { .send(true) }
-                ),
-                feedbackGeneratorClient: .init(
-                    prepare: { .fireAndForget {} },
-                    selectionChanged: {
-//                        feedbackGeneratorCalled = true
-                        return .run { _ in}
-                    }
-                ),
-                applicationClient: .noop,
-                mainQueue: .immediate
-            )
-        )
-        
-        store.send(.cameraButtonTapped)
-//        {
-//            XCTAssertTrue(feedbackGeneratorCalled)
-//        }
-        store.receive(.requestAccessResponse(true)) {
-            $0.cameraStatus = .authorized
-        }
-    }
-    
-    func testAppearanceDenyingCamera() {
-//        var feedbackGeneratorCalled = false
-        
-        let store = TestStore(
-            initialState: CameraState(cameraStatus: .notDetermined),
-            reducer: cameraReducer,
-            environment: CameraEnvironment(
-                avCaptureDeviceClient: .init(
-                    authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { .send(false) }
-                ),
-                feedbackGeneratorClient: .init(
-                    prepare: { .fireAndForget {} },
-                    selectionChanged: {
-//                        feedbackGeneratorCalled = true
-                        return .run { _ in}
-                    }
-                ),
-                applicationClient: .noop,
-                mainQueue: .immediate
-            )
-        )
-        
-        store.send(.cameraButtonTapped)
-//        { _ in
-//            XCTAssertTrue(feedbackGeneratorCalled)
-//        }
-        store.receive(.requestAccessResponse(false)) {
-            $0.cameraStatus = .denied
-        }
-    }
-    
-    func testAppearanceAuthorized() {
-        let store = TestStore(
-            initialState: CameraState(cameraStatus: .authorized),
-            reducer: cameraReducer,
-            environment: CameraEnvironment(
-                avCaptureDeviceClient: .init(
-                    authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { .send(true) }
-                ),
-                feedbackGeneratorClient: .noop,
-                applicationClient: .noop,
-                mainQueue: .immediate
-            )
-        )
-        
-        store.send(.cameraButtonTapped)
-    }
-    
-    func testSnapshotAuthorized() {
-        let store = Store(
-            initialState: .init(cameraStatus: .authorized),
-            reducer: cameraReducer,
-            environment: .init(
-                avCaptureDeviceClient: .noop,
-                feedbackGeneratorClient: .noop,
-                applicationClient: .noop,
-                mainQueue: .unimplemented
-            )
-        )
-        let view = CameraView(store: store)
-        
-        let vc = UIHostingController(rootView: view)
-        vc.view.frame = UIScreen.main.bounds
-        
-        assertSnapshot(matching: vc, as: .image)
-    }
-    
-    func testSnapshot_GivenNotDetermined_WhenCameraButtonTapped_DeniedResponse() {
-        let store = Store(
-            initialState: .init(cameraStatus: .notDetermined),
-            reducer: cameraReducer,
-            environment: .init(
-                avCaptureDeviceClient: .init(
-                    authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { .send(false) }
-                ),
-                feedbackGeneratorClient: .noop,
-                applicationClient: .noop,
-                mainQueue: .unimplemented
-            )
-        )
-        let view = CameraView(store: store)
-        
-        let vc = UIHostingController(rootView: view)
-        vc.view.frame = UIScreen.main.bounds
-        
-        let viewStore = ViewStore(
-            store.scope(state: { _ in () }),
-            removeDuplicates: ==
-        )
-        
-        assertSnapshot(matching: vc, as: .image)
-        
-        viewStore.send(.cameraButtonTapped)
-        assertSnapshot(matching: vc, as: .image)
-    }
-    
-    func testSnapshot_GivenNotDetermined_WhenCameraButtonTapped_Authorized() {
-        let store = Store(
-            initialState: .init(cameraStatus: .notDetermined),
-            reducer: cameraReducer,
-            environment: .init(
-                avCaptureDeviceClient: .init(
-                    authorizationStatus: { .fireAndForget {} },
-                    requestAccess: { .send(true) }
-                ),
-                feedbackGeneratorClient: .noop,
-                applicationClient: .noop,
-                mainQueue: .unimplemented
-            )
-        )
-        let view = CameraView(store: store)
-        
-        let vc = UIHostingController(rootView: view)
-        vc.view.frame = UIScreen.main.bounds
-        
-        let viewStore = ViewStore(
-            store.scope(state: { _ in () }),
-            removeDuplicates: ==
-        )
-        
-        assertSnapshot(matching: vc, as: .image)
-        
-        viewStore.send(.cameraButtonTapped)
-        assertSnapshot(matching: vc, as: .image)
-    }
-}
-
-import SwiftUI
+import Models
 import SnapshotTesting
+import SwiftUI
+import TestUtils
+import XCTest
+
+@MainActor
+final class CameraSettingsViewTests: XCTestCase {
+	@MainActor
+	func testAppearanceAuthorizingCamera() async {
+		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+		let store = TestStore(
+			initialState: CameraFeature.State(),
+			reducer: { CameraFeature() }
+		) {
+			$0.avCaptureDeviceClient.requestAccess = { true }
+		}
+		
+		await store.send(\.view.task)
+		
+		await store.receive(\.requestAccessResponse, true) {
+			$0.userSettings.authorizedVideoStatus = .authorized
+		}
+	}
+	
+	@MainActor
+	func testAppearanceDenyingCamera() async {
+		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+		let store = TestStore(
+			initialState: CameraFeature.State(),
+			reducer: { CameraFeature() }
+		) {
+			$0.avCaptureDeviceClient.requestAccess = { false }
+			$0.applicationClient.openSettings = {}
+		}
+		
+		await store.send(\.view.task)
+		
+		await store.receive(\.requestAccessResponse, false) {
+			$0.userSettings.authorizedVideoStatus = .denied
+		}
+		
+		await store.send(\.view.goToSettings)
+	}
+
+	@MainActor
+	func testAppearanceAuthorized() async {
+		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+		userSettings.authorizedVideoStatus = .denied
+		
+		let store = TestStore(
+			initialState: CameraFeature.State(),
+			reducer: { CameraFeature() }
+		) {
+			$0.avCaptureDeviceClient.requestAccess = { true }
+		}
+		
+		await store.send(\.view.cameraButtonTapped)
+		
+		userSettings.authorizedVideoStatus = .authorized
+		await store.send(\.view.cameraButtonTapped)
+		
+		userSettings.authorizedVideoStatus = .notDetermined
+		await store.send(\.view.cameraButtonTapped)
+		
+		await store.receive(\.requestAccessResponse, true) {
+			$0.userSettings.authorizedVideoStatus = .authorized
+		}
+	}
+	
+	func testSnapshot() {
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					CameraView(
+						store: Store(
+							initialState: CameraFeature.State(),
+							reducer: {}
+						)
+					)
+				)
+				
+				userSettings.authorizedVideoStatus = .authorized
+				
+				assertSnapshot(
+					CameraView(
+						store: Store(
+							initialState: CameraFeature.State(),
+							reducer: {}
+						)
+					)
+				)
+				
+				userSettings.authorizedVideoStatus = .denied
+				
+				assertSnapshot(
+					CameraView(
+						store: Store(
+							initialState: CameraFeature.State(),
+							reducer: {}
+						)
+					)
+				)
+				
+				userSettings.authorizedVideoStatus = .notDetermined
+			}
+		}
+	}
+}

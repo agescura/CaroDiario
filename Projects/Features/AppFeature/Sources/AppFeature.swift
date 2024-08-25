@@ -45,6 +45,7 @@ public struct AppFeature {
 	@CasePathable
 	public enum Action: Equatable {
 		case appDelegate(AppDelegateAction)
+		case authorizationStatusResponse(AuthorizedVideoStatus)
 		case biometricAlertPresent(Bool)
 		case process(URL)
 		case scene(Scene.Action)
@@ -85,8 +86,16 @@ public struct AppFeature {
 							if !showSplash {
 								await send(.splashFinished)
 							}
+						},
+						.run { send in
+							await send(.authorizationStatusResponse(self.avCaptureDeviceClient.authorizationStatus()))
 						}
 					)
+					
+				case let .authorizationStatusResponse(authorizedVideoStatus):
+					state.userSettings.authorizedVideoStatus = authorizedVideoStatus
+					let _ = print("agil app", state.userSettings.authorizedVideoStatus.rawValue.localized)
+					return .none
 					
 				case .splashFinished:
 					if state.userSettings.hasPasscode {
