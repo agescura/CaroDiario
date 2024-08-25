@@ -31,7 +31,6 @@ public struct LayoutFeature {
 					state.userSettings.appearance.layoutType = layoutType
 					state.entries = fakeEntries
 					return .none
-					
 				case .entries:
 					return .none
 			}

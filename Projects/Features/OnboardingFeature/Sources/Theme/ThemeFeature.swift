@@ -14,15 +14,20 @@ public struct ThemeFeature {
 		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
 	}
 	
-	public enum Action: Equatable {
+	public enum Action: ViewAction, Equatable {
 		case delegate(Delegate)
 		case entries(IdentifiedActionOf<DayEntriesRow>)
-		case startButtonTapped
 		case themeChanged(ThemeType)
+		case view(View)
 		
 		@CasePathable
 		public enum Delegate: Equatable {
 			case navigateToHome
+		}
+		
+		@CasePathable
+		public enum View: Equatable {
+			case startButtonTapped
 		}
 	}
 	
@@ -37,14 +42,17 @@ public struct ThemeFeature {
 				case .entries:
 					return .none
 					
-				case .startButtonTapped:
-					state.userSettings.hasShownOnboarding = true
-					return .send(.delegate(.navigateToHome))
-					
 				case let .themeChanged(themeType):
 					state.userSettings.appearance.themeType = themeType
 					return .run { _ in
 						await self.setUserInterfaceStyle(themeType.userInterfaceStyle)
+					}
+					
+				case let .view(viewAction):
+					switch viewAction {
+						case .startButtonTapped:
+							state.userSettings.hasShownOnboarding = true
+							return .send(.delegate(.navigateToHome))
 					}
 			}
 		}

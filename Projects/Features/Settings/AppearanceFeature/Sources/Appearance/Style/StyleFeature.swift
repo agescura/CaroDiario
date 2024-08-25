@@ -31,7 +31,6 @@ public struct StyleFeature {
 					state.userSettings.appearance.styleType = styleType
 					state.entries = fakeEntries
 					return .none
-					
 				case .entries:
 					return .none
 			}

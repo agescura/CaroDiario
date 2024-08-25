@@ -1,13 +1,14 @@
 import ComposableArchitecture
-import SwiftUI
-import Views
+import EntriesFeature
 import Localizables
 import Models
-import EntriesFeature
 import Styles
+import SwiftUI
+import Views
 
+@ViewAction(for: StyleFeature.self)
 public struct StyleView: View {
-	@Bindable var store: StoreOf<StyleFeature>
+	@Bindable public var store: StoreOf<StyleFeature>
 	
 	public var body: some View {
 		VStack {
@@ -22,7 +23,7 @@ public struct StyleView: View {
 						.foregroundColor(.adaptiveGray)
 						.adaptiveFont(.latoRegular, size: 10)
 					
-					Picker("", selection: self.$store.userSettings.appearance.styleType.sending(\.styleChanged)
+					Picker("", selection: $store.userSettings.appearance.styleType.sending(\.styleChanged)
 					) {
 						ForEach(StyleType.allCases, id: \.self) { type in
 							Text(type.rawValue.localized)
@@ -34,7 +35,7 @@ public struct StyleView: View {
 					
 					LazyVStack(alignment: .leading, spacing: 8) {
 						ForEach(
-							self.store.scope(state: \.entries, action: \.entries),
+							store.scope(state: \.entries, action: \.entries),
 							id: \.id
 						) { store in
 							DayEntriesRowView(store: store)
@@ -47,31 +48,25 @@ public struct StyleView: View {
 				}
 			}
 			
-			TerciaryButtonView(
-				label: {
-					Text("OnBoarding.Skip".localized)
-						.adaptiveFont(.latoRegular, size: 16)
-					
-				}) {
-					self.store.send(.skipAlertButtonTapped)
-				}
-				.opacity(self.store.isAppClip ? 0.0 : 1.0)
-				.padding(.horizontal, 16)
-				.alert(
-					store: self.store.scope(state: \.$alert, action: \.alert)
-				)
+			Button("OnBoarding.Skip".localized) {
+				send(.skipAlertButtonTapped)
+			}
+			.buttonStyle(.secondary)
+			.opacity(store.isAppClip ? 0.0 : 1.0)
 			
-			PrimaryButtonView(
-				label: {
-					Text("OnBoarding.Continue".localized)
-						.adaptiveFont(.latoRegular, size: 16)
-				}) {
-					self.store.send(.layoutButtonTapped)
-				}
-				.padding(.horizontal, 16)
+			Button("OnBoarding.Continue".localized) {
+				send(.layoutButtonTapped)
+			}
+			.buttonStyle(.primary)
 		}
 		.padding()
 		.navigationBarBackButtonHidden(true)
+		.alert(
+			store: store.scope(
+				state: \.$alert,
+				action: \.alert
+			)
+		)
 	}
 }
 

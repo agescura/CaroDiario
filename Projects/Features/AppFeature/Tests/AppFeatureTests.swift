@@ -22,7 +22,7 @@ class AppFeatureTests: XCTestCase {
 		}
 		
 		await store.send(\.appDelegate.didFinishLaunching)
-		await store.send(\.scene.splash.task)
+		await store.send(\.scene.splash.view.task)
 		await clock.advance(by: .seconds(1))
 		await store.receive(\.scene.splash.verticalLineAnimation) {
 			$0.scene.splash?.animation = .verticalLine

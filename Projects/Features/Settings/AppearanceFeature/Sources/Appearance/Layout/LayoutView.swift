@@ -16,7 +16,7 @@ public struct LayoutView: View {
 	public var body: some View {
 		VStack(alignment: .leading, spacing: 16) {
 			
-			Picker("", selection: self.$store.userSettings.appearance.layoutType.sending(\.layoutChanged)) {
+			Picker("", selection: $store.userSettings.appearance.layoutType.sending(\.layoutChanged)) {
 				ForEach(LayoutType.allCases, id: \.self) { type in
 					Text(type.rawValue.localized)
 						.foregroundColor(.berryRed)
@@ -29,7 +29,7 @@ public struct LayoutView: View {
 			ScrollView(showsIndicators: false) {
 				LazyVStack(alignment: .leading, spacing: 8) {
 					ForEach(
-						Array(self.store.scope(state: \.entries, action: \.entries)),
+						Array(store.scope(state: \.entries, action: \.entries)),
 						id: \.id
 					) { store in
 						DayEntriesRowView(store: store)

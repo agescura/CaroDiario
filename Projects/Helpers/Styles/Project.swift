@@ -3,5 +3,8 @@ import ProjectDescriptionHelpers
 
 let project: Project = .framework(
 	name: "Styles",
-	resources: ["Resources/**"]
+	resources: ["Resources/**"],
+	dependencies: [
+		.helper("SwiftUIHelper")
+	]
 )

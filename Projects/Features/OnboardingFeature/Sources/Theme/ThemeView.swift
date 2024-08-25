@@ -1,13 +1,14 @@
 import ComposableArchitecture
-import SwiftUI
-import Views
+import EntriesFeature
 import Localizables
 import Models
-import EntriesFeature
 import Styles
+import SwiftUI
+import Views
 
+@ViewAction(for: ThemeFeature.self)
 public struct ThemeView: View {
-	@Bindable var store: StoreOf<ThemeFeature>
+	@Bindable public var store: StoreOf<ThemeFeature>
 	
 	public var body: some View {
 		VStack {
@@ -19,7 +20,7 @@ public struct ThemeView: View {
 					Text("OnBoarding.Style.Message".localized)
 						.foregroundColor(.adaptiveBlack)
 						.adaptiveFont(.latoRegular, size: 10)
-					Picker("", selection: self.$store.userSettings.appearance.themeType.sending(\.themeChanged)) {
+					Picker("", selection: $store.userSettings.appearance.themeType.sending(\.themeChanged)) {
 						ForEach(ThemeType.allCases, id: \.self) { type in
 							Text(type.rawValue.localized)
 								.foregroundColor(.berryRed)
@@ -29,7 +30,7 @@ public struct ThemeView: View {
 					.pickerStyle(SegmentedPickerStyle())
 					LazyVStack(alignment: .leading, spacing: 8) {
 						ForEach(
-							self.store.scope(state: \.entries, action: \.entries),
+							store.scope(state: \.entries, action: \.entries),
 							id: \.id,
 							content: DayEntriesRowView.init
 						)
@@ -41,14 +42,10 @@ public struct ThemeView: View {
 				}
 			}
 			
-			PrimaryButtonView(
-				label: {
-					Text(self.store.isAppClip ? "Instalar en App Store" : "OnBoarding.Start".localized)
-						.adaptiveFont(.latoRegular, size: 16)
-				}) {
-					self.store.send(.startButtonTapped)
-				}
-				.padding(.horizontal, 16)
+			Button(store.isAppClip ? "App Store" : "OnBoarding.Start".localized) {
+				send(.startButtonTapped)
+			}
+			.buttonStyle(.primary)
 		}
 		.padding()
 		.navigationBarBackButtonHidden(true)

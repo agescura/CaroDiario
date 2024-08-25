@@ -1,11 +1,13 @@
-import SwiftUI
 import ComposableArchitecture
-import Views
-import SwiftUIHelper
 import Localizables
+import Styles
+import SwiftUI
+import SwiftUIHelper
+import Views
 
+@ViewAction(for: ActivateFeature.self)
 public struct ActivateView: View {
-	let store: StoreOf<ActivateFeature>
+	public let store: StoreOf<ActivateFeature>
 	
 	public init(
 		store: StoreOf<ActivateFeature>
@@ -16,17 +18,26 @@ public struct ActivateView: View {
 	public var body: some View {
 		VStack(spacing: 16) {
 			Text("Passcode.Title".localized)
-				.font(.title)
+				.textStyle(.title)
 			Text("Passcode.Activate.Message".localized)
-				.font(.caption)
+				.textStyle(.body)
 			Spacer()
 			
-			PrimaryButtonView(
-				label: { Text("Passcode.Activate.Title".localized) }
-			) {
-				self.store.send(.insertButtonTapped)
+			Button("Passcode.Activate.Title".localized) {
+				send(.insertButtonTapped)
 			}
+			.buttonStyle(.primary)
 		}
 		.padding(.horizontal, 16)
+		.navigationBarTitleDisplayMode(.inline)
 	}
+}
+
+#Preview {
+	ActivateView(
+		store: Store(
+			initialState: ActivateFeature.State(),
+			reducer: { ActivateFeature() }
+		)
+	)
 }

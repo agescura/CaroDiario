@@ -35,28 +35,24 @@ public struct PrivacyView: View {
 			
 			Spacer()
 			
-			TerciaryButtonView(
-				label: {
-					Text("OnBoarding.Skip".localized)
-						.adaptiveFont(.latoRegular, size: 16)
-					
-				}) {
-					send(.skipAlertButtonTapped)
-				}
-				.opacity(store.isAppClip ? 0.0 : 1.0)
-				.padding(.horizontal, 16)
-				.alert(store: store.scope(state: \.$alert, action: \.alert))
+			Button("OnBoarding.Skip".localized) {
+				send(.skipAlertButtonTapped)
+			}
+			.buttonStyle(.secondary)
+			.opacity(store.isAppClip ? 0.0 : 1.0)
 			
-			PrimaryButtonView(
-				label: {
-					Text("OnBoarding.Continue".localized)
-						.adaptiveFont(.latoRegular, size: 16)
-				}) {
-					send(.styleButtonTapped)
-				}
-				.padding(.horizontal, 16)
+			Button("OnBoarding.Continue".localized) {
+				send(.styleButtonTapped)
+			}
+			.buttonStyle(.primary)
 		}
 		.padding()
 		.navigationBarBackButtonHidden(true)
+		.alert(
+			store: store.scope(
+				state: \.$alert,
+				action: \.alert
+			)
+		)
 	}
 }

@@ -17,6 +17,7 @@ let project = Project(
 					"UILaunchStoryboardName": "LaunchScreen.storyboard",
 					"NSCameraUsageDescription": "Camera Usage Description",
 					"NSMicrophoneUsageDescription": "Microphone Usage Description",
+					"NSFaceIDUsageDescription": "Face ID Usage Description",
 					"CFBundleDisplayName": "Caro Diario",
 					"CFBundleIcons": [
 						"CFBundleAlternateIcons": [

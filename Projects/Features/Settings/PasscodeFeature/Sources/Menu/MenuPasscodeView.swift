@@ -5,8 +5,9 @@ import Localizables
 import SwiftUIHelper
 import Models
 
+@ViewAction(for: MenuFeature.self)
 public struct MenuPasscodeView: View {
-	@Bindable var store: StoreOf<MenuFeature>
+	@Bindable public var store: StoreOf<MenuFeature>
 	
 	public init(
 		store: StoreOf<MenuFeature>
@@ -18,60 +19,61 @@ public struct MenuPasscodeView: View {
 		Form {
 			Section(
 				footer: Text("Passcode.Activate.Message".localized)
+					.textStyle(.body)
 			) {
-				Button(action: {
-					self.store.send(.turnOffButtonTapped)
-				}) {
-					Text("Passcode.Turnoff".localized)
-						.foregroundColor(.chambray)
+				Button("Passcode.Turnoff".localized) {
+					send(.turnOffButtonTapped)
 				}
-				.confirmationDialog(
-					store: self.store.scope(state: \.$dialog, action: \.dialog)
-				)
+				.buttonStyle(.plain(.chambray))
 			}
 			
 			Section {
 				Toggle(
-					isOn: self.$store.userSettings.faceIdEnabled.sending(\.toggleFaceId)
+					isOn: $store.userSettings.faceIdEnabled.sending(\.toggleFaceId)
 				) {
-					Text("Passcode.UnlockFaceId".localized(with: [self.store.userSettings.localAuthenticationType.rawValue]))
-						.foregroundColor(.chambray)
+					Text("Passcode.UnlockFaceId".localized(with: [store.userSettings.localAuthenticationType.rawValue]))
+						.textStyle(.body(.chambray))
 				}
 				.toggleStyle(SwitchToggleStyle(tint: .chambray))
 				
 				Picker(
-					selection: self.$store.userSettings.timeForAskPasscode.sending(\.optionTimeForAskPasscode)
+					selection: $store.userSettings.timeForAskPasscode.sending(\.optionTimeForAskPasscode)
 				) {
-					ForEach(self.store.userSettings.listTimesForAskPasscode, id: \.self) { type in
+					ForEach(store.userSettings.listTimesForAskPasscode, id: \.self) { type in
 						Text(type.rawValue)
-							.adaptiveFont(.latoRegular, size: 12)
 					}
 				} label: {
 					Text("Passcode.Autolock".localized)
-						.foregroundColor(.chambray)
-						.adaptiveFont(.latoRegular, size: 12)
+						.textStyle(.body(.chambray))
 				}
 			}
 		}
-		.navigationBarItems(
-			leading: Button(
-				action: {
-					self.store.send(.popButtonTapped)
+		.toolbar {
+			ToolbarItem(placement: .cancellationAction) {
+				Button(systemName: .chevronLeft) {
+					send(.popButtonTapped)
 				}
-			) {
-				Image(.chevronLeft)
+				.buttonStyle(.icon)
 			}
-		)
+		}
 		.navigationBarTitle("Passcode.Title".localized)
 		.navigationBarBackButtonHidden(true)
+		.confirmationDialog(
+			store: store.scope(
+				state: \.$dialog,
+				action: \.dialog
+			)
+		)
 	}
 }
 
 #Preview {
-	MenuPasscodeView(
-		store: Store(
-			initialState: MenuFeature.State(),
-			reducer: { MenuFeature() }
+	NavigationStack {
+		MenuPasscodeView(
+			store: Store(
+				initialState: MenuFeature.State(),
+				reducer: { MenuFeature() }
+			)
 		)
-	)
+	}
 }

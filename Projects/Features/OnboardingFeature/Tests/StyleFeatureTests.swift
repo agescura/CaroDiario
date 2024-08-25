@@ -20,7 +20,7 @@ class StyleFeatureTests: XCTestCase {
 			$0.userSettings.appearance.styleType = .rounded
 		}
 		
-		await store.send(\.layoutButtonTapped)
+		await store.send(\.view.layoutButtonTapped)
 		await store.receive(\.delegate.navigateToLayout)
 	}
 	
@@ -31,7 +31,7 @@ class StyleFeatureTests: XCTestCase {
 			reducer: { StyleFeature() }
 		)
 		
-		await store.send(\.skipAlertButtonTapped) {
+		await store.send(\.view.skipAlertButtonTapped) {
 			$0.alert = .skip
 		}
 		await store.send(\.alert.skip) {
@@ -48,7 +48,7 @@ class StyleFeatureTests: XCTestCase {
 			reducer: { StyleFeature() }
 		)
 		
-		await store.send(\.skipAlertButtonTapped) {
+		await store.send(\.view.skipAlertButtonTapped) {
 			$0.alert = .skip
 		}
 		await store.send(\.alert.dismiss) {
@@ -72,7 +72,6 @@ class StyleFeatureTests: XCTestCase {
 					)
 				)
 				
-				@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
 				userSettings.appearance.styleType = .rounded
 				
 				assertSnapshot(
@@ -83,6 +82,8 @@ class StyleFeatureTests: XCTestCase {
 						)
 					)
 				)
+				
+				userSettings.appearance.styleType = .rectangle
 			}
 		}
 	}

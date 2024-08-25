@@ -22,7 +22,9 @@ let packageSettings = PackageSettings(
 		"CustomDump": .framework,
 		"XCTestDynamicOverlay": .framework,
 		"IssueReporting": .framework,
-		"InternalCollectionsUtilities": .framework
+		"InternalCollectionsUtilities": .framework,
+		"SwiftUINavigation": .framework,
+		"UIKitNavigation": .framework
 	]
 )
 #endif

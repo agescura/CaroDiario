@@ -7,8 +7,9 @@ import Styles
 import Models
 import SwiftUIHelper
 
+@ViewAction(for: CameraFeature.self)
 public struct CameraView: View {
-	let store: StoreOf<CameraFeature>
+	public let store: StoreOf<CameraFeature>
 	
 	public init(
 		store: StoreOf<CameraFeature>
@@ -21,41 +22,40 @@ public struct CameraView: View {
 			Section(
 				footer:
 					Group {
-						if self.store.userSettings.authorizedVideoStatus != .denied {
-							Text(self.store.userSettings.authorizedVideoStatus.description)
+						if store.userSettings.authorizedVideoStatus != .denied {
+							Text(store.userSettings.authorizedVideoStatus.description)
 						} else {
-							Text(self.store.userSettings.authorizedVideoStatus.description)
+							Text(store.userSettings.authorizedVideoStatus.description)
 							+ Text(" ") +
 							Text("Settings.GoToSettings".localized)
 								.underline()
 								.foregroundColor(.blue)
 						}
 					}
+					.textStyle(.body)
 					.onTapGesture {
-						self.store.send(.goToSettings)
+						send(.goToSettings)
 					}
 			) {
-				HStack {
-					Text(self.store.userSettings.authorizedVideoStatus.rawValue.localized)
-						.foregroundColor(.chambray)
-						.adaptiveFont(.latoRegular, size: 10)
-					Spacer()
-					if self.store.userSettings.authorizedVideoStatus == .notDetermined {
-						Text(self.store.userSettings.authorizedVideoStatus.permission)
-							.foregroundColor(.adaptiveGray)
-							.adaptiveFont(.latoRegular, size: 12)
-						Image(.chevronRight)
-							.foregroundColor(.adaptiveGray)
+				Group {
+					HStack {
+						Text(store.userSettings.authorizedVideoStatus.rawValue.localized)
+						Spacer()
+						if store.userSettings.authorizedVideoStatus == .notDetermined {
+							Text(store.userSettings.authorizedVideoStatus.permission)
+							Image(.chevronRight)
+						}
 					}
 				}
+				.textStyle(.body)
 				.contentShape(Rectangle())
 				.onTapGesture {
-					self.store.send(.cameraButtonTapped)
+					send(.cameraButtonTapped)
 				}
 			}
 		}
 		.navigationBarTitle("Settings.Camera.Privacy".localized, displayMode: .inline)
-		.task { await self.store.send(.task).finish() }
+		.task { await send(.task).finish() }
 	}
 }
 

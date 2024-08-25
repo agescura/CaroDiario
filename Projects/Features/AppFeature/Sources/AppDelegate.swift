@@ -20,7 +20,7 @@ public class AppDelegate: NSObject, UIApplicationDelegate {
 	public override init() {
 		self.store = Store(
 			initialState: AppFeature.State(),
-			reducer: { AppFeature() }
+			reducer: { AppFeature()._printChanges() }
 		)
 	}
 	

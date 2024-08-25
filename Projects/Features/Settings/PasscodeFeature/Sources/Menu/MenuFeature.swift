@@ -34,14 +34,13 @@ public struct MenuFeature {
 		public init() {}
 	}
 	
-	public enum Action: Equatable {
+	public enum Action: ViewAction, Equatable {
 		case delegate(Delegate)
 		case dialog(PresentationAction<Dialog>)
 		case faceId(response: Bool)
 		case optionTimeForAskPasscode(TimeForAskPasscode)
-		case popButtonTapped
 		case toggleFaceId(isOn: Bool)
-		case turnOffButtonTapped
+		case view(View)
 		
 		@CasePathable
 		public enum Delegate: Equatable {
@@ -50,6 +49,11 @@ public struct MenuFeature {
 		@CasePathable
 		public enum Dialog: Equatable {
 			case turnOff
+		}
+		@CasePathable
+		public enum View: Equatable {
+			case popButtonTapped
+			case turnOffButtonTapped
 		}
 	}
 	
@@ -77,18 +81,21 @@ public struct MenuFeature {
 				case let .optionTimeForAskPasscode(newOption):
 					state.userSettings.optionTimeForAskPasscode = newOption.value
 					return .none
-				case .popButtonTapped:
-					return .send(.delegate(.popToRoot))
 				case let .toggleFaceId(isOn: value):
 					if !value {
 						return .send(.faceId(response: value))
 					}
-					return .run { [state] send in
-						await send(.faceId(response: self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [state.userSettings.localAuthenticationType.rawValue]))))
+					return .run { [localAuthenticationType = state.userSettings.localAuthenticationType] send in
+						await send(.faceId(response: self.localAuthenticationClient.evaluate("Settings.Biometric.Test".localized(with: [localAuthenticationType.rawValue]))))
 					}
-				case .turnOffButtonTapped:
-					state.dialog = .turnOff(state.userSettings.localAuthenticationType)
-					return .none
+				case let .view(viewAction):
+					switch viewAction {
+						case .popButtonTapped:
+							return .send(.delegate(.popToRoot))
+						case .turnOffButtonTapped:
+							state.dialog = .turnOff(state.userSettings.localAuthenticationType)
+							return .none
+					}
 			}
 		}
 	}

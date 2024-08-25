@@ -37,16 +37,20 @@ public struct InsertFeature {
     }
   }
 
-  public enum Action: Equatable {
+  public enum Action: ViewAction, Equatable {
 		case delegate(Delegate)
-		case popButtonTapped
     case success
 		case update(code: String)
+		case view(View)
 		
 		@CasePathable
 		public enum Delegate: Equatable {
 			case navigateToMenu
 			case popToRoot
+		}
+		@CasePathable
+		public enum View: Equatable {
+			case popButtonTapped
 		}
   }
   
@@ -55,9 +59,6 @@ public struct InsertFeature {
 			switch action {
 				case .delegate:
 					return .none
-					
-				case .popButtonTapped:
-					return .send(.delegate(.popToRoot))
 					
 				case .success:
 					return .none
@@ -84,6 +85,9 @@ public struct InsertFeature {
 						}
 					}
 					return .none
+					
+				case .view(.popButtonTapped):
+					return .send(.delegate(.popToRoot))
 			}
 		}
   }

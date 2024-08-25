@@ -19,7 +19,7 @@ class WelcomeFeatureTests: XCTestCase {
 			$0.continuousClock = clock
 		}
 		
-		await store.send(\.task)
+		await store.send(\.view.task)
 		await clock.advance(by: .seconds(5))
 		await store.receive(\.nextPage) {
 			$0.selectedPage = 1
@@ -29,7 +29,7 @@ class WelcomeFeatureTests: XCTestCase {
 		await store.receive(.nextPage) {
 			$0.selectedPage = 2
 		}
-		await store.send(\.privacyButtonTapped) {
+		await store.send(\.view.privacyButtonTapped) {
 			$0.path.append(.privacy(PrivacyFeature.State()))
 		}
 	}
@@ -44,8 +44,8 @@ class WelcomeFeatureTests: XCTestCase {
 			$0.continuousClock = clock
 		}
 		
-		await store.send(\.task)
-		await store.send(\.skipAlertButtonTapped) {
+		await store.send(\.view.task)
+		await store.send(\.view.skipAlertButtonTapped) {
 			$0.alert = .skip
 		}
 		await store.send(\.alert.skip) {
@@ -62,7 +62,7 @@ class WelcomeFeatureTests: XCTestCase {
 			reducer: { WelcomeFeature() }
 		)
 		
-		await store.send(\.skipAlertButtonTapped) {
+		await store.send(\.view.skipAlertButtonTapped) {
 			$0.alert = .skip
 		}
 		await store.send(\.alert.dismiss) {

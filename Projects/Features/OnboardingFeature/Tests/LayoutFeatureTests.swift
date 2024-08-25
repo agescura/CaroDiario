@@ -15,7 +15,7 @@ class LayoutFeatureTests: XCTestCase {
 			reducer: { LayoutFeature() }
 		)
 		
-		await store.send(\.themeButtonTapped)
+		await store.send(\.view.themeButtonTapped)
 		await store.receive(\.delegate.navigateToTheme)
 	}
 	
@@ -25,7 +25,7 @@ class LayoutFeatureTests: XCTestCase {
 			reducer: { LayoutFeature() }
 		)
 		
-		await store.send(\.skipAlertButtonTapped) {
+		await store.send(\.view.skipAlertButtonTapped) {
 			$0.alert = .skip
 		}
 		await store.send(\.alert.skip) {
@@ -41,7 +41,7 @@ class LayoutFeatureTests: XCTestCase {
 			reducer: { LayoutFeature() }
 		)
 		
-		await store.send(\.skipAlertButtonTapped) {
+		await store.send(\.view.skipAlertButtonTapped) {
 			$0.alert = .skip
 		}
 		await store.send(\.alert.dismiss) {

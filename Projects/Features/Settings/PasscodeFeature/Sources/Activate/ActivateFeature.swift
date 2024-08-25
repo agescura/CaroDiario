@@ -13,13 +13,17 @@ public struct ActivateFeature {
     public init() {}
   }
   
-  public enum Action: Equatable {
+  public enum Action: ViewAction, Equatable {
 		case delegate(Delegate)
-		case insertButtonTapped
+		case view(View)
 		
 		@CasePathable
 		public enum Delegate: Equatable {
 			case navigateToInsert
+		}
+		@CasePathable
+		public enum View: Equatable {
+			case insertButtonTapped
 		}
   }
   
@@ -28,7 +32,7 @@ public struct ActivateFeature {
 			switch action {
 				case .delegate:
 					return .none
-				case .insertButtonTapped:
+				case .view(.insertButtonTapped):
 					return .send(.delegate(.navigateToInsert))
 			}
 		}

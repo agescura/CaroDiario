@@ -16,7 +16,7 @@ class PrivacyFeatureTests: XCTestCase {
 			reducer: { PrivacyFeature() }
 		)
 		
-		await store.send(\.styleButtonTapped)
+		await store.send(\.view.styleButtonTapped)
 		await store.receive(\.delegate.navigateToStyle)
 	}
 	
@@ -27,7 +27,7 @@ class PrivacyFeatureTests: XCTestCase {
 			reducer: { PrivacyFeature() }
 		)
 		
-		await store.send(\.skipAlertButtonTapped) {
+		await store.send(\.view.skipAlertButtonTapped) {
 			$0.alert = .skip
 		}
 		await store.send(\.alert.skip) {
@@ -44,7 +44,7 @@ class PrivacyFeatureTests: XCTestCase {
 			reducer: { PrivacyFeature() }
 		)
 		
-		await store.send(\.skipAlertButtonTapped) {
+		await store.send(\.view.skipAlertButtonTapped) {
 			$0.alert = .skip
 		}
 		await store.send(\.alert.dismiss) {

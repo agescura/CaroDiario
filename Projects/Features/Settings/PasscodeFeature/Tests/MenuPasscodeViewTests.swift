@@ -1,16 +1,18 @@
 import ComposableArchitecture
+import Models
 @testable import PasscodeFeature
+import SnapshotTesting
 import SwiftUI
+import TestUtils
 import XCTest
 
 @MainActor
-class MenuPasscodeViewTests: XCTestCase {
-	func happyPath() async {
-		let store = TestStore(
-			initialState: MenuFeature.State(),
-			reducer: { MenuFeature() }
-		)
+final class MenuPasscodeViewTests: XCTestCase {
+	@MainActor
+	func testHappyPath() async {
+	}
+	
+	func testSnapshot() {
 		
-//		await store.send(.)
 	}
 }

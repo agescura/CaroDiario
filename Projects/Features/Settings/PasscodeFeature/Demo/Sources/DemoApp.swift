@@ -6,14 +6,16 @@ import PasscodeFeature
 struct DemoApp: App {
 	var body: some Scene {
 		WindowGroup {
-			MenuPasscodeView(
-				store: Store(
-					initialState: MenuFeature.State(),
-					reducer: {
-						MenuFeature()
-					}
+			NavigationStack {
+				ActivateView(
+					store: Store(
+						initialState: ActivateFeature.State(),
+						reducer: {
+							ActivateFeature()
+						}
+					)
 				)
-			)
+			}
 		}
 	}
 }

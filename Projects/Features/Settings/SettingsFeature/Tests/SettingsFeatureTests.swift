@@ -3,8 +3,10 @@ import ComposableArchitecture
 import Models
 import PasscodeFeature
 @testable import SettingsFeature
+import SnapshotTesting
 import Styles
 import SwiftUI
+import TestUtils
 import UserDefaultsClient
 import XCTest
 
@@ -62,64 +64,37 @@ class SettingsFeatureTests: XCTestCase {
 			$0.path[id: 2] = .menu(MenuFeature.State())
 		}
 	}
+	
+	func testSnapshot() {
+		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
+			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
+			
+			for language in Localizable.allCases {
+				userSettings.language = language
+				
+				assertSnapshot(
+					SettingsView(
+						store: Store(
+							initialState: SettingsFeature.State(),
+							reducer: {}
+						)
+					)
+				)
+				
+				userSettings.showSplash = false
+				
+				assertSnapshot(
+					SettingsView(
+						store: Store(
+							initialState: SettingsFeature.State(),
+							reducer: {}
+						)
+					)
+				)
+				
+				userSettings.showSplash = true
+			}
+		}
+	}
 }
-//    func testSettingsHappyPath() {
-//        let store = TestStore(
-//            initialState: SettingsState(
-//                showSplash: true,
-//                styleType: .rectangle,
-//                layoutType: .horizontal,
-//                themeType: .system,
-//                iconType: .light,
-//                hasPasscode: false,
-//                cameraStatus: .notDetermined,
-//                optionTimeForAskPasscode: 0,
-//                faceIdEnabled: false,
-//                language: .spanish,
-//                microphoneStatus: .notDetermined
-//            ),
-//            reducer: settingsReducer,
-//            environment: SettingsEnvironment(
-//                fileClient: .noop,
-//                localAuthenticationClient: .noop,
-//                applicationClient: .init(
-//                    alternateIconName: nil,
-//                    setAlternateIconName: { _ in () },
-//                    supportsAlternateIcons: { true },
-//                    openSettings: { .fireAndForget {} },
-//                    open: { _, _  in .fireAndForget {} },
-//                    canOpen: { _ in true },
-//                    share: { _, _  in .fireAndForget {} },
-//                    showTabView: { _ in .fireAndForget {} }
-//                ),
-//                avCaptureDeviceClient: .noop,
-//                feedbackGeneratorClient: .noop,
-//                avAudioSessionClient: .noop,
-//                storeKitClient: .noop,
-//                pdfKitClient: .noop,
-//                mainQueue: .immediate,
-//                date: Date.init
-//            )
-//        )
-//        
-//        store.send(.toggleShowSplash(isOn: false)) {
-//            $0.showSplash = false
-//        }
-//        
-//        store.send(.navigateAppearance(true)) {
-//            $0.route = .appearance(
-//                .init(
-//                    styleType: .rectangle,
-//                    layoutType: .horizontal,
-//                    themeType: .system,
-//                    iconAppType: .light
-//                )
-//            )
-//        }
-//        
-//        store.send(.navigateAppearance(false)) {
-//            $0.appearanceState = nil
-//            $0.route = nil
-//        }
-//    }
-//}
+

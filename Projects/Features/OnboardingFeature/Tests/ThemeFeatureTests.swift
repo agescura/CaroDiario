@@ -16,7 +16,7 @@ class ThemeFeatureTests: XCTestCase {
 			reducer: { ThemeFeature() }
 		)
 		
-		await store.send(\.startButtonTapped) {
+		await store.send(\.view.startButtonTapped) {
 			$0.userSettings.hasShownOnboarding = true
 		}
 		await store.receive(\.delegate.navigateToHome)

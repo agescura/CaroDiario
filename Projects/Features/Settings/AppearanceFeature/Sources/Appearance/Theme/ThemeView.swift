@@ -20,7 +20,7 @@ public struct ThemeView: View {
 	public var body: some View {
 		VStack(alignment: .leading, spacing: 16) {
 			
-			Picker("", selection: self.$store.userSettings.appearance.themeType.sending(\.themeChanged)) {
+			Picker("", selection: $store.userSettings.appearance.themeType.sending(\.themeChanged)) {
 				ForEach(ThemeType.allCases, id: \.self) { type in
 					Text(type.rawValue.localized)
 						.foregroundColor(.berryRed)
@@ -33,7 +33,7 @@ public struct ThemeView: View {
 			ScrollView(showsIndicators: false) {
 				LazyVStack(alignment: .leading, spacing: 8) {
 					ForEach(
-						Array(self.store.scope(state: \.entries, action: \.entries)),
+						Array(store.scope(state: \.entries, action: \.entries)),
 						id: \.id
 					) { store in
 						DayEntriesRowView(store: store)
