@@ -94,7 +94,6 @@ public struct AppFeature {
 					
 				case let .authorizationStatusResponse(authorizedVideoStatus):
 					state.userSettings.authorizedVideoStatus = authorizedVideoStatus
-					let _ = print("agil app", state.userSettings.authorizedVideoStatus.rawValue.localized)
 					return .none
 					
 				case .splashFinished:

@@ -54,8 +54,14 @@ public struct CameraView: View {
 				}
 			}
 		}
-		.navigationBarTitle("Settings.Camera.Privacy".localized, displayMode: .inline)
 		.task { await send(.task).finish() }
+		.navigationBarTitleDisplayMode(.inline)
+		.toolbar {
+			ToolbarItem(placement: .principal) {
+				Text("Settings.Camera.Privacy".localized)
+					.textStyle(.body(.chambray))
+			}
+		}
 	}
 }
 

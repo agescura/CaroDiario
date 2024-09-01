@@ -5,8 +5,9 @@ import Styles
 import Models
 import SwiftUIHelper
 
+@ViewAction(for: MicrophoneFeature.self)
 public struct MicrophoneView: View {
-	let store: StoreOf<MicrophoneFeature>
+	public let store: StoreOf<MicrophoneFeature>
 	
 	public init(
 		store: StoreOf<MicrophoneFeature>
@@ -19,40 +20,44 @@ public struct MicrophoneView: View {
 			Section(
 				footer:
 					Group {
-						if self.store.userSettings.audioRecordPermission != .denied {
-							Text(self.store.userSettings.audioRecordPermission.description)
+						if store.userSettings.audioRecordPermission != .denied {
+							Text(store.userSettings.audioRecordPermission.description)
 						} else {
-							Text(self.store.userSettings.audioRecordPermission.description)
+							Text(store.userSettings.audioRecordPermission.description)
 							+ Text(" ") +
 							Text("Settings.GoToSettings".localized)
 								.underline()
 								.foregroundColor(.blue)
 						}
 					}
+					.textStyle(.body)
 					.onTapGesture {
-						self.store.send(.goToSettings)
+						send(.goToSettings)
 					}
 			) {
 				HStack {
-					Text(self.store.userSettings.audioRecordPermission.title.localized)
-						.foregroundColor(.chambray)
-						.adaptiveFont(.latoRegular, size: 10)
+					Text(store.userSettings.audioRecordPermission.title.localized)
 					Spacer()
-					if self.store.userSettings.audioRecordPermission == .notDetermined {
+					if store.userSettings.audioRecordPermission == .notDetermined {
 						Text("Settings.GivePermission".localized)
-							.foregroundColor(.adaptiveGray)
-							.adaptiveFont(.latoRegular, size: 8)
 						Image(.chevronRight)
 							.foregroundColor(.adaptiveGray)
 					}
 				}
+				.textStyle(.body)
 				.contentShape(Rectangle())
 				.onTapGesture {
-					self.store.send(.microphoneButtonTapped)
+					send(.microphoneButtonTapped)
 				}
 			}
 		}
-		.navigationBarTitle("Settings.Camera.Privacy".localized, displayMode: .inline)
+		.navigationBarTitleDisplayMode(.inline)
+		.toolbar {
+			ToolbarItem(placement: .principal) {
+				Text("Settings.Camera.Privacy".localized)
+					.textStyle(.body(.chambray))
+			}
+		}
 	}
 }
 
