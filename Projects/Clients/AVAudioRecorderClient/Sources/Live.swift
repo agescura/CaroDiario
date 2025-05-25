@@ -4,7 +4,7 @@ import Dependencies
 import Models
 
 extension RecordPermission {
-	public init(_ permission: AVAudioSession.RecordPermission) {
+	public init(_ permission: AVAudioApplication.recordPermission) {
 		switch permission {
 			case .denied:
 				self = .denied
@@ -49,12 +49,12 @@ private actor AudioRecorder {
 	}
 	
 	static func recordPermission() -> RecordPermission {
-		RecordPermission(AVAudioSession.sharedInstance().recordPermission)
+		RecordPermission(AVAudioApplication.shared.recordPermission)
 	}
 	
 	static func requestPermission() async -> RecordPermission {
 		await withUnsafeContinuation { continuation in
-			AVAudioSession.sharedInstance().requestRecordPermission { granted in
+			AVAudioApplication.requestRecordPermission { granted in
 				continuation.resume(returning: granted ? .granted : .denied)
 			}
 		}

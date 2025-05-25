@@ -1,19 +1,33 @@
 import SwiftUI
 import ComposableArchitecture
-import AboutFeature
+import AddEntryFeature
 
 @main
 struct DemoApp: App {
 	var body: some Scene {
 		WindowGroup {
-			AboutView(
-				store: Store(
-					initialState: AboutFeature.State(),
-					reducer: {
-						AboutFeature()
-					}
+			NavigationStack {
+				AddEntryView(
+					store: Store(
+						initialState: AddEntryFeature.State(entry: .mock),
+						reducer: { AddEntryFeature() }
+					)
 				)
-			)
+				.toolbar {
+					ToolbarItem(placement: .cancellationAction) {
+						Text("AddEntry.Title".localized)
+							.adaptiveFont(.latoBold, size: 16)
+							.foregroundColor(.adaptiveBlack)
+					}
+					ToolbarItem(placement: .confirmationAction) {
+						Button {
+						} label: {
+							Image(.xmark)
+								.foregroundColor(.adaptiveBlack)
+						}
+					}
+				}
+			}
 		}
 	}
 }

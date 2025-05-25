@@ -14,7 +14,7 @@ public struct AVAudioSessionClient {
     public var requestRecordPermission: () async throws -> Bool
 }
 
-extension AVAudioSession.RecordPermission {
+extension AVAudioApplication.recordPermission {
     public var permission: AudioRecordPermission {
         switch self {
         case .granted:

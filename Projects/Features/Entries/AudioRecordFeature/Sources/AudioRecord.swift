@@ -195,8 +195,8 @@ public struct AudioRecordFeature: Reducer {
 					state.alert = AlertState {
 						TextState("AudioRecord.Alert".localized)
 					} actions: {
-						ButtonState.cancel(TextState("Cancel".localized))
-						ButtonState.destructive(TextState("Continue".localized), action: .send(.newRecord))
+						ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
+						ButtonState(role: .destructive, action: .newRecord, label: { TextState("Continue".localized) })
 					} message: {
 						TextState("AudioRecord.Alert.Message".localized)
 					}
@@ -279,8 +279,8 @@ public struct AudioRecordFeature: Reducer {
 					state.alert = AlertState {
 						TextState("Title")
 					} actions: {
-						ButtonState.cancel(TextState("Cancel".localized))
-						ButtonState.destructive(TextState("Si, descartar"), action: .send(.dismiss))
+						ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
+						ButtonState(role: .destructive, action: .dismiss, label: { TextState("Si, descargar") })
 					} message: {
 						TextState("Message")
 					}

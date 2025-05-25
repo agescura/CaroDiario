@@ -5,7 +5,7 @@ import UserDefaultsClient
 import Models
 import SwiftUIHelper
 
-extension TimeForAskPasscode: Identifiable {
+extension TimeForAskPasscode {
 	public var rawValue: String {
 		switch self {
 			case .always:
@@ -15,10 +15,6 @@ extension TimeForAskPasscode: Identifiable {
 			case let .after(minutes: minutes):
 				return "\("Passcode.IfAway".localized)\(minutes) min"
 		}
-	}
-	
-	public var id: String {
-		rawValue
 	}
 }
 

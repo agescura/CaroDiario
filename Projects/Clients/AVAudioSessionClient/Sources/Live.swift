@@ -16,10 +16,10 @@ extension AVAudioSessionClient {
         }
         
         return Self(
-            recordPermission: { session.recordPermission.permission },
+					recordPermission: { AVAudioApplication.shared.recordPermission.permission },
             requestRecordPermission: {
                 try await withCheckedThrowingContinuation { continuation in
-                    session.requestRecordPermission { granted in
+									AVAudioApplication.requestRecordPermission() { granted in
                         continuation.resume(with: .success(granted))
                     }
                 }

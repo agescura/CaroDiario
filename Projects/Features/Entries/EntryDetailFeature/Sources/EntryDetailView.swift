@@ -23,12 +23,15 @@ public struct EntryDetailView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
               LazyHStack(spacing: 8) {
-                ForEachStore(
+                ForEach(
                   store.scope(
                     state: \.attachments,
-                    action: EntryDetailFeature.Action.attachments),
-                  content: AttachmentRowView.init(store:)
-                )
+                    action: \.attachments
+									),
+									id: \.state.id
+								) { store in
+									AttachmentRowView(store: store)
+								}
               }
             }
             .frame(height: 52)

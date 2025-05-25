@@ -6,6 +6,7 @@ import Models
 public struct AttachmentRow {
   public init() {}
   
+	@ObservableState
   public struct State: Identifiable, Equatable, Hashable {
     public let id: UUID
     public var attachment: Attachment.State

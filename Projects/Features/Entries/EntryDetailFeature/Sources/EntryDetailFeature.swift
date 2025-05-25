@@ -6,14 +6,16 @@ import AddEntryFeature
 import UIApplicationClient
 import FileClient
 
-public struct EntryDetailFeature: Reducer {
+@Reducer
+public struct EntryDetailFeature {
 	public init() {}
 	
+	@ObservableState
 	public struct State: Equatable {
 		public var addEntryState: AddEntryFeature.State?
-		@PresentationState public var alert: AlertState<Action.Alert>?
+		@Presents public var alert: AlertState<Action.Alert>?
 		public var attachments: IdentifiedArrayOf<AttachmentRow.State> = []
-		@PresentationState public var confirmationDialog: ConfirmationDialogState<Action.Dialog>?
+		@Presents public var confirmationDialog: ConfirmationDialogState<Action.Dialog>?
 		public var entry: Entry
 		public var meatballActionSheet: ConfirmationDialogState<Action>?
 		public var presentAddEntry = false
@@ -36,13 +38,12 @@ public struct EntryDetailFeature: Reducer {
 		}
 	}
 	
-	@CasePathable
 	public enum Action: Equatable {
 		case addEntryAction(AddEntryFeature.Action)
 		case alert(PresentationAction<Alert>)
 		case alertRemoveButtonTapped
 		case attachmentDetail(AttachmentDetail.Action)
-		case attachments(id: UUID, action: AttachmentRow.Action)
+		case attachments(IdentifiedActionOf<AttachmentRow>)
 		case confirmationDialog(PresentationAction<Dialog>)
 		case dismissAttachmentOverlayed
 		case dismissMeatballActionSheet
@@ -57,9 +58,11 @@ public struct EntryDetailFeature: Reducer {
 		case removeAttachmentResponse(UUID)
 		case selectedAttachmentRowAction(AttachmentRow.State)
 		
+		@CasePathable
 		public enum Alert: Equatable {
 			case remove(Entry)
 		}
+		@CasePathable
 		public enum Dialog: Equatable {
 			case presentAddEntry
 			case processShare
@@ -71,7 +74,10 @@ public struct EntryDetailFeature: Reducer {
 	@Dependency(\.mainQueue) var mainQueue
 	
 	public var body: some ReducerOf<Self> {
-		Scope(state: \.selectedAttachmentDetailState, action: \.attachmentDetail) {
+		Scope(
+			state: \.selectedAttachmentDetailState,
+			action: \.attachmentDetail
+		) {
 			AttachmentDetail()
 		}
 		Reduce { state, action in
@@ -102,13 +108,13 @@ public struct EntryDetailFeature: Reducer {
 				case .attachmentDetail:
 					return .none
 					
-				case let .attachments(id: id, action: .attachment(.image(.presentImageFullScreen(true)))),
-					let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),
-					let .attachments(id: id, action: .attachment(.audio(.presentAudioFullScreen(true)))):
-					state.seletedAttachmentRowState = state.attachments[id: id]
-					state.showAttachmentOverlayed = true
-					self.applicationClient.showTabView(true)
-					return .none
+//				case let .attachments(.element(id: id, action: .image(.presentImageFullScreen(true)))),
+//					let .attachments(id: id, action: .attachment(.video(.presentVideoPlayer(true)))),
+//					let .attachments(id: id, action: .attachment(.audio(.presentAudioFullScreen(true)))):
+//					state.seletedAttachmentRowState = state.attachments[id: id]
+//					state.showAttachmentOverlayed = true
+//					self.applicationClient.showTabView(true)
+//					return .none
 				case .attachments:
 					return .none
 					
@@ -204,7 +210,7 @@ public struct EntryDetailFeature: Reducer {
 					return .none
 			}
 		}
-		.forEach(\.attachments, action: /Action.attachments) {
+		.forEach(\.attachments, action: \.attachments) {
 			AttachmentRow()
 		}
 		.ifLet(\.$alert, action: \.alert)
