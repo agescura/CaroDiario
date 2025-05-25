@@ -32,7 +32,7 @@ let packageSettings = PackageSettings(
 let package = Package(
 	name: "CaroDiario",
 	dependencies: [
-		.package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.13.0"),
-		.package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.17.4"),
+		.package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.13.0"),
+		.package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.17.4"),
 	]
 )
