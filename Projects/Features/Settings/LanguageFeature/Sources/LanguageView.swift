@@ -26,7 +26,7 @@ public struct LanguageFeature {
 		Reduce { state, action in
 			switch action {
 				case let .updateLanguageTapped(language):
-					state.userSettings.language = language
+					state.$userSettings.language.withLock { $0 = language }
 					return .none
 			}
 		}

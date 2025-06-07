@@ -44,7 +44,7 @@ public struct LayoutFeature {
 		Reduce { state, action in
 			switch action {
 				case .alert(.presented(.skip)):
-					state.userSettings.hasShownOnboarding = true
+					state.$userSettings.hasShownOnboarding.withLock { $0 = true }
 					return .run { send in
 						await send(.delegate(.navigateToHome))
 					}
@@ -59,7 +59,7 @@ public struct LayoutFeature {
 					return .none
 					
 				case let .layoutChanged(layoutChanged):
-					state.userSettings.appearance.layoutType = layoutChanged
+					state.$userSettings.appearance.layoutType.withLock { $0 = layoutChanged }
 					state.entries = fakeEntries
 					return .none
 					

@@ -37,7 +37,7 @@ public struct CameraFeature {
 		Reduce { state, action in
 			switch action {
 				case let .requestAccessResponse(authorized):
-					state.userSettings.authorizedVideoStatus = authorized ? .authorized : .denied
+					state.$userSettings.authorizedVideoStatus.withLock { $0 = authorized ? .authorized : .denied }
 					return .none
 					
 				case let .view(viewAction):

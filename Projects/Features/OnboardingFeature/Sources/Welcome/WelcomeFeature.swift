@@ -70,7 +70,7 @@ public struct WelcomeFeature {
 			switch action {
 				case .alert(.presented(.skip)):
 					state.alert = nil
-					state.userSettings.hasShownOnboarding = true
+					state.$userSettings.hasShownOnboarding.withLock { $0 = true }
 					return .merge(
 						.cancel(id: CancelID.timer),
 						.run { send in await send(.delegate(.navigateToHome)) }

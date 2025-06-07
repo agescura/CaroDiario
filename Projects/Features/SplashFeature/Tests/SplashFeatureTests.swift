@@ -1,13 +1,14 @@
 import ComposableArchitecture
-@testable import SplashFeature
-import TestUtils
 import SnapshotTesting
 import SwiftUI
-import XCTest
+import Testing
+import TestUtils
+
+@testable import SplashFeature
 
 @MainActor
-final class SplashFeatureTests: XCTestCase {
-	@MainActor
+struct SplashFeatureTests {
+	@Test
 	func testSplashScreenHappyPath() async {
 		let store = TestStore(
 			initialState: SplashFeature.State(),
@@ -17,7 +18,7 @@ final class SplashFeatureTests: XCTestCase {
 		let clock = TestClock()
 		store.dependencies.continuousClock = clock
 		
-		await store.send(.task)
+		await store.send(.view(.task))
 		
 		await clock.advance(by: .seconds(1))
 		
@@ -39,6 +40,7 @@ final class SplashFeatureTests: XCTestCase {
 		await store.receive(\.delegate.animationFinished)
 	}
 	
+	@Test
 	func testSnapshot() {
 		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
 			assertSnapshot(

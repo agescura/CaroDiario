@@ -34,7 +34,7 @@ public struct MicrophoneFeature {
 		Reduce { state, action in
 			switch action {
 				case let .requestAccessResponse(authorized):
-					state.userSettings.audioRecordPermission = authorized ? .authorized : .denied
+					state.$userSettings.audioRecordPermission.withLock { $0 = authorized ? .authorized : .denied }
 					return .none
 					
 				case let .view(viewAction):

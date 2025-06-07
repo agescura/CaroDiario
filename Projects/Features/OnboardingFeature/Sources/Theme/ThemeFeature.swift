@@ -43,7 +43,7 @@ public struct ThemeFeature {
 					return .none
 					
 				case let .themeChanged(themeType):
-					state.userSettings.appearance.themeType = themeType
+					state.$userSettings.appearance.themeType.withLock { $0 = themeType }
 					return .run { _ in
 						await self.setUserInterfaceStyle(themeType.userInterfaceStyle)
 					}
@@ -51,7 +51,7 @@ public struct ThemeFeature {
 				case let .view(viewAction):
 					switch viewAction {
 						case .startButtonTapped:
-							state.userSettings.hasShownOnboarding = true
+							state.$userSettings.hasShownOnboarding.withLock { $0 = true }
 							return .send(.delegate(.navigateToHome))
 					}
 			}

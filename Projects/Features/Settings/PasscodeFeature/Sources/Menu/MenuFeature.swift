@@ -61,10 +61,10 @@ public struct MenuFeature {
 				case .delegate:
 					return .none
 				case .dialog(.presented(.turnOff)):
-					state.userSettings.passcode = nil
-					state.userSettings.localAuthenticationType = .none
-					state.userSettings.timeForAskPasscode = .never
-					state.userSettings.faceIdEnabled = false
+					state.$userSettings.passcode.withLock { $0 = nil }
+					state.$userSettings.localAuthenticationType.withLock{ $0 = .none }
+					state.$userSettings.timeForAskPasscode.withLock{ $0 = .never }
+					state.$userSettings.faceIdEnabled.withLock { $0 = false }
 					state.dialog = nil
 					return .run { send in
 						await send(.delegate(.popToRoot))
@@ -72,10 +72,10 @@ public struct MenuFeature {
 				case .dialog:
 					return .none
 				case let .faceId(response: response):
-					state.userSettings.faceIdEnabled = response
+					state.$userSettings.faceIdEnabled.withLock { $0 = response }
 					return .none
 				case let .optionTimeForAskPasscode(newOption):
-					state.userSettings.optionTimeForAskPasscode = newOption.value
+					state.$userSettings.optionTimeForAskPasscode.withLock { $0 = newOption.value }
 					return .none
 				case let .toggleFaceId(isOn: value):
 					if !value {

@@ -1,15 +1,16 @@
 import ComposableArchitecture
 import Dependencies
 import Models
-@testable import OnboardingFeature
 import SnapshotTesting
 import SwiftUI
+import Testing
 import TestUtils
-import XCTest
+
+@testable import OnboardingFeature
 
 @MainActor
-class WelcomeFeatureTests: XCTestCase {
-	@MainActor
+struct WelcomeFeatureTests {
+	@Test
 	func testHappyPath() async {
 		let clock = TestClock()
 		let store = TestStore(
@@ -34,7 +35,7 @@ class WelcomeFeatureTests: XCTestCase {
 		}
 	}
 	
-	@MainActor
+	@Test
 	func testSkipOnboarding() async {
 		let clock = TestClock()
 		let store = TestStore(
@@ -50,12 +51,12 @@ class WelcomeFeatureTests: XCTestCase {
 		}
 		await store.send(\.alert.skip) {
 			$0.alert = nil
-			$0.userSettings.hasShownOnboarding = true
+			$0.$userSettings.hasShownOnboarding.withLock { $0 = true }
 		}
 		await store.receive(\.delegate.navigateToHome)
 	}
 	
-	@MainActor
+	@Test
 	func testAlertSkipCancel() async {
 		let store = TestStore(
 			initialState: WelcomeFeature.State(),
@@ -70,12 +71,13 @@ class WelcomeFeatureTests: XCTestCase {
 		}
 	}
 	
+	@Test
 	func testSnapshot() {
 		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
 			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
 			
 			for language in Localizable.allCases {
-				userSettings.language = language
+				$userSettings.language.withLock { $0 = language }
 				
 				assertSnapshot(
 					WelcomeView(

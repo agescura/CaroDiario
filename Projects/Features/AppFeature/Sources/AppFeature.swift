@@ -93,7 +93,7 @@ public struct AppFeature {
 					)
 					
 				case let .authorizationStatusResponse(authorizedVideoStatus):
-					state.userSettings.authorizedVideoStatus = authorizedVideoStatus
+					state.$userSettings.authorizedVideoStatus.withLock { $0 = authorizedVideoStatus }
 					return .none
 					
 				case .splashFinished:

@@ -24,7 +24,8 @@ let packageSettings = PackageSettings(
 		"IssueReporting": .framework,
 		"InternalCollectionsUtilities": .framework,
 		"SwiftUINavigation": .framework,
-		"UIKitNavigation": .framework
+		"UIKitNavigation": .framework,
+		"PerceptionCore": .framework
 	]
 )
 #endif
@@ -32,7 +33,7 @@ let packageSettings = PackageSettings(
 let package = Package(
 	name: "CaroDiario",
 	dependencies: [
-		.package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.13.0"),
-		.package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.17.4"),
+		.package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.20.2"),
+		.package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.18.4"),
 	]
 )

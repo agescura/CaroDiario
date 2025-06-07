@@ -28,7 +28,7 @@ public struct StyleFeature {
 		Reduce { state, action in
 			switch action {
 				case let .styleChanged(styleType):
-					state.userSettings.appearance.styleType = styleType
+					state.$userSettings.appearance.styleType.withLock { $0 = styleType }
 					state.entries = fakeEntries
 					return .none
 				case .entries:

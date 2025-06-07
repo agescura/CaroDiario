@@ -1,15 +1,16 @@
 import ComposableArchitecture
 import EntriesFeature
 import Models
-@testable import OnboardingFeature
 import SnapshotTesting
 import SwiftUI
+import Testing
 import TestUtils
-import XCTest
+
+@testable import OnboardingFeature
 
 @MainActor
-class ThemeFeatureTests: XCTestCase {
-	@MainActor
+struct ThemeFeatureTests {
+	@Test
 	func testHappyPath() async {
 		let store = TestStore(
 			initialState: ThemeFeature.State(entries: fakeEntries),
@@ -17,17 +18,18 @@ class ThemeFeatureTests: XCTestCase {
 		)
 		
 		await store.send(\.view.startButtonTapped) {
-			$0.userSettings.hasShownOnboarding = true
+			$0.$userSettings.hasShownOnboarding.withLock { $0 = true }
 		}
 		await store.receive(\.delegate.navigateToHome)
 	}
 	
+	@Test
 	func testSnapshot() {
 		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
 			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
 			
 			for language in Localizable.allCases {
-				userSettings.language = language
+				$userSettings.language.withLock { $0 = language }
 				
 				assertSnapshot(
 					ThemeView(

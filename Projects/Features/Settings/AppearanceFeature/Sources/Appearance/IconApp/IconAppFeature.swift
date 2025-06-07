@@ -24,7 +24,7 @@ public struct IconAppFeature {
 		Reduce { state, action in
 			switch action {
 				case let .iconAppChanged(newIconApp):
-					state.userSettings.appearance.iconAppType = newIconApp
+					state.$userSettings.appearance.iconAppType.withLock { $0 = newIconApp }
 					return .run { _ in
 						try await self.applicationClient.setAlternateIconName(newIconApp == .dark ? "AppIcon-2" : nil)
 					}

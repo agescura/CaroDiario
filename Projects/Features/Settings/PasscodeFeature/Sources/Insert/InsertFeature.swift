@@ -75,7 +75,7 @@ public struct InsertFeature {
 					if state.step == .secondCode,
 						 state.code.count == state.maxNumbersCode {
 						if state.code == state.firstCode {
-							state.userSettings.passcode = state.code
+							state.$userSettings.passcode.withLock { $0 = state.code }
 							return .send(.delegate(.navigateToMenu))
 						} else {
 							state.step = .firstCode

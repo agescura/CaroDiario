@@ -11,11 +11,8 @@ struct MainApp: App {
 		WindowGroup {
 			if !_XCTIsTesting {
 				AppView(store: self.appDelegate.store)
-					.onOpenURL(perform: self.appDelegate.process(url:))
-					.onChange(
-						of: self.scenePhase,
-						perform: self.appDelegate.update(state:)
-					)
+					.onOpenURL(perform: self.appDelegate.process)
+					.onChange(of: self.scenePhase) { self.appDelegate.update(state: $1) }
 			}
 		}
 	}

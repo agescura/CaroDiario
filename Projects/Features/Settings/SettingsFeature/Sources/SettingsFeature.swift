@@ -63,7 +63,7 @@ public struct SettingsFeature {
 		Reduce { state, action in
 			switch action {
 				case let .biometricResult(localAuthenticationType):
-					state.userSettings.localAuthenticationType = localAuthenticationType
+					state.$userSettings.localAuthenticationType.withLock { $0 = localAuthenticationType }
 					return .none
 					
 				case .navigateToPasscode:
@@ -115,7 +115,7 @@ public struct SettingsFeature {
 					}
 					
 				case let .toggleShowSplash(showSplash):
-					state.userSettings.showSplash = showSplash
+					state.$userSettings.showSplash.withLock { $0 = showSplash }
 					return .none
 			}
 		}

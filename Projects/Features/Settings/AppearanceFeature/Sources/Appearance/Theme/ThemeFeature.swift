@@ -32,7 +32,7 @@ public struct ThemeFeature {
 		Reduce { state, action in
 			switch action {
 				case let .themeChanged(newTheme):
-					state.userSettings.appearance.themeType = newTheme
+					state.$userSettings.appearance.themeType.withLock { $0 = newTheme }
 					return .run { _ in
 						await self.setUserInterfaceStyle(newTheme.userInterfaceStyle)
 					}

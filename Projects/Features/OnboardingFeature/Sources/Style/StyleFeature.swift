@@ -40,7 +40,7 @@ public struct StyleFeature {
 			switch action {
 				case .alert(.presented(.skip)):
 					state.alert = nil
-					state.userSettings.hasShownOnboarding = true
+					state.$userSettings.hasShownOnboarding.withLock { $0 = true }
 					return .run { send in
 						await send(.delegate(.navigateToHome))
 					}
@@ -55,7 +55,7 @@ public struct StyleFeature {
 					return .none
 					
 				case let .styleChanged(styleType):
-					state.userSettings.appearance.styleType = styleType
+					state.$userSettings.appearance.styleType.withLock { $0 = styleType }
 					state.entries = fakeEntries
 					return .none
 					

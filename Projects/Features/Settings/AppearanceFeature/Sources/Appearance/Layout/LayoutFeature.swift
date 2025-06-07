@@ -28,7 +28,7 @@ public struct LayoutFeature {
 		Reduce { state, action in
 			switch action {
 				case let .layoutChanged(layoutType):
-					state.userSettings.appearance.layoutType = layoutType
+					state.$userSettings.appearance.layoutType.withLock { $0 = layoutType }
 					state.entries = fakeEntries
 					return .none
 				case .entries:

@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import Foundation
+import Sharing
 
 public enum TimeForAskPasscode: Equatable, Hashable {
 	case always
@@ -116,7 +117,7 @@ extension UserSettings {
 	}
 }
 
-extension PersistenceKey where Self == FileStorageKey<UserSettings> {
+extension SharedKey where Self == FileStorageKey<UserSettings> {
 	public static var userSettings: Self {
 		fileStorage(
 			FileManager.default

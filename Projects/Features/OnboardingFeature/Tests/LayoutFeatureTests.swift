@@ -1,14 +1,16 @@
 import ComposableArchitecture
 import EntriesFeature
 import Models
-@testable import OnboardingFeature
 import SnapshotTesting
 import SwiftUI
+import Testing
 import TestUtils
-import XCTest
+
+@testable import OnboardingFeature
 
 @MainActor
-class LayoutFeatureTests: XCTestCase {
+struct LayoutFeatureTests {
+	@Test
 	func testHappyPath() async {
 		let store = TestStore(
 			initialState: LayoutFeature.State(entries: fakeEntries),
@@ -19,6 +21,7 @@ class LayoutFeatureTests: XCTestCase {
 		await store.receive(\.delegate.navigateToTheme)
 	}
 	
+	@Test
 	func testAlertSkipOnboarding() async {
 		let store = TestStore(
 			initialState: LayoutFeature.State(entries: fakeEntries),
@@ -30,11 +33,12 @@ class LayoutFeatureTests: XCTestCase {
 		}
 		await store.send(\.alert.skip) {
 			$0.alert = nil
-			$0.userSettings.hasShownOnboarding = true
+			$0.$userSettings.hasShownOnboarding.withLock { $0 = true }
 		}
 		await store.receive(\.delegate.navigateToHome)
 	}
 	
+	@Test
 	func testAlertSkipCancel() async {
 		let store = TestStore(
 			initialState: LayoutFeature.State(entries: fakeEntries),
@@ -49,12 +53,13 @@ class LayoutFeatureTests: XCTestCase {
 		}
 	}
 	
+	@Test
 	func testSnapshot() {
 		withSnapshotTesting(record: .never, diffTool: "ksdiff") {
 			@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
 			
 			for language in Localizable.allCases {
-				userSettings.language = language
+				$userSettings.language.withLock { $0 = language }
 				
 				assertSnapshot(
 					LayoutView(
@@ -65,7 +70,7 @@ class LayoutFeatureTests: XCTestCase {
 					)
 				)
 				
-				userSettings.appearance.layoutType = .vertical
+				$userSettings.appearance.layoutType.withLock { $0 = .vertical }
 				
 				assertSnapshot(
 					LayoutView(
