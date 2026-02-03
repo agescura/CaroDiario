@@ -1,17 +1,21 @@
-//
-//  CaroDiarioApp.swift
-//  CaroDiario
-//
-//  Created by Albert Gil Escura on 14/6/25.
-//
-
 import SwiftUI
+import AboutFeature
+import ComposableArchitecture
+import DesignSystem
 
 @main
 struct CaroDiarioApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  init() {
+    registerFonts()
+  }
+  var body: some Scene {
+    WindowGroup {
+      AboutView(
+        store: Store(
+          initialState: AboutFeature.State(),
+          reducer: { AboutFeature() }
+        )
+      )
     }
+  }
 }
