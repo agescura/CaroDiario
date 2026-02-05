@@ -28,7 +28,7 @@ extension EntryImage {
 
 extension EntryImage {
 	public static var mock: Self {
-		Self(
+    EntryImage(
 			id: UUID(),
 			lastUpdated: Date(),
 			thumbnail: URL(string: "")!,

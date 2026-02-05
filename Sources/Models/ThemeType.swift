@@ -8,23 +8,22 @@ public enum ThemeType: String, CaseIterable, Codable, Sendable {
 	public var userInterfaceStyle: UIUserInterfaceStyle {
 		switch self {
 			case .dark:
-				return .dark
+				.dark
 			case .light:
-				return .light
+				.light
 			case .system:
-				return .unspecified
+				.unspecified
 		}
 	}
 	
 	public var icon: String {
 		switch self {
-				
 			case .system:
-				return "star.circle.fill"
+				"star.circle.fill"
 			case .light:
-				return "star.fill"
+				"star.fill"
 			case .dark:
-				return "star"
+				"star"
 		}
 	}
 }

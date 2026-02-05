@@ -25,7 +25,7 @@ extension EntryAudio {
 
 extension EntryAudio {
 	public static var mock: Self {
-		Self(
+    EntryAudio(
 			id: UUID(),
 			lastUpdated: Date(),
 			url: URL(string: "")!

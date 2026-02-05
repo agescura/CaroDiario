@@ -28,7 +28,7 @@ extension EntryVideo {
 
 extension EntryVideo {
 	public static var mock: Self {
-		Self(
+    EntryVideo(
 			id: UUID(),
 			lastUpdated: Date(),
 			thumbnail: URL(string: "")!,

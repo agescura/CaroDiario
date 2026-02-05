@@ -1,21 +1,20 @@
 import SwiftUI
-import AboutFeature
+import SettingsFeature
+import AppFeature
 import ComposableArchitecture
-import DesignSystem
 
 @main
 struct CaroDiarioApp: App {
-  init() {
-    registerFonts()
-  }
+  @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+  @Environment(\.scenePhase) var scenePhase
+  
   var body: some Scene {
     WindowGroup {
-      AboutView(
-        store: Store(
-          initialState: AboutFeature.State(),
-          reducer: { AboutFeature() }
-        )
-      )
+      if !_XCTIsTesting {
+        AppView(store: self.appDelegate.store)
+          .onOpenURL(perform: self.appDelegate.process)
+          .onChange(of: self.scenePhase) { self.appDelegate.update(state: $1) }
+      }
     }
   }
 }

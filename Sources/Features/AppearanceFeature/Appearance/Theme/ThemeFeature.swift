@@ -1,0 +1,46 @@
+import ApplicationClient
+import ComposableArchitecture
+import Foundation
+import Models
+//import EntriesFeature
+
+@Reducer
+public struct ThemeFeature {
+  public init() {}
+  
+  @ObservableState
+  public struct State: Equatable {
+    //		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
+    @Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
+    
+    public init(
+      //			entries: IdentifiedArrayOf<DayEntriesRow.State>
+    ) {
+      //			self.entries = entries
+    }
+  }
+  
+  public enum Action: Equatable {
+    case themeChanged(ThemeType)
+    //		case entries(IdentifiedActionOf<DayEntriesRow>)
+  }
+  
+  @Dependency(\.applicationClient.setUserInterfaceStyle) var setUserInterfaceStyle
+  
+  public var body: some ReducerOf<Self> {
+    Reduce { state, action in
+      switch action {
+      case let .themeChanged(newTheme):
+        state.$userSettings.appearance.themeType.withLock { $0 = newTheme }
+        return .run { [setUserInterfaceStyle] _ in
+          await setUserInterfaceStyle(newTheme.userInterfaceStyle)
+        }
+        //				case .entries:
+        //					return .none
+      }
+    }
+    //		.forEach(\.entries, action: \.entries) {
+    //			DayEntriesRow()
+    //		}
+  }
+}

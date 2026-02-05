@@ -88,7 +88,7 @@ extension Entry {
 
 extension Entry {
   public static var mock: Entry {
-    Self(
+    Entry(
       id: UUID(uuidString: "DEADBEEF-DEAD-BEEF-DEAD-BEEFDEADBEEF")!,
       date: Date(timeIntervalSince1970: 1),
       startDay: Date(timeIntervalSince1970: 1),
