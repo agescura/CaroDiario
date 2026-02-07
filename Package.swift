@@ -103,6 +103,18 @@ let package = Package(
       name: "StoreKitClient",
       targets: ["StoreKitClient"]
     ),
+    .library(
+      name: "EntriesFeature",
+      targets: ["EntriesFeature"]
+    ),
+    .library(
+      name: "EntryDetailFeature",
+      targets: ["EntryDetailFeature"]
+    ),
+    .library(
+      name: "SQLiteDataClient",
+      targets: ["SQLiteDataClient"]
+    ),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/sqlite-data", exact: "1.5.1"),
@@ -112,6 +124,14 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.18.9"),
   ],
   targets: [
+    .target(
+      name: "SQLiteDataClient",
+      dependencies: [
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "Models"
+      ],
+      path: "Sources/Clients/SQLiteDataClient"
+    ),
     .target(
       name: "AppFeature",
       dependencies: [
@@ -217,7 +237,9 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         "ApplicationClient",
         "DesignSystem",
-        "Localizables"
+        "Localizables",
+        "EntriesFeature",
+        "Models"
       ],
       path: "Sources/Features/AppearanceFeature",
       resources: [.process("Resources")]
@@ -252,7 +274,8 @@ let package = Package(
     .target(
       name: "Models",
       dependencies: [
-        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data")
       ]
     ),
     .target(
@@ -289,6 +312,7 @@ let package = Package(
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
+        "Models"
       ],
       path: "Sources/Clients/AVCaptureDeviceClient"
     ),
@@ -393,6 +417,31 @@ let package = Package(
         "PDFPreviewFeature"
       ],
       path: "Sources/Features/SettingsFeature"
+    ),
+    .target(
+      name: "EntriesFeature",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "ApplicationClient",
+        "Localizables",
+        "DesignSystem",
+        "Models",
+        "SQLiteDataClient",
+        "EntryDetailFeature"
+      ],
+      path: "Sources/Features/EntriesFeature"
+    ),
+    .target(
+      name: "EntryDetailFeature",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "ApplicationClient",
+        "Localizables",
+        "DesignSystem",
+        "Models",
+        "SQLiteDataClient"
+      ],
+      path: "Sources/Features/EntryDetailFeature"
     ),
   ]
 )

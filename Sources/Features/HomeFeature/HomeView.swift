@@ -1,6 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
-//import EntriesFeature
+import EntriesFeature
 import SettingsFeature
 //import AddEntryFeature
 import Models
@@ -42,7 +42,7 @@ extension TabViewType {
 		switch self {
 			case .entries:
       EmptyView()
-//				EntriesView(store: store.scope(state: \.entries, action: \.entries))
+				EntriesView(store: store.scope(state: \.entries, action: \.entries))
 			case .search:
       EmptyView()
 //				SearchView(store: store.scope(state: \.search, action: \.search))

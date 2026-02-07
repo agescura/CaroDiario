@@ -154,7 +154,7 @@ public struct SettingsView: View {
 					]
 				)
 			),
-			reducer: { SettingsFeature() }
+      reducer: { SettingsFeature()._printChanges() }
 		)
 	)
 }

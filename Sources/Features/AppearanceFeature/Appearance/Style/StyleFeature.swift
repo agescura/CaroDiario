@@ -9,19 +9,13 @@ public struct StyleFeature {
   
 	@ObservableState
   public struct State: Equatable {
-//    public var entries: IdentifiedArrayOf<DayEntriesRow.State>
-		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
+    @Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
 		
-		public init(
-//			entries: IdentifiedArrayOf<DayEntriesRow.State>
-		) {
-//			self.entries = entries
-		}
+		public init() {}
   }
 
   public enum Action: Equatable {
     case styleChanged(StyleType)
-//    case entries(IdentifiedActionOf<DayEntriesRow>)
   }
   
 	public var body: some ReducerOf<Self> {
@@ -29,14 +23,8 @@ public struct StyleFeature {
 			switch action {
 				case let .styleChanged(styleType):
 					state.$userSettings.appearance.styleType.withLock { $0 = styleType }
-//					state.entries = fakeEntries
 					return .none
-//				case .entries:
-//					return .none
 			}
 		}
-//		.forEach(\.entries, action: \.entries) {
-//			DayEntriesRow()
-//		}
 	}
 }

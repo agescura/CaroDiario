@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DesignSystem
+import Localizables
 import Models
 import SwiftUI
 
@@ -22,7 +23,7 @@ public struct IconAppView: View {
 					ForEach(IconAppType.allCases, id: \.self) { iconApp in
 						VStack {
 							Text(iconApp.icon)
-							Image(iconApp.icon)
+              Image(iconApp.icon, bundle: .module)
 								.resizable()
 								.frame(maxWidth: .infinity)
 								.scaledToFit()
@@ -54,7 +55,7 @@ public struct IconAppView: View {
 	IconAppView(
 		store: Store(
 			initialState: IconAppFeature.State(),
-			reducer: { IconAppFeature() }
+      reducer: { IconAppFeature()._printChanges() }
 		)
 	)
 }

@@ -7,22 +7,15 @@ import Models
 @Reducer
 public struct ThemeFeature {
   public init() {}
-  
   @ObservableState
   public struct State: Equatable {
-    //		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
     @Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
     
-    public init(
-      //			entries: IdentifiedArrayOf<DayEntriesRow.State>
-    ) {
-      //			self.entries = entries
-    }
+    public init() {}
   }
   
   public enum Action: Equatable {
     case themeChanged(ThemeType)
-    //		case entries(IdentifiedActionOf<DayEntriesRow>)
   }
   
   @Dependency(\.applicationClient.setUserInterfaceStyle) var setUserInterfaceStyle
@@ -35,12 +28,7 @@ public struct ThemeFeature {
         return .run { [setUserInterfaceStyle] _ in
           await setUserInterfaceStyle(newTheme.userInterfaceStyle)
         }
-        //				case .entries:
-        //					return .none
       }
     }
-    //		.forEach(\.entries, action: \.entries) {
-    //			DayEntriesRow()
-    //		}
   }
 }

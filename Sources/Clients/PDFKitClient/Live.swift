@@ -54,7 +54,7 @@ func add(_ entry : Entry, context : UIGraphicsPDFRendererContext) -> CGFloat {
     NSAttributedString.Key.paragraphStyle: paragraphStyle,
     NSAttributedString.Key.font: textFont
   ]
-  let newText = "\("PDF.Date".localized) \(entry.date.full) \n\n\(entry.text.message)"
+  let newText = "\("PDF.Date".localized) \(entry.updatedAt.full) \n\n\(entry.message)"
   let currentText = CFAttributedStringCreate(nil,
                                              newText as CFString,
                                              textAttributes as CFDictionary)

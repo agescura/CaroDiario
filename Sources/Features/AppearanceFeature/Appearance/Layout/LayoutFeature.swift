@@ -1,7 +1,7 @@
 import Foundation
 import ComposableArchitecture
 import Models
-//import EntriesFeature
+import EntriesFeature
 
 @Reducer
 public struct LayoutFeature {
@@ -9,19 +9,13 @@ public struct LayoutFeature {
 	
 	@ObservableState
 	public struct State: Equatable {
-//		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
 		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
 		
-		public init(
-//			entries: IdentifiedArrayOf<DayEntriesRow.State>
-		) {
-//			self.entries = entries
-		}
+		public init() {}
 	}
 
   public enum Action: Equatable {
     case layoutChanged(LayoutType)
-//    case entries(IdentifiedActionOf<DayEntriesRow>)
   }
   
 	public var body: some ReducerOf<Self> {
@@ -29,14 +23,8 @@ public struct LayoutFeature {
 			switch action {
 				case let .layoutChanged(layoutType):
 					state.$userSettings.appearance.layoutType.withLock { $0 = layoutType }
-//					state.entries = fakeEntries
 					return .none
-//				case .entries:
-//					return .none
 			}
 		}
-//		.forEach(\.entries, action: \.entries) {
-//			DayEntriesRow()
-//		}
 	}
 }

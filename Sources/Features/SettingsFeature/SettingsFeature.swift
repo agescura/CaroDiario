@@ -83,13 +83,13 @@ public struct SettingsFeature {
 							state.path.append(.iconApp(IconAppFeature.State()))
 							return .none
 						case .appearance(.delegate(.navigateToLayout)):
-//							state.path.append(.layout(LayoutFeature.State(entries: fakeEntries)))
+							state.path.append(.layout(LayoutFeature.State()))
 							return .none
 						case .appearance(.delegate(.navigateToStyle)):
-//							state.path.append(.style(StyleFeature.State(entries: fakeEntries)))
+							state.path.append(.style(StyleFeature.State()))
 							return .none
 						case .appearance(.delegate(.navigateToTheme)):
-//							state.path.append(.theme(ThemeFeature.State(entries: fakeEntries)))
+							state.path.append(.theme(ThemeFeature.State()))
 							return .none
 						case .insert(.delegate(.navigateToMenu)):
 							state.path.append(.menu(MenuFeature.State()))
