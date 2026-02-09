@@ -111,9 +111,13 @@ public struct AppFeature {
 						case .lockScreen(.delegate(.matchedCode)):
 							state.scene = .home(HomeFeature.State())
 							return .none
-						case .onboarding(.delegate(.navigateToHome)):
-							state.scene = .home(HomeFeature.State())
-							return .none
+          case .onboarding(.delegate(.navigateToHome)),
+              .onboarding(.path(.element(id: _, action: .style(.delegate(.navigateToHome))))),
+              .onboarding(.path(.element(id: _, action: .privacy(.delegate(.navigateToHome))))),
+              .onboarding(.path(.element(id: _, action: .layout(.delegate(.navigateToHome))))),
+              .onboarding(.path(.element(id: _, action: .theme(.delegate(.navigateToHome))))):
+              state.scene = .home(HomeFeature.State())
+              return .none
 						case .splash(.delegate(.animationFinished)):
 							return .send(.splashFinished)
 						default:

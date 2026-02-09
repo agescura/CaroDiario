@@ -1,5 +1,4 @@
 import ComposableArchitecture
-//import EntriesFeature
 import Foundation
 import Models
 
@@ -10,7 +9,6 @@ public struct StyleFeature {
 	@ObservableState
   public struct State: Equatable {
 		@Presents public var alert: AlertState<OnboardingAlert>?
-//		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
 		public var isAppClip = false
 		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
   }
@@ -18,7 +16,6 @@ public struct StyleFeature {
   public enum Action: ViewAction, Equatable {
 		case alert(PresentationAction<OnboardingAlert>)
 		case delegate(Delegate)
-//		case entries(IdentifiedActionOf<DayEntriesRow>)
 		case styleChanged(StyleType)
     case view(View)
 		
@@ -50,13 +47,9 @@ public struct StyleFeature {
 					
 				case .delegate:
 					return .none
-					
-//				case .entries:
-//					return .none
-					
+
 				case let .styleChanged(styleType):
 					state.$userSettings.appearance.styleType.withLock { $0 = styleType }
-//					state.entries = fakeEntries
 					return .none
 					
 				case let .view(viewAction):
@@ -70,9 +63,6 @@ public struct StyleFeature {
 					}
 			}
 		}
-//		.forEach(\.entries, action: \.entries) {
-//			DayEntriesRow()
-//		}
 		.ifLet(\.$alert, action: \.alert)
 	}
 }

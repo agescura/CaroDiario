@@ -13,11 +13,14 @@ import Models
 import StoreKitClient
 import LocalAuthenticationClient
 
+extension SettingsFeature.Path.State: Equatable {}
+extension SettingsFeature.Path.Action: Equatable {}
+
 @Reducer
 public struct SettingsFeature {
 	public init() {}
 	
-	@Reducer(state: .equatable, action: .equatable)
+	@Reducer
 	public enum Path {
 		case about(AboutFeature)
 		case activate(ActivateFeature)

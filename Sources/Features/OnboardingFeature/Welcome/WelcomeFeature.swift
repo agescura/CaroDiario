@@ -1,13 +1,15 @@
 import Foundation
 import ComposableArchitecture
 import Models
-//import EntriesFeature
+
+extension WelcomeFeature.Path.State: Equatable {}
+extension WelcomeFeature.Path.Action: Equatable {}
 
 @Reducer
 public struct WelcomeFeature {
 	public init() {}
 	
-	@Reducer(state: .equatable, action: .equatable)
+	@Reducer
 	public enum Path {
 		case layout(LayoutFeature)
 		case privacy(PrivacyFeature)
@@ -95,13 +97,13 @@ public struct WelcomeFeature {
 				case let .path(.element(id: _, action: pathAction)):
 					switch pathAction {
 						case .privacy(.delegate(.navigateToStyle)):
-//							state.path.append(.style(StyleFeature.State(entries: fakeEntries)))
+							state.path.append(.style(StyleFeature.State()))
 							return .none
 						case .style(.delegate(.navigateToLayout)):
-//							state.path.append(.layout(LayoutFeature.State(entries: fakeEntries)))
+							state.path.append(.layout(LayoutFeature.State()))
 							return .none
 						case .layout(.delegate(.navigateToTheme)):
-//							state.path.append(.theme(ThemeFeature.State(entries: fakeEntries)))
+							state.path.append(.theme(ThemeFeature.State()))
 							return .none
 						case .privacy(.delegate(.navigateToHome)),
 								.style(.delegate(.navigateToHome)),

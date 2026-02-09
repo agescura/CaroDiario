@@ -13,10 +13,10 @@ extension StoreKitClient {
       .compactMap { $0 as? UIWindowScene }
       .first
     
-    return .init(
+    return StoreKitClient(
       requestReview: {
         guard let windowScene = windowScene else { return }
-        await SKStoreReviewController.requestReview(in: windowScene)
+        await AppStore.requestReview(in: windowScene)
       }
     )
   }

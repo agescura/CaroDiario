@@ -17,7 +17,7 @@ public struct EntryDetailFeature {
 //		public var deniedCameraAlert: AlertState<Action>?
 //		public var dismissAlert: AlertState<Action>?
     public var entry: Entry.Draft
-    public var entryModified: Entry.Draft
+    public let entryOriginal: Entry.Draft
 //		public var presentAudioPicker: Bool = false
 //		public var presentImagePicker: Bool = false
 //		public var presentImagePickerSource: PickerSourceType = .photoAlbum
@@ -28,7 +28,7 @@ public struct EntryDetailFeature {
       entry: Entry.Draft
 		) {
 			self.entry = entry
-      self.entryModified = entry
+      self.entryOriginal = entry
 		}
 	}
 	

@@ -1,7 +1,6 @@
 import Foundation
 import ComposableArchitecture
 import Models
-//import EntriesFeature
 
 @Reducer
 public struct ThemeFeature {
@@ -9,14 +8,12 @@ public struct ThemeFeature {
 	
 	@ObservableState
 	public struct State: Equatable {
-//		public var entries: IdentifiedArrayOf<DayEntriesRow.State>
 		public var isAppClip = false
 		@Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
 	}
 	
 	public enum Action: ViewAction, Equatable {
 		case delegate(Delegate)
-//		case entries(IdentifiedActionOf<DayEntriesRow>)
 		case themeChanged(ThemeType)
 		case view(View)
 		
@@ -38,10 +35,7 @@ public struct ThemeFeature {
 			switch action {
 				case .delegate:
 					return .none
-					
-//				case .entries:
-//					return .none
-					
+
 				case let .themeChanged(themeType):
 					state.$userSettings.appearance.themeType.withLock { $0 = themeType }
 					return .run { [setUserInterfaceStyle] _ in
@@ -56,8 +50,5 @@ public struct ThemeFeature {
 					}
 			}
 		}
-//		.forEach(\.entries, action: \.entries) {
-//			DayEntriesRow()
-//		}
 	}
 }

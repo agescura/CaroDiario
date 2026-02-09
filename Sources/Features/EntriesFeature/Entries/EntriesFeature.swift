@@ -8,13 +8,14 @@ import Models
 import SQLiteData
 
 extension EntriesFeature.State: Sendable {}
-extension EntriesFeature.Path.State: Sendable {}
+extension EntriesFeature.Path.State: Equatable, Sendable {}
+extension EntriesFeature.Path.Action: Equatable {}
 
 @Reducer
 public struct EntriesFeature {
 	public init() {}
-	
-	@Reducer(state: .equatable, action: .equatable)
+
+	@Reducer
 	public enum Path {
 		case detail(EntryDetailFeature)
 	}
@@ -120,7 +121,7 @@ public struct EntriesFeature {
           await state.updateQuery()
         }
       case .dismissButtonTapped:
-        if state.add?.entry != state.add?.entryModified || state.path.first?.detail?.entry != state.path.first?.detail?.entryModified {
+        if state.add?.entry != state.add?.entryOriginal || state.path.first?.detail?.entry != state.path.first?.detail?.entryOriginal {
           state.alert = .alert
           return .none
         }

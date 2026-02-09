@@ -120,7 +120,6 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/sqlite-data", exact: "1.5.1"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", exact: "1.10.1"),
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.23.1"),
-    .package(url: "https://github.com/pointfreeco/swift-sharing", exact: "2.7.4"),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.18.9"),
   ],
   targets: [
@@ -144,6 +143,16 @@ let package = Package(
         "LockScreenFeature"
       ],
       path: "Sources/Features/AppFeature"
+    ),
+    .testTarget(
+      name: "AppFeatureTests",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        "TestHelper",
+        "AppFeature",
+      ],
+      path: "Tests/Features/AppFeatureTests"
     ),
     .target(
       name: "HomeFeature",
@@ -197,7 +206,8 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         "DesignSystem",
         "Localizables",
-        "ApplicationClient"
+        "ApplicationClient",
+        "EntriesFeature"
       ],
       path: "Sources/Features/OnboardingFeature"
     ),

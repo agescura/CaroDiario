@@ -32,7 +32,7 @@ public struct StyleView: View {
         styleType: store.userSettings.appearance.styleType
       )
       .accentColor(.chambray)
-      .animation(.default, value: UUID())
+      .animation(.default, value: store.userSettings.appearance.styleType)
       .disabled(true)
       
       Spacer()

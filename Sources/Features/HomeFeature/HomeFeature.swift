@@ -14,20 +14,17 @@ public struct HomeFeature {
     //		public var search: Search.State
     public var selectedTabBar: TabViewType
     public var settings: SettingsFeature.State
-    public var tabBars: [TabViewType]
     
     public init(
       entries: EntriesFeature.State = EntriesFeature.State(),
       //			search: Search.State = Search.State(),
       selectedTabBar: TabViewType = .entries,
       settings: SettingsFeature.State = SettingsFeature.State(),
-      tabBars: [TabViewType] = [.entries, .search, .settings]
     ) {
       self.entries = entries
       //			self.search = search
       self.selectedTabBar = selectedTabBar
       self.settings = settings
-      self.tabBars = tabBars
     }
   }
   

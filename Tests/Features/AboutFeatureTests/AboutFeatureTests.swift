@@ -88,7 +88,7 @@ struct AboutFeatureTests {
         AboutView(
           store: Store(
             initialState: AboutFeature.State(),
-            reducer: { AboutFeature() }
+            reducer: {}
           )
         )
       }

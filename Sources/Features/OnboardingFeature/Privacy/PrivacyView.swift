@@ -1,7 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
 import DesignSystem
-//import EntriesFeature
 
 @ViewAction(for: PrivacyFeature.self)
 public struct PrivacyView: View {

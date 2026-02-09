@@ -1,5 +1,5 @@
 import ComposableArchitecture
-//import EntriesFeature
+import EntriesFeature
 import Localizables
 import Models
 import SwiftUI
@@ -32,16 +32,13 @@ public struct StyleView: View {
 					}
 					.pickerStyle(SegmentedPickerStyle())
 					
-					LazyVStack(alignment: .leading, spacing: 8) {
-//						ForEach(
-//							store.scope(state: \.entries, action: \.entries),
-//							id: \.id
-//						) { store in
-//							DayEntriesRowView(store: store)
-//						}
-					}
+          DayEntriesView(
+            dayEntriesRows: .fakeGroupedEntries,
+            layoutType: store.userSettings.appearance.layoutType,
+            styleType: store.userSettings.appearance.styleType
+          )
 					.accentColor(.chambray)
-					.animation(.default, value: UUID())
+					.animation(.default, value: store.userSettings.appearance.styleType)
 					.disabled(true)
 					.frame(minHeight: 200)
 				}

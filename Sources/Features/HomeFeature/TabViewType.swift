@@ -1,10 +1,3 @@
-//
-//  TabViewType.swift
-//  HomeFeature
-//
-//  Created by Albert Gil Escura on 26/6/21.
-//
-
 import Foundation
 
 public enum TabViewType {

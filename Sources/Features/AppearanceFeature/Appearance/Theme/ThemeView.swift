@@ -35,7 +35,7 @@ public struct ThemeView: View {
         styleType: store.userSettings.appearance.styleType
       )
       .accentColor(.chambray)
-      .animation(.default, value: UUID())
+      .animation(.default, value: store.userSettings.appearance.themeType)
       .disabled(true)
       
       Spacer()
