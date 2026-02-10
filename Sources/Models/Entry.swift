@@ -7,7 +7,6 @@ public struct Entry: Identifiable, Sendable, Codable {
   public var createdAt: Date
   public var updatedAt: Date
   public var message: String
-  //    public var attachments: [EntryAttachment]
   
   public init(
     id: UUID,
@@ -80,20 +79,6 @@ extension Date {
     return formatter.string(from: self)
   }
 }
-
-//extension Entry {
-//    public var images: [EntryImage] {
-//        attachments.filter { $0 is EntryImage }.compactMap { $0 as? EntryImage }
-//    }
-//    
-//    public var videos: [EntryVideo] {
-//        attachments.filter { $0 is EntryVideo }.compactMap { $0 as? EntryVideo }
-//    }
-//    
-//    public var audios: [EntryAudio] {
-//        attachments.filter { $0 is EntryAudio }.compactMap { $0 as? EntryAudio }
-//    }
-//}
 
 extension Entry {
   public static var mock: Entry {

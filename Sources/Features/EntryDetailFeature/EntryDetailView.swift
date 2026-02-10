@@ -2,6 +2,10 @@ import ComposableArchitecture
 import DesignSystem
 import Localizables
 import Models
+import Photos
+import PhotosUI
+import SQLiteData
+import SQLiteDataClient
 import SwiftUI
 
 public struct EntryDetailView: View {
@@ -19,39 +23,54 @@ public struct EntryDetailView: View {
 				placeholder: "AddEntry.WriteSomething".localized,
         text: $store.entry.message
 			)
-      DatePicker("", selection: self.$store.entry.updatedAt)
 			
-//			if self.store.attachments.count > 0 {
-//				ScrollView(.horizontal, showsIndicators: false) {
-//					LazyHStack(spacing: 8) {
-//						ForEach(
-//							self.store.scope(state: \.attachments, action: \.attachments),
-//							id: \.id
-//						) { store in
-//							AttachmentAddRowView(store: store)
-//						}
-//					}
-//				}
-//				.frame(height: 52)
-//			}
+			if self.store.attachmentsRows.count > 0 {
+				ScrollView(.horizontal, showsIndicators: false) {
+					LazyHStack(spacing: 8) {
+            ForEach(self.store.attachmentsRows, id: \.self) { attachment in
+              if attachment.format == "image", let image = UIImage(data: attachment.data) {
+                Button {
+                  store.send(.attachmentButtonTapped(attachment))
+                } label: {
+                  Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .foregroundStyle(Color.gray)
+                    .frame(width: 44, height: 44)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+              }
+              if attachment.format == "video" {
+                Button {
+                  store.send(.attachmentButtonTapped(attachment))
+                } label: {
+                  Rectangle()
+                    .foregroundStyle(Color.gray)
+                    .frame(width: 44, height: 44)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+              }
+						}
+					}
+				}
+				.frame(height: 52)
+			}
+      
+      DatePicker("", selection: self.$store.entry.updatedAt)
 			
       HStack(spacing: 8) {
         SecondaryButtonView(
           label: {
-            Text(
-              store.entry.id != nil
-              ? "Entries.Edit".localized
-              : "AddEntry.Add".localized
-            )
-            .adaptiveFont(.latoRegular, size: 10)
-            .foregroundColor(.chambray)
+            Text("Save".localized)
+              .adaptiveFont(.latoRegular, size: 10)
+              .foregroundColor(.chambray)
           },
           disabled: self.store.entry.message.isEmpty
         ) {
           self.store.send(.addEntryButtonTapped)
-				}
-				
-				SecondaryButtonView(
+        }
+        
+        SecondaryButtonView(
 					label: {
             Image(systemName: .plus)
 							.resizable()
@@ -60,53 +79,56 @@ public struct EntryDetailView: View {
 					},
 					inFlight: false
 				) {
-//					self.store.send(.confirmationDialogButtonTapped)
+					self.store.send(.dialogButtonTapped)
 				}
 				.frame(width: 56)
+        .confirmationDialog(
+          store: self.store.scope(state: \.$dialog, action: \.dialog)
+        )
 			}
 			.frame(height: 56)
 		}
 		.padding(24)
-//		.alert(
-//			store: self.store.scope(state: \.$alert, action: \.alert)
-//		)
-//		.confirmationDialog(
-//			store: self.store.scope(state: \.$dialog, action: \.dialog)
-//		)
-//		.fullScreenCover(
-//			isPresented: self.$store.presentImagePicker.sending(\.presentImagePicker)
-//		) {
-//			ImagePicker(
-//				type: self.store.presentImagePickerSource,
-//				onImport: { response in
-//					self.store.send(.loadAttachment(response))
-//				}
-//			)
-//			.edgesIgnoringSafeArea(.all)
-//		}
-//		.fullScreenCover(
-//			isPresented: self.$store.presentAudioPicker.sending(\.presentAudioPicker)
-//		) {
-//			AudioPicker { audio in
-//				switch audio {
-//					case let .audio(url):
-//						self.store.send(.loadAudio(url))
-//				}
-//			}
-//		}
-//		.fullScreenCover(
-//			store: self.store.scope(state: \.$audioRecord, action: \.audioRecord)
-//		) { store in
-//			AudioRecordView(store: store)
-//		}
-//		.onAppear {
-//			self.store.send(.onAppear)
-//		}
+    .fullScreenCover(
+      item: $store.scope(
+        state: \.attachment,
+        action: \.attachment
+      )
+    ) { store in
+      NavigationStack {
+        AttachmentView(store: store)
+          .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+              Button {
+                self.store.send(.dismissButtonTapped)
+              } label: {
+                Image(systemName: .xmark)
+              }
+            }
+            ToolbarItem {
+              Button {
+                self.store.send(.removeAttachmentButtonTapped)
+              } label: {
+                Image(systemName: .trash)
+              }
+            }
+          }
+      }
+    }
+    .photosPicker(
+      isPresented: $store.isPhotoPickerPresented,
+      selection: $store.photosPickerItem
+    )
+    .task { await store.send(.task).finish() }
 	}
 }
 
 #Preview {
-  NavigationStack {
+  let _ = prepareDependencies {
+    try! $0.bootstrapDatabase()
+    try! $0.defaultDatabase.seed()
+  }
+  return NavigationStack {
     EntryDetailView(
       store: Store(
         initialState: EntryDetailFeature.State(
@@ -117,7 +139,7 @@ public struct EntryDetailView: View {
             message: ""
           )
         ),
-        reducer: { EntryDetailFeature() }
+        reducer: { EntryDetailFeature()._printChanges() }
       )
     )
   }

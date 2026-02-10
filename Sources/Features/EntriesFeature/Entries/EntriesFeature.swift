@@ -32,11 +32,14 @@ public struct EntriesFeature {
     private var dayEntriesQuery: some StructuredQueries.Statement<GroupedEntries> {
       With {
         Entry
+          .group(by: \.id)
+          .leftJoin(EntryAsset.all) { $1.entryID.eq($0.id) }
           .select {
             EntryModel.Columns(
               id: $0.id,
               createdAt: $0.createdAt,
               dayDate: $0.dayDate,
+              imagesCount: $1.id.count(),
               message: $0.message,
               updatedAt: $0.updatedAt
             )

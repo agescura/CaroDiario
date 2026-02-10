@@ -14,6 +14,7 @@ extension [GroupedEntries] {
             id: UUID(1),
             createdAt: date,
             dayDate: date,
+            imagesCount: 1,
             message: "Entries.FakeEntry.FirstMessage".localized,
             updatedAt: date
           ),
@@ -21,6 +22,7 @@ extension [GroupedEntries] {
             id: UUID(2),
             createdAt: date,
             dayDate: date,
+            imagesCount: 1,
             message: "Entries.FakeEntry.SecondMessage".localized,
             updatedAt: date
           ),

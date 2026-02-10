@@ -1,4 +1,41 @@
 import Foundation
+import SQLiteData
+
+@Table
+public struct Asset: Identifiable, Sendable, Equatable {
+  public let id: UUID
+  public var data: Data
+  public let format: String
+
+  public init(
+    id: UUID,
+    data: Data,
+    format: String
+  ) {
+    self.id = id
+    self.data = data
+    self.format = format
+  }
+}
+
+extension Asset.Draft: Sendable {}
+
+@Table
+public struct EntryAsset: Sendable, Equatable, Identifiable {
+  public let id: UUID
+  public let assetID: Asset.ID
+  public let entryID: Entry.ID
+  
+  public init(
+    id: UUID,
+    assetID: Asset.ID,
+    entryID: Entry.ID
+  ) {
+    self.id = id
+    self.assetID = assetID
+    self.entryID = entryID
+  }
+}
 
 public protocol EntryAttachment: Sendable {
     var id: UUID { get }

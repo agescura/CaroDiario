@@ -30,6 +30,28 @@ public func appDatabase() throws -> any DatabaseWriter {
      """
     )
     .execute(db)
+    
+    try #sql(
+     """
+     CREATE TABLE "assets" (
+      "id" TEXT PRIMARY KEY NOT NULL ON CONFLICT REPLACE DEFAULT (uuid()),
+      "data" BLOB NOT NULL,
+      "format" TEXT
+     ) STRICT
+     """
+    )
+    .execute(db)
+    
+    try #sql(
+     """
+     CREATE TABLE "entryAssets" (
+      "id" TEXT PRIMARY KEY NOT NULL ON CONFLICT REPLACE DEFAULT (uuid()),
+      "assetID" TEXT NOT NULL REFERENCES "assets"("id") ON DELETE CASCADE,
+      "entryID" TEXT NOT NULL REFERENCES "entries"("id") ON DELETE CASCADE
+     ) STRICT
+     """
+    )
+    .execute(db)
   }
   
   try migrator.migrate(database)

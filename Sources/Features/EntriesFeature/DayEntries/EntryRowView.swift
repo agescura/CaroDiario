@@ -15,8 +15,8 @@ struct EntryRowView: View {
         .lineLimit(3)
       HStack(spacing: 8) {
         HStack(spacing: 4) {
-          //                  Text("\(entry.images.count)")
-          //                    .adaptiveFont(.latoRegular, size: 6)
+          Text("\(entry.imagesCount)")
+            .adaptiveFont(.latoRegular, size: 6)
           Image(systemName: .photo)
             .resizable()
             .frame(width: 10, height: 10)
