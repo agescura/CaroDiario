@@ -16,7 +16,7 @@ public struct AppView: View {
 	}
 	
 	public var body: some View {
-		switch self.store.scope(state: \.scene, action: \.scene).case {
+		switch store.scope(state: \.scene, action: \.scene).case {
 			case let .splash(store):
 				SplashView(store: store)
 			case let .onboarding(store):

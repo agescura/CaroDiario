@@ -68,7 +68,7 @@ public struct StyleView: View {
 
 #Preview {
 	StyleView(
-		store: .init(
+		store: Store(
 			initialState: StyleFeature.State(
 //				entries: fakeEntries
 			),

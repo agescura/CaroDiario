@@ -5,8 +5,9 @@ import SQLiteDataClient
 import SwiftUI
 import DesignSystem
 
+@ViewAction(for: EntriesFeature.self)
 public struct EntriesView: View {
-	@Bindable var store: StoreOf<EntriesFeature>
+	@Bindable public var store: StoreOf<EntriesFeature>
   
 	public init(
 		store: StoreOf<EntriesFeature>
@@ -15,9 +16,9 @@ public struct EntriesView: View {
 	}
 	
 	public var body: some View {
-    NavigationStack(path: self.$store.scope(state: \.path, action: \.path)) {
+    NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
       ScrollView {
-        if self.store.dayEntriesRows.isEmpty {
+        if store.dayEntriesRows.isEmpty {
           ContentUnavailableView(
             "",
             systemImage: SystemImage.pencil.rawValue,
@@ -28,8 +29,8 @@ public struct EntriesView: View {
             dayEntriesRows: store.dayEntriesRows,
             layoutType: store.userSettings.appearance.layoutType,
             styleType: store.userSettings.appearance.styleType,
-            contentAction: { entry in store.send(.entryButtonTapped(entry)) },
-            labelAction: { dayEntry in store.send(.dayEntryButtonTapped(dayEntry.date)) }
+            contentAction: { entry in send(.entryButtonTapped(entry)) },
+            labelAction: { dayEntry in send(.dayEntryButtonTapped(dayEntry.date)) }
           )
         }
       }
@@ -37,7 +38,7 @@ public struct EntriesView: View {
       .navigationBarItems(
         trailing:
 					Button(action: {
-						self.store.send(.addEntryButtonTapped)
+						send(.addEntryButtonTapped)
 					}) {
             Image(systemName: .plus)
 							.foregroundColor(.chambray)
@@ -53,7 +54,7 @@ public struct EntriesView: View {
 						.toolbar {
 							ToolbarItem(placement: .cancellationAction) {
 								Button {
-                  self.store.send(.dismissButtonTapped)
+                  send(.dismissButtonTapped)
 								} label: {
                   Image(systemName: .xmark)
 										.foregroundColor(.adaptiveBlack)
@@ -72,7 +73,7 @@ public struct EntriesView: View {
           .toolbar {
             ToolbarItem(placement: .cancellationAction) {
               Button {
-                self.store.send(.dismissButtonTapped)
+                send(.dismissButtonTapped)
               } label: {
                 Image(systemName: .chevronLeft)
                   .foregroundColor(.adaptiveBlack)
@@ -82,9 +83,6 @@ public struct EntriesView: View {
 			}
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
-		.task {
-			await self.store.send(.task).finish()
-		}
     .alert(
       store: store.scope(
         state: \.$alert,
@@ -102,7 +100,7 @@ public struct EntriesView: View {
 	EntriesView(
 		store: Store(
 			initialState: EntriesFeature.State(),
-      reducer: { EntriesFeature()._printChanges() }
+      reducer: { EntriesFeature() }
 		)
 	)
 }

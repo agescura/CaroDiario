@@ -22,9 +22,9 @@ public struct WelcomeView: View {
 				
 				OnBoardingTabView(
 					items: [
-						.init(id: 0, title: "OnBoarding.Description.1".localized),
-						.init(id: 1, title: "OnBoarding.Description.2".localized),
-						.init(id: 2, title: "OnBoarding.Description.3".localized)
+            OnBoardingTabItem(id: 0, title: "OnBoarding.Description.1".localized),
+            OnBoardingTabItem(id: 1, title: "OnBoarding.Description.2".localized),
+            OnBoardingTabItem(id: 2, title: "OnBoarding.Description.3".localized)
 					],
 					selection: $store.selectedPage.sending(\.selectedPage),
 					animated: store.tabViewAnimated

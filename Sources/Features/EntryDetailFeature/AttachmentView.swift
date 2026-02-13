@@ -7,16 +7,18 @@ public struct AttachmentView: View {
   
   public var body: some View {
     switch store.attachment.format {
-    case "image":
-      if let image = UIImage(data: store.attachment.data) {
-        Image(uiImage: image)
+    case .image:
+      AsyncImage(url: store.attachment.fileUrl) { image in
+        image
           .resizable()
           .scaledToFill()
+      } placeholder: {
+        ProgressView()
       }
-    case "video":
-      Text("SHOW VIDEO")
-    default:
-      EmptyView()
+    case .video:
+      VideoPlayer(player: AVPlayer(url: store.attachment.fileUrl))
+    case .audio:
+      Text("SHOW AUDIO")
     }
   }
 }

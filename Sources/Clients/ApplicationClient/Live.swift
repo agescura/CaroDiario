@@ -59,20 +59,20 @@ extension ApplicationClient.PopoverPosition {
   var x: CGFloat {
     switch self {
     case .attachment:
-      return UIScreen.main.bounds.width - 74
+      UIScreen.main.bounds.width - 74
     case .text:
-      return UIScreen.main.bounds.width -  16
+      UIScreen.main.bounds.width -  16
     case .pdf:
-      return 0
+      0
     }
   }
   
   var y: CGFloat {
     switch self {
     case .attachment, .text:
-      return 70
+      70
     case .pdf:
-      return 270
+      270
     }
   }
 }

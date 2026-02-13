@@ -55,7 +55,7 @@ public struct IconAppView: View {
 	IconAppView(
 		store: Store(
 			initialState: IconAppFeature.State(),
-      reducer: { IconAppFeature()._printChanges() }
+      reducer: { IconAppFeature() }
 		)
 	)
 }

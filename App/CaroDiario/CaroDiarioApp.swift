@@ -18,9 +18,9 @@ struct CaroDiarioApp: App {
   var body: some Scene {
     WindowGroup {
       if !_XCTIsTesting {
-        AppView(store: self.appDelegate.store)
-          .onOpenURL(perform: self.appDelegate.process)
-          .onChange(of: self.scenePhase) { self.appDelegate.update(state: $1) }
+        AppView(store: appDelegate.store)
+          .onOpenURL(perform: appDelegate.process)
+          .onChange(of: scenePhase) { appDelegate.update(state: $1) }
       }
     }
   }

@@ -64,13 +64,13 @@ public struct InsertView: View {
 	)
 }
 
-extension Binding where Value: Equatable {
+extension Binding where Value: Equatable & Sendable {
 	func removeDuplicates() -> Self {
-		.init(
-			get: { self.wrappedValue },
+    Binding(
+			get: { wrappedValue },
 			set: { newValue, transaction in
-				guard newValue != self.wrappedValue else { return }
-				self.transaction(transaction).wrappedValue = newValue
+				guard newValue != wrappedValue else { return }
+        self.transaction(transaction).wrappedValue = newValue
 			}
 		)
 	}

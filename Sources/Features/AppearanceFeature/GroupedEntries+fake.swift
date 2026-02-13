@@ -16,7 +16,8 @@ extension [GroupedEntries] {
             dayDate: date,
             imagesCount: 1,
             message: "Entries.FakeEntry.FirstMessage".localized,
-            updatedAt: date
+            updatedAt: date,
+            videosCount: 2
           ),
           EntryModel(
             id: UUID(2),
@@ -24,7 +25,8 @@ extension [GroupedEntries] {
             dayDate: date,
             imagesCount: 1,
             message: "Entries.FakeEntry.SecondMessage".localized,
-            updatedAt: date
+            updatedAt: date,
+            videosCount: 2
           ),
         ]
       )

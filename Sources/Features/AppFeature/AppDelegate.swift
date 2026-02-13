@@ -44,11 +44,11 @@ public class AppDelegate: NSObject, UIApplicationDelegate {
 	}
 	
 	public func process(url: URL) {
-		self.store.send(.process(url))
+		store.send(.process(url))
 	}
 	
 	public func update(state: ScenePhase) {
-		self.store.send(.state(state.value))
+		store.send(.state(state.value))
 	}
 	
 	public func application(

@@ -22,7 +22,6 @@ extension Button where Label == Image {
 			action: action,
 			label: {
 				Image(systemName: systemName.rawValue)
-					.resizable()
 			}
 		)
 	}

@@ -8,8 +8,9 @@ import SQLiteData
 import SQLiteDataClient
 import SwiftUI
 
+@ViewAction(for: EntryDetailFeature.self)
 public struct EntryDetailView: View {
-	@Bindable var store: StoreOf<EntryDetailFeature>
+	@Bindable public var store: StoreOf<EntryDetailFeature>
 	
 	public init(
 		store: StoreOf<EntryDetailFeature>
@@ -24,31 +25,45 @@ public struct EntryDetailView: View {
         text: $store.entry.message
 			)
 			
-			if self.store.attachmentsRows.count > 0 {
+			if store.attachmentsRows.count > 0 {
 				ScrollView(.horizontal, showsIndicators: false) {
 					LazyHStack(spacing: 8) {
-            ForEach(self.store.attachmentsRows, id: \.self) { attachment in
-              if attachment.format == "image", let image = UIImage(data: attachment.data) {
+            ForEach(store.attachmentsRows, id: \.self) { attachment in
+              switch attachment.format {
+              case .image:
                 Button {
-                  store.send(.attachmentButtonTapped(attachment))
+                  send(.attachmentButtonTapped(attachment))
                 } label: {
-                  Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .foregroundStyle(Color.gray)
-                    .frame(width: 44, height: 44)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                  AsyncImage(url: attachment.fileUrl) { image in
+                    image
+                      .resizable()
+                      .scaledToFill()
+                      .foregroundStyle(Color.gray)
+                      .frame(width: 44, height: 44)
+                      .clipShape(RoundedRectangle(cornerRadius: 8))
+                  } placeholder: {
+                    ProgressView()
+                  }
                 }
-              }
-              if attachment.format == "video" {
+              case .video:
                 Button {
-                  store.send(.attachmentButtonTapped(attachment))
+                  send(.attachmentButtonTapped(attachment))
                 } label: {
-                  Rectangle()
-                    .foregroundStyle(Color.gray)
-                    .frame(width: 44, height: 44)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                  if let image = attachment.imagePreview {
+                    Image(uiImage: image)
+                      .resizable()
+                      .aspectRatio(contentMode: .fill)
+                      .frame(width: 44, height: 44)
+                      .clipShape(RoundedRectangle(cornerRadius: 8))
+                  } else {
+                    Rectangle()
+                      .foregroundStyle(Color.gray)
+                      .frame(width: 44, height: 44)
+                      .clipShape(RoundedRectangle(cornerRadius: 8))
+                  }
                 }
+              case .audio:
+                Text("AUDIO")
               }
 						}
 					}
@@ -58,32 +73,20 @@ public struct EntryDetailView: View {
       
       DatePicker("", selection: self.$store.entry.updatedAt)
 			
-      HStack(spacing: 8) {
-        SecondaryButtonView(
-          label: {
-            Text("Save".localized)
-              .adaptiveFont(.latoRegular, size: 10)
-              .foregroundColor(.chambray)
-          },
-          disabled: self.store.entry.message.isEmpty
-        ) {
-          self.store.send(.addEntryButtonTapped)
+      HStack(spacing: .s16) {
+        Button("Save".localized) {
+          send(.addEntryButtonTapped)
         }
+        .buttonStyle(.secondary)
+        .disabled(store.entry.message.isEmpty)
         
-        SecondaryButtonView(
-					label: {
-            Image(systemName: .plus)
-							.resizable()
-							.foregroundColor(.chambray)
-							.frame(width: 16, height: 16)
-					},
-					inFlight: false
-				) {
-					self.store.send(.dialogButtonTapped)
-				}
+        Button(systemName: .plus) {
+          send(.dialogButtonTapped)
+        }
+        .buttonStyle(.secondary)
 				.frame(width: 56)
         .confirmationDialog(
-          store: self.store.scope(state: \.$dialog, action: \.dialog)
+          store: store.scope(state: \.$dialog, action: \.dialog)
         )
 			}
 			.frame(height: 56)
@@ -100,14 +103,14 @@ public struct EntryDetailView: View {
           .toolbar {
             ToolbarItem(placement: .cancellationAction) {
               Button {
-                self.store.send(.dismissButtonTapped)
+                send(.dismissButtonTapped)
               } label: {
                 Image(systemName: .xmark)
               }
             }
             ToolbarItem {
               Button {
-                self.store.send(.removeAttachmentButtonTapped)
+                send(.removeAttachmentButtonTapped)
               } label: {
                 Image(systemName: .trash)
               }
@@ -119,7 +122,7 @@ public struct EntryDetailView: View {
       isPresented: $store.isPhotoPickerPresented,
       selection: $store.photosPickerItem
     )
-    .task { await store.send(.task).finish() }
+    .task { await send(.task).finish() }
 	}
 }
 
@@ -135,11 +138,12 @@ public struct EntryDetailView: View {
           entry: Entry.Draft(
             id: UUID(1),
             createdAt: Date(),
+            isDraft: false,
             updatedAt: Date(),
             message: ""
           )
         ),
-        reducer: { EntryDetailFeature()._printChanges() }
+        reducer: { EntryDetailFeature() }
       )
     )
   }

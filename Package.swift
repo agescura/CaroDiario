@@ -44,6 +44,10 @@ let package = Package(
       targets: ["ApplicationClient"]
     ),
     .library(
+      name: "FileClient",
+      targets: ["FileClient"]
+    ),
+    .library(
       name: "Localizables",
       targets: ["Localizables"]
     ),
@@ -132,6 +136,14 @@ let package = Package(
       path: "Sources/Clients/SQLiteDataClient"
     ),
     .target(
+      name: "FileClient",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "DependenciesMacros", package: "swift-dependencies")
+      ],
+      path: "Sources/Clients/FileClient"
+    ),
+    .target(
       name: "AppFeature",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -148,6 +160,7 @@ let package = Package(
       name: "AppFeatureTests",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
         "TestHelper",
         "AppFeature",
@@ -428,6 +441,17 @@ let package = Package(
       ],
       path: "Sources/Features/SettingsFeature"
     ),
+    .testTarget(
+      name: "SettingsFeatureTests",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        "TestHelper",
+        "SettingsFeature",
+      ],
+      path: "Tests/Features/SettingsFeatureTests"
+    ),
     .target(
       name: "EntriesFeature",
       dependencies: [
@@ -449,7 +473,8 @@ let package = Package(
         "Localizables",
         "DesignSystem",
         "Models",
-        "SQLiteDataClient"
+        "SQLiteDataClient",
+        "FileClient"
       ],
       path: "Sources/Features/EntryDetailFeature"
     ),

@@ -27,14 +27,14 @@ public struct SettingsView: View {
 					Section {
 						Toggle(
 							isOn: $store.userSettings.showSplash.sending(\.toggleShowSplash),
-							label: SplashRowView.init
+              label: { SettingsRowView(type: .splash) }
 						)
 						.toggleStyle(SwitchToggleStyle(tint: .chambray))
 						
 						NavigationLink(
 							state: SettingsFeature.Path.State.appearance(AppearanceFeature.State())
 						) {
-							AppearanceRowView()
+              SettingsRowView(type: .appearance)
 						}
 					}
 					
@@ -42,34 +42,36 @@ public struct SettingsView: View {
 						NavigationLink(
 							state: SettingsFeature.Path.State.language(LanguageFeature.State())
 						) {
-							LanguageRowView(
-								title: "Settings.Language".localized,
-								status: store.userSettings.language.localizable.localized
-							)
+              SettingsRowView(type: .language(store.userSettings.language))
 						}
 					}
 					
 					Section {
-						Button {
-							store.send(.navigateToPasscode)
-						} label: {
-							PasscodeRowView(
-								title: "Settings.Code".localized(with: [store.userSettings.localAuthenticationType.rawValue]),
-								status: store.userSettings.hasPasscode ? "Settings.On".localized : "Settings.Off".localized
-							)
-						}
+            if store.userSettings.hasPasscode {
+              NavigationLink(
+                state: SettingsFeature.Path.State.menu(MenuFeature.State())
+              ) {
+                SettingsRowView(type: .menu(store.userSettings.localAuthenticationType))
+              }
+            } else {
+              NavigationLink(
+                state: SettingsFeature.Path.State.insert(InsertFeature.State())
+              ) {
+                SettingsRowView(type: .insert(store.userSettings.localAuthenticationType))
+              }
+            }
 					}
 					
 					Section {
 						NavigationLink(
 							state: SettingsFeature.Path.State.camera(CameraFeature.State())
 						) {
-							CameraRowView(title: store.userSettings.authorizedVideoStatus.rawValue.localized)
+              SettingsRowView(type: .camera(store.userSettings.authorizedVideoStatus.rawValue.localized))
 						}
 						NavigationLink(
 							state: SettingsFeature.Path.State.microphone(MicrophoneFeature.State())
 						) {
-							MicrophoneRowView(title: store.userSettings.audioRecordPermission.title.localized)
+              SettingsRowView(type: .microphone(store.userSettings.audioRecordPermission.title.localized))
 						}
 					}
 					
@@ -77,12 +79,12 @@ public struct SettingsView: View {
 						NavigationLink(
 							state: SettingsFeature.Path.State.export(ExportFeature.State())
 						) {
-							ExportRowView()
+              SettingsRowView(type: .export)
 						}
 					}
 					
 					Section {
-						ReviewRowView()
+            SettingsRowView(type: .review)
 							.contentShape(Rectangle())
 							.onTapGesture {
 								store.send(.reviewStoreKit)
@@ -141,20 +143,19 @@ public struct SettingsView: View {
 	}
 }
 
-//import EntriesFeature
-
-#Preview {
-	SettingsView(
-		store: Store(
-			initialState: SettingsFeature.State(
-				path: StackState(
-					[
-//              .appearance(AppearanceFeature()),
-//            .style(StyleFeature.State(entries: fakeEntries))
-					]
-				)
-			),
-      reducer: { SettingsFeature()._printChanges() }
-		)
-	)
+struct SettingsPreviews: PreviewProvider {
+  static var previews: some View {
+    SettingsView(
+      store: Store(
+        initialState: SettingsFeature.State(
+          path: {
+            let state = StackState<SettingsFeature.Path.State>()
+//            state.append(SettingsFeature.Path.State.appearance(AppearanceFeature.State()))
+            return state
+          }()
+        ),
+        reducer: { SettingsFeature() }
+      )
+    )
+  }
 }

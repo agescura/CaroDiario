@@ -5,17 +5,20 @@ import SQLiteData
 public struct Entry: Identifiable, Sendable, Codable {
   public var id: UUID
   public var createdAt: Date
+  public var isDraft: Bool
   public var updatedAt: Date
   public var message: String
   
   public init(
     id: UUID,
     createdAt: Date,
+    isDraft: Bool,
     updatedAt: Date,
     message: String
   ) {
     self.id = id
     self.createdAt = createdAt
+    self.isDraft = isDraft
     self.updatedAt = updatedAt
     self.message = message
   }
@@ -85,6 +88,7 @@ extension Entry {
     Entry(
       id: UUID(0),
       createdAt: Date(timeIntervalSince1970: 1),
+      isDraft: false,
       updatedAt: Date(timeIntervalSince1970: 1),
       message: "Message"
     )

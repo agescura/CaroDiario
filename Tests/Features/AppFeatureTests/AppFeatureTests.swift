@@ -1,5 +1,6 @@
 @testable import AppFeature
 import ComposableArchitecture
+import DependenciesTestSupport
 import EntriesFeature
 import HomeFeature
 import LockScreenFeature
@@ -8,8 +9,15 @@ import OnboardingFeature
 import SwiftUI
 import Testing
 
+@MainActor
+@Suite(
+  .dependencies {
+    try! $0.bootstrapDatabase()
+    try! $0.defaultDatabase.seed()
+  }
+)
 struct AppFeatureTests {
-	@MainActor
+	@Test
 	func testHappyPath() async {
 		let clock = TestClock()
 		let store = TestStore(
@@ -45,7 +53,7 @@ struct AppFeatureTests {
 		}
 	}
 	
-	@MainActor
+  @Test
 	func testHideSplash() async {
 		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
     $userSettings.showSplash.withLock { $0 = false }
@@ -55,15 +63,17 @@ struct AppFeatureTests {
 			reducer: { AppFeature() }
 		) {
 			$0.applicationClient.setUserInterfaceStyle = { _ in }
+      $0.avCaptureDeviceClient.authorizationStatus = { .notDetermined }
 		}
 		
 		await store.send(.appDelegate(.didFinishLaunching))
+    await store.receive(\.authorizationStatusResponse, .notDetermined)
 		await store.receive(\.splashFinished) {
 			$0.scene = .onboarding(WelcomeFeature.State())
 		}
 	}
 	
-	@MainActor
+  @Test
 	func testLockScreen() async {
 		@Shared(.userSettings) var userSettings: UserSettings = .defaultValue
     $userSettings.showSplash.withLock { $0 = false }
@@ -74,9 +84,11 @@ struct AppFeatureTests {
 			reducer: { AppFeature() }
 		) {
 			$0.applicationClient.setUserInterfaceStyle = { _ in }
+      $0.avCaptureDeviceClient.authorizationStatus = { .notDetermined }
 		}
 		
 		await store.send(.appDelegate(.didFinishLaunching))
+    await store.receive(\.authorizationStatusResponse, .notDetermined)
 		await store.receive(\.splashFinished) {
 			$0.scene = .lockScreen(LockScreenFeature.State())
 		}

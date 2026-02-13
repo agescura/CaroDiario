@@ -57,6 +57,7 @@ public struct MicrophoneView: View {
 					.textStyle(.body(.chambray))
 			}
 		}
+    .task { await send(.task).finish() }
 	}
 }
 

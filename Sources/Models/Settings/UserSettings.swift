@@ -74,9 +74,9 @@ extension UserSettings {
 	
 	public var timeForAskPasscode: TimeForAskPasscode {
 		get {
-			TimeForAskPasscode(self.optionTimeForAskPasscode)
+			TimeForAskPasscode(optionTimeForAskPasscode)
 		} set {
-			self.optionTimeForAskPasscode = newValue.value
+			optionTimeForAskPasscode = newValue.value
 		}
 	}
 }

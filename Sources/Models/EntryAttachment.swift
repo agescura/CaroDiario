@@ -4,18 +4,24 @@ import SQLiteData
 @Table
 public struct Asset: Identifiable, Sendable, Equatable {
   public let id: UUID
-  public var data: Data
-  public let format: String
-
+  public var pathUrl: String
+  public let format: Format
+  
   public init(
     id: UUID,
-    data: Data,
-    format: String
+    pathUrl: String,
+    format: Format
   ) {
     self.id = id
-    self.data = data
+    self.pathUrl = pathUrl
     self.format = format
   }
+}
+
+public enum Format: Int, QueryBindable, Sendable {
+  case image = 1
+  case video
+  case audio
 }
 
 extension Asset.Draft: Sendable {}

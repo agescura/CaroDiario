@@ -9,6 +9,7 @@ public struct EntryModel: Codable, Identifiable, Equatable, Hashable, Sendable {
   public var imagesCount: Int
   public var message: String
   public var updatedAt: Date
+  public var videosCount: Int
   
   public init(
     id: Entry.ID,
@@ -16,7 +17,8 @@ public struct EntryModel: Codable, Identifiable, Equatable, Hashable, Sendable {
     dayDate: Date,
     imagesCount: Int,
     message: String,
-    updatedAt: Date
+    updatedAt: Date,
+    videosCount: Int
   ) {
     self.id = id
     self.createdAt = createdAt
@@ -24,5 +26,6 @@ public struct EntryModel: Codable, Identifiable, Equatable, Hashable, Sendable {
     self.imagesCount = imagesCount
     self.updatedAt = updatedAt
     self.message = message
+    self.videosCount = videosCount
   }
 }

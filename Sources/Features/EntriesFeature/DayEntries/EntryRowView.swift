@@ -22,8 +22,8 @@ struct EntryRowView: View {
             .frame(width: 10, height: 10)
         }
         HStack(spacing: 4) {
-          //                  Text("\(entry.videos.count)")
-          //                    .adaptiveFont(.latoRegular, size: 6)
+          Text("\(entry.videosCount)")
+            .adaptiveFont(.latoRegular, size: 6)
           Image(systemName: .video)
             .resizable()
             .frame(width: 14, height: 10)
