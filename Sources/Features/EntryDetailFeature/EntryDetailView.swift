@@ -86,7 +86,10 @@ public struct EntryDetailView: View {
         .buttonStyle(.secondary)
 				.frame(width: 56)
         .confirmationDialog(
-          store: store.scope(state: \.$dialog, action: \.dialog)
+          store: store.scope(
+            state: \.$destination.dialog,
+            action: \.destination.dialog
+          )
         )
 			}
 			.frame(height: 56)
@@ -94,8 +97,8 @@ public struct EntryDetailView: View {
 		.padding(24)
     .fullScreenCover(
       item: $store.scope(
-        state: \.attachment,
-        action: \.attachment
+        state: \.destination?.attachment,
+        action: \.destination.attachment
       )
     ) { store in
       NavigationStack {

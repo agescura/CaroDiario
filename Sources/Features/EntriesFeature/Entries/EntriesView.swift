@@ -45,7 +45,10 @@ public struct EntriesView: View {
 					}
 			)
 			.fullScreenCover(
-				item: self.$store.scope(state: \.add, action: \.add)
+        item: $store.scope(
+          state: \.destination?.add,
+          action: \.destination.add
+        )
 			) { store in
 				NavigationStack {
 					EntryDetailView(store: store)
@@ -85,8 +88,8 @@ public struct EntriesView: View {
 		.navigationViewStyle(StackNavigationViewStyle())
     .alert(
       store: store.scope(
-        state: \.$alert,
-        action: \.alert
+        state: \.$destination.alert,
+        action: \.destination.alert
       )
     )
 	}

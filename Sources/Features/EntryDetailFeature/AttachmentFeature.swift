@@ -7,7 +7,7 @@ public struct AttachmentFeature {
   public struct State: Equatable, Sendable {
     var attachment: Attachment
   }
-  public enum Action: Equatable {
+  public enum Action: Equatable, Sendable {
   }
   public var body: some ReducerOf<Self> {
     Reduce { state, action in

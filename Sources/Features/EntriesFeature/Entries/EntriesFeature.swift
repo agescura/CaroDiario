@@ -9,6 +9,8 @@ import SQLiteData
 extension EntriesFeature.State: Sendable {}
 extension EntriesFeature.Path.State: Equatable, Sendable {}
 extension EntriesFeature.Path.Action: Equatable {}
+extension EntriesFeature.Destination.State: Equatable, Sendable {}
+extension EntriesFeature.Destination.Action: Equatable {}
 
 extension Asset.TableColumns {
   var imagesCount: some QueryExpression<Int> {
@@ -28,11 +30,20 @@ public struct EntriesFeature {
 	public enum Path {
 		case detail(EntryDetailFeature)
 	}
+  
+  @Reducer
+  public enum Destination {
+    case alert(AlertState<Alert>)
+    case add(EntryDetailFeature)
+    
+    public enum Alert: Equatable, Sendable {
+      case discard
+    }
+  }
 	
 	@ObservableState
 	public struct State: Equatable {
-    @Presents public var alert: AlertState<Action.Alert>?
-		@Presents public var add: EntryDetailFeature.State?
+    @Presents public var destination: Destination.State?
     public var path: StackState<Path.State>
     @FetchAll var dayEntriesRows: [GroupedEntries]
     public var expandedDayEntries: Set<Date> = []
@@ -73,8 +84,10 @@ public struct EntriesFeature {
     }
 		
 		public init(
+      destination: Destination.State? = nil,
 			path: StackState<Path.State> = StackState<Path.State>()
 		) {
+      self.destination = destination
 			self.path = path
       _dayEntriesRows = FetchAll(
         dayEntriesQuery,
@@ -90,14 +103,10 @@ public struct EntriesFeature {
 	}
 	
 	public enum Action: ViewAction, Equatable {
-    case add(PresentationAction<EntryDetailFeature.Action>)
-    case alert(PresentationAction<Alert>)
+    case destination(PresentationAction<EntriesFeature.Destination.Action>)
     case path(StackActionOf<Path>)
     case view(View)
     
-    public enum Alert: Equatable, Sendable {
-      case discard
-    }
     public enum View: Equatable {
       case addEntryButtonTapped
       case dayEntryButtonTapped(Date)
@@ -114,24 +123,21 @@ public struct EntriesFeature {
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
       switch action {
-      case .add:
+      case.destination(.presented(.alert(.discard))):
+        state.destination = nil
+        state.path = StackState()
         return .none
-      case let .alert(action):
-        switch action {
-        case .presented(.discard):
-          state.add = nil
-          state.path = StackState()
-          return .none
-        default:
-          return .none
-        }
+      case .destination:
+        return .none
       case .path:
         return .none
       case let .view(action):
         switch action {
         case .addEntryButtonTapped:
-          state.add = EntryDetailFeature.State(
-            entry: Entry.Draft(createdAt: Date(), isDraft: true, updatedAt: Date(), message: "")
+          state.destination = .add(
+            EntryDetailFeature.State(
+              entry: Entry.Draft(createdAt: Date(), isDraft: true, updatedAt: Date(), message: "")
+            )
           )
           return .none
         case let .dayEntryButtonTapped(day):
@@ -144,7 +150,7 @@ public struct EntriesFeature {
             await state.updateQuery()
           }
         case .dismissButtonTapped:
-          state.add = nil
+          state.destination = nil
           state.path = StackState()
           return .none
         case let .entryButtonTapped(entry):
@@ -156,15 +162,12 @@ public struct EntriesFeature {
         }
       }
 		}
-    .ifLet(\.$alert, action: \.alert)
-		.ifLet(\.$add, action: \.add) {
-			EntryDetailFeature()
-		}
+    .ifLet(\.$destination, action: \.destination)
 		.forEach(\.path, action: \.path)
 	}
 }
 
-extension AlertState where Action == EntriesFeature.Action.Alert {
+extension AlertState where Action == EntriesFeature.Destination.Alert {
   public static var alert: AlertState {
     AlertState {
       TextState("OnBoarding.Skip.Title".localized)

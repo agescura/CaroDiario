@@ -38,6 +38,9 @@ extension Attachment {
   }
 }
 
+extension EntryDetailFeature.Destination.State: Equatable, Sendable {}
+extension EntryDetailFeature.Destination.Action: Equatable, Sendable {}
+
 @Reducer
 public struct EntryDetailFeature {
 	public init() {}
@@ -46,8 +49,7 @@ public struct EntryDetailFeature {
 	public struct State: Equatable, Sendable {
     @FetchAll
     public var attachmentsRows: [Attachment]
-    @Presents public var attachment: AttachmentFeature.State?
-		@Presents public var dialog: ConfirmationDialogState<Action.Dialog>?
+    @Presents public var destination: Destination.State?
     public var entry: Entry.Draft
     public let entryOriginal: Entry.Draft
     public var isPhotoPickerPresented = false
@@ -68,8 +70,10 @@ public struct EntryDetailFeature {
     }
 		
 		public init(
+      destination: Destination.State? = nil,
       entry: Entry.Draft
 		) {
+      self.destination = destination
 			self.entry = entry
       self.entryOriginal = entry
       _attachmentsRows = FetchAll(
@@ -84,17 +88,22 @@ public struct EntryDetailFeature {
       }
     }
 	}
+  
+  @Reducer
+  public enum Destination {
+    case attachment(AttachmentFeature)
+    case dialog(ConfirmationDialogState<Dialog>)
+    
+    public enum Dialog: Equatable, Sendable {
+      case photoPicker
+    }
+  }
 	
 	public enum Action: ViewAction, Equatable, BindableAction {
-    case attachment(PresentationAction<AttachmentFeature.Action>)
+    case destination(PresentationAction<Destination.Action>)
     case binding(BindingAction<State>)
-		case dialog(PresentationAction<Dialog>)
     case entryResponse(Entry.Draft)
     case view(View)
-
-		public enum Dialog: Equatable, Sendable {
-			case photoPicker
-		}
 
     public enum View: Equatable {
       case addEntryButtonTapped
@@ -117,7 +126,11 @@ public struct EntryDetailFeature {
     BindingReducer()
 		Reduce { state, action in
       switch action {
-      case .attachment:
+      case .destination(.presented(.dialog(.photoPicker))):
+        state.destination = nil
+        state.isPhotoPickerPresented = true
+        return .none
+      case .destination:
         return .none
       case .binding(\.photosPickerItem):
         guard let photosPickerItem = state.photosPickerItem else { return .none }
@@ -177,12 +190,6 @@ public struct EntryDetailFeature {
         }
       case .binding:
         return .none
-      case .dialog(.presented(.photoPicker)):
-        state.dialog = nil
-        state.isPhotoPickerPresented = true
-        return .none
-      case .dialog:
-        return .none
       case let .entryResponse(entry):
         state.entry = entry
         return .none
@@ -201,18 +208,17 @@ public struct EntryDetailFeature {
             await dismiss()
           }
         case let .attachmentButtonTapped(attachment):
-          state.attachment = AttachmentFeature.State(attachment: attachment)
+          state.destination = .attachment(AttachmentFeature.State(attachment: attachment))
           return .none
         case .dialogButtonTapped:
-          state.dialog = .dialog
+          state.destination = .dialog(.attachments)
           return .none
         case .dismissButtonTapped:
-          state.attachment = nil
-          state.dialog = nil
+          state.destination = nil
           return .none
         case .removeAttachmentButtonTapped:
-          guard let attachment = state.attachment?.attachment else { return .none }
-          state.attachment = nil
+          guard let attachment = state.destination?.attachment?.attachment else { return .none }
+          state.destination = nil
           return .run { [database, fileClient, attachment] send in
             try await database.write { db in
               try Asset
@@ -244,15 +250,12 @@ public struct EntryDetailFeature {
         }
       }
 		}
-		.ifLet(\.$dialog, action: \.dialog)
-    .ifLet(\.$attachment, action: \.attachment) {
-      AttachmentFeature()
-    }
+    .ifLet(\.$destination, action: \.destination)
 	}
 }
 
-extension ConfirmationDialogState where Action == EntryDetailFeature.Action.Dialog {
-	public static var dialog: Self {
+extension ConfirmationDialogState where Action == EntryDetailFeature.Destination.Dialog {
+	public static var attachments: Self {
 		ConfirmationDialogState {
 			TextState("AddEntry.ChooseOption".localized)
 		} actions: {
