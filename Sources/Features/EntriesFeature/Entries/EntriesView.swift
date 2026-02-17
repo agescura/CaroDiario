@@ -74,6 +74,14 @@ public struct EntriesView: View {
           .navigationBarTitleDisplayMode(.inline)
           .navigationBarBackButtonHidden()
           .toolbar {
+            ToolbarItem {
+              Button {
+                send(.deleteButtonTapped)
+              } label: {
+                Image(systemName: .trash)
+                  .foregroundColor(.adaptiveBlack)
+              }
+            }
             ToolbarItem(placement: .cancellationAction) {
               Button {
                 send(.dismissButtonTapped)

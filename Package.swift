@@ -470,6 +470,7 @@ let package = Package(
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         "ApplicationClient",
+        "AVCaptureDeviceClient",
         "Localizables",
         "DesignSystem",
         "Models",

@@ -55,7 +55,7 @@ public enum Resource {
 
 @DependencyClient
 public struct FileClient: Sendable {
-    public var removeAttachments: @Sendable ([URL]) async throws -> Void
+    public var removeAttachments: @Sendable ([String]) async throws -> Void
     public var addImage: @Sendable (Resource) async throws -> Void
     public var addVideo: @Sendable (Resource) async throws -> Void
 }

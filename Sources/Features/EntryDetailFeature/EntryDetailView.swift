@@ -125,6 +125,20 @@ public struct EntryDetailView: View {
       isPresented: $store.isPhotoPickerPresented,
       selection: $store.photosPickerItem
     )
+    .fullScreenCover(
+      isPresented: $store.presentImagePicker.sending(\.presentImagePicker)
+    ) {
+      ImagePicker(type: .camera) { response in
+        switch response {
+        case let .image(image):
+          guard let data = image.pngData() else { return }
+          store.send(.storeImage(data))
+        case let .video(url):
+          store.send(.storeVideo(url))
+        }
+      }
+      .edgesIgnoringSafeArea(.all)
+    }
     .task { await send(.task).finish() }
 	}
 }

@@ -5,9 +5,10 @@ import Dependencies
 extension FileClient: DependencyKey {
   public static var liveValue: FileClient {
     return FileClient(
-      removeAttachments: { urls in
-        for url in urls {
-          try? FileManager.default.removeItem(at: url)
+      removeAttachments: { paths in
+        let documentsDirectory = URL.documentsDirectory
+        for path in paths {
+          try? FileManager.default.removeItem(at: documentsDirectory.appendingPathComponent(path))
         }
       },
       addImage: { image in

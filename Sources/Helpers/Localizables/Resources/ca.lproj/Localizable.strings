@@ -47,7 +47,7 @@
 "Entries.Diary" = "Diari";
 "Entries.ReadMore" = "Llegir més";
 "Entries.Empty" = "Per afegir una entrada, prem el + del cantó superior dret.";
-"Entries.Remove.Title" = "Estás a punto de eliminar esta entrada";
+"Entries.Remove.Title" = "Estás a punt d'eliminar esta entrada";
 "Entries.Remove.Cancel" = "Cancel.lar";
 "Entries.Remove.Action" = "Eliminar";
 "Entries.ChooseOption" = "Selecciona una opció";

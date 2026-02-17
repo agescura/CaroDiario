@@ -37,7 +37,7 @@ public struct EntriesFeature {
     case add(EntryDetailFeature)
     
     public enum Alert: Equatable, Sendable {
-      case discard
+      case delete
     }
   }
 	
@@ -110,6 +110,7 @@ public struct EntriesFeature {
     public enum View: Equatable {
       case addEntryButtonTapped
       case dayEntryButtonTapped(Date)
+      case deleteButtonTapped
       case dismissButtonTapped
       case entryButtonTapped(EntryModel)
     }
@@ -117,16 +118,35 @@ public struct EntriesFeature {
 	
 	@Dependency(\.applicationClient) var applicationClient
 	@Dependency(\.continuousClock) var clock
+  @Dependency(\.defaultDatabase) var database
+  @Dependency(\.fileClient) var fileClient
 	@Dependency(\.mainRunLoop.now.date) var now
 	@Dependency(\.uuid) var uuid
 	
 	public var body: some ReducerOf<Self> {
 		Reduce { state, action in
       switch action {
-      case.destination(.presented(.alert(.discard))):
+      case.destination(.presented(.alert(.delete))):
+        guard
+          let detail = state.path.first?.detail,
+          let id = detail.entry.id else {
+          return .none
+        }
         state.destination = nil
         state.path = StackState()
-        return .none
+        return .run { [database, fileClient, id] _ in
+          try await fileClient.removeAttachments(detail.attachmentsRows.map(\.pathUrl))
+          try await database.write { db in
+            try Entry
+              .find(id)
+              .delete()
+              .execute(db)
+            try Asset
+              .where { $0.id.in(detail.attachmentsRows.map(\.id)) }
+              .delete()
+              .execute(db)
+          }
+        }
       case .destination:
         return .none
       case .path:
@@ -149,6 +169,9 @@ public struct EntriesFeature {
           return .run { [state] _ in
             await state.updateQuery()
           }
+        case .deleteButtonTapped:
+          state.destination = .alert(.delete)
+          return .none
         case .dismissButtonTapped:
           state.destination = nil
           state.path = StackState()
@@ -168,14 +191,14 @@ public struct EntriesFeature {
 }
 
 extension AlertState where Action == EntriesFeature.Destination.Alert {
-  public static var alert: AlertState {
+  public static var delete: AlertState {
     AlertState {
-      TextState("OnBoarding.Skip.Title".localized)
+      TextState("Entries.Remove.Action".localized)
     } actions: {
-      ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
-      ButtonState(role: .destructive, action: .discard, label: { TextState("OnBoarding.Skip".localized) })
+      ButtonState(role: .cancel, label: { TextState("Entries.Remove.Cancel".localized) })
+      ButtonState(role: .destructive, action: .delete, label: { TextState("Entries.Remove.Action".localized) })
     } message: {
-      TextState("OnBoarding.Skip.Alert".localized)
+      TextState("Entries.Remove.Title".localized)
     }
   }
 }

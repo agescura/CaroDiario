@@ -1,4 +1,5 @@
 import ApplicationClient
+import AVCaptureDeviceClient
 import ComposableArchitecture
 import FileClient
 import Foundation
@@ -11,9 +12,9 @@ import UIKit
 
 @Selection
 public struct Attachment: Sendable, Equatable, Hashable {
-  let id: UUID
-  let pathUrl: String
-  let format: Format
+  public let id: UUID
+  public let pathUrl: String
+  public let format: Format
 }
 
 extension Attachment {
@@ -54,6 +55,7 @@ public struct EntryDetailFeature {
     public let entryOriginal: Entry.Draft
     public var isPhotoPickerPresented = false
     public var photosPickerItem: PhotosPickerItem?
+    public var presentImagePicker: Bool = false
     
     private var attachmentsQuery: some StructuredQueries.Statement<Attachment> {
       EntryAsset
@@ -95,14 +97,20 @@ public struct EntryDetailFeature {
     case dialog(ConfirmationDialogState<Dialog>)
     
     public enum Dialog: Equatable, Sendable {
+      case camera
       case photoPicker
     }
   }
 	
 	public enum Action: ViewAction, Equatable, BindableAction {
+    case authorizationCameraResponse(AuthorizedVideoStatus)
     case destination(PresentationAction<Destination.Action>)
     case binding(BindingAction<State>)
     case entryResponse(Entry.Draft)
+    case presentCameraPicker(Bool)
+    case presentImagePicker(Bool)
+    case storeImage(Data)
+    case storeVideo(URL)
     case view(View)
 
     public enum View: Equatable {
@@ -116,6 +124,7 @@ public struct EntryDetailFeature {
 	}
 	
 	@Dependency(\.applicationClient) var applicationClient
+  @Dependency(\.avCaptureDeviceClient) var avCaptureDeviceClient
   @Dependency(\.calendar) var calendar
   @Dependency(\.defaultDatabase) var database
   @Dependency(\.dismiss) var dismiss
@@ -126,17 +135,36 @@ public struct EntryDetailFeature {
     BindingReducer()
 		Reduce { state, action in
       switch action {
+      case let .authorizationCameraResponse(status):
+        switch status {
+        case .notDetermined:
+          return .run { [requestAccess = avCaptureDeviceClient.requestAccess] send in
+            try await send(.authorizationCameraResponse(requestAccess() ? .authorized : .denied))
+          }
+        case .denied:
+          print("denied")
+          return .none
+        case .authorized:
+          return .send(.presentCameraPicker(true))
+        case .restricted:
+          print("restricted")
+          return .none
+        }
       case .destination(.presented(.dialog(.photoPicker))):
         state.destination = nil
         state.isPhotoPickerPresented = true
         return .none
+      case .destination(.presented(.dialog(.camera))):
+        return .run { [authorizationStatus = avCaptureDeviceClient.authorizationStatus] send in
+          try await send(.authorizationCameraResponse(authorizationStatus()))
+        }
       case .destination:
         return .none
       case .binding(\.photosPickerItem):
         guard let photosPickerItem = state.photosPickerItem else { return .none }
         state.photosPickerItem = nil
         
-        return .run { [fileClient, database, state = state] _ in
+        return .run { send in
           guard
             let asset = try await photosPickerItem.loadTransferable(type: TransferableAsset.self),
             let source = asset.source
@@ -144,55 +172,70 @@ public struct EntryDetailFeature {
           
           switch source {
           case let .image(data):
-            let pathUrl = UUID().uuidString + ".png"
-            let folderUrl = "UserData/Images/"
-            try await fileClient.addImage(.image(data, folderUrl, pathUrl))
-            try await database.write { db in
-              let storedAsset = try Asset
-                .insert {
-                  Asset.Draft(
-                    pathUrl: folderUrl + pathUrl,
-                    format: .image
-                  )
-                }
-                .returning(\.self)
-                .fetchOne(db)
-              guard let storedAsset, let entryID = state.entry.id else { return }
-              try EntryAsset
-                .insert {
-                  EntryAsset.Draft(assetID: storedAsset.id, entryID: entryID)
-                }
-                .execute(db)
-            }
+            await send(.storeImage(data))
           case let .video(url):
-            let pathUrl = UUID().uuidString + ".mp4"
-            let folderUrl = "UserData/Videos/"
-            try await fileClient.addVideo(.video(url, folderUrl, pathUrl))
-            try await database.write { db in
-              let storedAsset = try Asset
-                .insert {
-                  Asset.Draft(
-                    pathUrl: folderUrl + pathUrl,
-                    format: .video
-                  )
-                }
-                .returning(\.self)
-                .fetchOne(db)
-              guard let storedAsset, let entryID = state.entry.id else { return }
-              try EntryAsset
-                .insert {
-                  EntryAsset.Draft(assetID: storedAsset.id, entryID: entryID)
-                }
-                .execute(db)
-            }
+            await send(.storeVideo(url))
           }
-          await state.updateQuery()
         }
       case .binding:
         return .none
       case let .entryResponse(entry):
         state.entry = entry
         return .none
+      case let .presentCameraPicker(value), let .presentImagePicker(value):
+//        state.addAttachmentInFlight = true
+        
+        state.presentImagePicker = value
+//        state.presentImagePickerSource = .camera
+        return .none
+      case let .storeImage(data):
+        return .run { [database, fileClient, id = state.entry.id, updateQuery = state.updateQuery] _ in
+          let pathUrl = UUID().uuidString + ".png"
+          let folderUrl = "UserData/Images/"
+          try await fileClient.addImage(.image(data, folderUrl, pathUrl))
+          try await database.write { db in
+            let storedAsset = try Asset
+              .insert {
+                Asset.Draft(
+                  pathUrl: folderUrl + pathUrl,
+                  format: .image
+                )
+              }
+              .returning(\.self)
+              .fetchOne(db)
+            guard let storedAsset, let entryID = id else { return }
+            try EntryAsset
+              .insert {
+                EntryAsset.Draft(assetID: storedAsset.id, entryID: entryID)
+              }
+              .execute(db)
+          }
+          await updateQuery()
+        }
+      case let .storeVideo(url):
+        return .run { [fileClient, database, id = state.entry.id, updateQuery = state.updateQuery] _ in
+          let pathUrl = UUID().uuidString + ".mp4"
+          let folderUrl = "UserData/Videos/"
+          try await fileClient.addVideo(.video(url, folderUrl, pathUrl))
+          try await database.write { db in
+            let storedAsset = try Asset
+              .insert {
+                Asset.Draft(
+                  pathUrl: folderUrl + pathUrl,
+                  format: .video
+                )
+              }
+              .returning(\.self)
+              .fetchOne(db)
+            guard let storedAsset, let entryID = id else { return }
+            try EntryAsset
+              .insert {
+                EntryAsset.Draft(assetID: storedAsset.id, entryID: entryID)
+              }
+              .execute(db)
+          }
+          await updateQuery()
+        }
       case let .view(action):
         switch action {
         case .addEntryButtonTapped:
@@ -226,8 +269,7 @@ public struct EntryDetailFeature {
                 .delete()
                 .execute(db)
             }
-            let fileUrl = URL.documentsDirectory.appendingPathComponent(attachment.pathUrl)
-            try await fileClient.removeAttachments([fileUrl])
+            try await fileClient.removeAttachments([attachment.pathUrl])
           }
         case .task:
           return .run { [database, entry = state.entry] send in
@@ -259,8 +301,7 @@ extension ConfirmationDialogState where Action == EntryDetailFeature.Destination
 		ConfirmationDialogState {
 			TextState("AddEntry.ChooseOption".localized)
 		} actions: {
-			ButtonState(role: .cancel, label: { TextState("Cancel".localized) })
-//			ButtonState(action: .requestAuthorizationCamera, label: { TextState("AddEntry.Camera".localized) })
+			ButtonState(action: .camera, label: { TextState("AddEntry.Camera".localized) })
 			ButtonState(action: .photoPicker, label: { TextState("AddEntry.Photos".localized) })
 //			ButtonState(action: .presentAudioRecord, label: { TextState("Crear un audio") })
 		}
