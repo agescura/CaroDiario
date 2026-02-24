@@ -60,7 +60,11 @@ public struct EntryDetailFeature {
     private var attachmentsQuery: some StructuredQueries.Statement<Attachment> {
       EntryAsset
         .group(by: \.id)
-        .where { $0.entryID == entry.id }
+        .where {
+          if let id = entry.id {
+            $0.entryID.eq(id)
+          }
+        }
         .join(Asset.all) { $0.assetID.eq($1.id) }
         .select { _, asset in
           Attachment.Columns(

@@ -121,9 +121,9 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/sqlite-data", exact: "1.5.1"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies", exact: "1.10.1"),
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.23.1"),
+    .package(url: "https://github.com/pointfreeco/sqlite-data", exact: "1.6.0"),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies", exact: "1.11.0"),
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.24.1"),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.18.9"),
   ],
   targets: [
