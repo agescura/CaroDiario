@@ -57,12 +57,7 @@ public struct MenuPasscodeView: View {
 		}
 		.navigationBarTitle("Passcode.Title".localized)
 		.navigationBarBackButtonHidden(true)
-		.confirmationDialog(
-			store: store.scope(
-				state: \.$dialog,
-				action: \.dialog
-			)
-		)
+		.confirmationDialog($store.scope(state: \.dialog, action: \.dialog))
 	}
 }
 

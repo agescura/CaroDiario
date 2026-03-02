@@ -94,12 +94,7 @@ public struct EntriesView: View {
 			}
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
-    .alert(
-      store: store.scope(
-        state: \.$destination.alert,
-        action: \.destination.alert
-      )
-    )
+    .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
 	}
 }
 

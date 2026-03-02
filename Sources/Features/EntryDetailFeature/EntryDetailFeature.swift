@@ -123,6 +123,8 @@ public struct EntryDetailFeature {
       case dialogButtonTapped
       case dismissButtonTapped
       case removeAttachmentButtonTapped
+      case receiveImage(Data)
+      case receiveVideo(URL)
       case task
     }
 	}
@@ -263,6 +265,10 @@ public struct EntryDetailFeature {
         case .dismissButtonTapped:
           state.destination = nil
           return .none
+        case let .receiveImage(image):
+          return .send(.storeImage(image))
+        case let .receiveVideo(url):
+          return .send(.storeVideo(url))
         case .removeAttachmentButtonTapped:
           guard let attachment = state.destination?.attachment?.attachment else { return .none }
           state.destination = nil

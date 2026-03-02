@@ -86,8 +86,8 @@ public struct EntryDetailView: View {
         .buttonStyle(.secondary)
 				.frame(width: 56)
         .confirmationDialog(
-          store: store.scope(
-            state: \.$destination.dialog,
+          $store.scope(
+            state: \.destination?.dialog,
             action: \.destination.dialog
           )
         )
@@ -132,9 +132,9 @@ public struct EntryDetailView: View {
         switch response {
         case let .image(image):
           guard let data = image.pngData() else { return }
-          store.send(.storeImage(data))
+          send(.receiveImage(data))
         case let .video(url):
-          store.send(.storeVideo(url))
+          send(.receiveVideo(url))
         }
       }
       .edgesIgnoringSafeArea(.all)

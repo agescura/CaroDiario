@@ -46,7 +46,10 @@ public struct WelcomeView: View {
 			.padding()
 			.navigationBarTitleDisplayMode(.inline)
 			.alert(
-				store: store.scope(state: \.$alert, action: \.alert)
+				$store.scope(
+          state: \.alert,
+          action: \.alert
+        )
 			)
 		} destination: { store in
 			switch store.case {

@@ -155,9 +155,7 @@ public struct EntriesFeature {
         switch action {
         case .addEntryButtonTapped:
           state.destination = .add(
-            EntryDetailFeature.State(
-              entry: Entry.Draft(createdAt: Date(), isDraft: true, updatedAt: Date(), message: "")
-            )
+            EntryDetailFeature.State(entry: .new)
           )
           return .none
         case let .dayEntryButtonTapped(day):
@@ -200,5 +198,11 @@ extension AlertState where Action == EntriesFeature.Destination.Alert {
     } message: {
       TextState("Entries.Remove.Title".localized)
     }
+  }
+}
+
+extension Entry.Draft {
+  public static var new: Self {
+    Entry.Draft(createdAt: Date(), isDraft: true, updatedAt: Date(), message: "")
   }
 }

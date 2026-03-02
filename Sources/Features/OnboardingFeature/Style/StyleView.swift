@@ -55,19 +55,19 @@ public struct StyleView: View {
 			}
 			.buttonStyle(.primary)
 		}
-		.padding()
-		.navigationBarBackButtonHidden(true)
-		.alert(
-			store: store.scope(
-				state: \.$alert,
-				action: \.alert
-			)
-		)
-	}
+    .padding()
+    .navigationBarBackButtonHidden(true)
+    .alert(
+      $store.scope(
+        state: \.alert,
+        action: \.alert
+      )
+    )
+  }
 }
 
 #Preview {
-	StyleView(
+  StyleView(
 		store: Store(
 			initialState: StyleFeature.State(
 //				entries: fakeEntries

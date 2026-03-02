@@ -59,14 +59,14 @@ public struct LayoutView: View {
 			.buttonStyle(.primary)
 		}
 		.padding()
-		.navigationBarBackButtonHidden(true)
-		.alert(
-			store: store.scope(
-				state: \.$alert,
-				action: \.alert
-			)
-		)
-	}
+    .navigationBarBackButtonHidden(true)
+    .alert(
+      $store.scope(
+        state: \.alert,
+        action: \.alert
+      )
+    )
+  }
 }
 
 #Preview {

@@ -4,7 +4,7 @@ import DesignSystem
 
 @ViewAction(for: PrivacyFeature.self)
 public struct PrivacyView: View {
-	public let store: StoreOf<PrivacyFeature>
+	@Bindable public var store: StoreOf<PrivacyFeature>
 	
 	public init(
 		store: StoreOf<PrivacyFeature>
@@ -45,12 +45,12 @@ public struct PrivacyView: View {
 			.buttonStyle(.primary)
 		}
 		.padding()
-		.navigationBarBackButtonHidden(true)
-		.alert(
-			store: store.scope(
-				state: \.$alert,
-				action: \.alert
-			)
-		)
-	}
+    .navigationBarBackButtonHidden(true)
+    .alert(
+      $store.scope(
+        state: \.alert,
+        action: \.alert
+      )
+    )
+  }
 }

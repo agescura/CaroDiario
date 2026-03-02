@@ -4,7 +4,7 @@ import Localizables
 import SwiftUI
 
 public struct AboutView: View {
-	private let store: StoreOf<AboutFeature>
+	@Bindable var store: StoreOf<AboutFeature>
 	
 	public init(
 		store: StoreOf<AboutFeature>
@@ -31,9 +31,7 @@ public struct AboutView: View {
         store.send(.confirmationDialogButtonTapped)
       }
     }
-		.confirmationDialog(
-			store: store.scope(state: \.$dialog, action: \.dialog)
-		)
+		.confirmationDialog($store.scope(state: \.dialog, action: \.dialog))
 		.navigationBarTitle("Settings.About".localized)
 	}
 }
