@@ -1,5 +1,4 @@
 import SwiftUI
-import SettingsFeature
 import AppFeature
 import ComposableArchitecture
 import SQLiteDataClient

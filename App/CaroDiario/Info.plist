@@ -1,29 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-  <key>UIApplicationShortcutItems</key>
-  <array>
-      <dict>
-          <key>UIApplicationShortcutItemType</key>
-          <string>AddAction</string>
-          <key>UIApplicationShortcutItemIconSymbolName</key>
-          <string>plus</string>
-          <key>UIApplicationShortcutItemTitle</key>
-          <string>Add</string>
-          <key>UIApplicationShortcutItemSubtitle</key>
-          <string>Write an entry</string>
-      </dict>
-      <dict>
-          <key>UIApplicationShortcutItemType</key>
-          <string>SettingsAction</string>
-          <key>UIApplicationShortcutItemIconSymbolName</key>
-          <string>gear</string>
-          <key>UIApplicationShortcutItemTitle</key>
-          <string>Settings</string>
-          <key>UIApplicationShortcutItemSubtitle</key>
-          <string>Show settings</string>
-      </dict>
-  </array>
-</dict>
+<dict/>
 </plist>

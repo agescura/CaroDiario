@@ -1,19 +1,17 @@
 import ComposableArchitecture
+import Models
 import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+  @Shared(.userSettings) public var userSettings: UserSettings = .defaultValue
   
   func scene(
     _ scene: UIScene,
     willConnectTo session: UISceneSession,
     options connectionOptions: UIScene.ConnectionOptions
   ) {
-    appDelegate.store.send(.appDelegate(.didFinishLaunching))
-    
-    if let shortcutItem = connectionOptions.shortcutItem {
-      
-    }
+    appDelegate.store.send(.appDelegate(.didFinishLaunching(connectionOptions.shortcutItem?.shortcut)))
   }
   
   func windowScene(
@@ -26,14 +24,54 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     completionHandler(true)
   }
+  
+  func sceneWillResignActive(_ scene: UIScene) {
+    if userSettings.hasShownOnboarding {
+      let application = UIApplication.shared
+      application.shortcutItems = ShorcutItem.allCases.map { item -> UIApplicationShortcutItem in
+        return UIApplicationShortcutItem(
+          type: item.rawValue,
+          localizedTitle: item.title,
+          localizedSubtitle: item.subtitle,
+          icon: UIApplicationShortcutIcon(systemImageName: item.icon)
+        )
+      }
+    }
+  }
+}
+
+public enum ShorcutItem: String, CaseIterable, Sendable {
+  case add
+  case settings
+  
+  var title: String {
+    switch self {
+    case .add: "Add"
+    case .settings: "Settings"
+    }
+  }
+  
+  var subtitle: String {
+    switch self {
+    case .add: "Write an entry"
+    case .settings: "Show settings"
+    }
+  }
+  
+  var icon: String {
+    switch self {
+    case .add: "plus"
+    case .settings: "gear"
+    }
+  }
 }
 
 extension UIApplicationShortcutItem {
-  var shortcut: AppFeature.Action.Shortcut? {
+  var shortcut: ShorcutItem? {
     switch self.type {
-    case "AddAction":
+    case "add":
       return .add
-    case "SettingsAction":
+    case "settings":
       return .settings
     default:
       return nil

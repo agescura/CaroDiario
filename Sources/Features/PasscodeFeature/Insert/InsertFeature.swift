@@ -39,8 +39,7 @@ public struct InsertFeature {
 
   public enum Action: ViewAction, Equatable {
 		case delegate(Delegate)
-    case success
-		case update(code: String)
+    case update(code: String)
 		case view(View)
 		
 		@CasePathable
@@ -58,9 +57,6 @@ public struct InsertFeature {
 		Reduce { state, action in
 			switch action {
 				case .delegate:
-					return .none
-					
-				case .success:
 					return .none
 					
 				case let .update(code: code):

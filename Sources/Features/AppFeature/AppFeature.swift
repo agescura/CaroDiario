@@ -52,15 +52,10 @@ public struct AppFeature {
     case process(URL)
     case scene(Scene.Action)
     case setUserInterfaceStyle
-    case shortcuts(Shortcut)
-    case splashFinished
+    case shortcuts(ShorcutItem)
+    case splashFinished(ShorcutItem?)
     case startHome(cameraStatus: AuthorizedVideoStatus)
     case state(AppFeature.State.State)
-    
-    public enum Shortcut: Equatable {
-      case add
-      case settings
-    }
   }
   
   @Dependency(\.applicationClient) var applicationClient
@@ -82,14 +77,14 @@ public struct AppFeature {
     }
     Reduce { state, action in
       switch action {
-      case .appDelegate(.didFinishLaunching):
+      case let .appDelegate(.didFinishLaunching(shortcutItem)):
         return .merge(
           .run { [userInterfaceStyle = state.userSettings.appearance.themeType.userInterfaceStyle, applicationClient] _ in
             await applicationClient.setUserInterfaceStyle(userInterfaceStyle)
           },
           .run { [showSplash = state.userSettings.showSplash] send in
             if !showSplash {
-              await send(.splashFinished)
+              await send(.splashFinished(shortcutItem))
             }
           },
           .run { [avCaptureDeviceClient] send in
@@ -100,6 +95,11 @@ public struct AppFeature {
       case let .authorizationStatusResponse(authorizedVideoStatus):
         state.$userSettings.authorizedVideoStatus.withLock { $0 = authorizedVideoStatus }
         return .none
+        
+      case .splashFinished(.add):
+        return .send(.shortcuts(.add))
+      case .splashFinished(.settings):
+        return .send(.shortcuts(.settings))
         
       case .splashFinished:
         if state.userSettings.hasPasscode {
@@ -126,7 +126,7 @@ public struct AppFeature {
           state.scene = .home(HomeFeature.State())
           return .none
         case .splash(.delegate(.animationFinished)):
-          return .send(.splashFinished)
+          return .send(.splashFinished(nil))
         default:
           return .none
         }

@@ -9,7 +9,7 @@ public struct AppDelegateState: Equatable {
 
 @CasePathable
 public enum AppDelegateAction: Equatable {
-  case didFinishLaunching
+  case didFinishLaunching(ShorcutItem?)
 }
 
 public class AppDelegate: NSObject, UIApplicationDelegate {
@@ -18,7 +18,7 @@ public class AppDelegate: NSObject, UIApplicationDelegate {
 	public override init() {
 		self.store = Store(
 			initialState: AppFeature.State(),
-      reducer: { AppFeature()._printChanges() }
+      reducer: { AppFeature() }
 		)
 	}
 	

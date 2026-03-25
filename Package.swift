@@ -123,8 +123,15 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/pointfreeco/sqlite-data", exact: "1.6.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", exact: "1.11.0"),
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.24.1"),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.18.9"),
+    .package(
+      url: "https://github.com/pointfreeco/swift-composable-architecture",
+      from: "1.25.2",
+      traits: [
+        "ComposableArchitecture2Deprecations",
+        "ComposableArchitecture2DeprecationOverloads"
+      ]
+    ),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.19.1"),
   ],
   targets: [
     .target(
@@ -401,6 +408,17 @@ let package = Package(
         "LocalAuthenticationClient"
       ],
       path: "Sources/Features/PasscodeFeature"
+    ),
+    .testTarget(
+      name: "PasscodeFeatureTests",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        "TestHelper",
+        "PasscodeFeature",
+      ],
+      path: "Tests/Features/PasscodeFeatureTests"
     ),
     .target(
       name: "LocalAuthenticationClient",
